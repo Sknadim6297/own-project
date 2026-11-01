@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#168A80">
     <title>Reset Password | Yuktione</title>
     @include('partials.dm-sans')
-    @vite(['resources/css/tazen.css', 'resources/css/auth-theme.css'])
+    @vite(['resources/css/tazen.css', 'resources/css/auth-theme.css', 'resources/css/yuktione-feedback.css'])
     <style>
         .password-strength { height: 4px; margin-top: .5rem; overflow: hidden; border-radius: 9999px; background: #e0e9f0; }
         .password-strength-meter { height: 100%; width: 0; transition: width .2s ease, background-color .2s ease; }
@@ -59,6 +59,21 @@
             </form>
         </section>
     </main>
+    <x-yuktione.feedback />
+    @vite('resources/js/yuktione-feedback.js')
+    <script type="module">
+        const error = @json($errors->first());
+        const notify = () => {
+            if (!window.YuktioneToast || !error) {
+                return Boolean(window.YuktioneToast);
+            }
+            window.YuktioneToast.error(error, { title: 'Check your password' });
+            return true;
+        };
+        if (!notify()) {
+            window.addEventListener('load', notify, { once: true });
+        }
+    </script>
     <script>
         const passwordInput = document.getElementById('password');
         const strengthMeter = document.querySelector('.password-strength-meter');

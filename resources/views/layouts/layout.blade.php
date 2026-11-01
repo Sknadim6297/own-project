@@ -687,5 +687,33 @@ $(document).ready(function () {
 	@endif
 	@stack('scripts')
 	@vite('resources/js/yuktione-feedback.js')
+	@if ($isAuthenticationRoute)
+		@php
+			$authFlashes = array_values(array_filter([
+				session('status') ? ['success', session('status'), 'Password updated'] : null,
+				session('success') ? ['success', session('success'), 'Signed in'] : null,
+				session('error') ? ['error', session('error'), 'Something went wrong'] : null,
+				session('warning') ? ['warning', session('warning'), 'Please note'] : null,
+				session('message') ? ['info', session('message'), 'Please note'] : null,
+			]));
+		@endphp
+		<script type="module">
+			const flashes = @json($authFlashes);
+			const notify = () => {
+				if (!window.YuktioneToast) {
+					return false;
+				}
+				flashes.forEach(([type, message, title]) => {
+					if (window.YuktioneToast[type]) {
+						window.YuktioneToast[type](message, { title });
+					}
+				});
+				return true;
+			};
+			if (!notify()) {
+				window.addEventListener('load', notify, { once: true });
+			}
+		</script>
+	@endif
 </body>
 </html>

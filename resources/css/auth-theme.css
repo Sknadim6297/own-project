@@ -61,6 +61,14 @@ body.yuktione-auth-page {
     cursor: not-allowed;
 }
 
+.yuktione-auth-page #signInButton:disabled {
+    border-color: #36877F;
+    background-color: #36877F;
+    color: #ffffff;
+    opacity: 0.72;
+    cursor: wait;
+}
+
 .yuktione-auth-page [role="tab"][aria-selected="true"] {
     background-color: #36877F;
     color: #ffffff;

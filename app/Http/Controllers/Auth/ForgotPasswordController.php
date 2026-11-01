@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\AccountRecovery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -21,13 +22,40 @@ class ForgotPasswordController extends Controller
     /**
      * Send password reset link
      */
-    public function sendResetLink(Request $request)
+    public function sendResetLink(Request $request, AccountRecovery $recovery)
     {
-        $request->validate(['email' => 'required|email']);
+        $request->validate([
+            'phone' => ['required', 'string', 'min:10', 'max:20', 'regex:/^[0-9+\-\s()]+$/'],
+        ]);
 
-        Password::broker('users')->sendResetLink($request->only('email'));
+        if ($recovery->nationalNumber($request->phone) === '') {
+            return back()
+                ->withInput($request->only('phone'))
+                ->withErrors(['phone' => 'Enter a valid mobile number.']);
+        }
 
-        return back()->with('password_reset_requested', "If an account matches your details, you'll receive further instructions.");
+        $user = $recovery->registeredCustomer($request->phone);
+
+        if (! $user) {
+            return back()
+                ->withInput($request->only('phone'))
+                ->with('recovery_unregistered', true);
+        }
+
+        try {
+            $sent = $recovery->sendCustomerReset($user);
+        } catch (\Throwable $exception) {
+            report($exception);
+            $sent = false;
+        }
+
+        if (! $sent) {
+            return back()
+                ->withInput($request->only('phone'))
+                ->withErrors(['phone' => AccountRecovery::SEND_FAILED]);
+        }
+
+        return back()->with('status', AccountRecovery::SENT_MESSAGE);
     }
 
     /**

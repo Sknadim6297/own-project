@@ -6,6 +6,18 @@
         : 'customer';
 @endphp
 
+@push('head')
+    <style>
+        .yuktione-auth-page #signInButton:disabled {
+            border-color: #36877F;
+            background-color: #36877F;
+            color: #ffffff;
+            opacity: 0.72;
+            cursor: wait;
+        }
+    </style>
+@endpush
+
 @section('title', 'Sign In | Yuktione')
 @section('meta_description', 'Sign in to your Yuktione account to manage consultations and bookings.')
 @section('body_class', 'yuktione-auth-page')
@@ -199,7 +211,13 @@
         field.setAttribute('aria-invalid', message ? 'true' : 'false');
     };
     const showLoginError = (title, message, type = 'error') => {
-        window.YuktioneToast[type](message, { title });
+        const notify = window.YuktioneToast?.[type];
+        if (typeof notify === 'function') {
+            notify(message, { title });
+            return;
+        }
+        termsError.textContent = message;
+        termsError.classList.remove('hidden');
     };
     const setLoading = (loading) => {
         signInButton.disabled = loading;
@@ -313,7 +331,9 @@
             return;
         }
         if (!termsAccepted.checked) {
+            termsError.textContent = 'Please read and accept the terms to continue.';
             termsError.classList.remove('hidden');
+            showLoginError('Terms required', 'Please read and accept the Terms and Conditions to continue.', 'warning');
             document.getElementById('openTerms').focus();
             return;
         }
@@ -374,7 +394,15 @@
                 return;
             }
             if (payload.redirect_url && (response.ok || payload.status === 'rejected')) {
-                window.location.assign(payload.redirect_url);
+                const rejected = payload.status === 'rejected';
+                showLoginError(
+                    rejected ? 'Profile needs attention' : 'Signed in',
+                    payload.message || (rejected
+                        ? 'Your profile has been rejected. Please review and resubmit your details.'
+                        : 'You are successfully logged in!'),
+                    rejected ? 'warning' : 'success'
+                );
+                window.setTimeout(() => window.location.assign(payload.redirect_url), 700);
                 return;
             }
             if (response.status === 422 && payload.errors && typeof payload.errors === 'object') {
@@ -386,7 +414,7 @@
             }
 
             if (response.status === 401) {
-                showLoginError('Unable to sign in', 'Incorrect email or password. Please check your details and try again.');
+                showLoginError('Unable to sign in', payload.message || 'Incorrect email or password. Please check your details and try again.');
                 return;
             }
 
@@ -413,6 +441,7 @@
         event.preventDefault();
         submitLogin();
     });
+
 })();
 </script>
 @endpush

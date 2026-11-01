@@ -553,7 +553,9 @@ Route::post('/submit-mcq', [MCQController::class, 'store'])->name('submit.mcq');
 Route::get('/get-mcq-questions/{serviceId}', [HomeController::class, 'getServiceQuestions']);
 // Forgot Password
 Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('forgot.form');
-Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('forgot.send');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])
+    ->middleware(['throttle:5,1,recovery', 'throttle:20,60,recovery-hour'])
+    ->name('forgot.send');
 
 // Reset Password
 Route::get('/reset-password', [AuthController::class, 'showResetForm'])->name('password.reset.form');
@@ -564,6 +566,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showForgotForm'])
         ->name('forgot.form');
     Route::post('/forgot-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLink'])
+        ->middleware(['throttle:5,1,recovery', 'throttle:20,60,recovery-hour'])
         ->name('forgot.send');
     Route::get('/reset-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showResetForm'])
         ->name('password.reset.form');
@@ -577,6 +580,7 @@ Route::prefix('professional')->name('professional.')->group(function () {
         Route::get('/forgot-password', [App\Http\Controllers\Professional\AuthController::class, 'showForgotForm'])
             ->name('forgot.form');
         Route::post('/forgot-password', [App\Http\Controllers\Professional\AuthController::class, 'sendResetLink'])
+            ->middleware(['throttle:5,1,recovery', 'throttle:20,60,recovery-hour'])
             ->name('forgot.send');
         Route::get('/reset-password', [App\Http\Controllers\Professional\AuthController::class, 'showResetForm'])
             ->name('password.reset.form');

@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#168A80">
     <title>Forgot Password | Yuktione</title>
     @include('partials.dm-sans')
-    @vite(['resources/css/tazen.css', 'resources/css/auth-theme.css'])
+    @vite(['resources/css/tazen.css', 'resources/css/auth-theme.css', 'resources/css/yuktione-feedback.css'])
 </head>
 <body class="yuktione-auth-page min-h-screen bg-background px-4 py-8 font-sans text-text-primary sm:px-6">
     <main class="mx-auto flex min-h-[75vh] w-full max-w-lg items-center justify-center">
@@ -17,8 +17,10 @@
             <div class="mb-7">
                 <p class="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-brand-primary">Account recovery</p>
                 <h1 id="recovery-title" class="text-2xl font-semibold text-brand-secondary">Forgot password?</h1>
-                <p class="mt-2 text-sm leading-6 text-text-secondary">Enter your email address and we’ll send a password reset link if an account matches.</p>
+                <p class="mt-2 text-sm leading-6 text-text-secondary">Enter the mobile number on your account. If it is registered, we’ll send password reset instructions to the email address on that account.</p>
             </div>
+
+            @include('frontend.login.partials.recovery-not-registered', ['registerUrl' => route('register')])
 
             @if (session('status'))
                 <div class="mb-5 rounded-card border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800" role="status">
@@ -29,10 +31,10 @@
             <form method="POST" action="{{ route('forgot.send') }}" class="space-y-5">
                 @csrf
                 <div>
-                    <label for="email" class="mb-2 block text-sm font-medium text-text-primary">{{ __('E-Mail Address') }}</label>
-                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus
-                        class="w-full rounded-control border border-border bg-white px-4 py-3 text-sm text-text-primary placeholder:text-text-muted shadow-sm outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-100 @error('email') border-red-500 @enderror">
-                    @error('email')
+                    <label for="phone" class="mb-2 block text-sm font-medium text-text-primary">Mobile number</label>
+                    <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" required autocomplete="tel" inputmode="tel" minlength="10" maxlength="20" autofocus placeholder="10-digit mobile number"
+                        class="w-full rounded-control border border-border bg-white px-4 py-3 text-sm text-text-primary placeholder:text-text-muted shadow-sm outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-100 @error('phone') border-red-500 @enderror">
+                    @error('phone')
                         <span class="mt-2 block text-sm text-red-700" role="alert"><strong>{{ $message }}</strong></span>
                     @enderror
                 </div>
@@ -43,5 +45,27 @@
             </form>
         </section>
     </main>
+    <x-yuktione.feedback />
+    @vite('resources/js/yuktione-feedback.js')
+    <script type="module">
+        const unregistered = @json((bool) session('recovery_unregistered'));
+        const status = @json(session('status'));
+        const error = @json($errors->first('phone'));
+        const notify = () => {
+            if (!window.YuktioneToast) {
+                return false;
+            }
+            if (status && !unregistered) {
+                window.YuktioneToast.success(status, { title: 'Check your email' });
+            }
+            if (error) {
+                window.YuktioneToast.error(error, { title: 'Unable to send reset link' });
+            }
+            return true;
+        };
+        if (!notify()) {
+            window.addEventListener('load', notify, { once: true });
+        }
+    </script>
 </body>
 </html>
