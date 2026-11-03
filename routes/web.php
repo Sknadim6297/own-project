@@ -50,6 +50,7 @@ use App\Models\ContactDetail;
 use App\Models\BlogBanner;
 use App\Models\BlogPost;
 use App\Models\Blog;
+use App\Models\Professional;
 use App\Models\Service;
 use App\Models\AllEvent;
 use Illuminate\Support\Facades\Auth;
@@ -94,6 +95,79 @@ Route::post('tools/psychology/mood/emotions', [\App\Http\Controllers\Frontend\Mo
 Route::get('tools/psychology/mood', [\App\Http\Controllers\Frontend\MoodCheckinController::class, 'create'])->name('tools.psychology.mood');
 Route::post('tools/psychology/mood', [\App\Http\Controllers\Frontend\MoodCheckinController::class, 'store'])->name('tools.psychology.mood.store');
 Route::get('tools/psychology', [HomeController::class, 'psychology'])->name('tools.psychology');
+
+Route::get('tools/nutrition/search', [\App\Http\Controllers\Frontend\NutritionTrackerController::class, 'search'])->name('tools.nutrition.search');
+Route::get('tools/nutrition/foods/{food}/portion', [\App\Http\Controllers\Frontend\NutritionTrackerController::class, 'portion'])->name('tools.nutrition.portion');
+Route::post('tools/nutrition/entries', [\App\Http\Controllers\Frontend\NutritionTrackerController::class, 'storeEntry'])->middleware('throttle:60,1')->name('tools.nutrition.entries.store');
+Route::put('tools/nutrition/entries/{entry}', [\App\Http\Controllers\Frontend\NutritionTrackerController::class, 'updateEntry'])->name('tools.nutrition.entries.update');
+Route::delete('tools/nutrition/entries/{entry}', [\App\Http\Controllers\Frontend\NutritionTrackerController::class, 'destroyEntry'])->name('tools.nutrition.entries.destroy');
+Route::get('tools/nutrition/meal', [\App\Http\Controllers\Frontend\NutritionTrackerController::class, 'meal'])->name('tools.nutrition.meal');
+Route::get('tools/nutrition/insights', [\App\Http\Controllers\Frontend\NutritionTrackerController::class, 'insights'])->name('tools.nutrition.insights');
+Route::get('tools/nutrition/goals', [\App\Http\Controllers\Frontend\NutritionTrackerController::class, 'goalsForm'])->name('tools.nutrition.goals');
+Route::post('tools/nutrition/goals', [\App\Http\Controllers\Frontend\NutritionTrackerController::class, 'updateGoals'])->middleware('throttle:30,1')->name('tools.nutrition.goals.update');
+Route::get('tools/nutrition', [\App\Http\Controllers\Frontend\NutritionTrackerController::class, 'dashboard'])->name('tools.nutrition');
+
+Route::get('tools/weight-journey/goal', [\App\Http\Controllers\Frontend\WeightJourneyController::class, 'goalForm'])->name('tools.weight-journey.goal');
+
+Route::post('tools/weight-journey/goal', [\App\Http\Controllers\Frontend\WeightJourneyController::class, 'saveGoal'])->middleware('throttle:30,1')->name('tools.weight-journey.goal.store');
+Route::post('tools/weight-journey/goal/archive', [\App\Http\Controllers\Frontend\WeightJourneyController::class, 'archiveGoal'])->name('tools.weight-journey.goal.archive');
+Route::get('tools/weight-journey/log', [\App\Http\Controllers\Frontend\WeightJourneyController::class, 'logForm'])->name('tools.weight-journey.log');
+Route::post('tools/weight-journey/measurements', [\App\Http\Controllers\Frontend\WeightJourneyController::class, 'storeMeasurement'])->middleware('throttle:60,1')->name('tools.weight-journey.measurements.store');
+Route::put('tools/weight-journey/measurements/{measurement}', [\App\Http\Controllers\Frontend\WeightJourneyController::class, 'updateMeasurement'])->name('tools.weight-journey.measurements.update');
+Route::delete('tools/weight-journey/measurements/{measurement}', [\App\Http\Controllers\Frontend\WeightJourneyController::class, 'destroyMeasurement'])->name('tools.weight-journey.measurements.destroy');
+Route::get('tools/weight-journey/progress', [\App\Http\Controllers\Frontend\WeightJourneyController::class, 'progress'])->name('tools.weight-journey.progress');
+Route::get('tools/weight-journey', [\App\Http\Controllers\Frontend\WeightJourneyController::class, 'journey'])->name('tools.weight-journey');
+
+Route::get('tools/water-intake/today', [\App\Http\Controllers\Frontend\WaterIntakeController::class, 'today'])->name('tools.water-intake.today');
+Route::get('tools/water-intake/week', [\App\Http\Controllers\Frontend\WaterIntakeController::class, 'week'])->name('tools.water-intake.week');
+Route::get('tools/water-intake/goal', [\App\Http\Controllers\Frontend\WaterIntakeController::class, 'editGoal'])->name('tools.water-intake.goal');
+Route::post('tools/water-intake/goal', [\App\Http\Controllers\Frontend\WaterIntakeController::class, 'updateGoal'])->name('tools.water-intake.goal.update');
+Route::post('tools/water-intake/entries', [\App\Http\Controllers\Frontend\WaterIntakeController::class, 'store'])->middleware('throttle:60,1')->name('tools.water-intake.store');
+Route::put('tools/water-intake/entries/{entry}', [\App\Http\Controllers\Frontend\WaterIntakeController::class, 'update'])->name('tools.water-intake.entries.update');
+Route::delete('tools/water-intake/entries/{entry}', [\App\Http\Controllers\Frontend\WaterIntakeController::class, 'destroy'])->name('tools.water-intake.entries.destroy');
+Route::get('tools/water-intake', [\App\Http\Controllers\Frontend\WaterIntakeController::class, 'dashboard'])->name('tools.water-intake');
+
+Route::get('tools/bmi-bmr/history', [\App\Http\Controllers\Frontend\BmiBmrController::class, 'history'])->name('tools.bmi-bmr.history');
+Route::get('tools/bmi-bmr/history/{calculation}', [\App\Http\Controllers\Frontend\BmiBmrController::class, 'show'])->name('tools.bmi-bmr.history.show');
+Route::delete('tools/bmi-bmr/history/{calculation}', [\App\Http\Controllers\Frontend\BmiBmrController::class, 'destroy'])->name('tools.bmi-bmr.history.destroy');
+Route::get('tools/bmi-bmr/finish', [\App\Http\Controllers\Frontend\BmiBmrController::class, 'finish'])->name('tools.bmi-bmr.finish');
+Route::post('tools/bmi-bmr/save', [\App\Http\Controllers\Frontend\BmiBmrController::class, 'save'])->name('tools.bmi-bmr.save');
+Route::post('tools/bmi-bmr/recalculate', [\App\Http\Controllers\Frontend\BmiBmrController::class, 'recalculate'])->name('tools.bmi-bmr.recalculate');
+Route::get('tools/bmi-bmr/guidance', [\App\Http\Controllers\Frontend\BmiBmrController::class, 'guidance'])->name('tools.bmi-bmr.guidance');
+Route::get('tools/bmi-bmr/understand', [\App\Http\Controllers\Frontend\BmiBmrController::class, 'understand'])->name('tools.bmi-bmr.understand');
+Route::get('tools/bmi-bmr/results', [\App\Http\Controllers\Frontend\BmiBmrController::class, 'results'])->name('tools.bmi-bmr.results');
+Route::post('tools/bmi-bmr/calculate', [\App\Http\Controllers\Frontend\BmiBmrController::class, 'calculate'])->name('tools.bmi-bmr.calculate');
+Route::get('tools/bmi-bmr', [\App\Http\Controllers\Frontend\BmiBmrController::class, 'create'])->name('tools.bmi-bmr');
+
+Route::get('tools/skills-strengths/history', [\App\Http\Controllers\Frontend\SkillsStrengthsController::class, 'history'])->name('tools.skills-strengths.history');
+Route::get('tools/skills-strengths/finish', [\App\Http\Controllers\Frontend\SkillsStrengthsController::class, 'finish'])->name('tools.skills-strengths.finish');
+Route::get('tools/skills-strengths/result/{attempt}', [\App\Http\Controllers\Frontend\SkillsStrengthsController::class, 'result'])->name('tools.skills-strengths.result');
+Route::delete('tools/skills-strengths/result/{attempt}', [\App\Http\Controllers\Frontend\SkillsStrengthsController::class, 'destroy'])->name('tools.skills-strengths.destroy');
+Route::post('tools/skills-strengths/retake', [\App\Http\Controllers\Frontend\SkillsStrengthsController::class, 'retake'])->name('tools.skills-strengths.retake');
+Route::post('tools/skills-strengths/save', [\App\Http\Controllers\Frontend\SkillsStrengthsController::class, 'save'])->name('tools.skills-strengths.save');
+Route::get('tools/skills-strengths/profile', [\App\Http\Controllers\Frontend\SkillsStrengthsController::class, 'profile'])->name('tools.skills-strengths.profile');
+Route::get('tools/skills-strengths/intro', [\App\Http\Controllers\Frontend\SkillsStrengthsController::class, 'intro'])->name('tools.skills-strengths.intro');
+Route::post('tools/skills-strengths/intro', [\App\Http\Controllers\Frontend\SkillsStrengthsController::class, 'storeIntro'])->name('tools.skills-strengths.intro.store');
+Route::get('tools/skills-strengths/category/{category}', [\App\Http\Controllers\Frontend\SkillsStrengthsController::class, 'category'])->name('tools.skills-strengths.category');
+Route::post('tools/skills-strengths/category/{category}', [\App\Http\Controllers\Frontend\SkillsStrengthsController::class, 'storeCategory'])->name('tools.skills-strengths.category.store');
+Route::post('tools/skills-strengths/start', [\App\Http\Controllers\Frontend\SkillsStrengthsController::class, 'start'])->name('tools.skills-strengths.start');
+Route::get('tools/skills-strengths', [\App\Http\Controllers\Frontend\SkillsStrengthsController::class, 'welcome'])->name('tools.skills-strengths');
+
+Route::get('tools/career-interest/history', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'history'])->name('tools.career-interest.history');
+Route::get('tools/career-interest/finish', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'finish'])->name('tools.career-interest.finish');
+Route::get('tools/career-interest/result/{attempt}', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'result'])->name('tools.career-interest.result');
+Route::delete('tools/career-interest/result/{attempt}', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'destroy'])->name('tools.career-interest.destroy');
+Route::post('tools/career-interest/retake', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'retake'])->name('tools.career-interest.retake');
+Route::post('tools/career-interest/save', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'save'])->name('tools.career-interest.save');
+Route::get('tools/career-interest/suggestions', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'suggestions'])->name('tools.career-interest.suggestions');
+Route::get('tools/career-interest/profile', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'profile'])->name('tools.career-interest.profile');
+Route::get('tools/career-interest/about', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'about'])->name('tools.career-interest.about');
+Route::post('tools/career-interest/about', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'storeAbout'])->name('tools.career-interest.about.store');
+Route::get('tools/career-interest/category/{category}', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'category'])->name('tools.career-interest.category');
+Route::post('tools/career-interest/category/{category}', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'storeCategory'])->name('tools.career-interest.category.store');
+Route::post('tools/career-interest/start', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'start'])->name('tools.career-interest.start');
+Route::get('tools/career-interest', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'welcome'])->name('tools.career-interest');
+
 Route::get('tools', [HomeController::class, 'tools'])->name('tools.index');
 Route::post('/currency/switch', [CurrencyController::class, 'switch'])->name('currency.switch');
 
@@ -108,18 +182,37 @@ Route::get("professionals/details/{id}/{professional_name?}", [HomeController::c
 // Route::get('professionals/get-rates-by-sub-service', [HomeController::class, 'getProfessionalRatesBySubService'])->name('get.professional.rates.availability');
 
 Route::get('about', function () {
-    $about_us = AboutUs::latest()->get();
-    $whychooses = Whychoose::latest()->get();
-    $testimonials = Testimonial::latest()->get();
-    $banners = AboutBanner::latest()->get();
-    $aboutexperiences = AboutExperience::latest()->get();
-    $abouthowweworks = AboutHowWeWork::latest()->get();
-    $aboutfaqs = AboutFAQ::latest()->get();
-    $services = Service::latest()->get();
+    $about = AboutUs::latest()->first();
+    $aboutImage = ($about && $about->image && is_file(public_path('storage/'.$about->image)))
+        ? asset('storage/'.$about->image)
+        : null;
+    $storyImage = is_file(public_path('frontend/assets/img/professionals_photos/about-work-section.jpeg'))
+        ? asset('frontend/assets/img/professionals_photos/about-work-section.jpeg')
+        : $aboutImage;
+    $services = Service::query()->where('status', 'active')->orderBy('name')->get();
+    $testimonials = Testimonial::query()
+        ->whereNotNull('description')
+        ->where('description', '!=', '')
+        ->latest()
+        ->get();
+    $listedProfessionals = Professional::query()
+        ->where('status', 'accepted')
+        ->where('active', true)
+        ->count();
 
-    return view('frontend.sections.about', compact('services', 'about_us', 'whychooses', 'testimonials', 'banners', 'aboutexperiences', 'abouthowweworks', 'aboutfaqs'));
-});
+    return view('frontend.sections.about', compact(
+        'aboutImage',
+        'storyImage',
+        'services',
+        'testimonials',
+        'listedProfessionals'
+    ));
+})->name('about');
 Route::get('/eventlist', function (Request $request) {
+    if (! config('yuktione.programmes_enabled')) {
+        return redirect()->route('gridlisting');
+    }
+
     $filter = $request->query('filter');
     $category = $request->query('category');
     $price_range = $request->query('price_range');
@@ -257,9 +350,17 @@ Route::get('/eventlist', function (Request $request) {
     return view('frontend.sections.eventlist', compact('events', 'services', 'filter', 'categories', 'category', 'price_range', 'cities', 'city', 'event_modes', 'event_mode'));
 })->name('event.list');
 Route::get('/programmes', function (Request $request) {
+    if (! config('yuktione.programmes_enabled')) {
+        return redirect()->route('gridlisting');
+    }
+
     return redirect()->route('event.list', $request->query(), 302);
 })->name('programmes.index');
 Route::get('/allevent/{id}', function ($id) {
+    if (! config('yuktione.programmes_enabled')) {
+        return redirect()->route('gridlisting');
+    }
+
     // Try to find in AllEvent (this table has status column)
     $allEvent = AllEvent::where('id', $id)
         ->where('status', 'approved')
@@ -315,9 +416,17 @@ Route::get('/allevent/{id}', function ($id) {
     return view('frontend.sections.allevent', compact('event', 'services', 'eventfaqs', 'eventDetail'));
 })->name('event.details');
 Route::get('/programmes/{id}', function ($id) {
+    if (! config('yuktione.programmes_enabled')) {
+        return redirect()->route('gridlisting');
+    }
+
     return redirect()->to(url('/allevent/' . $id), 302);
 })->whereNumber('id')->name('programmes.show');
 Route::get('allevent', function ($id) {
+    if (! config('yuktione.programmes_enabled')) {
+        return redirect()->route('gridlisting');
+    }
+
     $eventdetails = Eventdetail::with('event')->latest()->get();
     // dd($eventdetails);
     $eventfaqs = EventFAQ::latest()->get();
@@ -326,7 +435,13 @@ Route::get('allevent', function ($id) {
     return view('frontend.sections.allevent', compact('eventdetails', 'eventfaqs', 'event'));
 });
 
-Route::get('/allevents', [EventController::class, 'index'])->name('allevents');
+Route::get('/allevents', function () {
+    if (! config('yuktione.programmes_enabled')) {
+        return redirect()->route('gridlisting');
+    }
+
+    return app(EventController::class)->index();
+})->name('allevents');
 Route::get('/service/{service:slug}', [ServiceController::class, 'show'])->name('service.show');
 Route::get('/service/{service:slug}/questions', [HomeController::class, 'getServiceQuestions'])->name('service.questions');
 
@@ -425,16 +540,12 @@ Route::get('contact', function () {
     return view('frontend.sections.contact', compact('contactbanners', 'contactdetails', 'services'));
 });
 
-Route::get('help', function () {
-    $services = Service::latest()->get();
-    return view('frontend.sections.help', compact('services'));
-});
-
 Route::get('influencer', function () {
     return view('frontend.sections.influencer');
 });
 Route::get('stylist', function () {
-    return view('frontend.sections.stylist');
+    // Legacy landing template is missing; send visitors to Explore.
+    return redirect()->route('gridlisting');
 });
 Route::get('job', function () {
     return view('frontend.sections.job');
@@ -452,9 +563,7 @@ Route::get('astro', function () {
     return view('frontend.sections.astro');
 });
 Route::get('blog-post', function () {
-    $blogbanners = BlogBanner::latest()->get();
-
-    return view('frontend.sections.blog-post', compact('blogbanners'));
+    return redirect()->route('blog.index');
 });
 
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');

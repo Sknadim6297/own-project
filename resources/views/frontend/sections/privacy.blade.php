@@ -1,82 +1,18 @@
 @extends('layouts.layout')
-@section('styles')
-   {{-- <link rel="stylesheet" href="{{ asset('admin/css/styles.css') }}" /> --}}
-   {{-- <link rel="stylesheet" href="{{ asset('frontend/assets/css/help.css') }}"> --}}
-   <style>
-       .terms-data {
-           background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-           color: #ffffff;
-       }
-       .terms-data .main_title h2 {
-           color: #ffffff;
-       }
-       .terms-data .main_title p {
-           color: #ecf0f1;
-       }
-       .terms-data .content {
-           background: rgba(255, 255, 255, 0.05);
-           border-radius: 10px;
-           padding: 30px;
-           backdrop-filter: blur(10px);
-           border: 1px solid rgba(255, 255, 255, 0.1);
-       }
-       .terms-data .content h3 {
-           color: #3498db;
-           margin-top: 30px;
-           margin-bottom: 15px;
-           font-weight: 600;
-       }
-       .terms-data .content h4 {
-           color: #e74c3c;
-           margin-top: 25px;
-           margin-bottom: 12px;
-           font-weight: 500;
-       }
-       .terms-data .content p {
-           line-height: 1.8;
-           margin-bottom: 20px;
-           color: #ecf0f1;
-       }
-       .terms-data .content strong {
-           color: #f39c12;
-       }
-       .terms-data .content ul {
-           color: #ecf0f1;
-           line-height: 1.8;
-           margin-bottom: 20px;
-       }
-       .terms-data .content li {
-           margin-bottom: 8px;
-       }
-   </style>
-@endsection
-@section('content')
 
-<main>
-    <div class="hero_single inner_pages professional-details">
-        <div class="opacity-mask" data-opacity-mask="rgba(0, 0, 0, 0.7)">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-xl-9 col-lg-12 col-md-8">
-                        <h1>Privacy & Policy</h1>
-                        <p>Your privacy is important to us. Please read our privacy policy carefully.</p>
-                    </div>
-                </div>
-                <!-- /row -->
-            </div>
-        </div>
-    </div>
-    <!-- /error -->	
-     
-    <section class="terms-data py-5">
-        <div class="container my-5">
-            <div class="main_title center">
-                <span><em></em></span>
-                <h2>Privacy Policy</h2>
-                <p>Tazen (Part of Suntree Consulting LLP)</p>
-            </div>
-            <div class="content">
-                <p><strong>Tazen (Part of Suntree Consulting LLP)</strong> its affiliated companies are committed to protecting the personal information of its users. Please read this Privacy Policy carefully to understand how Tazen processes personal information of its users and other visitors browsing the Site ("users") in connection with the Site and other services provided by Tazen as well as privacy practices that apply to affiliates, influencers and other collaborators.</p>
+@section('title', 'Privacy Policy | YuktiOne')
+@section('meta_description', 'How YuktiOne collects, uses, and protects personal information.')
+
+@section('content')
+<x-yuktione.page
+    title="Privacy Policy"
+    lead="Your privacy is important to us. Please read how personal information is collected and used."
+    crumb="Privacy"
+>
+    <article class="yk-doc__article">
+        <p class="yk-doc__kicker">Privacy policy</p>
+        <h2>Tazen (Part of Suntree Consulting LLP)</h2>
+                <p><strong>Tazen (Part of Suntree Consulting LLP)</strong> Its affiliated companies are committed to protecting the personal information of its users. Please read this Privacy Policy carefully to understand how Tazen processes personal information of its users and other visitors browsing the Site ("users") in connection with the Site and other services provided by Tazen as well as privacy practices that apply to affiliates, influencers and other collaborators.</p>
 
                 <p>By accessing or using Tazen.in, the Tazen mobile app, or any other related sites, applications, services and goods, or any other website operated by Tazen that links to this policy (each, the "Site"), as well as by registering to a Tazen account or to our affiliate, influencer or similar program, you acknowledge that you have read and understood this Policy. This Policy may change from time to time; any changes we make to this Policy will be posted on this Site, we will also take any other steps, to the extent required by applicable law, including notifying you about material changes.</p>
 
@@ -248,9 +184,6 @@
                 <h3>11. Contact Us</h3>
 
                 <p>If you have any questions (or comments) concerning this Policy, please email our team at <strong>help@Tazen.com</strong>, and we will make an effort to reply within a reasonable timeframe.</p>
-            </div>
-        </div>
-    </section>
-</main>
-
+    </article>
+</x-yuktione.page>
 @endsection

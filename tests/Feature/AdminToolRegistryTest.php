@@ -114,9 +114,9 @@ class AdminToolRegistryTest extends TestCase
         $registrar->register();
         $registrar->register();
 
-        $this->assertSame(1, ToolCategory::query()->count());
-        $this->assertSame(3, Tool::query()->count());
-        $this->assertSame(2, Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->whereNull('route_name')->count());
+        $this->assertSame(3, ToolCategory::query()->count());
+        $this->assertSame(9, Tool::query()->count());
+        $this->assertSame(8, Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->whereNull('route_name')->count());
         $mood = Tool::query()->where('slug', 'daily-mood-check-in')->firstOrFail();
         $this->assertSame('active', $mood->status);
         $this->assertTrue($mood->is_implemented);
@@ -136,6 +136,8 @@ class AdminToolRegistryTest extends TestCase
             ->assertSee('Daily Mood Check-in')
             ->assertSee('Digital Journal')
             ->assertSee('Gratitude Journal')
+            ->assertSee('Career Interest Test')
+            ->assertSee('BMI & BMR Calculator')
             ->assertSee('Coming Soon')
             ->assertDontSee('>Enable<', false);
 
@@ -195,8 +197,8 @@ class AdminToolRegistryTest extends TestCase
             ])
             ->assertRedirect(route('admin.tool-settings.edit'));
 
-        $this->assertSame(2, Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->count());
-        $this->assertSame(3, Tool::query()->where('access_type', 'paid')->count());
+        $this->assertSame(8, Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->count());
+        $this->assertSame(9, Tool::query()->where('access_type', 'paid')->count());
         $published = Tool::query()->where('slug', 'daily-mood-check-in')->firstOrFail();
         $this->assertSame('tools.psychology.mood', $published->route_name);
         $this->assertSame('active', $published->status);
@@ -242,6 +244,8 @@ class AdminToolRegistryTest extends TestCase
             ->assertSee(route('tools.psychology.mood'), false)
             ->assertDontSee('Digital Journal')
             ->assertDontSee('Gratitude Journal')
+            ->assertDontSee('Career Interest Test')
+            ->assertDontSee('Calorie & Nutrition Tracker')
             ->assertDontSee('Extra Tool')
             ->assertDontSee(route('tools.psychology.mood.history'), false);
 

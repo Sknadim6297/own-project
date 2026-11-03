@@ -463,7 +463,20 @@ Route::middleware(['auth:admin', 'admin.menu'])->group(function () {
     Route::middleware(['auth:admin', 'admin.menu'])->group(function () {
         Route::get('tools/psychology/settings', [\App\Http\Controllers\Admin\PsychologySettingController::class, 'edit'])->name('psychology.settings.edit');
         Route::put('tools/psychology/settings', [\App\Http\Controllers\Admin\PsychologySettingController::class, 'update'])->name('psychology.settings.update');
+        Route::get('nutrition-foods', [\App\Http\Controllers\Admin\NutritionFoodController::class, 'index'])->name('nutrition-foods.index');
+        Route::get('nutrition-foods/create', [\App\Http\Controllers\Admin\NutritionFoodController::class, 'create'])->name('nutrition-foods.create');
+        Route::post('nutrition-foods', [\App\Http\Controllers\Admin\NutritionFoodController::class, 'store'])->name('nutrition-foods.store');
+        Route::get('nutrition-foods/{nutritionFood}/edit', [\App\Http\Controllers\Admin\NutritionFoodController::class, 'edit'])->name('nutrition-foods.edit');
+        Route::put('nutrition-foods/{nutritionFood}', [\App\Http\Controllers\Admin\NutritionFoodController::class, 'update'])->name('nutrition-foods.update');
+        Route::post('nutrition-foods/{nutritionFood}/review', [\App\Http\Controllers\Admin\NutritionFoodController::class, 'review'])->name('nutrition-foods.review');
+        Route::post('nutrition-foods/categories', [\App\Http\Controllers\Admin\NutritionFoodController::class, 'storeCategory'])->name('nutrition-foods.categories.store');
+        Route::get('nutrition-imports', [\App\Http\Controllers\Admin\NutritionImportBatchController::class, 'index'])->name('nutrition-imports.index');
+        Route::get('nutrition-imports/duplicates', [\App\Http\Controllers\Admin\NutritionImportBatchController::class, 'duplicates'])->name('nutrition-imports.duplicates');
+        Route::post('nutrition-imports/duplicates/{duplicate}', [\App\Http\Controllers\Admin\NutritionImportBatchController::class, 'decideDuplicate'])->name('nutrition-imports.duplicates.decide');
+        Route::get('nutrition-imports/{nutritionImportBatch}', [\App\Http\Controllers\Admin\NutritionImportBatchController::class, 'show'])->name('nutrition-imports.show');
+
         Route::get('tools', [\App\Http\Controllers\Admin\ToolRegistryController::class, 'index'])->name('tools.index');
+
         Route::get('tools/{tool}/edit', [\App\Http\Controllers\Admin\ToolRegistryController::class, 'edit'])->name('tools.edit');
         Route::put('tools/{tool}', [\App\Http\Controllers\Admin\ToolRegistryController::class, 'update'])->name('tools.update');
         Route::post('tools/{tool}/toggle', [\App\Http\Controllers\Admin\ToolRegistryController::class, 'toggle'])->name('tools.toggle');

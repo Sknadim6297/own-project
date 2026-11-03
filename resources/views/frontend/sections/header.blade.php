@@ -45,12 +45,6 @@
             'placeholder' => false,
         ],
         [
-            'label' => 'Programmes',
-            'href' => route('programmes.index'),
-            'active' => request()->routeIs('programmes.*', 'event.list', 'event.details'),
-            'placeholder' => false,
-        ],
-        [
             'label' => 'Community',
             'href' => '#',
             'active' => false,
@@ -63,6 +57,15 @@
             'placeholder' => true,
         ],
     ];
+
+    if (config('yuktione.programmes_enabled')) {
+        array_splice($navLinks, 3, 0, [[
+            'label' => 'Programmes',
+            'href' => route('programmes.index'),
+            'active' => request()->routeIs('programmes.*', 'event.list', 'event.details'),
+            'placeholder' => false,
+        ]]);
+    }
 @endphp
 
 <header class="yk-navbar" id="tazen-public-header" data-public-header>

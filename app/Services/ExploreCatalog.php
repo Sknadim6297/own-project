@@ -73,6 +73,9 @@ class ExploreCatalog
         if (!in_array($type, ['all', 'experts', 'tools', 'programmes', 'articles'], true)) {
             $type = 'all';
         }
+        if (! $this->programmesEnabled() && $type === 'programmes') {
+            $type = 'all';
+        }
 
         $category = (string) $request->query('category', '');
         if (!array_key_exists($category, self::CATEGORIES)) {
@@ -106,7 +109,10 @@ class ExploreCatalog
 
         $view = $request->query('view') === 'list' ? 'list' : 'grid';
 
-        $types = array_values(array_intersect((array) $request->query('types', []), ['experts', 'programmes', 'articles']));
+        $allowedTypes = $this->programmesEnabled()
+            ? ['experts', 'programmes', 'articles']
+            : ['experts', 'articles'];
+        $types = array_values(array_intersect((array) $request->query('types', []), $allowedTypes));
         $price = array_values(array_intersect((array) $request->query('price', []), ['free', 'paid']));
         $rating = array_values(array_intersect((array) $request->query('rating', []), ['4.5', '4', '3.5']));
         $availability = array_values(array_intersect((array) $request->query('availability', []), ['now', 'anytime']));
@@ -533,7 +539,7 @@ class ExploreCatalog
 
         return [
             'experts' => $this->expertIdQuery($filters)->count(),
-            'programmes' => $this->programmeIdQuery($filters)->count(),
+            'programmes' => $this->programmesEnabled() ? $this->programmeIdQuery($filters)->count() : 0,
             'articles' => $this->articleIdQuery($filters)->count(),
             'tools' => 0,
         ];
@@ -707,6 +713,9 @@ class ExploreCatalog
 
     private function includes(string $kind, array $filters): bool
     {
+        if ($kind === 'programmes' && ! $this->programmesEnabled()) {
+            return false;
+        }
         if ($filters['type'] === 'tools') {
             return false;
         }
@@ -729,10 +738,17 @@ class ExploreCatalog
             return [$filters['type']];
         }
         if ($filters['types'] === []) {
-            return ['experts', 'programmes', 'articles'];
+            return $this->programmesEnabled()
+                ? ['experts', 'programmes', 'articles']
+                : ['experts', 'articles'];
         }
 
         return $filters['types'];
+    }
+
+    private function programmesEnabled(): bool
+    {
+        return (bool) config('yuktione.programmes_enabled', true);
     }
 
     private function tab(array $filters): string

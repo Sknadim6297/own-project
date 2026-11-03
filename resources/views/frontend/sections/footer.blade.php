@@ -9,30 +9,25 @@
                 <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="Yuktione" width="300" height="100" loading="lazy">
             </a>
             <p>Discover trusted professionals and services for your next step.</p>
-            <nav class="tazen-footer__social" aria-label="Tazen on social media">
-                <a href="https://www.facebook.com/share/18vaMJRLFG/" target="_blank" rel="noopener noreferrer" aria-label="Tazen on Facebook">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.2v2.2H7.7V13h2.7v8h3.1Z"></path></svg>
-                    <span>Facebook</span>
+            <h2 class="tazen-footer__social-title">Connect With Us</h2>
+            <nav class="tazen-footer__social" aria-label="Connect with us">
+                <a class="is-facebook" href="https://www.facebook.com/share/18vaMJRLFG/" target="_blank" rel="noopener noreferrer" aria-label="YuktiOne on Facebook" title="Facebook">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14.5 8.5V6.8c0-.7.5-1 1.2-1H17V3h-2.1C12.2 3 11 4.5 11 6.6v1.9H9v2.7h2V21h3.1v-9.8h2.4l.4-2.7h-2.8Z"></path></svg>
                 </a>
-                <a href="https://www.instagram.com/tazen.in?igsh=eml2bnhsMTdvaTlj" target="_blank" rel="noopener noreferrer" aria-label="Tazen on Instagram">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle class="tazen-footer__social-dot" cx="17.5" cy="6.8" r="1"></circle></svg>
-                    <span>Instagram</span>
+                <a class="is-instagram" href="https://www.instagram.com/tazen.in?igsh=eml2bnhsMTdvaTlj" target="_blank" rel="noopener noreferrer" aria-label="YuktiOne on Instagram" title="Instagram">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.4" cy="6.6" r="1"></circle></svg>
                 </a>
-                <a href="https://www.linkedin.com/company/tazen/" target="_blank" rel="noopener noreferrer" aria-label="Tazen on LinkedIn">
+                <a class="is-linkedin" href="https://www.linkedin.com/company/tazen/" target="_blank" rel="noopener noreferrer" aria-label="YuktiOne on LinkedIn" title="LinkedIn">
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5.2 8.5a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6ZM3.7 10h3v10h-3zM9 10h2.9v1.4h.1a3.2 3.2 0 0 1 2.9-1.6c3.1 0 3.7 2 3.7 4.6V20h-3v-5c0-1.2 0-2.7-1.7-2.7s-2 1.3-2 2.6V20H9z"></path></svg>
-                    <span>LinkedIn</span>
                 </a>
-                <a href="https://www.youtube.com/@Tazenofficial1" target="_blank" rel="noopener noreferrer" aria-label="Tazen on YouTube">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 7.2 8.5 4.8L9 16.8z"></path></svg>
-                    <span>YouTube</span>
+                <a class="is-youtube" href="https://www.youtube.com/@Tazenofficial1" target="_blank" rel="noopener noreferrer" aria-label="YuktiOne on YouTube" title="YouTube">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M23 12.2s0-3.2-.4-4.6c-.2-.9-.9-1.6-1.8-1.8C19.2 5.4 12 5.4 12 5.4s-7.2 0-8.8.4c-.9.2-1.6.9-1.8 1.8C1 9 1 12.2 1 12.2s0 3.2.4 4.6c.2.9.9 1.6 1.8 1.8 1.6.4 8.8.4 8.8.4s7.2 0 8.8-.4c.9-.2 1.6-.9 1.8-1.8.4-1.4.4-4.6.4-4.6ZM9.8 15.5v-6.6l6.2 3.3-6.2 3.3Z"></path></svg>
                 </a>
-                <a href="https://x.com/Tazenofficial_" target="_blank" rel="noopener noreferrer" aria-label="Tazen on X">
+                <a class="is-x" href="https://x.com/Tazenofficial_" target="_blank" rel="noopener noreferrer" aria-label="YuktiOne on X" title="X">
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18.9 3H22l-6.8 7.8L23.2 21h-6.3L12 14.7 6.5 21H3.3l7.3-8.4L2.8 3h6.5l4.5 5.9L18.9 3Zm-1.1 16h1.7L8.2 4.9H6.4L17.8 19Z"></path></svg>
-                    <span>X</span>
                 </a>
-                <a href="https://wa.me/+919147421560?text=Hello%20Tazen!%20I%20need%20assistance%20with%20your%20services." target="_blank" rel="noopener noreferrer" aria-label="Tazen on WhatsApp">
+                <a class="is-whatsapp" href="https://wa.me/+919147421560?text=Hello%20Tazen!%20I%20need%20assistance%20with%20your%20services." target="_blank" rel="noopener noreferrer" aria-label="YuktiOne on WhatsApp" title="WhatsApp">
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.5a9.3 9.3 0 0 0-8 14l-1.2 4.4 4.5-1.2A9.5 9.5 0 1 0 12 2.5Zm0 17.1a7.6 7.6 0 0 1-3.9-1.1l-.3-.2-2.7.7.7-2.6-.2-.3A7.6 7.6 0 1 1 12 19.6Zm4.2-5.7c-.2-.1-1.3-.7-1.5-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.8.9-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.8-1.1-.6-.5-1.1-1.2-1.2-1.4-.1-.2 0-.4.1-.5l.4-.5.2-.4c.1-.2 0-.3 0-.5l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.1s.9 2.4 1 2.5c.1.2 1.8 2.7 4.3 3.8.6.3 1.1.4 1.4.5.6.2 1.2.2 1.6.1.5-.1 1.3-.5 1.5-1 .2-.5.2-.9.1-1-.1-.1-.3-.2-.5-.3Z"></path></svg>
-                    <span>WhatsApp</span>
                 </a>
             </nav>
         </div>
@@ -54,7 +49,9 @@
                 <li><a href="{{ route('gridlisting') }}">Explore Services</a></li>
                 <li><a href="{{ url('/help') }}">Help</a></li>
                 <li><a href="{{ route('blog.index') }}">Blog</a></li>
-                <li><a href="{{ route('programmes.index') }}">Programmes</a></li>
+                @if (config('yuktione.programmes_enabled'))
+                    <li><a href="{{ route('programmes.index') }}">Programmes</a></li>
+                @endif
                 <li><a href="{{ url('/contact') }}">Contact Us</a></li>
             </ul>
         </nav>

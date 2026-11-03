@@ -483,9 +483,17 @@
                                 </ul>
                             </li>
                             @endif
+                            <li class="slide">
+                                <a href="{{ route('admin.nutrition-foods.index') }}" class="side-menu__item">Nutrition Foods</a>
+                            </li>
+                            <li class="slide">
+                                <a href="{{ route('admin.nutrition-imports.index') }}" class="side-menu__item">Nutrition Imports</a>
+                            </li>
+
                         </ul>
                     </li>
                     @endif
+
                     @if($isMenuAccessible('reviews'))
                     <li class="slide has-sub">
     <a href="javascript:void(0);" class="side-menu__item">

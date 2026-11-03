@@ -1,0 +1,64 @@
+/* YuktiOne token overlay for legacy customer booking screens.
+   Keeps existing markup/layout; only restyles colours/typography. */
+[data-yuktione-panel="customer"] {
+    --yk-navy: #0b2048;
+    --yk-teal: #316d61;
+    --yk-mint: #eaf6f2;
+    --yk-lavender: #9d81db;
+    --yk-line: #e6ebf2;
+    font-family: "DM Sans", sans-serif;
+}
+
+[data-yuktione-panel="customer"] .bg_gray.pattern,
+[data-yuktione-panel="customer"] main.bg_gray {
+    background:
+        radial-gradient(circle at 10% 0%, rgba(157, 129, 219, 0.12), transparent 28%),
+        radial-gradient(circle at 90% 8%, rgba(49, 109, 97, 0.1), transparent 26%),
+        #f7faf9 !important;
+}
+
+[data-yuktione-panel="customer"] .btn_1,
+[data-yuktione-panel="customer"] .btn-primary,
+[data-yuktione-panel="customer"] button.btn_1,
+[data-yuktione-panel="customer"] a.btn_1 {
+    background: var(--yk-teal) !important;
+    border-color: var(--yk-teal) !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+
+[data-yuktione-panel="customer"] .btn_1:hover,
+[data-yuktione-panel="customer"] .btn-primary:hover,
+[data-yuktione-panel="customer"] a.btn_1:hover {
+    background: #28584e !important;
+    border-color: #28584e !important;
+    color: #fff !important;
+}
+
+[data-yuktione-panel="customer"] h1,
+[data-yuktione-panel="customer"] h2,
+[data-yuktione-panel="customer"] h3,
+[data-yuktione-panel="customer"] h4 {
+    color: var(--yk-navy) !important;
+}
+
+[data-yuktione-panel="customer"] .box_booking,
+[data-yuktione-panel="customer"] .box_booking_2,
+[data-yuktione-panel="customer"] .booking-card,
+[data-yuktione-panel="customer"] .card {
+    border-color: var(--yk-line) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 28px rgba(11, 32, 72, 0.06) !important;
+}
+
+[data-yuktione-panel="customer"] a:not(.btn_1):not(.btn-primary) {
+    color: var(--yk-teal);
+}
+
+[data-yuktione-panel="customer"] .form-control:focus,
+[data-yuktione-panel="customer"] input:focus,
+[data-yuktione-panel="customer"] select:focus,
+[data-yuktione-panel="customer"] textarea:focus {
+    border-color: var(--yk-teal) !important;
+    box-shadow: 0 0 0 3px rgba(49, 109, 97, 0.15) !important;
+}

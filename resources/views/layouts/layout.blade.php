@@ -61,37 +61,7 @@
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/all.css">
 
-<!-- SPECIFIC CSS -->
-<link href="{{ asset('frontend/assets/css/home.css') }}" rel="stylesheet">
-
-<!-- YOUR CUSTOM CSS -->
-<link href="{{ asset('frontend/assets/css/custom.css') }}" rel="stylesheet">
-{{-- <link rel="stylesheet" href="{{ asset('frontend/assets/css/new-style.css') }}"> --}}
-{{-- <link rel="stylesheet" href="{{ asset('frontend/assets/css/testi.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/listing.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/details.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/detail-page.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/event-list.css') }}"> --}}
-{{-- <link rel="stylesheet" href="{{ asset('frontend/assets/css/blog.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/owl2.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/aos.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/astro.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/campaign.css') }}"> --}}
-{{-- <link rel="stylesheet" href="{{ asset('frontend/assets/style.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/responsive.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/slick.min.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/campaign-detail.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/swiper-bundle.min.css') }}"> --}}
-{{-- <link rel="stylesheet" href="{{ asset('frontend/assets/css/newsliders.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/newslidertwo.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/account.css') }}">
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/contacts.css') }}"> --}}
-{{-- <link rel="stylesheet" href="{{ asset('frontend/assets/css/blog.css') }}"> --}}
-@yield('styles')
-@stack('styles')
- 
-
-	<!-- slick slider css  -->
+	<!-- slick / owl kept for pages that still initialise those carousels -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
@@ -109,6 +79,7 @@
 	<link rel="stylesheet" href="{{ asset('frontend/assets/css/responsive2.css') }}" media="screen and (max-width: 992px)">
 
 	@yield('styles')
+	@stack('styles')
 
 	<!-- Bootstrap Bundle -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -203,6 +174,7 @@
 	@vite('resources/css/yuktione-feedback.css')
 	@if ($isCustomerPanelFlow)
 		@vite('resources/css/customer-panel.css')
+		<link href="{{ asset('frontend/assets/css/yuktione-booking.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-booking.css')) }}" rel="stylesheet">
 	@endif
 	<link href="{{ asset('frontend/assets/css/tazen-public-chrome.css') }}?v={{ filemtime(public_path('frontend/assets/css/tazen-public-chrome.css')) }}" rel="stylesheet">
 	@if (request()->routeIs('home'))
@@ -212,16 +184,18 @@
 		<link href="{{ asset('frontend/assets/css/yuktione-tools.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-insights.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-insights.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-talk.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-talk.css')) }}" rel="stylesheet">
-		<link href="{{ asset('frontend/assets/css/yuktione-programmes.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-programmes.css')) }}" rel="stylesheet">
+		@if (config('yuktione.programmes_enabled'))
+			<link href="{{ asset('frontend/assets/css/yuktione-programmes.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-programmes.css')) }}" rel="stylesheet">
+		@endif
 		<link href="{{ asset('admin/assets/css/icons.css') }}" rel="stylesheet">
 	@endif
-	@if (request()->routeIs('event.list', 'event.details'))
+	@if (config('yuktione.programmes_enabled') && request()->routeIs('event.list', 'event.details'))
 		<link href="{{ asset('frontend/assets/css/yuktione-programmes.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-programmes.css')) }}" rel="stylesheet">
 	@endif
-	@if (request()->routeIs('gridlisting'))
+	@if (request()->routeIs('gridlisting', 'professionals'))
 		<link href="{{ asset('frontend/assets/css/yuktione-explore.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-explore.css')) }}" rel="stylesheet">
 	@endif
-	@if (request()->routeIs('tools.index'))
+	@if (request()->routeIs('tools.index', 'professionals'))
 		<link href="{{ asset('frontend/assets/css/yuktione-tools-page.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools-page.css')) }}" rel="stylesheet">
 	@endif
 	@if (request()->routeIs('tools.psychology'))
@@ -230,7 +204,27 @@
 	@if (request()->routeIs('tools.psychology.mood', 'tools.psychology.mood.emotions', 'tools.psychology.mood.reflection', 'tools.psychology.mood.finish', 'tools.psychology.mood.complete', 'tools.psychology.mood.history'))
 		<link href="{{ asset('frontend/assets/css/yuktione-mood.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-mood.css')) }}" rel="stylesheet">
 	@endif
+	@if (request()->routeIs('tools.career-interest*'))
+		<link href="{{ asset('frontend/assets/css/yuktione-career-interest.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-career-interest.css')) }}" rel="stylesheet">
+	@endif
+	@if (request()->routeIs('tools.skills-strengths*'))
+		<link href="{{ asset('frontend/assets/css/yuktione-skills-strengths.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-skills-strengths.css')) }}" rel="stylesheet">
+	@endif
+	@if (request()->routeIs('tools.bmi-bmr*'))
+		<link href="{{ asset('frontend/assets/css/yuktione-bmi-bmr.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-bmi-bmr.css')) }}" rel="stylesheet">
+	@endif
+	@if (request()->routeIs('tools.water-intake*'))
+		<link href="{{ asset('frontend/assets/css/yuktione-water-intake.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-water-intake.css')) }}" rel="stylesheet">
+	@endif
+	@if (request()->routeIs('tools.weight-journey*'))
+		<link href="{{ asset('frontend/assets/css/yuktione-weight-journey.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-weight-journey.css')) }}" rel="stylesheet">
+	@endif
+	@if (request()->routeIs('tools.nutrition*'))
+		<link href="{{ asset('frontend/assets/css/yuktione-nutrition.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-nutrition.css')) }}" rel="stylesheet">
+	@endif
 	<link href="{{ asset('frontend/assets/css/yuktione-navbar.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-navbar.css')) }}" rel="stylesheet">
+
+	<link href="{{ asset('frontend/assets/css/yuktione-document.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-document.css')) }}" rel="stylesheet">
 	@endif
 </head>
 
@@ -676,12 +670,14 @@ $(document).ready(function () {
 	@if (request()->routeIs('home'))
 		<script src="{{ asset('frontend/assets/js/yuktione-home.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-home.js')) }}"></script>
 		<script src="{{ asset('frontend/assets/js/home-category-slider.js') }}?v={{ filemtime(public_path('frontend/assets/js/home-category-slider.js')) }}"></script>
+		@if (config('yuktione.programmes_enabled'))
+			<script src="{{ asset('frontend/assets/js/yuktione-programmes.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-programmes.js')) }}"></script>
+		@endif
+	@endif
+	@if (config('yuktione.programmes_enabled') && request()->routeIs('event.list'))
 		<script src="{{ asset('frontend/assets/js/yuktione-programmes.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-programmes.js')) }}"></script>
 	@endif
-	@if (request()->routeIs('event.list'))
-		<script src="{{ asset('frontend/assets/js/yuktione-programmes.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-programmes.js')) }}"></script>
-	@endif
-	@if (request()->routeIs('event.details'))
+	@if (config('yuktione.programmes_enabled') && request()->routeIs('event.details'))
 		<script src="{{ asset('frontend/assets/js/yuktione-programmes.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-programmes.js')) }}"></script>
 	@endif
 	@endif

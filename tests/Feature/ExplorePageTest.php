@@ -149,13 +149,20 @@ class ExplorePageTest extends TestCase
             ->assertSee('Explore what')
             ->assertSee('speaks to you.')
             ->assertSee('Visible Expert')
-            ->assertSee('Visible Programme')
             ->assertSee('Visible Article')
             ->assertDontSee('Hidden Expert')
             ->assertDontSee('Hidden Programme')
             ->assertDontSee('Hidden Article')
             ->assertSee('family=DM+Sans', false)
             ->assertSee('Tools are not published as a catalogue yet.');
+
+        // Programmes stay hidden while config('yuktione.programmes_enabled') is false.
+        if (! config('yuktione.programmes_enabled')) {
+            $response->assertDontSee('Visible Programme')
+                ->assertDontSee('Programmes', false);
+        } else {
+            $response->assertSee('Visible Programme');
+        }
     }
 
     public function test_explore_search_and_tools_tab_stay_honest(): void

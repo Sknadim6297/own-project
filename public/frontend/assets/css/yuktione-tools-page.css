@@ -607,3 +607,31 @@
         border-radius: 16px 16px 0 0;
     }
 }
+
+.yk-experts__toolbar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.yk-experts__toolbar-actions select {
+    min-height: 38px;
+    border: 1px solid #e3e8ee;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--yk-navy, #0b2048);
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0 0.9rem;
+}
+
+.yk-experts__results .yk-explore__grid {
+    margin-top: 0.15rem;
+}
+
+.yk-experts__results .yk-explore__pages {
+    margin-top: 1rem;
+}

@@ -61,8 +61,8 @@
                         <path d="M23 10h3a2 2 0 0 1 2 2v14H10m1-15h7m-7 4h7"/>
                     </svg>
                 </span>
-                <h3>Programmes &amp; Insights</h3>
-                <p>Discover workshops, programmes and helpful articles.</p>
+                <h3>{{ config('yuktione.programmes_enabled') ? 'Programmes & Insights' : 'Insights & Guidance' }}</h3>
+                <p>{{ config('yuktione.programmes_enabled') ? 'Discover workshops, programmes and helpful articles.' : 'Discover helpful articles and expert guidance.' }}</p>
                 <span class="yk-home-experience-card__index" aria-hidden="true">04</span>
             </article>
         </div>

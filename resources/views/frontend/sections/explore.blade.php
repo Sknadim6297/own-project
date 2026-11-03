@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('title', 'Explore | YuktiOne')
-@section('meta_description', 'Discover experts, programmes and articles to support your journey.')
+@section('meta_description', 'Discover experts and articles to support your journey.')
 @section('body_class', 'yk-explore-page')
 
 @php
@@ -32,10 +32,22 @@
         'all' => 'All',
         'experts' => 'Experts',
         'tools' => 'Tools',
-        'programmes' => 'Programmes',
         'articles' => 'Articles',
     ];
+    if (config('yuktione.programmes_enabled')) {
+        $tabs = [
+            'all' => 'All',
+            'experts' => 'Experts',
+            'tools' => 'Tools',
+            'programmes' => 'Programmes',
+            'articles' => 'Articles',
+        ];
+    }
     $topics = ['Anxiety', 'Relationships', 'Career', 'Money', 'Meditation', 'Nutrition'];
+    $contentTypes = ['experts' => 'Experts', 'tools' => 'Tools', 'articles' => 'Articles'];
+    if (config('yuktione.programmes_enabled')) {
+        $contentTypes = ['experts' => 'Experts', 'tools' => 'Tools', 'programmes' => 'Programmes', 'articles' => 'Articles'];
+    }
 @endphp
 
 @section('content')
@@ -49,12 +61,12 @@
                     <span aria-current="page">Explore</span>
                 </nav>
                 <h1 id="explore-heading">Explore what<br><span>speaks to you.</span></h1>
-                <p class="yk-explore__lead">Discover experts, tools, programmes and articles to support your journey.</p>
+                <p class="yk-explore__lead">Discover experts, tools{{ config('yuktione.programmes_enabled') ? ', programmes' : '' }} and articles to support your journey.</p>
                 <form class="yk-explore__search" action="{{ route('gridlisting') }}" method="get" role="search">
                     @include('frontend.sections.partials.explore-state', ['omit' => ['q']])
-                    <label class="visually-hidden" for="explore-search">Search experts, tools, programmes, topics</label>
+                    <label class="visually-hidden" for="explore-search">Search experts, tools{{ config('yuktione.programmes_enabled') ? ', programmes' : '' }}, topics</label>
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg>
-                    <input id="explore-search" type="search" name="q" value="{{ $filters['q'] }}" placeholder="Search experts, tools, programmes, topics..." autocomplete="off">
+                    <input id="explore-search" type="search" name="q" value="{{ $filters['q'] }}" placeholder="Search experts, tools{{ config('yuktione.programmes_enabled') ? ', programmes' : '' }}, topics..." autocomplete="off">
                     <button type="submit" aria-label="Search">
                         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h12"/><path d="m13 6 6 6-6 6"/></svg>
                     </button>
@@ -115,7 +127,7 @@
 
             <fieldset>
                 <legend>Content Type</legend>
-                @foreach (['experts' => 'Experts', 'tools' => 'Tools', 'programmes' => 'Programmes', 'articles' => 'Articles'] as $key => $label)
+                @foreach ($contentTypes as $key => $label)
                     <label class="@if ($key === 'tools') is-disabled @endif">
                         <input type="checkbox" name="types[]" value="{{ $key }}" @checked(in_array($key, $activeTypes, true)) @disabled($key === 'tools')>
                         <span>{{ $label }}</span>
@@ -217,7 +229,7 @@
             </div>
 
             @if ($tab === 'tools')
-                <p class="yk-explore__empty">YuktiOne does not have a public tools catalogue yet. Experts, programmes and articles are available from the other tabs.</p>
+                <p class="yk-explore__empty">YuktiOne does not have a public tools catalogue yet. Experts{{ config('yuktione.programmes_enabled') ? ', programmes' : '' }} and articles are available from the other tabs.</p>
             @elseif ($items->isEmpty())
                 <p class="yk-explore__empty">No results match these filters. Try another topic or <a href="{{ route('gridlisting') }}">reset Explore</a>.</p>
             @else

@@ -9,20 +9,28 @@ class ContactFormController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name_contact' => 'required|string|max:255',
             'email_contact' => 'required|email|max:255',
-            'phone_contact' => 'required|digits:10',
-            'message_contact' => 'required|string',
-            'verify_contact' => 'required|string'
+            'phone_contact' => 'nullable|digits:10',
+            'subject_contact' => 'nullable|string|max:255',
+            'message_contact' => 'required|string|max:5000',
+            'verify_contact' => 'required|in:4',
+        ], [
+            'verify_contact.in' => 'Please answer the verification question correctly.',
         ]);
 
+        $message = trim($validated['message_contact']);
+        if (filled($validated['subject_contact'] ?? null)) {
+            $message = 'Subject: '.trim($validated['subject_contact'])."\n\n".$message;
+        }
+
         ContactForm::create([
-            'name' => $request->name_contact,
-            'email' => $request->email_contact,
-            'phone' => $request->phone_contact,
-            'message' => $request->message_contact,
-            'verification_answer' => $request->verify_contact
+            'name' => $validated['name_contact'],
+            'email' => $validated['email_contact'],
+            'phone' => $validated['phone_contact'] ?: null,
+            'message' => $message,
+            'verification_answer' => $validated['verify_contact'],
         ]);
 
         return redirect()->back()->with('success', 'Thank you for your message. We will get back to you soon!');

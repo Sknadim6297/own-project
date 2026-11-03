@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Listeners\ClaimBmiBmrDraft;
+use App\Listeners\ClaimCareerInterestDraft;
 use App\Listeners\ClaimMoodCheckinDraft;
+use App\Listeners\ClaimSkillsStrengthsDraft;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -24,6 +27,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         Login::class => [
             ClaimMoodCheckinDraft::class,
+            ClaimCareerInterestDraft::class,
+            ClaimSkillsStrengthsDraft::class,
+            ClaimBmiBmrDraft::class,
         ],
         MessageSent::class => [
             SaveSentEmailToImap::class,

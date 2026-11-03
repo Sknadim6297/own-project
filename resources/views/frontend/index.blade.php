@@ -835,7 +835,9 @@
 
 		<!-- /bg_gray -->
 
-		@include('frontend.home.partials.events')
+		@if (config('yuktione.programmes_enabled'))
+			@include('frontend.home.partials.events')
+		@endif
 		@include('frontend.home.partials.support-cta')
 		@include('frontend.home.partials.how-it-works')
 
