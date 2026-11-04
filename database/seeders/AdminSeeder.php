@@ -7,25 +7,38 @@ use App\Models\AdminMenu;
 use App\Models\AdminMenuPermission;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-
-class AdminSeeder extends Seeder
+    class AdminSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run()
     {
-        // Create super admin if it doesn't exist
-        Admin::firstOrCreate(
-            ['email' => 'admin@gmail.com'],
-            [
-                'name' => 'Super Admin',
-                'password' => Hash::make('admin123'),
+        $adminEmail = env('ADMIN_EMAIL', 'admin@gmail.com');
+        $adminPassword = env('ADMIN_PASSWORD', 'admin123');
+        $adminName = env('ADMIN_NAME', 'Super Admin');
+
+        // Create/update super admin from .env (plain password; Admin model hashed cast handles hashing)
+        $superAdmin = Admin::withTrashed()->where('email', $adminEmail)->first();
+        if (!$superAdmin) {
+            Admin::create([
+                'email' => $adminEmail,
+                'name' => $adminName,
+                'password' => $adminPassword,
                 'role' => 'super_admin',
-                'is_active' => true
-            ]
-        );
+                'is_active' => true,
+            ]);
+        } else {
+            if ($superAdmin->trashed()) {
+                $superAdmin->restore();
+            }
+            $superAdmin->update([
+                'name' => $adminName,
+                'password' => $adminPassword,
+                'role' => 'super_admin',
+                'is_active' => true,
+            ]);
+        }
         
         // Create a regular admin with limited permissions
         $adminEmail = 'regular@example.com';
@@ -35,7 +48,7 @@ class AdminSeeder extends Seeder
             $admin = Admin::create([
                 'email' => $adminEmail,
                 'name' => 'Regular Admin',
-                'password' => Hash::make('password123'),
+                'password' => 'password123',
                 'role' => 'admin',
                 'is_active' => true
             ]);
@@ -44,7 +57,7 @@ class AdminSeeder extends Seeder
             $admin->restore();
             $admin->update([
                 'name' => 'Regular Admin',
-                'password' => Hash::make('password123'),
+                'password' => 'password123',
                 'role' => 'admin',
                 'is_active' => true
             ]);
