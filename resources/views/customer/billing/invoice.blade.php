@@ -319,15 +319,25 @@
                 <tr>
                     <td class="logo-cell">
                         @php
-                            $logoPath = public_path('customer-css/assets/images/tazen_logo.png');
-                            $logoExists = file_exists($logoPath);
+                            $logoCandidates = [
+                                public_path('frontend/assets/Yuktione_logo.png'),
+                                public_path('customer-css/assets/images/tazen_logo.png'),
+                            ];
+                            $logoPath = null;
+                            foreach ($logoCandidates as $candidate) {
+                                if (file_exists($candidate)) {
+                                    $logoPath = $candidate;
+                                    break;
+                                }
+                            }
+                            $brandName = config('yuktione.name', 'YuktiOne');
                         @endphp
-                        
-                        @if($logoExists)
-                            <img src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}" alt="Tazen Logo" class="logo">
+
+                        @if($logoPath)
+                            <img src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}" alt="{{ $brandName }} Logo" class="logo">
                         @else
-                            <div style="font-size: 24px; font-weight: bold; color: black; text-align: center; padding: 12px; border: 1px solid black; width: 270px; height: 80px; line-height: 56px;">
-                                TAZEN
+                            <div style="font-size: 24px; font-weight: bold; color: #142B4D; text-align: center; padding: 12px; border: 1px solid #E2E9EE; width: 270px; height: 80px; line-height: 56px;">
+                                {{ strtoupper($brandName) }}
                             </div>
                         @endif
                     </td>
@@ -618,7 +628,7 @@
         <!-- Footer Note -->
         <div class="footer-note">
             <p>This is a computer generated invoice and does not require physical signature.</p>
-            <p>For any queries regarding this invoice, please contact us at support@tazen.com</p>
+            <p>For any queries regarding this invoice, please contact us at {{ config('yuktione.email', 'info@yuktione.in') }}</p>
             <p><strong>Thank you for choosing our services!</strong></p>
         </div>
     </div>

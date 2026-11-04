@@ -1,468 +1,360 @@
 @extends('customer.layout.layout')
 
-@section('title', 'Additional Service Details')
+@section('title', 'Additional Service Details | Yuktione')
 
 @section('styles')
-
-
-<style>.custom-modal{display:none}.custom-modal.show{display:flex}</style>
+<style>
+.custom-modal{display:none;align-items:center;justify-content:center;position:fixed;inset:0;z-index:50;background:rgb(20 43 77 / 0.45);padding:1rem}
+.custom-modal.show{display:flex}
+.custom-modal .custom-modal-content,.custom-modal .modal-content{
+    background:#fff;border:1px solid #E2E9EE;border-radius:1rem;box-shadow:0 18px 42px -24px rgb(20 43 77 / 0.28);
+    max-height:90vh;max-width:32rem;overflow:auto;width:100%
+}
+.custom-modal .modal-header{align-items:center;border-bottom:1px solid #E2E9EE;display:flex;justify-content:space-between;padding:1rem 1.25rem}
+.custom-modal .modal-title{color:#142B4D;font-size:1.05rem;font-weight:700;margin:0}
+.custom-modal .modal-close{background:transparent;border:0;color:#718096;cursor:pointer;font-size:1rem}
+.custom-modal .modal-body{padding:1.25rem}
+.custom-modal .modal-footer{border-top:1px solid #E2E9EE;display:flex;gap:.75rem;justify-content:flex-end;padding:1rem 1.25rem}
+.yk-as-price-table{width:100%}
+.yk-as-price-table td{border-bottom:1px solid #E2E9EE;color:#142B4D;font-size:.9rem;padding:.55rem 0}
+.yk-as-price-table tr:last-child td{border-bottom:0}
+.yk-as-actions .pay-now-btn,
+.yk-as-actions .negotiate-btn,
+.yk-as-actions .confirm-completion-btn{
+    align-items:center;border-radius:.75rem;display:inline-flex;font-weight:600;gap:.5rem;justify-content:center;min-height:2.75rem;padding:.65rem 1rem;width:100%
+}
+.yk-as-actions .pay-now-btn{background:#36877F;border:1px solid #36877F;color:#fff}
+.yk-as-actions .pay-now-btn:hover{background:#286E67;border-color:#286E67;color:#fff}
+.yk-as-actions .negotiate-btn{background:#fff;border:1px solid #E2E9EE;color:#142B4D}
+.yk-as-actions .negotiate-btn:hover{border-color:#36877F;color:#36877F}
+.yk-as-actions .confirm-completion-btn{background:#36877F;border:1px solid #36877F;color:#fff}
+</style>
 @endsection
 
 @section('content')
-<div class="content-wrapper">
-    <div class="page-header">
-        <div class="page-title">
-            <h3>Additional Service Details</h3>
-            <p>Review your add-on request, track negotiation updates, and complete payment when you are satisfied with the offer.</p>
+@php
+    $originalProfessionalBasePrice = $additionalService->original_professional_price;
+    $originalCGST = $originalProfessionalBasePrice * 0.09;
+    $originalSGST = $originalProfessionalBasePrice * 0.09;
+    $originalTotalGST = $originalCGST + $originalSGST;
+    $originalFinalPrice = $originalProfessionalBasePrice + $originalTotalGST;
+    $hasNegotiation = in_array($additionalService->negotiation_status, ['user_negotiated', 'admin_responded'], true);
+
+    if ($hasNegotiation) {
+        if ($additionalService->negotiation_status === 'admin_responded') {
+            $negotiatedBasePrice = $additionalService->admin_final_negotiated_price;
+        } else {
+            $negotiatedBasePrice = $additionalService->user_negotiated_price;
+        }
+        $discountAmount = $originalProfessionalBasePrice - $negotiatedBasePrice;
+        $discountPercent = ($originalProfessionalBasePrice > 0) ? (($discountAmount / $originalProfessionalBasePrice) * 100) : 0;
+        $negotiatedCGST = $negotiatedBasePrice * 0.09;
+        $negotiatedSGST = $negotiatedBasePrice * 0.09;
+        $negotiatedTotalGST = $negotiatedCGST + $negotiatedSGST;
+        $negotiatedFinalPrice = $negotiatedBasePrice + $negotiatedTotalGST;
+    }
+
+    $statusLabel = $additionalService->status_text ?? ucfirst((string) ($additionalService->payment_status ?? 'pending'));
+@endphp
+
+<div class="mx-auto grid max-w-7xl gap-6">
+    <x-tazen-v2.panel.breadcrumbs :items="[
+        ['label' => 'Dashboard', 'url' => route('user.dashboard')],
+        ['label' => 'Additional Services', 'url' => route('user.additional-services.index')],
+        ['label' => 'Details'],
+    ]" />
+
+    <header class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-wide text-brand-primary">Your services</p>
+            <h1 class="mt-1 font-display text-page-title font-semibold text-brand-secondary">Additional Service Details</h1>
+            <p class="mt-2 max-w-2xl text-sm leading-6 text-text-secondary sm:text-base">
+                Review your add-on request, track negotiation updates, and complete payment when you are satisfied with the offer.
+            </p>
         </div>
-        <ul class="breadcrumb">
-            <li><a href="{{ route('user.dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ route('user.additional-services.index') }}">Additional Services</a></li>
-            <li class="active">Details</li>
-        </ul>
-    </div>
+        <span class="inline-flex w-fit items-center rounded-full border border-brand-200 bg-brand-50 px-3 py-1.5 text-sm font-semibold text-brand-secondary">
+            {{ $statusLabel }}
+        </span>
+    </header>
 
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="mb-0">
-                        <i class="fas fa-info-circle section-icon"></i>
-                        Service Information
-                    </h4>
+    <div class="grid gap-6 lg:grid-cols-3">
+        <div class="grid gap-6 lg:col-span-2">
+            <article class="rounded-panel border border-border bg-surface p-5 shadow-card sm:p-6">
+                <div class="mb-4 flex items-center gap-2 border-b border-divider pb-3">
+                    <span class="inline-flex size-8 items-center justify-center rounded-full bg-brand-50 text-brand-primary">
+                        <i class="fas fa-info" aria-hidden="true"></i>
+                    </span>
+                    <h2 class="font-display text-lg font-semibold text-brand-secondary">Service overview</h2>
                 </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="d-block"><strong>Service Name:</strong></label>
-                            <p class="mb-0">{{ $additionalService->service_name }}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="d-block"><strong>Status:</strong></label>
-                            <p class="mb-0">{{ $additionalService->status_text }}</p>
-                        </div>
+
+                <dl class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <dt class="text-xs font-semibold uppercase tracking-wide text-text-muted">Service name</dt>
+                        <dd class="mt-1 text-sm font-medium text-text-primary">{{ $additionalService->service_name }}</dd>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="d-block"><strong>Reason:</strong></label>
-                        <p class="mb-0">{{ $additionalService->reason }}</p>
+                    <div>
+                        <dt class="text-xs font-semibold uppercase tracking-wide text-text-muted">Status</dt>
+                        <dd class="mt-1 text-sm font-medium text-text-primary">{{ $statusLabel }}</dd>
                     </div>
-
-                    @php
-                        // Get the original professional price using the model method
-                        $originalProfessionalBasePrice = $additionalService->original_professional_price;
-                        
-                        // For Professional's Price Breakdown - always use original
-                        $originalCGST = $originalProfessionalBasePrice * 0.09;
-                        $originalSGST = $originalProfessionalBasePrice * 0.09;
-                        $originalTotalGST = $originalCGST + $originalSGST;
-                        $originalFinalPrice = $originalProfessionalBasePrice + $originalTotalGST;
-                        
-                        // Check if customer has negotiated
-                        $hasNegotiation = in_array($additionalService->negotiation_status, ['user_negotiated', 'admin_responded']);
-                        
-                        if ($hasNegotiation) {
-                            // For Negotiated Price Breakdown - show the negotiated amount
-                            if ($additionalService->negotiation_status === 'admin_responded') {
-                                // Professional accepted - show final negotiated price
-                                $negotiatedBasePrice = $additionalService->admin_final_negotiated_price;
-                            } else {
-                                // Still pending - show customer's offer
-                                $negotiatedBasePrice = $additionalService->user_negotiated_price;
-                            }
-                            
-                            // Calculate discount and new price based on ORIGINAL price
-                            $discountAmount = $originalProfessionalBasePrice - $negotiatedBasePrice;
-                            $discountPercent = ($originalProfessionalBasePrice > 0) ? (($discountAmount / $originalProfessionalBasePrice) * 100) : 0;
-                            
-                            $negotiatedCGST = $negotiatedBasePrice * 0.09;
-                            $negotiatedSGST = $negotiatedBasePrice * 0.09;
-                            $negotiatedTotalGST = $negotiatedCGST + $negotiatedSGST;
-                            $negotiatedFinalPrice = $negotiatedBasePrice + $negotiatedTotalGST;
-                        }
-                    @endphp
-
-                    <!-- Professional's Price Breakdown -->
-                    <div class="card mb-3 price-breakdown">
-                        <div class="card-header">
-                            <h6 class="mb-0">{{ getCurrencySymbol() }} Professional's Initial Price Breakdown</h6>
-                        </div>
-                        <div class="card-body">
-                            <table class="table table-borderless mb-0 price-table">
-                                <tbody>
-                                    <tr>
-                                        <td><strong>Description</strong></td>
-                                        <td class="text-end"><strong>Amount</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Base Price</strong></td>
-                                        <td class="text-end"><strong>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($originalProfessionalBasePrice), 2) }}</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2"><strong>Tax Breakdown</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td>CGST 9%</td>
-                                        <td class="text-end">{{ getCurrencySymbol() }}{{ number_format(convertCurrency($originalCGST), 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>SGST 9%</td>
-                                        <td class="text-end">{{ getCurrencySymbol() }}{{ number_format(convertCurrency($originalSGST), 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Total GST (18%)</strong></td>
-                                        <td class="text-end"><strong>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($originalTotalGST), 2) }}</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Final Amount</strong></td>
-                                        <td class="text-end"><h5 class="mb-0"><strong>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($originalFinalPrice), 2) }}</strong></h5></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="sm:col-span-2">
+                        <dt class="text-xs font-semibold uppercase tracking-wide text-text-muted">Reason</dt>
+                        <dd class="mt-1 text-sm font-medium text-text-primary">{{ $additionalService->reason }}</dd>
                     </div>
-
-                    @if($hasNegotiation)
-                    <!-- Negotiated Price Breakdown -->
-                    <div class="card mb-4 negotiated-price-card">
-                        <div class="card-header">
-                            <h6 class="mb-0">
-                                <i class="fas fa-handshake"></i>
-                                Negotiated Price Breakdown
-                                @if($additionalService->negotiation_status === 'admin_responded')
-                                    <span class="badge badge-paid ms-2">✅ Accepted</span>
-                                @else
-                                    <span class="badge badge-pending ms-2">⏳ Pending</span>
-                                @endif
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <table class="table table-borderless mb-0 price-table">
-                                <tbody>
-                                    <tr>
-                                        <td><strong>Description</strong></td>
-                                        <td class="text-end"><strong>Amount</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Base Price</td>
-                                        <td class="text-end">{{ getCurrencySymbol() }}{{ number_format(convertCurrency($originalProfessionalBasePrice), 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Negotiation Discount ({{ number_format($discountPercent, 1) }}%)</td>
-                                        <td class="text-end text-warning">− {{ getCurrencySymbol() }}{{ number_format(convertCurrency($discountAmount), 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>New Price After Discount</strong></td>
-                                        <td class="text-end"><strong>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($negotiatedBasePrice), 2) }}</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td>GST 18% (9%+9%)</td>
-                                        <td class="text-end">{{ getCurrencySymbol() }}{{ number_format(convertCurrency($negotiatedTotalGST), 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Final Price Customer Pays</strong></td>
-                                        <td class="text-end"><h5 class="mb-0 text-warning"><strong>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($negotiatedFinalPrice), 2) }}</strong></h5></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            
-                            <div class="mt-3 text-center">
-                                @if($additionalService->negotiation_status === 'admin_responded')
-                                    @php
-                                        $totalSavings = $originalFinalPrice - $negotiatedFinalPrice;
-                                    @endphp
-                                    <small class="text-success d-block">✅ Negotiated price accepted - Ready for payment</small>
-                                    <small class="text-success"><i class="fas fa-piggy-bank"></i> You save: <strong>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($totalSavings), 2) }}</strong> total</small>
-                                @else
-                                    <small class="text-warning d-block">⏳ Your negotiated offer is pending professional review</small>
-                                    <small class="d-block mt-1">Once accepted, you'll pay {{ getCurrencySymbol() }}{{ number_format(convertCurrency($negotiatedFinalPrice), 2) }}</small>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-
                     @if($additionalService->delivery_date)
-                    <div class="mb-3">
-                        <label class="d-block"><strong>Delivery Date:</strong></label>
-                        <p class="mb-0">{{ \Carbon\Carbon::parse($additionalService->delivery_date)->format('M d, Y') }}</p>
-                    </div>
+                        <div>
+                            <dt class="text-xs font-semibold uppercase tracking-wide text-text-muted">Delivery date</dt>
+                            <dd class="mt-1 text-sm font-medium text-text-primary">{{ \Carbon\Carbon::parse($additionalService->delivery_date)->format('M d, Y') }}</dd>
+                        </div>
                     @endif
+                </dl>
+            </article>
 
-                    @if($additionalService->negotiation_status !== 'none')
-                    <div class="alert {{ $additionalService->negotiation_status === 'user_negotiated' ? 'alert-warning' : 'alert-info' }}">
-                        <h5 class="mb-3">
-                            @if($additionalService->negotiation_status === 'user_negotiated')
-                                ⏳ Negotiation Pending Review
-                            @else
-                                ✅ Negotiation Accepted
-                            @endif
-                        </h5>
-                        @if($additionalService->negotiation_status === 'user_negotiated')
-                            @php
-                                $negotiationHandler = $additionalService->professional_id ? 'professional' : 'admin';
-                                $handlerLabel = $negotiationHandler === 'professional' ? 'Professional' : 'Admin';
-                            @endphp
-                            
-                            <div class="mb-2">
-                                <strong>Your Negotiated Offer:</strong> 
-                                <span class="text-success">₹{{ number_format($additionalService->user_negotiated_price, 2) }}</span>
-                            </div>
-                            <div class="mb-2">
-                                <strong>Your Reason:</strong> 
-                                <p class="mb-0 text-muted">{{ $additionalService->user_negotiation_reason }}</p>
-                            </div>
-                            <p class="text-info mb-0">
-                                <i class="fas fa-clock"></i> 
-                                <strong>Status:</strong> Waiting for {{ strtolower($handlerLabel) }} response... We'll notify you once {{ strtolower($handlerLabel) }} reviews your negotiation.
-                            </p>
-                        @elseif($additionalService->negotiation_status === 'admin_responded')
-                            @php
-                                $modifierLabel = $additionalService->professional_id ? 'Professional' : 'Admin';
-                                $originalBasePriceForSavings = $additionalService->base_price; // Use the same original price
-                                $finalNegotiatedPrice = $additionalService->admin_final_negotiated_price;
-                                $totalSavings = ($originalBasePriceForSavings - $finalNegotiatedPrice) * 1.18;
-                                $savingsPercent = ($originalBasePriceForSavings > 0) ? (($originalBasePriceForSavings - $finalNegotiatedPrice) / $originalBasePriceForSavings * 100) : 0;
-                            @endphp
-                            
-                            <div class="mb-2">
-                                <strong>Your Base Price Offer:</strong> ₹{{ number_format($additionalService->user_negotiated_price, 2) }}
-                            </div>
-                            <div class="mb-2">
-                                <strong>{{ $modifierLabel }}'s Base Price Final Offer:</strong> 
-                                <span class="text-success">₹{{ number_format($finalNegotiatedPrice, 2) }}</span>
-                            </div>
-                            <div class="mb-2">
-                                <strong>{{ $modifierLabel }}'s Response:</strong> 
-                                <p class="mb-0 text-muted">{{ $additionalService->admin_negotiation_response }}</p>
-                            </div>
-                            <div class="mt-2">
-                                <small class="text-success">✅ <strong>Good news!</strong> {{ $modifierLabel }} has responded to your negotiation. You can now proceed with payment at the updated price.</small>
-                            </div>
-                        @endif
-                    </div>
+            <article class="rounded-panel border border-border bg-surface p-5 shadow-card sm:p-6 price-breakdown">
+                <div class="mb-4 rounded-control bg-brand-50 px-3 py-2 text-sm font-semibold text-brand-secondary card-header">
+                    Professional initial price breakdown
+                </div>
+                <table class="yk-as-price-table price-table">
+                    <tbody>
+                        <tr><td><strong>Description</strong></td><td class="text-end"><strong>Amount</strong></td></tr>
+                        <tr><td><strong>Base price</strong></td><td class="text-end"><strong>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($originalProfessionalBasePrice), 2) }}</strong></td></tr>
+                        <tr><td colspan="2"><strong>Tax breakdown</strong></td></tr>
+                        <tr><td>CGST 9%</td><td class="text-end">{{ getCurrencySymbol() }}{{ number_format(convertCurrency($originalCGST), 2) }}</td></tr>
+                        <tr><td>SGST 9%</td><td class="text-end">{{ getCurrencySymbol() }}{{ number_format(convertCurrency($originalSGST), 2) }}</td></tr>
+                        <tr><td><strong>Total GST (18%)</strong></td><td class="text-end"><strong>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($originalTotalGST), 2) }}</strong></td></tr>
+                        <tr><td><strong>Final amount</strong></td><td class="text-end"><strong>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($originalFinalPrice), 2) }}</strong></td></tr>
+                    </tbody>
+                </table>
+            </article>
+
+            @if($hasNegotiation)
+            <article class="rounded-panel border border-border bg-surface p-5 shadow-card sm:p-6 negotiated-price-card">
+                <div class="mb-4 flex flex-wrap items-center gap-2 rounded-control bg-brand-50 px-3 py-2 text-sm font-semibold text-brand-secondary card-header">
+                    Negotiated price breakdown
+                    @if($additionalService->negotiation_status === 'admin_responded')
+                        <span class="badge badge-paid rounded-full bg-brand-primary px-2 py-0.5 text-xs text-white">Accepted</span>
+                    @else
+                        <span class="badge badge-pending rounded-full border border-border bg-surface px-2 py-0.5 text-xs text-text-secondary">Pending</span>
                     @endif
                 </div>
-            </div>
+                <table class="yk-as-price-table price-table">
+                    <tbody>
+                        <tr><td>Base price</td><td class="text-end">{{ getCurrencySymbol() }}{{ number_format(convertCurrency($originalProfessionalBasePrice), 2) }}</td></tr>
+                        <tr><td>Negotiation discount ({{ number_format($discountPercent, 1) }}%)</td><td class="text-end">− {{ getCurrencySymbol() }}{{ number_format(convertCurrency($discountAmount), 2) }}</td></tr>
+                        <tr><td><strong>New price after discount</strong></td><td class="text-end"><strong>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($negotiatedBasePrice), 2) }}</strong></td></tr>
+                        <tr><td>GST 18% (9%+9%)</td><td class="text-end">{{ getCurrencySymbol() }}{{ number_format(convertCurrency($negotiatedTotalGST), 2) }}</td></tr>
+                        <tr><td><strong>Final price customer pays</strong></td><td class="text-end"><strong>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($negotiatedFinalPrice), 2) }}</strong></td></tr>
+                    </tbody>
+                </table>
+                <div class="mt-4 text-sm text-text-secondary">
+                    @if($additionalService->negotiation_status === 'admin_responded')
+                        @php $totalSavings = $originalFinalPrice - $negotiatedFinalPrice; @endphp
+                        <p>Negotiated price accepted — ready for payment.</p>
+                        <p class="mt-1 font-semibold text-brand-primary">You save {{ getCurrencySymbol() }}{{ number_format(convertCurrency($totalSavings), 2) }} total.</p>
+                    @else
+                        <p>Your negotiated offer is pending professional review.</p>
+                        <p class="mt-1">Once accepted, you'll pay {{ getCurrencySymbol() }}{{ number_format(convertCurrency($negotiatedFinalPrice), 2) }}.</p>
+                    @endif
+                </div>
+            </article>
+            @endif
+
+            @if($additionalService->negotiation_status !== 'none')
+            <article class="rounded-panel border border-border bg-surface p-5 shadow-card sm:p-6">
+                <h2 class="mb-3 font-display text-lg font-semibold text-brand-secondary">Negotiation status</h2>
+                @if($additionalService->negotiation_status === 'user_negotiated')
+                    @php
+                        $negotiationHandler = $additionalService->professional_id ? 'professional' : 'admin';
+                        $handlerLabel = $negotiationHandler === 'professional' ? 'Professional' : 'Admin';
+                    @endphp
+                    <div class="rounded-control border border-border bg-surface-muted/40 p-4 text-sm">
+                        <p><span class="font-semibold text-brand-secondary">Your offer:</span> ₹{{ number_format($additionalService->user_negotiated_price, 2) }}</p>
+                        <p class="mt-2"><span class="font-semibold text-brand-secondary">Reason:</span> {{ $additionalService->user_negotiation_reason }}</p>
+                        <p class="mt-3 text-text-secondary">Waiting for {{ strtolower($handlerLabel) }} response.</p>
+                    </div>
+                @elseif($additionalService->negotiation_status === 'admin_responded')
+                    @php
+                        $modifierLabel = $additionalService->professional_id ? 'Professional' : 'Admin';
+                        $finalNegotiatedPrice = $additionalService->admin_final_negotiated_price;
+                    @endphp
+                    <div class="rounded-control border border-border bg-surface-muted/40 p-4 text-sm">
+                        <p><span class="font-semibold text-brand-secondary">Your base offer:</span> ₹{{ number_format($additionalService->user_negotiated_price, 2) }}</p>
+                        <p class="mt-2"><span class="font-semibold text-brand-secondary">{{ $modifierLabel }} final base offer:</span> ₹{{ number_format($finalNegotiatedPrice, 2) }}</p>
+                        <p class="mt-2"><span class="font-semibold text-brand-secondary">Response:</span> {{ $additionalService->admin_negotiation_response }}</p>
+                    </div>
+                @endif
+            </article>
+            @endif
         </div>
 
-        <div class="col-lg-4">
-            <div class="card mb-3">
-                <div class="card-header">
-                    <h5 class="mb-0">👨‍💼 Professional Information</h5>
+        <aside class="grid gap-6 content-start">
+            <article class="rounded-panel border border-border bg-surface p-5 shadow-card sm:p-6">
+                <h2 class="mb-4 font-display text-lg font-semibold text-brand-secondary">Professional</h2>
+                <div class="info-card space-y-2 text-sm">
+                    <p class="font-semibold text-brand-secondary">{{ $additionalService->professional->name }}</p>
+                    <p class="text-text-secondary"><i class="fas fa-envelope me-2" aria-hidden="true"></i>{{ $additionalService->professional->email }}</p>
+                    <p class="text-text-secondary"><i class="fas fa-phone me-2" aria-hidden="true"></i>{{ $additionalService->professional->phone }}</p>
+                    <p class="text-text-secondary"><i class="fas fa-bookmark me-2" aria-hidden="true"></i>Booking #{{ $additionalService->booking_id }}</p>
                 </div>
-                <div class="card-body">
-                    <div class="info-card">
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                <h6>👤 {{ $additionalService->professional->name }}</h6>
-                                <p class="mb-1"><i class="fas fa-envelope me-2"></i>{{ $additionalService->professional->email }}</p>
-                                <p class="mb-1"><i class="fas fa-phone me-2"></i>{{ $additionalService->professional->phone }}</p>
-                                <p class="mb-0"><i class="fas fa-bookmark me-2"></i>Booking: #{{ $additionalService->booking_id }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </article>
 
-            <div class="card mb-3">
-                <div class="card-header">
-                    <h5 class="mb-0">⚡ Quick Actions</h5>
-                </div>
-                <div class="card-body d-grid gap-3 quick-actions">
+            <article class="rounded-panel border border-border bg-surface p-5 shadow-card sm:p-6">
+                <h2 class="mb-4 font-display text-lg font-semibold text-brand-secondary">Quick actions</h2>
+                <div class="d-grid gap-3 quick-actions yk-as-actions grid gap-3">
                     @if($additionalService->payment_status === 'pending')
                         @if($additionalService->negotiation_status === 'user_negotiated')
-                            <button class="btn btn-secondary" disabled>
-                                <i class="fas fa-clock"></i> 
-                                Payment Pending Admin Review
+                            <button class="inline-flex min-h-10 items-center justify-center rounded-control border border-border bg-surface-muted px-3 text-sm font-semibold text-text-muted" disabled>
+                                Payment pending review
                             </button>
-                            <small class="text-muted text-center">
-                                <i class="fas fa-info-circle"></i> 
-                                Payment will be enabled once admin responds to your negotiation
-                            </small>
+                            <p class="text-center text-xs text-text-muted">Payment unlocks after the negotiation response.</p>
                         @else
                             <button class="btn btn-success pay-now-btn" data-id="{{ $additionalService->id }}">
-                                <i class="fas fa-credit-card"></i> 
-                                Pay Now - ₹{{ number_format($additionalService->final_price, 2) }}
+                                <i class="fas fa-credit-card" aria-hidden="true"></i>
+                                Pay now — ₹{{ number_format($additionalService->final_price, 2) }}
                             </button>
                         @endif
                     @endif
-                    
+
                     @if($additionalService->canBeNegotiated())
-                    <button class="btn btn-warning negotiate-btn" data-id="{{ $additionalService->id }}">
-                        <i class="fas fa-handshake"></i> 
-                        Negotiate Price
-                    </button>
+                        <button class="btn btn-warning negotiate-btn" data-id="{{ $additionalService->id }}">
+                            <i class="fas fa-handshake" aria-hidden="true"></i>
+                            Negotiate price
+                        </button>
                     @endif
-                    
+
                     @if($additionalService->consulting_status === 'done' && !$additionalService->customer_confirmed_at)
-                    <button class="btn btn-primary confirm-completion-btn" data-id="{{ $additionalService->id }}">
-                        <i class="fas fa-check-circle"></i> 
-                        Confirm Completion
-                    </button>
+                        <button class="btn btn-primary confirm-completion-btn" data-id="{{ $additionalService->id }}">
+                            <i class="fas fa-check-circle" aria-hidden="true"></i>
+                            Confirm completion
+                        </button>
                     @endif
 
                     @if($additionalService->consulting_status === 'done' && $additionalService->payment_status === 'paid')
-                    <hr class="my-2">
-                    <div class="d-grid gap-2">
-                        <a href="{{ route('user.additional-services.invoice', $additionalService->id) }}" class="btn btn-success">
-                            <i class="fas fa-file-text"></i> View Invoice
+                        <a href="{{ route('user.additional-services.invoice', $additionalService->id) }}" class="inline-flex min-h-10 items-center justify-center rounded-control border border-brand-primary bg-brand-primary px-3 text-sm font-semibold text-white">
+                            View invoice
                         </a>
-                        <a href="{{ route('user.additional-services.invoice.pdf', $additionalService->id) }}" class="btn btn-outline-success" target="_blank">
-                            <i class="fas fa-download"></i> Download PDF Invoice
+                        <a href="{{ route('user.additional-services.invoice.pdf', $additionalService->id) }}" class="inline-flex min-h-10 items-center justify-center rounded-control border border-border bg-surface px-3 text-sm font-semibold text-text-primary" target="_blank">
+                            Download PDF
                         </a>
-                    </div>
                     @endif
 
-                    <a href="{{ route('user.additional-services.index') }}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left"></i> 
-                        Back to List
+                    <a href="{{ route('user.additional-services.index') }}" class="inline-flex min-h-10 items-center justify-center rounded-control border border-border bg-surface px-3 text-sm font-semibold text-text-primary">
+                        Back to list
                     </a>
                 </div>
-            </div>
+            </article>
 
             @if($additionalService->isPaid())
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">💳 Payment Information</h5>
-                </div>
-                <div class="card-body">
-                    <div class="info-card payment-card">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge badge-paid">✅ Payment Completed</span>
-                            <h4 class="mb-0">₹{{ number_format($additionalService->final_price, 2) }}</h4>
-                        </div>
-                        @if($additionalService->payment_id)
-                        <p class="mb-0">
-                            <small class="opacity-75">Transaction ID</small><br>
-                            <code>{{ $additionalService->payment_id }}</code>
-                        </p>
-                        @endif
+            <article class="rounded-panel border border-border bg-surface p-5 shadow-card sm:p-6">
+                <h2 class="mb-3 font-display text-lg font-semibold text-brand-secondary">Payment</h2>
+                <div class="info-card payment-card">
+                    <div class="mb-3 flex items-center justify-between gap-3">
+                        <span class="badge badge-paid rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-primary">Paid</span>
+                        <p class="text-lg font-semibold text-brand-secondary">₹{{ number_format($additionalService->final_price, 2) }}</p>
                     </div>
+                    @if($additionalService->payment_id)
+                        <p class="text-xs text-text-muted">Transaction ID</p>
+                        <code class="text-sm text-text-primary">{{ $additionalService->payment_id }}</code>
+                    @endif
                 </div>
-            </div>
+            </article>
             @endif
-        </div>
+        </aside>
     </div>
 </div>
 
-<!-- Custom Negotiation Modal -->
 <div class="custom-modal" id="negotiationModal">
-    <div class="modal-content">
+    <div class="modal-content custom-modal-content">
         <div class="modal-header">
-            <h5 class="modal-title">💰 Negotiate Service Price</h5>
-            <button type="button" class="modal-close" onclick="closeModal('negotiationModal')">
-                <i class="fas fa-times"></i>
+            <h5 class="modal-title">Negotiate service price</h5>
+            <button type="button" class="modal-close" onclick="closeModal('negotiationModal')" aria-label="Close">
+                <i class="fas fa-times" aria-hidden="true"></i>
             </button>
         </div>
         <form id="negotiationForm">
             <div class="modal-body">
                 @php
                     $professional = $additionalService->professional;
-                    // Use professional->service_request_offset (percentage) for negotiation limit; default to 10%
                     $maxDiscountPercent = $professional->service_request_offset ?? 10;
-                    // Effective base price (before GST)
                     $basePrice = $additionalService->getEffectiveBasePrice();
-                    // Minimum allowed base price (e.g., 10% discount)
                     $minBasePrice = $minPrice ?? round($basePrice * (1 - ($maxDiscountPercent / 100)), 2);
-                    // Final amounts including GST (18%) for display
                     $minFinal = round($minBasePrice * 1.18, 2);
                     $currentFinal = round($basePrice * 1.18, 2);
                 @endphp
-                
-                <div class="alert alert-info">
-                    <div class="row">
-                        <div class="col-6">
-                            <small class="d-block opacity-75">Current Base Price</small>
-                            <strong>₹{{ number_format($basePrice, 2) }}</strong>
-                            <small class="d-block text-muted">+ GST (18%): ₹{{ number_format($basePrice * 0.18, 2) }}</small>
-                            <small class="d-block"><strong>Total: ₹{{ number_format($currentFinal, 2) }}</strong></small>
-                        </div>
-                        <div class="col-6">
-                            <small class="d-block opacity-75">You can negotiate this service</small>
-                            <strong class="text-success">💬 Make an offer</strong>
-                        </div>
+
+                <div class="mb-4 grid gap-3 rounded-control border border-border bg-brand-50 p-3 text-sm sm:grid-cols-2">
+                    <div>
+                        <p class="text-xs text-text-muted">Current base price</p>
+                        <p class="font-semibold text-brand-secondary">₹{{ number_format($basePrice, 2) }}</p>
+                        <p class="text-xs text-text-muted">Total with GST: ₹{{ number_format($currentFinal, 2) }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-text-muted">Negotiation range</p>
+                        <p class="font-semibold text-brand-secondary">₹{{ number_format($minBasePrice, 2) }} – ₹{{ number_format($basePrice, 2) }}</p>
                     </div>
                 </div>
-                
+
                 <div class="mb-3">
-                    <label for="negotiated_price" class="form-label">
-                        <i class="fas fa-tag me-2"></i>Your Proposed Base Price (₹) *
-                        <small class="text-muted d-block mt-1">
-                            <i class="fas fa-info-circle"></i> 
-                            You are negotiating the <strong>base price</strong> (currently ₹{{ number_format($basePrice, 2) }}). 
-                            GST (18%) will be calculated on your negotiated price.
-                        </small>
+                    <label for="negotiated_price" class="form-label mb-1 block text-sm font-semibold text-brand-secondary">
+                        Your proposed base price (₹) *
+                        <span class="mt-1 block text-xs font-normal text-text-muted">
+                            You are negotiating the base price (currently ₹{{ number_format($basePrice, 2) }}). GST (18%) will be calculated on your negotiated price.
+                        </span>
                     </label>
-                    <input type="number" class="form-control form-control-lg" id="negotiated_price" name="negotiated_price" 
-                           data-min-price="{{ $minBasePrice }}" 
+                    <input type="number" class="form-control form-control-lg w-full rounded-control border border-border px-3 py-2" id="negotiated_price" name="negotiated_price"
+                           data-min-price="{{ $minBasePrice }}"
                            data-max-price="{{ $basePrice }}"
                            min="{{ $minBasePrice }}"
-                           max="{{ $basePrice }}" 
-                           step="0.01" 
+                           max="{{ $basePrice }}"
+                           step="0.01"
                            required
                            placeholder="Enter amount between ₹{{ number_format($minBasePrice, 2) }} - ₹{{ number_format($basePrice, 2) }}">
-                    
                 </div>
-                
+
                 <div class="mb-3">
-                    <label for="negotiation_reason" class="form-label">
-                        <i class="fas fa-comment me-2"></i>Reason for Negotiation *
+                    <label for="negotiation_reason" class="form-label mb-1 block text-sm font-semibold text-brand-secondary">
+                        Reason for negotiation *
                     </label>
-                    <textarea class="form-control" id="negotiation_reason" name="negotiation_reason" 
-                              rows="4" maxlength="1000" required 
+                    <textarea class="form-control w-full rounded-control border border-border px-3 py-2" id="negotiation_reason" name="negotiation_reason"
+                              rows="4" maxlength="1000" required
                               placeholder="Please explain why you're requesting a price reduction..."></textarea>
-                    <div class="form-text">
+                    <div class="form-text mt-1 text-xs text-text-muted">
                         <span id="char-count">0</span>/1000 characters
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" onclick="closeModal('negotiationModal')">
-                    <i class="fas fa-times me-2"></i>Cancel
-                </button>
-                <button type="submit" class="btn btn-warning">
-                    <i class="fas fa-paper-plane me-2"></i>Submit Negotiation
-                </button>
+                <button type="button" class="btn btn-outline-secondary inline-flex min-h-10 items-center rounded-control border border-border px-3 text-sm font-semibold" onclick="closeModal('negotiationModal')">Cancel</button>
+                <button type="submit" class="btn btn-warning inline-flex min-h-10 items-center rounded-control border border-brand-primary bg-brand-primary px-3 text-sm font-semibold text-white">Submit negotiation</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Custom Confirm Completion Modal -->
 <div class="custom-modal" id="confirmCompletionModal">
-    <div class="modal-content">
+    <div class="modal-content custom-modal-content">
         <div class="modal-header">
-            <h5 class="modal-title">✅ Confirm Service Completion</h5>
-            <button type="button" class="modal-close" onclick="closeModal('confirmCompletionModal')">
-                <i class="fas fa-times"></i>
+            <h5 class="modal-title">Confirm service completion</h5>
+            <button type="button" class="modal-close" onclick="closeModal('confirmCompletionModal')" aria-label="Close">
+                <i class="fas fa-times" aria-hidden="true"></i>
             </button>
         </div>
         <div class="modal-body">
-            <div class="text-center mb-4">
-                <div class="modal-illustration">
-                    <i class="fas fa-check-circle modal-illustration-icon"></i>
-                </div>
+            <div class="mb-4 text-center modal-illustration">
+                <i class="fas fa-check-circle modal-illustration-icon text-3xl text-brand-primary" aria-hidden="true"></i>
             </div>
-            <h6 class="text-center mb-3">Service Completion Confirmation</h6>
-            <p class="text-center">The professional has marked this consultation as completed. Do you confirm that the service has been delivered satisfactorily?</p>
-            <div class="alert alert-warning">
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                <strong>Important:</strong> Once confirmed, this action cannot be undone and the service will be marked as fully completed.
+            <h6 class="mb-3 text-center font-semibold text-brand-secondary">Service completion confirmation</h6>
+            <p class="text-center text-sm text-text-secondary">The professional has marked this consultation as completed. Do you confirm that the service has been delivered satisfactorily?</p>
+            <div class="mt-4 rounded-control border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                Once confirmed, this action cannot be undone and the service will be marked as fully completed.
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" onclick="closeModal('confirmCompletionModal')">
-                <i class="fas fa-clock me-2"></i>Not Yet
-            </button>
-            <button type="button" class="btn btn-success" id="confirmCompletionBtn">
-                <i class="fas fa-check-circle me-2"></i>Yes, Confirm Completion
-            </button>
+            <button type="button" class="btn btn-outline-secondary inline-flex min-h-10 items-center rounded-control border border-border px-3 text-sm font-semibold" onclick="closeModal('confirmCompletionModal')">Not yet</button>
+            <button type="button" class="btn btn-success inline-flex min-h-10 items-center rounded-control border border-brand-primary bg-brand-primary px-3 text-sm font-semibold text-white" id="confirmCompletionBtn">Yes, confirm completion</button>
         </div>
     </div>
 </div>
 @endsection
-
 @section('scripts')
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
@@ -554,7 +446,7 @@ $(document).ready(function() {
                             contact: '{{ Auth::guard('user')->user()->phone }}'
                         },
                         theme: {
-                            color: '#667eea'
+                            color: '#36877F'
                         },
                         modal: {
                             ondismiss: function() {

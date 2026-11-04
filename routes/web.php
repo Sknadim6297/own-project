@@ -741,8 +741,11 @@ Route::prefix('professional')->middleware(['auth:professional'])->name('professi
         ->name('reviews.index');
 });
 Route::get('/search-services', [HomeController::class, 'searchServices'])->name('search.services');
-Route::get('event-booking/success', [EventController::class, 'bookingSuccess'])
-    ->name('event.booking.success');
+Route::middleware(['auth:user'])->group(function () {
+    // Legacy compatibility URI; mirrors user.event.booking.success ownership checks.
+    Route::get('event-booking/success', [\App\Http\Controllers\Customer\EventController::class, 'bookingSuccess'])
+        ->name('event.booking.success');
+});
 
 // Help & FAQ Routes
 Route::prefix('admin')->name('admin.')->group(function () {

@@ -386,10 +386,13 @@ class CustomerBookingController extends Controller
             
             session([
                 'booking_success' => [
+                    'booking_id' => $booking->id,
+                    'user_id' => Auth::guard('user')->id(),
                     'professional_id' => $professional->id,
                     'professional_name' => $professional->name,
                     'professional_address' => $professional->profile->address ?? 'Address not available',
                     'service_name' => $serviceName ?? 'N/A',
+                    'service_id' => $professionalService?->service_id,
                     'sub_service_id' => $booking->sub_service_id ?? null,
                     'sub_service_name' => $booking->sub_service_name ?? null,
                     'plan_type' => $bookingData['plan_type'],
@@ -435,8 +438,14 @@ class CustomerBookingController extends Controller
 
     public function success()
     {
-        if (!session()->has('booking_success')) {
-            return redirect()->route('professionals')->with('error', 'No booking information found');
+        $payload = session('booking_success');
+
+        if (!\App\Support\BookingSuccessAccess::professionalSessionIsAuthorized($payload)) {
+            session()->forget('booking_success');
+
+            return redirect()
+                ->route('user.upcoming-appointment.index')
+                ->with('error', 'No booking information found. Your confirmation session may have expired.');
         }
 
         return view('customer.booking.success');
@@ -555,6 +564,8 @@ class CustomerBookingController extends Controller
                 'message' => 'Answers submitted successfully'
             ]);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            throw $e;
         } catch (\Exception $e) {
             Log::error('Error submitting MCQ answers: ' . $e->getMessage());
             return response()->json([
@@ -628,7 +639,21 @@ class CustomerBookingController extends Controller
     }
     public function eventSuccess()
     {
-        return view('customer.booking.event_success');
+        $payload = session('event_booking_success');
+        $booking = \App\Support\BookingSuccessAccess::eventSuccessBooking($payload);
+
+        if (!$booking) {
+            session()->forget('event_booking_success');
+
+            return redirect()
+                ->route('user.dashboard')
+                ->with('error', 'No booking information found. Your confirmation session may have expired.');
+        }
+
+        $event = \App\Models\AllEvent::find($booking->event_id);
+        $user = Auth::guard('user')->user();
+
+        return view('customer.booking.event_success', compact('booking', 'event', 'user'));
     }
     /**
      * Export filtered billing transactions as PDF

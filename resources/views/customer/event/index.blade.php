@@ -123,8 +123,10 @@
                             <a href="{{ route('user.customer-event.index') }}" class="inline-flex min-h-10 items-center justify-center rounded-control border border-border bg-surface px-4 text-sm font-semibold text-text-primary hover:bg-surface-muted">
                                 Clear Filters
                             </a>
-                        @else
+                        @elseif(config('yuktione.programmes_enabled'))
                             <x-tazen-v2.ui.button href="{{ route('programmes.index') }}" size="sm">Explore Programmes</x-tazen-v2.ui.button>
+                        @else
+                            <x-tazen-v2.ui.button href="{{ route('user.dashboard') }}" size="sm" variant="outline">Back to Dashboard</x-tazen-v2.ui.button>
                         @endif
                     </x-slot:actions>
                 </x-tazen-v2.panel.empty-state>

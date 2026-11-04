@@ -302,6 +302,12 @@ public function bookingSummary()
                     'error_details' => $e->getTraceAsString()
                 ]);
             }
+            session([
+                'event_booking_success' => [
+                    'booking_id' => $booking->id,
+                    'user_id' => $user->id,
+                ],
+            ]);
             session()->forget('event_booking_data');
 
             return response()->json([
@@ -484,12 +490,22 @@ public function bookingSummary()
 
     public function successPage()
     {
+        $payload = session('booking_success');
+
+        if (!\App\Support\BookingSuccessAccess::professionalSessionIsAuthorized($payload)) {
+            session()->forget('booking_success');
+
+            return redirect()
+                ->route('user.upcoming-appointment.index')
+                ->with('error', 'No booking information found. Your confirmation session may have expired.');
+        }
+
         return view('customer.booking.success');
     }
 
     public function bookingSuccessPage()
     {
-        return view('customer.booking.success');
+        return $this->successPage();
     }
 
     public function resetBooking()

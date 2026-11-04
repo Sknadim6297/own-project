@@ -115,20 +115,9 @@
                                                                                 <i class="ri-delete-bin-line"></i> Remove
                                                                             </button>
                                                                         </div>
-                                                                        <div class="mb-2">
+                                                                        <div>
                                                                             <label class="form-label">Feature Heading <span class="text-danger">*</span></label>
                                                                             <input type="text" class="form-control" name="features[{{ $featureIndex }}][feature_heading]" value="{{ $feature->feature_heading }}" required>
-                                                                        </div>
-                                                                        <div>
-                                                                            <label class="form-label">Services <span class="text-danger">*</span></label>
-                                                                            <select class="form-select" name="features[{{ $featureIndex }}][services][]" multiple required>
-                                                                                @foreach($services as $service)
-                                                                                    <option value="{{ $service->id }}" {{ $feature->services->contains($service->id) ? 'selected' : '' }}>
-                                                                                        {{ $service->name }}
-                                                                                    </option>
-                                                                                @endforeach
-                                                                            </select>
-                                                                            <small class="text-muted">Hold Ctrl/Cmd to select multiple services</small>
                                                                         </div>
                                                                     </div>
                                                                     @endforeach
@@ -223,18 +212,9 @@ function addFeature() {
                     <i class="ri-delete-bin-line"></i> Remove
                 </button>
             </div>
-            <div class="mb-2">
+            <div>
                 <label class="form-label">Feature Heading <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" name="features[${featureIndex}][feature_heading]" required>
-            </div>
-            <div>
-                <label class="form-label">Services <span class="text-danger">*</span></label>
-                <select class="form-select" name="features[${featureIndex}][services][]" multiple required>
-                    @foreach($services as $service)
-                        <option value="{{ $service->id }}">{{ $service->name }}</option>
-                    @endforeach
-                </select>
-                <small class="text-muted">Hold Ctrl/Cmd to select multiple services</small>
             </div>
         </div>
     `;
@@ -244,13 +224,11 @@ function addFeature() {
 
 function removeFeature(button) {
     button.closest('.feature-item').remove();
-    // Update feature indices
     const container = document.getElementById('features-container');
     const features = container.querySelectorAll('.feature-item');
     features.forEach((feature, index) => {
         feature.querySelector('strong').textContent = `Feature ${index + 1}`;
-        // Update form field names
-        const inputs = feature.querySelectorAll('input, select');
+        const inputs = feature.querySelectorAll('input');
         inputs.forEach(input => {
             if (input.name) {
                 input.name = input.name.replace(/features\[\d+\]/, `features[${index}]`);
@@ -264,7 +242,7 @@ function addFeatureEdit(headerId) {
     const container = document.getElementById(`features-container-${headerId}`);
     const existingFeatures = container.querySelectorAll('.feature-item');
     const newIndex = existingFeatures.length;
-    
+
     const featureHtml = `
         <div class="feature-item mb-3 p-3 border rounded">
             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -273,18 +251,9 @@ function addFeatureEdit(headerId) {
                     <i class="ri-delete-bin-line"></i> Remove
                 </button>
             </div>
-            <div class="mb-2">
+            <div>
                 <label class="form-label">Feature Heading <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" name="features[${newIndex}][feature_heading]" required>
-            </div>
-            <div>
-                <label class="form-label">Services <span class="text-danger">*</span></label>
-                <select class="form-select" name="features[${newIndex}][services][]" multiple required>
-                    @foreach($services as $service)
-                        <option value="{{ $service->id }}">{{ $service->name }}</option>
-                    @endforeach
-                </select>
-                <small class="text-muted">Hold Ctrl/Cmd to select multiple services</small>
             </div>
         </div>
     `;
@@ -294,16 +263,14 @@ function addFeatureEdit(headerId) {
 function removeFeatureEdit(button) {
     const container = button.closest('[id^="features-container-"]');
     if (!container) return;
-    
+
     const featureItem = button.closest('.feature-item');
     featureItem.remove();
-    
-    // Update feature indices
+
     const features = container.querySelectorAll('.feature-item');
     features.forEach((feature, index) => {
         feature.querySelector('strong').textContent = `Feature ${index + 1}`;
-        // Update form field names
-        const inputs = feature.querySelectorAll('input, select');
+        const inputs = feature.querySelectorAll('input');
         inputs.forEach(input => {
             if (input.name) {
                 input.name = input.name.replace(/features\[\d+\]/, `features[${index}]`);
@@ -312,7 +279,6 @@ function removeFeatureEdit(button) {
     });
 }
 
-// Add initial feature when modal opens
 document.getElementById('create-header').addEventListener('shown.bs.modal', function() {
     if (document.getElementById('features-container').children.length === 0) {
         addFeature();

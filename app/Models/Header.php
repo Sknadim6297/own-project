@@ -21,17 +21,4 @@ class Header extends Model
     {
         return $this->hasMany(HeaderFeature::class)->orderBy('order');
     }
-
-    /**
-     * Get all services for the header through features
-     */
-    public function getServicesAttribute()
-    {
-        $services = collect();
-        foreach ($this->features as $feature) {
-            $services = $services->merge($feature->services);
-        }
-        return $services->unique('id');
-    }
 }
-

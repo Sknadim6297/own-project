@@ -15,35 +15,18 @@
             <div class="tazen-header__dropdown-heading">
                 <h2>{{ $trendingHeader->tagline }} Services</h2>
             </div>
-            @if ($trendingHeader->features->isNotEmpty())
-                <div class="tazen-header__dropdown-columns">
-                    @foreach ($trendingHeader->features as $feature)
-                        <section class="tazen-header__dropdown-column">
-                            <h3>{{ $feature->feature_heading }}</h3>
-                            <ul>
-                                @forelse ($feature->services as $service)
-                                    <li><a href="{{ route('service.show', $service->slug) }}">{{ $service->name }}</a></li>
-                                @empty
-                                    <li><span>No services available</span></li>
-                                @endforelse
-                            </ul>
-                        </section>
-                    @endforeach
-                </div>
-            @else
-                <div class="tazen-header__dropdown-columns">
-                    @foreach ($trendingServices as $chunk)
-                        <section class="tazen-header__dropdown-column">
-                            <h3>{{ $loop->first ? 'Popular Services' : 'More Services' }}</h3>
-                            <ul>
-                                @foreach ($chunk as $subService)
-                                    <li><a href="{{ route('service.show', $subService->service?->slug) }}">{{ $subService->name }}</a></li>
-                                @endforeach
-                            </ul>
-                        </section>
-                    @endforeach
-                </div>
-            @endif
+            <div class="tazen-header__dropdown-columns">
+                @foreach ($trendingServices as $chunk)
+                    <section class="tazen-header__dropdown-column">
+                        <h3>{{ $loop->first ? 'Popular Services' : 'More Services' }}</h3>
+                        <ul>
+                            @foreach ($chunk as $subService)
+                                <li><a href="{{ route('service.show', $subService->service?->slug) }}">{{ $subService->name }}</a></li>
+                            @endforeach
+                        </ul>
+                    </section>
+                @endforeach
+            </div>
         </div>
     </li>
 @else
@@ -87,13 +70,6 @@
                 @foreach ($header->features as $feature)
                     <section class="tazen-header__dropdown-column">
                         <h3>{{ $feature->feature_heading }}</h3>
-                        <ul>
-                            @forelse ($feature->services as $service)
-                                <li><a href="{{ route('service.show', $service->slug) }}">{{ $service->name }}</a></li>
-                            @empty
-                                <li><span>No services available</span></li>
-                            @endforelse
-                        </ul>
                     </section>
                 @endforeach
             </div>

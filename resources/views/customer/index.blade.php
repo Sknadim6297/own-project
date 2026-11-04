@@ -178,13 +178,15 @@
                 :href="route('user.all-appointment.index')"
                 icon="calendar"
             />
-            <x-tazen-v2.panel.metric-card
-                label="Event bookings soon"
-                :value="$dashboardError ? '—' : $upcomingBookedEvents"
-                :hint="$dashboardError ? 'Temporarily unavailable' : 'Your bookings in the next 3 days'"
-                :href="route('user.customer-event.index')"
-                icon="spark"
-            />
+            @if (config('yuktione.programmes_enabled'))
+                <x-tazen-v2.panel.metric-card
+                    label="Event bookings soon"
+                    :value="$dashboardError ? '—' : $upcomingBookedEvents"
+                    :hint="$dashboardError ? 'Temporarily unavailable' : 'Your bookings in the next 3 days'"
+                    :href="route('user.customer-event.index')"
+                    icon="spark"
+                />
+            @endif
             <x-tazen-v2.panel.metric-card
                 label="Profile completion"
                 :value="$profileCompletion . '%'"
@@ -262,9 +264,14 @@
                 <x-tazen-v2.ui.button href="{{ route('user.billing.index') }}" variant="outline" class="w-full justify-between">
                     View billing
                 </x-tazen-v2.ui.button>
-                <x-tazen-v2.ui.button href="{{ route('user.customer-event.index') }}" variant="outline" class="w-full justify-between">
-                    My events
+                <x-tazen-v2.ui.button href="{{ route('user.my-bookings') }}" variant="outline" class="w-full justify-between">
+                    My bookings
                 </x-tazen-v2.ui.button>
+                @if (config('yuktione.programmes_enabled'))
+                    <x-tazen-v2.ui.button href="{{ route('user.customer-event.index') }}" variant="outline" class="w-full justify-between">
+                        My events
+                    </x-tazen-v2.ui.button>
+                @endif
             </div>
         </x-tazen-v2.ui.card>
     </section>
@@ -313,46 +320,64 @@
             @endif
         </x-tazen-v2.ui.card>
 
-        <x-tazen-v2.ui.card>
-            <x-slot:heading>
-                <div class="flex items-center justify-between gap-3">
-                    <h2 class="font-display text-card-title font-semibold text-brand-secondary">Upcoming programmes</h2>
-                    <a href="{{ route('programmes.index') }}" class="text-sm font-semibold text-brand-primary hover:underline">Browse programmes</a>
-                </div>
-            </x-slot:heading>
+        @if (config('yuktione.programmes_enabled'))
+            <x-tazen-v2.ui.card>
+                <x-slot:heading>
+                    <div class="flex items-center justify-between gap-3">
+                        <h2 class="font-display text-card-title font-semibold text-brand-secondary">Upcoming programmes</h2>
+                        <a href="{{ route('programmes.index') }}" class="text-sm font-semibold text-brand-primary hover:underline">Browse programmes</a>
+                    </div>
+                </x-slot:heading>
 
-            @if ($dashboardError)
-                <x-tazen-v2.panel.empty-state
-                    title="Programmes unavailable"
-                    description="We couldn't load upcoming programmes. Please try again later."
-                    icon="spark"
-                />
-            @elseif ($events->isEmpty())
-                <x-tazen-v2.panel.empty-state
-                    title="No upcoming programmes"
-                    description="When programmes are published, they will appear here."
-                    icon="spark"
-                />
-            @else
-                <ul class="grid gap-3">
-                    @foreach ($events as $event)
-                        <li class="rounded-card border border-divider px-4 py-3">
-                            <p class="font-semibold text-text-primary">{{ $event->heading }}</p>
-                            <p class="mt-1 text-sm text-text-secondary">{{ \Illuminate\Support\Str::limit($event->short_description, 110) }}</p>
-                            <div class="mt-3 flex flex-wrap items-center justify-between gap-2">
-                                <x-tazen-v2.ui.badge variant="info">
-                                    {{ $event->date ? \Carbon\Carbon::parse($event->date)->format('M d, Y') : 'Date unavailable' }}
-                                </x-tazen-v2.ui.badge>
-                                <span class="text-sm font-medium text-text-secondary">
-                                    From {{ getCurrencySymbol() }}{{ number_format(convertCurrency($event->starting_fees ?? 0), 0) }}
-                                </span>
-                            </div>
-                            <a href="{{ route('event.details', $event->id) }}" class="mt-3 inline-flex text-sm font-semibold text-brand-primary hover:underline">View event</a>
-                        </li>
-                    @endforeach
-                </ul>
-            @endif
-        </x-tazen-v2.ui.card>
+                @if ($dashboardError)
+                    <x-tazen-v2.panel.empty-state
+                        title="Programmes unavailable"
+                        description="We couldn't load upcoming programmes. Please try again later."
+                        icon="spark"
+                    />
+                @elseif ($events->isEmpty())
+                    <x-tazen-v2.panel.empty-state
+                        title="No upcoming programmes"
+                        description="When programmes are published, they will appear here."
+                        icon="spark"
+                    />
+                @else
+                    <ul class="grid gap-3">
+                        @foreach ($events as $event)
+                            <li class="rounded-card border border-divider px-4 py-3">
+                                <p class="font-semibold text-text-primary">{{ $event->heading }}</p>
+                                <p class="mt-1 text-sm text-text-secondary">{{ \Illuminate\Support\Str::limit($event->short_description, 110) }}</p>
+                                <div class="mt-3 flex flex-wrap items-center justify-between gap-2">
+                                    <x-tazen-v2.ui.badge variant="info">
+                                        {{ $event->date ? \Carbon\Carbon::parse($event->date)->format('M d, Y') : 'Date unavailable' }}
+                                    </x-tazen-v2.ui.badge>
+                                    <span class="text-sm font-medium text-text-secondary">
+                                        From {{ getCurrencySymbol() }}{{ number_format(convertCurrency($event->starting_fees ?? 0), 0) }}
+                                    </span>
+                                </div>
+                                <a href="{{ route('event.details', $event->id) }}" class="mt-3 inline-flex text-sm font-semibold text-brand-primary hover:underline">View event</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </x-tazen-v2.ui.card>
+        @else
+            <x-tazen-v2.ui.card>
+                <x-slot:heading>
+                    <div class="flex items-center justify-between gap-3">
+                        <h2 class="font-display text-card-title font-semibold text-brand-secondary">Account shortcuts</h2>
+                    </div>
+                </x-slot:heading>
+                <div class="grid gap-2">
+                    <x-tazen-v2.ui.button href="{{ route('user.additional-services.index') }}" variant="outline" class="w-full justify-between">
+                        Additional services
+                    </x-tazen-v2.ui.button>
+                    <x-tazen-v2.ui.button href="{{ route('user.admin-chat.index') }}" variant="outline" class="w-full justify-between">
+                        Message support
+                    </x-tazen-v2.ui.button>
+                </div>
+            </x-tazen-v2.ui.card>
+        @endif
     </section>
 </div>
 @endsection

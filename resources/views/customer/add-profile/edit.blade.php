@@ -1,15 +1,24 @@
 @extends('customer.layout.layout')
+
+@section('title', 'Edit Profile | Yuktione')
+
 @section('content')
 <div class="customer-profile-edit-page">
     <div class="customer-profile-edit-shell">
+        <x-tazen-v2.panel.breadcrumbs :items="[
+            ['label' => 'Dashboard', 'url' => route('user.dashboard')],
+            ['label' => 'My Profile', 'url' => route('user.profile.index')],
+            ['label' => 'Edit Profile'],
+        ]" />
+
         <section class="edit-hero">
             <div class="hero-copy">
-                <span class="hero-eyebrow"><i class="ri-user-settings-line"></i>Edit Profile</span>
+                <span class="hero-eyebrow">Edit Profile</span>
                 <h1>Update Your Information</h1>
                 <p>Keep your contact and profile details up to date so we can notify you about bookings and new offers without interruption.</p>
             </div>
-            <div class="edit-hero-illustration">
-                <i class="ri-draft-line"></i>
+            <div class="edit-hero-illustration" aria-hidden="true">
+                <x-tazen-v2.panel.icon name="user" class="size-8" />
             </div>
         </section>
 
@@ -93,7 +102,7 @@
 
                 <div class="form-actions">
                     <a href="{{ route('user.profile.index') }}" class="btn-secondary">Cancel</a>
-                    <button type="submit" class="btn-primary"><i class="ri-save-3-line"></i> Save Profile</button>
+                    <button type="submit" class="btn-primary">Save Profile</button>
                 </div>
             </form>
         </section>

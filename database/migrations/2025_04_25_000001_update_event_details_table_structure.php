@@ -6,50 +6,43 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    /**
+     * Historical structure tweak.
+     *
+     * Fresh installs already get compatible columns from the create migration.
+     * Foreign key to all_events is added later (2025_04_29_123609) after the
+     * parent table exists. Avoid ->change() (requires doctrine/dbal) and avoid
+     * adding a premature FK to all_events before that table is created.
+     */
+    public function up(): void
     {
+        if (!Schema::hasTable('event_details')) {
+            return;
+        }
+
         Schema::table('event_details', function (Blueprint $table) {
-            // Drop columns if they exist
             if (Schema::hasColumn('event_details', 'meeting_link')) {
                 $table->dropColumn('meeting_link');
             }
             if (Schema::hasColumn('event_details', 'landmark')) {
                 $table->dropColumn('landmark');
             }
+        });
+    }
 
-            // Modify existing columns
-            $table->string('banner_image', 255)->change();
-            $table->string('event_type', 255)->change();
-            $table->text('event_details')->change();
-            $table->date('starting_date')->change();
-            $table->decimal('starting_fees', 10, 2)->change();
-            $table->longText('event_gallery')->nullable()->change();
-            $table->string('city', 255)->nullable()->change();
-            $table->enum('event_mode', ['online', 'offline'])->nullable()->change();
+    public function down(): void
+    {
+        if (!Schema::hasTable('event_details')) {
+            return;
+        }
 
-            // Add foreign key constraint if not exists
-            if (!Schema::hasColumn('event_details', 'event_id')) {
-                $table->foreignId('event_id')->constrained('all_events')->onDelete('cascade');
+        Schema::table('event_details', function (Blueprint $table) {
+            if (!Schema::hasColumn('event_details', 'meeting_link')) {
+                $table->string('meeting_link', 255)->nullable();
+            }
+            if (!Schema::hasColumn('event_details', 'landmark')) {
+                $table->string('landmark', 255)->nullable();
             }
         });
     }
-
-    public function down()
-    {
-        Schema::table('event_details', function (Blueprint $table) {
-            // Add back the dropped columns
-            $table->string('meeting_link', 255)->nullable();
-            $table->string('landmark', 255)->nullable();
-
-            // Revert column modifications
-            $table->string('banner_image', 255)->change();
-            $table->string('event_type', 255)->change();
-            $table->text('event_details')->change();
-            $table->date('starting_date')->change();
-            $table->decimal('starting_fees', 10, 2)->change();
-            $table->longText('event_gallery')->nullable()->change();
-            $table->string('city', 255)->nullable()->change();
-            $table->enum('event_mode', ['online', 'offline'])->nullable()->change();
-        });
-    }
-}; 
+};

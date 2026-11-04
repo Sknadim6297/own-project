@@ -1,4 +1,46 @@
 @php
+    $consultationLinks = [
+        [
+            'label' => 'Upcoming appointments',
+            'url' => route('user.upcoming-appointment.index'),
+            'icon' => 'clock',
+            'active' => request()->routeIs('user.upcoming-appointment.*'),
+        ],
+        [
+            'label' => 'All appointments',
+            'url' => route('user.all-appointment.index'),
+            'icon' => 'calendar',
+            'active' => request()->routeIs('user.all-appointment.*'),
+        ],
+        [
+            'label' => 'My Bookings',
+            'url' => route('user.my-bookings'),
+            'icon' => 'inbox',
+            'active' => request()->routeIs('user.my-bookings'),
+        ],
+        [
+            'label' => 'Additional services',
+            'url' => route('user.additional-services.index'),
+            'icon' => 'plus',
+            'active' => request()->routeIs('user.additional-services.*'),
+        ],
+        [
+            'label' => 'Messages',
+            'url' => route('user.admin-chat.index'),
+            'icon' => 'chat',
+            'active' => request()->routeIs('user.admin-chat.*'),
+        ],
+    ];
+
+    if (config('yuktione.programmes_enabled')) {
+        $consultationLinks[] = [
+            'label' => 'Programmes',
+            'url' => route('user.customer-event.index'),
+            'icon' => 'spark',
+            'active' => request()->routeIs('user.customer-event.*'),
+        ];
+    }
+
     $customerNav = [
         [
             'title' => 'Overview',
@@ -13,38 +55,7 @@
         ],
         [
             'title' => 'Consultations',
-            'links' => [
-                [
-                    'label' => 'Upcoming appointments',
-                    'url' => route('user.upcoming-appointment.index'),
-                    'icon' => 'clock',
-                    'active' => request()->routeIs('user.upcoming-appointment.*'),
-                ],
-                [
-                    'label' => 'All appointments',
-                    'url' => route('user.all-appointment.index'),
-                    'icon' => 'calendar',
-                    'active' => request()->routeIs('user.all-appointment.*'),
-                ],
-                [
-                    'label' => 'Additional services',
-                    'url' => route('user.additional-services.index'),
-                    'icon' => 'plus',
-                    'active' => request()->routeIs('user.additional-services.*'),
-                ],
-                [
-                    'label' => 'Messages',
-                    'url' => route('user.admin-chat.index'),
-                    'icon' => 'chat',
-                    'active' => request()->routeIs('user.admin-chat.*'),
-                ],
-                [
-                    'label' => 'Programmes',
-                    'url' => route('user.customer-event.index'),
-                    'icon' => 'spark',
-                    'active' => request()->routeIs('user.customer-event.*'),
-                ],
-            ],
+            'links' => $consultationLinks,
         ],
         [
             'title' => 'Account',

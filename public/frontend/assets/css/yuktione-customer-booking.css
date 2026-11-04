@@ -1,0 +1,168 @@
+/* Authenticated customer booking funnel — panel shell polish */
+[data-yuktione-booking="1"] .yk-booking-shell {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 56rem;
+}
+
+[data-yuktione-booking="1"] .yk-booking-card {
+    background: #ffffff;
+    border: 1px solid #E2E9EE;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+[data-yuktione-booking="1"] .yk-booking-card__head {
+    background: #EAF6F2;
+    border-bottom: 1px solid #E2E9EE;
+    padding: 1.25rem 1.5rem;
+}
+
+[data-yuktione-booking="1"] .yk-booking-card__head h2,
+[data-yuktione-booking="1"] .yk-booking-card__head h3 {
+    color: #142B4D;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+[data-yuktione-booking="1"] .yk-booking-card__head p {
+    color: #475569;
+    font-size: 0.875rem;
+    margin: 0.35rem 0 0;
+}
+
+[data-yuktione-booking="1"] .yk-booking-card__body {
+    padding: 1.25rem 1.5rem 1.5rem;
+}
+
+[data-yuktione-booking="1"] .yk-booking-dl {
+    display: grid;
+    gap: 0.85rem;
+    margin: 0;
+}
+
+[data-yuktione-booking="1"] .yk-booking-dl > div {
+    align-items: baseline;
+    border-bottom: 1px solid #E2E9EE;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    padding-bottom: 0.75rem;
+}
+
+[data-yuktione-booking="1"] .yk-booking-dl > div:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+[data-yuktione-booking="1"] .yk-booking-dl dt {
+    color: #718096;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+[data-yuktione-booking="1"] .yk-booking-dl dd {
+    color: #142B4D;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 0;
+    text-align: right;
+}
+
+[data-yuktione-booking="1"] .yk-booking-actions {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}
+
+[data-yuktione-booking="1"] .yk-booking-actions .btn_1,
+[data-yuktione-booking="1"] a.btn_1,
+[data-yuktione-booking="1"] button.btn_1 {
+    align-items: center;
+    background: #36877F !important;
+    border: 1px solid #36877F !important;
+    border-radius: 0.75rem !important;
+    box-shadow: none !important;
+    color: #fff !important;
+    display: inline-flex;
+    font-weight: 600;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.65rem 1.25rem;
+    text-decoration: none !important;
+    width: 100%;
+}
+
+[data-yuktione-booking="1"] .yk-booking-actions .btn_1:hover,
+[data-yuktione-booking="1"] a.btn_1:hover,
+[data-yuktione-booking="1"] button.btn_1:hover {
+    background: #286E67 !important;
+    border-color: #286E67 !important;
+}
+
+[data-yuktione-booking="1"] .yk-booking-actions .btn_1.outline,
+[data-yuktione-booking="1"] a.btn_1.outline {
+    background: #fff !important;
+    border-color: #E2E9EE !important;
+    color: #142B4D !important;
+}
+
+[data-yuktione-booking="1"] .yk-booking-actions .btn_1.outline:hover,
+[data-yuktione-booking="1"] a.btn_1.outline:hover {
+    border-color: #36877F !important;
+    color: #36877F !important;
+}
+
+[data-yuktione-booking="1"] .yk-booking-phone {
+    margin-top: 0.35rem;
+}
+
+[data-yuktione-booking="1"] .yk-booking-phone .form-control,
+[data-yuktione-booking="1"] #phone {
+    background: #fff;
+    border: 1px solid #E2E9EE;
+    border-radius: 0.75rem;
+    color: #142B4D;
+    min-height: 2.75rem;
+    padding: 0.65rem 0.9rem;
+    width: 100%;
+}
+
+[data-yuktione-booking="1"] .yk-booking-phone .form-control:focus,
+[data-yuktione-booking="1"] #phone:focus {
+    border-color: #36877F;
+    box-shadow: 0 0 0 3px rgb(54 135 127 / 0.15);
+    outline: none;
+}
+
+[data-yuktione-booking="1"] .yk-booking-success-icon {
+    align-items: center;
+    background: #EAF6F2;
+    border-radius: 999px;
+    color: #36877F;
+    display: inline-flex;
+    font-size: 2rem;
+    height: 4rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+    width: 4rem;
+}
+
+[data-yuktione-booking="1"] .loading-overlay {
+    background: rgb(247 250 251 / 0.72);
+    z-index: 40;
+}
+
+@media (min-width: 768px) {
+    [data-yuktione-booking="1"] .yk-booking-actions {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    [data-yuktione-booking="1"] .yk-booking-actions .btn_1:first-child {
+        grid-column: 1 / -1;
+    }
+}

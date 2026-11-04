@@ -1,22 +1,19 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Historical migration retained for migration-history compatibility.
+     *
+     * The unused header_services pivot also depended on services and blocked
+     * fresh installs with the same foreign-key failure mode. It is retired
+     * alongside header_feature_services; any leftover table is dropped later.
      */
     public function up(): void
     {
-        Schema::create('header_services', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('header_id')->constrained()->onDelete('cascade');
-            $table->foreignId('service_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
-        });
+        // no-op: unused header/services pivot retired
     }
 
     /**
@@ -24,7 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('header_services');
+        // no-op: unused header/services pivot retired
     }
 };
-

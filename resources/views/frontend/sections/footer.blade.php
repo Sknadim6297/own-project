@@ -26,7 +26,7 @@
                 <a class="is-x" href="https://x.com/Tazenofficial_" target="_blank" rel="noopener noreferrer" aria-label="YuktiOne on X" title="X">
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18.9 3H22l-6.8 7.8L23.2 21h-6.3L12 14.7 6.5 21H3.3l7.3-8.4L2.8 3h6.5l4.5 5.9L18.9 3Zm-1.1 16h1.7L8.2 4.9H6.4L17.8 19Z"></path></svg>
                 </a>
-                <a class="is-whatsapp" href="https://wa.me/+919147421560?text=Hello%20Tazen!%20I%20need%20assistance%20with%20your%20services." target="_blank" rel="noopener noreferrer" aria-label="YuktiOne on WhatsApp" title="WhatsApp">
+                <a class="is-whatsapp" href="https://wa.me/+919147421560?text=Hello%20{{ rawurlencode(config('yuktione.name', 'YuktiOne')) }}!%20I%20need%20assistance%20with%20your%20services." target="_blank" rel="noopener noreferrer" aria-label="{{ config('yuktione.name', 'YuktiOne') }} on WhatsApp" title="WhatsApp">
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.5a9.3 9.3 0 0 0-8 14l-1.2 4.4 4.5-1.2A9.5 9.5 0 1 0 12 2.5Zm0 17.1a7.6 7.6 0 0 1-3.9-1.1l-.3-.2-2.7.7.7-2.6-.2-.3A7.6 7.6 0 1 1 12 19.6Zm4.2-5.7c-.2-.1-1.3-.7-1.5-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.8.9-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.8-1.1-.6-.5-1.1-1.2-1.2-1.4-.1-.2 0-.4.1-.5l.4-.5.2-.4c.1-.2 0-.3 0-.5l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.1s.9 2.4 1 2.5c.1.2 1.8 2.7 4.3 3.8.6.3 1.1.4 1.4.5.6.2 1.2.2 1.6.1.5-.1 1.3-.5 1.5-1 .2-.5.2-.9.1-1-.1-.1-.3-.2-.5-.3Z"></path></svg>
                 </a>
             </nav>
@@ -58,11 +58,11 @@
 
         <div class="tazen-footer__column tazen-footer__contact">
             <h2>Get in Touch</h2>
-            <a href="mailto:help@tazen.in">
+            <a href="mailto:{{ config('yuktione.email', 'info@yuktione.in') }}">
                 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path></svg>
-                <span>help@tazen.in</span>
+                <span>{{ config('yuktione.email', 'info@yuktione.in') }}</span>
             </a>
-            <p>For support and enquiries, contact the Tazen team.</p>
+            <p>For support and enquiries, contact the {{ config('yuktione.name', 'YuktiOne') }} team.</p>
             <form class="tazen-footer__contact-form" data-contact-redirect>
                 <label for="tazen-footer-email">Send us your email</label>
                 <div>

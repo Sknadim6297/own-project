@@ -42,25 +42,21 @@ class EventController extends Controller
      */
     public function bookingSuccess(Request $request)
     {
-        if (!session()->has('event_booking_data')) {
-            $booking = EventBooking::where('user_id', auth()->guard('user')->id())
-                ->latest()
-                ->first();
-                
-            if ($booking) {
-                $event = AllEvent::find($booking->event_id);
-                $user = auth()->guard('user')->user();
-                
-                return view('customer.booking.event_success', compact('booking', 'event', 'user'));
-            }
-            return redirect()->route('user.customer-event.index')
-                ->with('error', 'No booking information found. Please check your bookings list.');
+        $payload = session('event_booking_success');
+        $booking = \App\Support\BookingSuccessAccess::eventSuccessBooking($payload);
+
+        if (!$booking) {
+            session()->forget('event_booking_success');
+
+            return redirect()
+                ->route('user.dashboard')
+                ->with('error', 'No booking information found. Your confirmation session may have expired.');
         }
-        $bookingData = session('event_booking_data');
-        $event = AllEvent::find($bookingData['event_id'] ?? null);
+
+        $event = AllEvent::find($booking->event_id);
         $user = auth()->guard('user')->user();
-        
-        return view('customer.booking.event_success', compact('bookingData', 'event', 'user'));
+
+        return view('customer.booking.event_success', compact('booking', 'event', 'user'));
     }
 
     /**

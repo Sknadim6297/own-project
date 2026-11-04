@@ -947,6 +947,16 @@ class HomeController extends Controller
 
     public function success()
     {
+        $payload = session('booking_success');
+
+        if (!\App\Support\BookingSuccessAccess::professionalSessionIsAuthorized($payload)) {
+            session()->forget('booking_success');
+
+            return redirect()
+                ->route('user.upcoming-appointment.index')
+                ->with('error', 'No booking information found. Your confirmation session may have expired.');
+        }
+
         return view('customer.booking.success', ['showFooter' => false]);
     }
 

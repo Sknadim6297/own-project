@@ -4,7 +4,23 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="author" content="Tazen">
+	@php
+		$brandName = config('yuktione.name', 'YuktiOne');
+		$isAuthenticationRoute = request()->routeIs('login', 'professional.login');
+		$isCustomerPanelFlow = request()->routeIs(
+			'user.booking',
+			'user.booking.summary',
+			'user.booking.success',
+			'user.booking.retry',
+			'user.customer.booking.retry',
+			'user.event.booking.success',
+			'event.booking.success',
+			'user.my-bookings'
+		);
+		$defaultPublicTitle = $brandName . ' | Find Verified Experts for Career, Health & Finance';
+		$defaultPublicDescription = 'Discover trusted professionals in career counselling, business, health, finance, and more. Book verified experts easily with ' . $brandName . '.';
+	@endphp
+	<meta name="author" content="{{ $brandName }}">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	@include('partials.dm-sans')
 	
@@ -17,39 +33,26 @@
 		@yield('meta')
 	@else
 		<!-- Default Meta Tags -->
-		<meta name="description" content="@yield('meta_description', isset($metaDescription) ? $metaDescription : 'Discover trusted professionals in career counselling, business, health, finance, and more. Book verified experts easily with Tazen.in.')">
-		<meta name="keywords" content="career counselling, health experts, finance professionals, business consultants, verified experts, professional consultation, appointment booking, Tazen">
+		<meta name="description" content="@yield('meta_description', isset($metaDescription) ? $metaDescription : $defaultPublicDescription)">
+		<meta name="keywords" content="career counselling, health experts, finance professionals, business consultants, verified experts, professional consultation, appointment booking, {{ $brandName }}">
 		
 		<!-- Open Graph Meta Tags for Social Media -->
-		<meta property="og:title" content="{{ isset($metaTitle) ? $metaTitle : 'Tazen.in | Find Verified Experts for Career, Health & Finance' }}">
-		<meta property="og:description" content="{{ isset($metaDescription) ? $metaDescription : 'Discover trusted professionals in career counselling, business, health, finance, and more. Book verified experts easily with Tazen.in.' }}">
+		<meta property="og:title" content="{{ isset($metaTitle) ? $metaTitle : $defaultPublicTitle }}">
+		<meta property="og:description" content="{{ isset($metaDescription) ? $metaDescription : $defaultPublicDescription }}">
 		<meta property="og:type" content="website">
 		<meta property="og:url" content="{{ url()->current() }}">
-		<meta property="og:site_name" content="Tazen.in">
-		<meta property="og:image" content="{{ asset('frontend/assets/img/tazen-logo.png') }}">
+		<meta property="og:site_name" content="{{ $brandName }}">
+		<meta property="og:image" content="{{ asset('frontend/assets/Yuktione_logo.png') }}">
 		
 		<!-- Twitter Card Meta Tags -->
 		<meta name="twitter:card" content="summary_large_image">
-		<meta name="twitter:title" content="{{ isset($metaTitle) ? $metaTitle : 'Tazen.in | Find Verified Experts for Career, Health & Finance' }}">
-		<meta name="twitter:description" content="{{ isset($metaDescription) ? $metaDescription : 'Discover trusted professionals in career counselling, business, health, finance, and more. Book verified experts easily with Tazen.in.' }}">
-		<meta name="twitter:image" content="{{ asset('frontend/assets/img/tazen-logo.png') }}">
+		<meta name="twitter:title" content="{{ isset($metaTitle) ? $metaTitle : $defaultPublicTitle }}">
+		<meta name="twitter:description" content="{{ isset($metaDescription) ? $metaDescription : $defaultPublicDescription }}">
+		<meta name="twitter:image" content="{{ asset('frontend/assets/Yuktione_logo.png') }}">
 		
-		<title>@yield('title', isset($metaTitle) ? $metaTitle : 'Tazen.in | Find Verified Experts for Career, Health & Finance')</title>
+		<title>@yield('title', isset($metaTitle) ? $metaTitle : $defaultPublicTitle)</title>
 	@endif
 	@stack('head')
-	@php
-		$isAuthenticationRoute = request()->routeIs('login', 'professional.login');
-		$isCustomerPanelFlow = request()->routeIs(
-			'user.booking',
-			'user.booking.summary',
-			'user.booking.success',
-			'user.booking.retry',
-			'user.customer.booking.retry',
-			'user.event.booking.success',
-			'event.booking.success',
-			'user.my-bookings'
-		);
-	@endphp
 
 	@if ($isAuthenticationRoute)
 		@vite([
@@ -250,7 +253,7 @@
 
 	<!-- WhatsApp Floating Button -->
 	@if (!$isAuthenticationRoute)
-		<a href="https://wa.me/+919147421560?text=Hello%20Tazen!%20I%20need%20assistance%20with%20your%20services." target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Chat with us on WhatsApp">
+		<a href="https://wa.me/+919147421560?text=Hello%20{{ rawurlencode(config('yuktione.name', 'YuktiOne')) }}!%20I%20need%20assistance%20with%20your%20services." target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Chat with us on WhatsApp">
 			<svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
 				<path d="M16 3.4a12.1 12.1 0 0 0-10.4 18.3L4 28l6.5-1.7A12.3 12.3 0 1 0 16 3.4Z"></path>
 				<path d="M12 10.2c.3-.6.6-.6.9-.6h.7c.2 0 .5 0 .7.5l1 2.4c.1.3.1.5-.1.7l-.8 1c-.2.2-.2.4-.1.6.4.8 1.2 1.6 2.1 2.2.8.5 1.5.8 1.8.9.3.1.5 0 .7-.2l1-1.2c.2-.3.5-.3.8-.2l2.3 1.1c.3.2.5.3.5.5 0 .2-.2 1.4-.8 2-.7.7-1.8 1-2.5 1-1.1 0-2.5-.4-4.3-1.4-2.2-1.2-4-3.4-4.6-4.2-.6-.8-1.5-2.1-1.5-3.5s.7-2.1 1-2.5Z"></path>

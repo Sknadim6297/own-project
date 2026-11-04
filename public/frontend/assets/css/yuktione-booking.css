@@ -1,64 +1,155 @@
-/* YuktiOne token overlay for legacy customer booking screens.
-   Keeps existing markup/layout; only restyles colours/typography. */
+/* YuktiOne token overlay for authenticated customer booking screens.
+   Keeps existing markup hooks; restyles colours/typography to customer-panel tokens. */
 [data-yuktione-panel="customer"] {
-    --yk-navy: #0b2048;
-    --yk-teal: #316d61;
-    --yk-mint: #eaf6f2;
-    --yk-lavender: #9d81db;
-    --yk-line: #e6ebf2;
+    --yk-primary: #36877F;
+    --yk-primary-hover: #286E67;
+    --yk-heading: #142B4D;
+    --yk-body: #475569;
+    --yk-muted: #718096;
+    --yk-background: #F7FAFB;
+    --yk-surface: #ffffff;
+    --yk-mint: #EAF6F2;
+    --yk-lavender: #F0EBF8;
+    --yk-border: #E2E9EE;
     font-family: "DM Sans", sans-serif;
+    color: var(--yk-body);
 }
 
 [data-yuktione-panel="customer"] .bg_gray.pattern,
 [data-yuktione-panel="customer"] main.bg_gray {
-    background:
-        radial-gradient(circle at 10% 0%, rgba(157, 129, 219, 0.12), transparent 28%),
-        radial-gradient(circle at 90% 8%, rgba(49, 109, 97, 0.1), transparent 26%),
-        #f7faf9 !important;
+    background: var(--yk-background) !important;
 }
 
 [data-yuktione-panel="customer"] .btn_1,
 [data-yuktione-panel="customer"] .btn-primary,
 [data-yuktione-panel="customer"] button.btn_1,
 [data-yuktione-panel="customer"] a.btn_1 {
-    background: var(--yk-teal) !important;
-    border-color: var(--yk-teal) !important;
-    color: #fff !important;
+    background: var(--yk-primary) !important;
+    border: 1px solid var(--yk-primary) !important;
+    border-radius: 0.75rem !important;
     box-shadow: none !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+    min-height: 2.75rem;
 }
 
 [data-yuktione-panel="customer"] .btn_1:hover,
 [data-yuktione-panel="customer"] .btn-primary:hover,
 [data-yuktione-panel="customer"] a.btn_1:hover {
-    background: #28584e !important;
-    border-color: #28584e !important;
+    background: var(--yk-primary-hover) !important;
+    border-color: var(--yk-primary-hover) !important;
     color: #fff !important;
+    transform: none !important;
+}
+
+[data-yuktione-panel="customer"] .btn_1.outline,
+[data-yuktione-panel="customer"] a.btn_1.outline {
+    background: var(--yk-surface) !important;
+    border-color: var(--yk-border) !important;
+    color: var(--yk-heading) !important;
+}
+
+[data-yuktione-panel="customer"] .btn_1.outline:hover,
+[data-yuktione-panel="customer"] a.btn_1.outline:hover {
+    background: var(--yk-mint) !important;
+    border-color: var(--yk-primary) !important;
+    color: var(--yk-primary) !important;
 }
 
 [data-yuktione-panel="customer"] h1,
 [data-yuktione-panel="customer"] h2,
 [data-yuktione-panel="customer"] h3,
-[data-yuktione-panel="customer"] h4 {
-    color: var(--yk-navy) !important;
+[data-yuktione-panel="customer"] h4,
+[data-yuktione-panel="customer"] h5,
+[data-yuktione-panel="customer"] h6 {
+    color: var(--yk-heading) !important;
+    font-family: "DM Sans", sans-serif;
 }
 
 [data-yuktione-panel="customer"] .box_booking,
 [data-yuktione-panel="customer"] .box_booking_2,
 [data-yuktione-panel="customer"] .booking-card,
+[data-yuktione-panel="customer"] .success-box,
 [data-yuktione-panel="customer"] .card {
-    border-color: var(--yk-line) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 10px 28px rgba(11, 32, 72, 0.06) !important;
+    background: var(--yk-surface) !important;
+    border: 1px solid var(--yk-border) !important;
+    border-radius: 1.25rem !important;
+    box-shadow: 0 2px 8px rgb(20 43 77 / 0.05), 0 16px 36px -24px rgb(20 43 77 / 0.18) !important;
+    overflow: hidden;
 }
 
-[data-yuktione-panel="customer"] a:not(.btn_1):not(.btn-primary) {
-    color: var(--yk-teal);
+[data-yuktione-panel="customer"] .box_booking_2 .head,
+[data-yuktione-panel="customer"] .box_booking .head {
+    background: var(--yk-mint) !important;
+    border-bottom: 1px solid var(--yk-border) !important;
+    color: var(--yk-heading) !important;
+    text-align: left !important;
+}
+
+[data-yuktione-panel="customer"] .box_booking_2 .head h3,
+[data-yuktione-panel="customer"] .box_booking .head h3,
+[data-yuktione-panel="customer"] .box_booking_2 .head a,
+[data-yuktione-panel="customer"] .box_booking .head a {
+    color: var(--yk-heading) !important;
+    text-decoration: none !important;
+}
+
+[data-yuktione-panel="customer"] .box_booking_2 .main ul li span,
+[data-yuktione-panel="customer"] .box_booking .main ul li span {
+    color: var(--yk-heading);
+    font-weight: 600;
+}
+
+[data-yuktione-panel="customer"] a:not(.btn_1):not(.btn-primary):not(.btn-dashboard) {
+    color: var(--yk-primary);
+}
+
+[data-yuktione-panel="customer"] .form-control,
+[data-yuktione-panel="customer"] input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+[data-yuktione-panel="customer"] select,
+[data-yuktione-panel="customer"] textarea {
+    border: 1px solid var(--yk-border) !important;
+    border-radius: 0.75rem !important;
+    color: var(--yk-heading);
+    min-height: 2.75rem;
 }
 
 [data-yuktione-panel="customer"] .form-control:focus,
 [data-yuktione-panel="customer"] input:focus,
 [data-yuktione-panel="customer"] select:focus,
 [data-yuktione-panel="customer"] textarea:focus {
-    border-color: var(--yk-teal) !important;
-    box-shadow: 0 0 0 3px rgba(49, 109, 97, 0.15) !important;
+    border-color: var(--yk-primary) !important;
+    box-shadow: 0 0 0 3px rgb(54 135 127 / 0.12) !important;
+    outline: none;
+}
+
+[data-yuktione-panel="customer"] .btn-dashboard {
+    background: var(--yk-primary) !important;
+    border-radius: 0.75rem !important;
+    color: #fff !important;
+    display: inline-flex;
+    font-weight: 600;
+    min-height: 2.75rem;
+    padding: 0.65rem 1.25rem;
+    text-decoration: none !important;
+}
+
+[data-yuktione-panel="customer"] .btn-dashboard:hover {
+    background: var(--yk-primary-hover) !important;
+    color: #fff !important;
+}
+
+[data-yuktione-panel="customer"] .success-icon,
+[data-yuktione-panel="customer"] .success-icon i {
+    color: var(--yk-primary) !important;
+}
+
+[data-yuktione-panel="customer"] .booking-details {
+    background: #F3F7F8 !important;
+    border: 1px solid var(--yk-border);
+    border-radius: 1rem;
+}
+
+[data-yuktione-panel="customer"] .booking-details h5 {
+    border-bottom-color: var(--yk-primary) !important;
 }

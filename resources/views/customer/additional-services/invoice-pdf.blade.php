@@ -19,13 +19,13 @@
         }
         
         .invoice-header {
-            border-bottom: 3px solid #007bff;
+            border-bottom: 3px solid #36877F;
             margin-bottom: 30px;
             padding-bottom: 20px;
         }
         
         .invoice-title {
-            color: #007bff;
+            color: #142B4D;
             font-size: 36px;
             font-weight: bold;
             margin-bottom: 5px;
@@ -91,7 +91,7 @@
             padding: 10px;
             background: white;
             border-radius: 5px;
-            border-left: 4px solid #28a745;
+            border-left: 4px solid #36877F;
         }
         
         .price-stage {
@@ -106,14 +106,14 @@
             text-align: center;
             width: 5%;
             font-size: 18px;
-            color: #007bff;
+            color: #36877F;
             vertical-align: middle;
         }
         
         .price-value {
             font-size: 16px;
             font-weight: bold;
-            color: #28a745;
+            color: #36877F;
         }
         
         .price-label {
@@ -127,16 +127,16 @@
             border-radius: 5px;
             padding: 10px;
             margin: 10px 0;
-            border-left: 4px solid #28a745;
+            border-left: 4px solid #36877F;
             font-size: 11px;
         }
         
         .negotiation-history {
-            background: #e3f2fd;
+            background: #EAF6F2;
             border-radius: 5px;
             padding: 15px;
             margin: 15px 0;
-            border-left: 4px solid #2196f3;
+            border-left: 4px solid #36877F;
         }
         
         .badge {
@@ -290,7 +290,8 @@
         <div class="text-center border-top">
             <p class="text-muted">
                 <small>
-                    Thank you for using our services!<br>
+                    Thank you for using {{ config('yuktione.name', 'YuktiOne') }}!<br>
+                    For support contact {{ config('yuktione.email', 'info@yuktione.in') }}.<br>
                     This is a computer-generated invoice. Generated on {{ now()->format('d M, Y H:i') }}
                 </small>
             </p>

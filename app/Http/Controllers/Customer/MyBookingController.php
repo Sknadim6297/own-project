@@ -11,13 +11,18 @@ class MyBookingController extends Controller
 {
     public function index()
     {
-        $userId = Auth::guard('web')->id();
-        
-        $bookings = Booking::with(['professional', 'service', 'chat.messages'])
+        $userId = Auth::guard('user')->id();
+
+        if (!$userId) {
+            abort(401);
+        }
+
+        $bookings = Booking::with(['professional', 'service'])
             ->where('user_id', $userId)
             ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(10);
-        
+
         return view('customer.bookings.index', compact('bookings'));
     }
 }

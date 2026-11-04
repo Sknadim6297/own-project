@@ -1,83 +1,129 @@
-@extends('layouts.layout')
+@extends('customer.layout.booking')
+
+@section('title', config('yuktione.name', 'YuktiOne') . ' | Booking Summary')
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/booking-sign_up.css') }}" />
+<style>
+    .box_booking_2 .main h6 { color: #142B4D; font-weight: 700; margin-bottom: 1rem; }
+</style>
 @endsection
 
 @section('content')
-<main class="bg_gray pattern">
-    <div class="container margin_60_40">
-        <div class="row justify-content-center">
-            <div class="col-lg-5">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="fa fa-check-circle"></i> {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-                
-                @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fa fa-exclamation-circle"></i> {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-                
-                <div class="box_booking_2">
-                    @if(isset($bookingData))
-                        @php
-                            $event = \App\Models\AllEvent::find($bookingData['event_id'] ?? null);
-                            $user = Auth::guard('user')->user();
-                            $amount = ($bookingData['total_price'] ?? 0) * 100;
-                        @endphp
+<div class="yk-booking-shell mx-auto grid max-w-3xl gap-6">
+    <x-tazen-v2.panel.breadcrumbs :items="[
+        ['label' => 'Dashboard', 'url' => route('user.dashboard')],
+        ['label' => 'Booking Summary'],
+    ]" />
 
-                        <div class="head">
-                            <div class="title">
-                                <h3>{{ $bookingData['event_name'] ?? 'Programme Booking' }}</h3>
-                                <p>{{ $bookingData['location'] ?? 'Location N/A' }} ({{ ucfirst($bookingData['type'] ?? '') }})</p>
-                            </div>
-                        </div>
+    <header>
+        <p class="text-sm font-semibold uppercase tracking-wide text-brand-primary">Programmes</p>
+        <h1 class="mt-1 font-display text-page-title font-semibold text-brand-secondary">Booking Summary</h1>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-text-secondary sm:text-base">
+            Review your programme booking details before confirming payment.
+        </p>
+    </header>
 
-                        <div class="main">
-                            <h6>Programme Booking Summary</h6>
-                            <ul>
-                                <li>Programme Name: <span>{{ $bookingData['event_name'] ?? ($event->heading ?? 'N/A') }}</span></li>
-                                <li>Programme Date: <span>{{ isset($bookingData['event_date']) ? \Carbon\Carbon::parse($bookingData['event_date'])->format('d M Y') : 'N/A' }}</span></li>
-                                <li>Total Amount: <span>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($bookingData['total_price'] ?? 0), 2) }}</span></li>
-                                <li>Status: <span>{{ ucfirst($event->status ?? 'Pending') }}</span></li>
-                                <li>Location: <span>{{ $bookingData['location'] ?? ($event->city ?? 'N/A') }}</span></li>
-                                <li>Type: <span>{{ ucfirst($bookingData['type'] ?? 'N/A') }}</span></li>
-                                <li>Persons: <span>{{ $bookingData['persons'] ?? 'N/A' }}</span></li>
-                                <li>Phone: <span>{{ $bookingData['phone'] ?? 'N/A' }}</span></li>
-                                <li>Your Name: <span>{{ $user->name ?? 'N/A' }}</span></li>
-                                <li>Your Email: <span>{{ $user->email ?? 'N/A' }}</span></li>
-                            </ul>
+    @if(session('success'))
+        <div class="rounded-panel border border-brand-200 bg-brand-50 px-4 py-3 text-sm text-brand-secondary" role="status">
+            {{ session('success') }}
+        </div>
+    @endif
 
-                            <hr>
-                            <button class="btn_1 full-width mb_5" id="payNowBtn">Confirm Booking</button>
-                            <a href="{{ route('event.list') }}" class="btn_1 full-width outline mb_25">Change Booking</a>
-                            
-                            @if(session('failed_booking_data'))
-                                <div class="alert alert-warning mt-3">
-                                    <h6>Previous Payment Failed</h6>
-                                    <p>Your previous payment attempt was unsuccessful. You can retry your booking below.</p>
-                                    <a href="{{ route('user.booking.retry', ['booking_id' => session('failed_booking_id')]) }}" 
-                                       class="btn btn-warning btn-sm">
-                                        <i class="fa fa-refresh"></i> Retry Booking
-                                    </a>
-                                </div>
-                            @endif
-                        </div>
-                    @else
-                        <div class="main">
-                            <h6>No booking data available.</h6>
-                        </div>
-                    @endif
+    @if(session('error'))
+        <div class="rounded-panel border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if(isset($bookingData))
+        @php
+            $event = \App\Models\AllEvent::find($bookingData['event_id'] ?? null);
+            $user = Auth::guard('user')->user();
+            $amount = ($bookingData['total_price'] ?? 0) * 100;
+        @endphp
+
+        <article class="yk-booking-card box_booking_2">
+            <div class="yk-booking-card__head head">
+                <div class="title">
+                    <h3>{{ $bookingData['event_name'] ?? 'Programme Booking' }}</h3>
+                    <p>{{ $bookingData['location'] ?? 'Location N/A' }} ({{ ucfirst($bookingData['type'] ?? '') }})</p>
                 </div>
             </div>
-        </div>
-    </div>
-</main>
+
+            <div class="yk-booking-card__body main">
+                <h6>Programme Booking Summary</h6>
+                <dl class="yk-booking-dl">
+                    <div>
+                        <dt>Programme name</dt>
+                        <dd>{{ $bookingData['event_name'] ?? ($event->heading ?? 'N/A') }}</dd>
+                    </div>
+                    <div>
+                        <dt>Programme date</dt>
+                        <dd>{{ isset($bookingData['event_date']) ? \Carbon\Carbon::parse($bookingData['event_date'])->format('d M Y') : 'N/A' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Total amount</dt>
+                        <dd>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($bookingData['total_price'] ?? 0), 2) }}</dd>
+                    </div>
+                    <div>
+                        <dt>Status</dt>
+                        <dd>{{ ucfirst($event->status ?? 'Pending') }}</dd>
+                    </div>
+                    <div>
+                        <dt>Location</dt>
+                        <dd>{{ $bookingData['location'] ?? ($event->city ?? 'N/A') }}</dd>
+                    </div>
+                    <div>
+                        <dt>Type</dt>
+                        <dd>{{ ucfirst($bookingData['type'] ?? 'N/A') }}</dd>
+                    </div>
+                    <div>
+                        <dt>Persons</dt>
+                        <dd>{{ $bookingData['persons'] ?? 'N/A' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Phone</dt>
+                        <dd>{{ $bookingData['phone'] ?? 'N/A' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Your name</dt>
+                        <dd>{{ $user->name ?? 'N/A' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Your email</dt>
+                        <dd>{{ $user->email ?? 'N/A' }}</dd>
+                    </div>
+                </dl>
+
+                <div class="yk-booking-actions">
+                    <button type="button" class="btn_1 full-width mb_5" id="payNowBtn">Confirm Booking</button>
+                    @if(config('yuktione.programmes_enabled'))
+                        <a href="{{ route('event.list') }}" class="btn_1 full-width outline mb_25">Change Booking</a>
+                    @else
+                        <a href="{{ route('user.dashboard') }}" class="btn_1 full-width outline mb_25">Back to Dashboard</a>
+                    @endif
+                </div>
+
+                @if(session('failed_booking_data'))
+                    <div class="mt-4 rounded-panel border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                        <p class="font-semibold">Previous payment failed</p>
+                        <p class="mt-1">Your previous payment attempt was unsuccessful. You can retry your booking below.</p>
+                        <a href="{{ route('user.booking.retry', ['booking_id' => session('failed_booking_id')]) }}"
+                           class="mt-3 inline-flex min-h-10 items-center justify-center rounded-control border border-brand-primary bg-brand-primary px-3 text-sm font-semibold text-white">
+                            Retry Booking
+                        </a>
+                    </div>
+                @endif
+            </div>
+        </article>
+    @else
+        <article class="yk-booking-card">
+            <div class="yk-booking-card__body main">
+                <h6>No booking data available.</h6>
+            </div>
+        </article>
+    @endif
+</div>
 @endsection
 
 @section('script')

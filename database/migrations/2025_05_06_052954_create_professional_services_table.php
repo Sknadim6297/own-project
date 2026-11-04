@@ -22,6 +22,10 @@ return new class extends Migration
             $table->json('features')->nullable();
             $table->string('tags')->nullable();
             $table->text('requirements')->nullable();
+            // Included here so fresh installs still get columns from the earlier
+            // 2025_05_01 alter that cannot run before this table exists.
+            $table->json('most_requested_services')->nullable();
+            $table->json('most_requested_services_upto_price')->nullable();
             $table->timestamps();
 
             $table->foreign('professional_id')->references('id')->on('professionals')->onDelete('cascade');

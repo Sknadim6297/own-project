@@ -1,196 +1,159 @@
-@extends('layouts.layout')
+@extends('customer.layout.booking')
+
+@section('title', config('yuktione.name', 'YuktiOne') . ' | Booking Confirmed')
 
 @section('styles')
-    <link rel="stylesheet" href="{{ asset('frontend/assets/css/booking-sign_up.css') }}">
-    <style>
-        .success-box {
-            background: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            margin-top: 50px;
-        }
-        .success-icon {
-            color: #28a745;
-            font-size: 50px;
-            margin-bottom: 20px;
-        }
-        .booking-details {
-            margin-top: 30px;
-            text-align: left;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-        .booking-details h5 {
-            color: #333;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #28a745;
-            padding-bottom: 10px;
-        }
-        .booking-details ul {
-            list-style: none;
-            padding: 0;
-        }
-        .booking-details ul li {
-            margin-bottom: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .booking-details ul li strong {
-            color: #666;
-            min-width: 150px;
-            display: inline-block;
-        }
-        .btn-dashboard {
-            margin-top: 20px;
-            background: #3399cc;
-            color: white;
-            padding: 10px 30px;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-        .btn-dashboard:hover {
-            background: #2980b9;
-            text-decoration: none;
-            color: white;
-        }
-    </style>
+<style>
+    .btn-dashboard {
+        align-items: center;
+        background: #36877F;
+        border-radius: 0.75rem;
+        color: #fff;
+        display: inline-flex;
+        font-weight: 600;
+        justify-content: center;
+        min-height: 2.75rem;
+        padding: 0.65rem 1.5rem;
+        text-decoration: none;
+    }
+    .btn-dashboard:hover { background: #286E67; color: #fff; text-decoration: none; }
+</style>
 @endsection
 
 @section('content')
 @php
-    // Get service name with multiple fallbacks
     $serviceName = 'N/A';
     $subServiceName = null;
-    
-    // First try from session
+
     if (session('booking_success.service_name')) {
         $serviceName = session('booking_success.service_name');
-    }
-    // Then try to get from professional ID if available
-    elseif (session('booking_success.professional_id')) {
+    } elseif (session('booking_success.professional_id')) {
         $professionalId = session('booking_success.professional_id');
         $professionalService = \App\Models\ProfessionalService::with('service')
             ->where('professional_id', $professionalId)
             ->first();
-        
+
         if ($professionalService) {
-            // First try to get from the related Service model
             if ($professionalService->service && $professionalService->service->name) {
                 $serviceName = $professionalService->service->name;
-            }
-            // Fallback to professional service's own service_name
-            elseif ($professionalService->service_name) {
+            } elseif ($professionalService->service_name) {
                 $serviceName = $professionalService->service_name;
             }
         }
-    }
-    // Final fallback to session
-    elseif (session('selected_service_name')) {
+    } elseif (session('selected_service_name')) {
         $serviceName = session('selected_service_name');
     }
-    
-    // Get sub-service name from session if available
+
     if (session('booking_success.sub_service_name')) {
         $subServiceName = session('booking_success.sub_service_name');
     } elseif (session('booking_success.sub_service_id')) {
-        // If sub_service_id exists but not name, fetch from database
         $subService = \App\Models\SubService::find(session('booking_success.sub_service_id'));
         if ($subService) {
             $subServiceName = $subService->name;
         }
     }
+
+    $successBookings = session('booking_success.bookings');
+    $successBookings = is_array($successBookings) ? $successBookings : [];
+    $bookingRef = session('booking_success.booking_id');
 @endphp
 
-<main class="bg_gray pattern">
-    <div class="container margin_60_40">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="success-box">
-                    <div class="success-icon">
-                        <i class="icon_check_alt2"></i>
-                    </div>
-                    <h2>Booking Confirmed!</h2>
-                    <p>Your appointment has been successfully booked.</p>
+<div class="yk-booking-shell mx-auto grid max-w-3xl gap-6">
+    <x-tazen-v2.panel.breadcrumbs :items="[
+        ['label' => 'Dashboard', 'url' => route('user.dashboard')],
+        ['label' => 'Booking Confirmed'],
+    ]" />
 
-                    <div class="booking-details">
-                        <h5>Professional Details</h5>
-                        <ul>
-                            <li>
-                                <strong>Professional Name:</strong>
-                                <span>{{ session('booking_success.professional_name') }}</span>
-                            </li>
-                            <li>
-                                <strong>Address:</strong>
-                                <span>{{ session('booking_success.professional_address') }}</span>
-                            </li>
-                            <li>
-                                <strong>Service:</strong>
-                                <span>{{ $serviceName }}</span>
-                            </li>
-                            @if($subServiceName)
-                            <li>
-                                <strong>Sub-Service:</strong>
-                                <span>{{ $subServiceName }}</span>
-                            </li>
-                            @endif
-                        </ul>
+    <article class="yk-booking-card success-box text-center">
+        <div class="yk-booking-card__body">
+            <div class="yk-booking-success-icon success-icon mx-auto" aria-hidden="true">
+                <i class="fas fa-check"></i>
+            </div>
+            <h1 class="font-display text-page-title font-semibold text-brand-secondary">Booking Confirmed!</h1>
+            <p class="mt-2 text-sm text-text-secondary">Your appointment has been successfully booked.</p>
+            @if($bookingRef)
+                <p class="mt-3 inline-flex rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-secondary">
+                    Booking #{{ $bookingRef }}
+                </p>
+            @endif
 
-                        <h5>Booking Information</h5>
-                        <ul>
-                            <li>
-                                <strong>Plan Type:</strong>
-                                <span>{{ ucwords(str_replace('_', ' ', session('booking_success.plan_type'))) }}</span>
-                            </li>
-                            @if(session('booking_success.base_amount') && session('booking_success.cgst'))
-                            <li>
-                                <strong>Base Amount:</strong>
-                                <span>{{ getCurrencySymbol() }}{{ number_format(convertCurrency(session('booking_success.base_amount')), 2) }}</span>
-                            </li>
-                            <li>
-                                <strong>CGST (9%):</strong>
-                                <span>{{ getCurrencySymbol() }}{{ number_format(convertCurrency(session('booking_success.cgst')), 2) }}</span>
-                            </li>
-                            <li>
-                                <strong>SGST (9%):</strong>
-                                <span>{{ getCurrencySymbol() }}{{ number_format(convertCurrency(session('booking_success.sgst')), 2) }}</span>
-                            </li>
-                            <li>
-                                <strong>IGST (0%):</strong>
-                                <span>{{ getCurrencySymbol() }}{{ number_format(convertCurrency(session('booking_success.igst')), 2) }}</span>
-                            </li>
-                            @endif
-                            <li>
-                                <strong>Total Amount Paid (including GST):</strong>
-m                                <span>{{ getCurrencySymbol() }}{{ number_format(convertCurrency(session('booking_success.amount')), 2) }}</span>
-                            </li>
-                            <li>
-                                <strong>Booking Dates:</strong>
-                                <ul style="margin-left: 150px;">
-                                    @foreach(session('booking_success.bookings') as $booking)
-                                        <li style="border: none;">
-                                            {{ \Carbon\Carbon::parse($booking['date'])->format('d M Y') }} - 
-                                            {{ $booking['time_slot'] }}
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </li>
-                        </ul>
+            <div class="booking-details mt-6 rounded-panel border border-border bg-surface-muted/30 p-4 text-left sm:p-5">
+                <h2 class="mb-3 border-b border-brand-primary/40 pb-2 text-base font-semibold text-brand-secondary">Professional details</h2>
+                <dl class="yk-booking-dl">
+                    <div>
+                        <dt>Professional</dt>
+                        <dd>{{ session('booking_success.professional_name') }}</dd>
                     </div>
+                    <div>
+                        <dt>Address</dt>
+                        <dd>{{ session('booking_success.professional_address') }}</dd>
+                    </div>
+                    <div>
+                        <dt>Service</dt>
+                        <dd>{{ $serviceName }}</dd>
+                    </div>
+                    @if($subServiceName)
+                        <div>
+                            <dt>Sub-service</dt>
+                            <dd>{{ $subServiceName }}</dd>
+                        </div>
+                    @endif
+                </dl>
 
-                    <div style="margin-top: 30px;">
-                        <a href="{{ route('user.upcoming-appointment.index') }}" class="btn-dashboard">
-                            View My Appointments
-                        </a>
+                <h2 class="mb-3 mt-6 border-b border-brand-primary/40 pb-2 text-base font-semibold text-brand-secondary">Booking information</h2>
+                <dl class="yk-booking-dl">
+                    <div>
+                        <dt>Plan type</dt>
+                        <dd>{{ ucwords(str_replace('_', ' ', (string) session('booking_success.plan_type'))) }}</dd>
                     </div>
-                </div>
+                    @if(session('booking_success.base_amount') && session('booking_success.cgst'))
+                        <div>
+                            <dt>Base amount</dt>
+                            <dd>{{ getCurrencySymbol() }}{{ number_format(convertCurrency(session('booking_success.base_amount')), 2) }}</dd>
+                        </div>
+                        <div>
+                            <dt>CGST (9%)</dt>
+                            <dd>{{ getCurrencySymbol() }}{{ number_format(convertCurrency(session('booking_success.cgst')), 2) }}</dd>
+                        </div>
+                        <div>
+                            <dt>SGST (9%)</dt>
+                            <dd>{{ getCurrencySymbol() }}{{ number_format(convertCurrency(session('booking_success.sgst')), 2) }}</dd>
+                        </div>
+                        <div>
+                            <dt>IGST (0%)</dt>
+                            <dd>{{ getCurrencySymbol() }}{{ number_format(convertCurrency(session('booking_success.igst')), 2) }}</dd>
+                        </div>
+                    @endif
+                    <div>
+                        <dt>Total paid (incl. GST)</dt>
+                        <dd>{{ getCurrencySymbol() }}{{ number_format(convertCurrency(session('booking_success.amount')), 2) }}</dd>
+                    </div>
+                    <div>
+                        <dt>Booking dates</dt>
+                        <dd>
+                            <ul class="m-0 list-none space-y-1 p-0 text-right">
+                                @forelse($successBookings as $booking)
+                                    <li>
+                                        {{ \Carbon\Carbon::parse($booking['date'])->format('d M Y') }}
+                                        · {{ $booking['time_slot'] }}
+                                    </li>
+                                @empty
+                                    <li>N/A</li>
+                                @endforelse
+                            </ul>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            <div class="yk-booking-actions mt-6">
+                <a href="{{ route('user.upcoming-appointment.index') }}" class="btn_1 btn-dashboard">View My Appointments</a>
+                <a href="{{ route('user.my-bookings') }}" class="btn_1 outline">My Bookings</a>
+                <a href="{{ route('user.dashboard') }}" class="btn_1 outline">Dashboard</a>
             </div>
         </div>
-    </div>
-</main>
+    </article>
+</div>
 
 <!-- MCQ Modal -->
 @if(isset($mcqQuestions) && $mcqQuestions->count() > 0)
@@ -280,11 +243,11 @@ m                                <span>{{ getCurrencySymbol() }}{{ number_format
 
 <style>
 .question-text {
-    background: #f8f9fa;
-    padding: 15px;
-    border-left: 4px solid #007bff;
-    border-radius: 5px;
+    background: #F7FAFB;
+    border-left: 4px solid #36877F;
+    border-radius: 0.75rem;
     margin-bottom: 15px;
+    padding: 15px;
 }
 
 .options-container {
@@ -292,17 +255,17 @@ m                                <span>{{ getCurrencySymbol() }}{{ number_format
 }
 
 .form-check {
+    border-radius: 0.75rem;
     padding: 10px;
-    border-radius: 5px;
     transition: background-color 0.2s;
 }
 
 .form-check:hover {
-    background-color: #f8f9fa;
+    background-color: #EAF6F2;
 }
 
 .form-check-input:checked + .form-check-label {
-    color: #007bff;
+    color: #36877F;
     font-weight: 600;
 }
 
@@ -311,12 +274,30 @@ m                                <span>{{ getCurrencySymbol() }}{{ number_format
     max-width: 300px;
 }
 
-.modal-header {
-    border-bottom: 3px solid #dee2e6;
+#mcqModal .modal-content {
+    border: 1px solid #E2E9EE;
+    border-radius: 1.25rem;
+    overflow: hidden;
 }
 
-.modal-footer {
-    border-top: 3px solid #dee2e6;
+#mcqModal .modal-header {
+    background: #EAF6F2;
+    border-bottom: 1px solid #E2E9EE;
+    color: #142B4D;
+}
+
+#mcqModal .modal-footer {
+    border-top: 1px solid #E2E9EE;
+}
+
+#mcqModal .btn-primary {
+    background: #36877F;
+    border-color: #36877F;
+}
+
+#mcqModal .btn-primary:hover {
+    background: #286E67;
+    border-color: #286E67;
 }
 
 #mcqModal .modal-body {
@@ -396,17 +377,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const answer{{ $index }} = {
                 mcq_id: formData.get('answers[{{ $index }}][mcq_id]'),
                 question: formData.get('answers[{{ $index }}][question]'),
-                selected_answer: formData.get('answers[{{ $index }}][selected_answer]'),
+                // Map selected_answer -> answer for user.mcq.submit validation
+                answer: formData.get('answers[{{ $index }}][selected_answer]'),
                 other_answer: formData.get('answers[{{ $index }}][other_answer]') || null
             };
             answers.push(answer{{ $index }});
         @endforeach
 
-        // Submit via AJAX
-        fetch('{{ route("user.booking.mcq.store") }}', {
+        // Submit via existing authenticated MCQ endpoint (compatible payload shape)
+        fetch('{{ route("user.mcq.submit") }}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
             body: JSON.stringify({
@@ -438,8 +421,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endif
-
 @endsection
-
-
-

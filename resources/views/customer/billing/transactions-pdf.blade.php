@@ -116,8 +116,8 @@
         }
         
         .badge-monthly {
-            background-color: #ebf4ff;
-            color: #667eea;
+            background-color: #EAF6F2;
+            color: #286E67;
         }
         
         .badge-quarterly {
@@ -126,14 +126,14 @@
         }
         
         .badge-one_time, .badge-free_hand {
-            background-color: #e9e9ff;
-            color: #5a67d8;
+            background-color: #E7F0FB;
+            color: #142B4D;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>TAZEN BILLING TRANSACTIONS</h1>
+        <h1>{{ strtoupper(config('yuktione.name', 'YuktiOne')) }} BILLING TRANSACTIONS</h1>
         <div class="date">Generated on: {{ $generatedDate }}</div>
     </div>
     
@@ -209,7 +209,7 @@
     </table>
     
     <div class="footer">
-        © {{ date('Y') }} Tazen - This is an automatically generated report of your billing transactions.
+        © {{ date('Y') }} {{ config('yuktione.name', 'YuktiOne') }} - This is an automatically generated report of your billing transactions. Contact {{ config('yuktione.email', 'info@yuktione.in') }} for support.
     </div>
     
     <script type="text/php">

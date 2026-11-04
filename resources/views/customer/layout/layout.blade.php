@@ -7,9 +7,9 @@
     <meta name="user-type" content="user">
     <meta name="user-id" content="{{ Auth::guard('user')->id() }}">
     <title>@yield('title', 'Customer Panel | Yuktione')</title>
-    <link rel="icon" type="image/png" href="{{ asset('tazen-favicon.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
-    <meta name="theme-color" content="#168B80">
+    <meta name="theme-color" content="#36877F">
     @include('partials.dm-sans')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite('resources/css/yuktione-feedback.css')

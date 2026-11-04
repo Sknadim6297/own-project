@@ -22,13 +22,4 @@ class HeaderFeature extends Model
     {
         return $this->belongsTo(Header::class);
     }
-
-    /**
-     * Get the services for the feature
-     */
-    public function services()
-    {
-        return $this->belongsToMany(Service::class, 'header_feature_services', 'header_feature_id', 'service_id');
-    }
 }
-

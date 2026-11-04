@@ -1,187 +1,206 @@
-@extends('layouts.layout')
+@extends('customer.layout.booking')
+
+@section('title', config('yuktione.name', 'YuktiOne') . ' | Booking Checkout')
 
 @section('styles')
-    <link rel="stylesheet" href="{{ asset('frontend/assets/css/booking-sign_up.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
-        /* Login Popup Custom Styling */
-        .login-popup-title {
-            font-size: 1.5rem !important;
-            color: white !important;
-        }
-
-        .login-popup-title .wave-icon {
-            font-size: 1.8rem !important;
-        }
-
+        .login-popup-title { font-size: 1.5rem !important; color: #142B4D !important; }
+        .login-popup-title .wave-icon { font-size: 1.8rem !important; color: #36877F !important; }
         .login-popup-custom {
-            background: linear-gradient(135deg, #152a70, #c51010, #f39c12) !important;
-            color: white !important;
-            border-radius: 15px !important;
+            background: #ffffff !important;
+            border: 1px solid #E2E9EE !important;
+            border-radius: 1.25rem !important;
+            color: #475569 !important;
             padding: 25px 20px !important;
         }
-
         .login-popup-btn {
-            background-color: #1e0d60 !important;
+            background-color: #36877F !important;
+            border: none !important;
+            border-radius: 0.75rem !important;
+            box-shadow: none !important;
             color: white !important;
-            font-size: 1.2rem !important;
+            font-size: 1rem !important;
             font-weight: 600 !important;
             padding: 12px 30px !important;
-            border-radius: 50px !important;
-            border: none !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
         }
-
-        .login-popup-btn:hover {
-            transform: translateY(-3px) !important;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
-        }
-        
-        .login-popup-close {
-            color: white !important;
-            opacity: 0.8 !important;
-            font-size: 1.5rem !important;
-        }
-        
-        .login-popup-close:hover {
-            opacity: 1 !important;
-        }
+        .login-popup-btn:hover { background-color: #286E67 !important; box-shadow: none !important; transform: none !important; }
+        .login-popup-close { color: #718096 !important; font-size: 1.5rem !important; opacity: 1 !important; }
+        .login-popup-close:hover { color: #142B4D !important; }
     </style>
 @endsection
 
 @section('content')
-<main class="bg_gray pattern">
-    <!-- Loading overlay -->
+<div class="yk-booking-shell mx-auto grid max-w-3xl gap-6">
+    <x-tazen-v2.panel.breadcrumbs :items="[
+        ['label' => 'Dashboard', 'url' => route('user.dashboard')],
+        ['label' => 'Booking Checkout'],
+    ]" />
+
+    <header>
+        <p class="text-sm font-semibold uppercase tracking-wide text-brand-primary">Consultations</p>
+        <h1 class="mt-1 font-display text-page-title font-semibold text-brand-secondary">Booking Checkout</h1>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-text-secondary sm:text-base">
+            Confirm your consultation details, add a contact number, and complete payment securely.
+        </p>
+    </header>
+
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
     </div>
-    
-    <div class="container margin_60_40">
-        <div class="row justify-content-center">
-            <div class="col-lg-4">
-                <div class="box_booking_2">
-                    @if(session()->has('booking_data'))
-                        @php
-                            $bookingData = session('booking_data');
-                            $professionalId = $bookingData['professional_id'] ?? null;
-                            $professional = \App\Models\Professional::with('profile')->where('id', $professionalId)->first();
-                            
-                            // Get the professional's service information
-                            $professionalService = null;
-                            $serviceName = 'N/A';
-                            $subServiceName = null;
-                            
-                            if ($professional) {
-                                // Try to get professional service with relationship
-                                $professionalService = \App\Models\ProfessionalService::with('service')
-                                    ->where('professional_id', $professional->id)
-                                    ->first();
-                                
-                                if ($professionalService) {
-                                    // First try to get from the related Service model
-                                    if ($professionalService->service && $professionalService->service->name) {
-                                        $serviceName = $professionalService->service->name;
-                                    }
-                                    // Fallback to professional service's own service_name
-                                    elseif ($professionalService->service_name) {
-                                        $serviceName = $professionalService->service_name;
-                                    }
-                                }
-                            }
-                            
-                            // Final fallback to session if nothing found
-                            if ($serviceName === 'N/A') {
-                                $serviceName = session('selected_service_name') ?? 'N/A';
-                            }
-                            
-                            // Get sub-service name from booking_data session
-                            if (!empty($bookingData['sub_service_name'])) {
-                                $subServiceName = $bookingData['sub_service_name'];
-                            } elseif (!empty($bookingData['sub_service_id'])) {
-                                // If sub_service_id exists but not name, fetch from database
-                                $subService = \App\Models\SubService::find($bookingData['sub_service_id']);
-                                if ($subService) {
-                                    $subServiceName = $subService->name;
-                                }
-                            } else {
-                                // Fallback to session
-                                $subServiceName = session('selected_sub_service_name');
-                            }
-                        @endphp
 
-                        <div class="head">
-                            <div class="title">
-                                <h3>{{ Auth::guard('user')->user()->name ?? 'N/A' }}</h3>
-                                {{ Auth::guard('user')->user()->email ?? 'N/A' }}</a>
-                            </div>
-                        </div>
+    @if(session()->has('booking_data'))
+        @php
+            $bookingData = session('booking_data');
+            $professionalId = $bookingData['professional_id'] ?? null;
+            $professional = \App\Models\Professional::with('profile')->where('id', $professionalId)->first();
 
-                        <div class="main">
-                            <h6 style="text-align: center">Booking Summary</h6>
-                            <ul>
-                                @if(!empty($bookingData['bookings']))
-                                    <li><strong>Date & Time:</strong>
-                                        <ul>
-                                            @foreach($bookingData['bookings'] as $booking)
-                                                <li>{{ \Carbon\Carbon::parse($booking['date'])->format('d/m/y') }} - {{ $booking['time_slot'] ?? 'N/A' }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </li>
-                                @else
-                                    <li>No bookings found.</li>
-                                @endif
-                                <hr>
-                                <li>Service name: <span>{{ $serviceName }}</span></li>
-                                @if(isset($subServiceName) && !empty($subServiceName))
-                                    <li>Sub-service: <span>{{ $subServiceName }}</span></li>
-                                @endif
-                                <li>Plan type: <span>{{ isset($bookingData['plan_type']) ? ucwords(str_replace('_', ' ', $bookingData['plan_type'])) : 'N/A' }}</span></li>
-                                <li>Type: <span>Appointment</span></li>
-                                @php
-                                    $baseAmount = $bookingData['total_amount'] ?? 0;
-                                    $cgst = $baseAmount * 0.09; // 9% CGST
-                                    $sgst = $baseAmount * 0.09; // 9% SGST  
-                                    $igst = 0; // 0% IGST (since CGST+SGST are applied)
-                                    $totalWithGst = $baseAmount + $cgst + $sgst + $igst;
-                                @endphp
-                                <li>Base Amount: <span>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($baseAmount), 2) }}</span></li>
-                                <li>CGST (9%): <span>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($cgst), 2) }}</span></li>
-                                <li>SGST (9%): <span>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($sgst), 2) }}</span></li>
-                                <li>IGST (0%): <span>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($igst), 2) }}</span></li>
-                                <hr>
-                                <li><strong>Total Amount (including GST): <span>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($totalWithGst), 2) }}</span></strong></li>
-                                <li>Professional name: <span>{{ $professional['name'] ?? 'Booking Details' }}</span></li>
-                                <li>Professional Address: <span>{{ $professional->profile->address ?? 'Booking Address is not available' }}</span></li>
-                            </ul>
-                            <hr>
-                            <h6>Enter contact number for the booking</h6>
-                            <div class="form-group add_bottom_15">
-                                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone" maxlength="10" pattern="\d{10}" autocomplete="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)">
-                                <i class="icon_phone"></i>
-                            </div>
+            $professionalService = null;
+            $serviceName = 'N/A';
+            $subServiceName = null;
 
-                            <a href="javascript:void(0);" class="btn_1 full-width mb_5 booking">Book Now</a>
-                            <a href="{{ route('user.reset-booking') }}" class="btn_1 full-width outline mb_25">Change Booking</a>
-                        </div>
-                    @else
-                        <div class="main text-center">
-                            <h6>No booking data available</h6>
-                            <p class="text-muted mb-4">You need to select a service and professional before you can proceed with booking.</p>
-                            <div class="d-flex flex-column gap-2">
-                                <a href="{{ route('home') }}" class="btn btn-primary">
-                                    <i class="fa fa-search"></i> Browse Services
-                                </a>
-                                <a href="{{ route('professionals') }}" class="btn btn-outline-primary">
-                                    <i class="fa fa-users"></i> View Professionals
-                                </a>
-                            </div>
-                        </div>
-                    @endif
+            if ($professional) {
+                $professionalService = \App\Models\ProfessionalService::with('service')
+                    ->where('professional_id', $professional->id)
+                    ->first();
+
+                if ($professionalService) {
+                    if ($professionalService->service && $professionalService->service->name) {
+                        $serviceName = $professionalService->service->name;
+                    } elseif ($professionalService->service_name) {
+                        $serviceName = $professionalService->service_name;
+                    }
+                }
+            }
+
+            if ($serviceName === 'N/A') {
+                $serviceName = session('selected_service_name') ?? 'N/A';
+            }
+
+            if (!empty($bookingData['sub_service_name'])) {
+                $subServiceName = $bookingData['sub_service_name'];
+            } elseif (!empty($bookingData['sub_service_id'])) {
+                $subService = \App\Models\SubService::find($bookingData['sub_service_id']);
+                if ($subService) {
+                    $subServiceName = $subService->name;
+                }
+            } else {
+                $subServiceName = session('selected_sub_service_name');
+            }
+
+            $baseAmount = $bookingData['total_amount'] ?? 0;
+            $cgst = $baseAmount * 0.09;
+            $sgst = $baseAmount * 0.09;
+            $igst = 0;
+            $totalWithGst = $baseAmount + $cgst + $sgst + $igst;
+            $user = Auth::guard('user')->user();
+        @endphp
+
+        <article class="yk-booking-card box_booking_2">
+            <div class="yk-booking-card__head head">
+                <div class="title">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-brand-primary">Signed in as</p>
+                    <h3>{{ $user->name ?? 'N/A' }}</h3>
+                    <p>{{ $user->email ?? 'N/A' }}</p>
                 </div>
             </div>
-        </div>
-    </div>
-</main>
+
+            <div class="yk-booking-card__body main">
+                <h2 class="mb-4 text-base font-semibold text-brand-secondary">Booking Summary</h2>
+
+                <dl class="yk-booking-dl">
+                    <div>
+                        <dt>Date &amp; time</dt>
+                        <dd>
+                            @if(!empty($bookingData['bookings']))
+                                <ul class="m-0 list-none space-y-1 p-0 text-right">
+                                    @foreach($bookingData['bookings'] as $booking)
+                                        <li>{{ \Carbon\Carbon::parse($booking['date'])->format('d M Y') }} · {{ $booking['time_slot'] ?? 'N/A' }}</li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                No bookings found.
+                            @endif
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>Service</dt>
+                        <dd>{{ $serviceName }}</dd>
+                    </div>
+                    @if(!empty($subServiceName))
+                        <div>
+                            <dt>Sub-service</dt>
+                            <dd>{{ $subServiceName }}</dd>
+                        </div>
+                    @endif
+                    <div>
+                        <dt>Plan type</dt>
+                        <dd>{{ isset($bookingData['plan_type']) ? ucwords(str_replace('_', ' ', $bookingData['plan_type'])) : 'N/A' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Type</dt>
+                        <dd>Appointment</dd>
+                    </div>
+                    <div>
+                        <dt>Base amount</dt>
+                        <dd>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($baseAmount), 2) }}</dd>
+                    </div>
+                    <div>
+                        <dt>CGST (9%)</dt>
+                        <dd>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($cgst), 2) }}</dd>
+                    </div>
+                    <div>
+                        <dt>SGST (9%)</dt>
+                        <dd>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($sgst), 2) }}</dd>
+                    </div>
+                    <div>
+                        <dt>IGST (0%)</dt>
+                        <dd>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($igst), 2) }}</dd>
+                    </div>
+                    <div>
+                        <dt>Total (incl. GST)</dt>
+                        <dd>{{ getCurrencySymbol() }}{{ number_format(convertCurrency($totalWithGst), 2) }}</dd>
+                    </div>
+                    <div>
+                        <dt>Professional</dt>
+                        <dd>{{ $professional['name'] ?? 'Booking Details' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Address</dt>
+                        <dd>{{ $professional->profile->address ?? 'Booking Address is not available' }}</dd>
+                    </div>
+                </dl>
+
+                <div class="mt-6 rounded-panel border border-border bg-surface-muted/40 p-4">
+                    <h6 class="mb-2 text-sm font-semibold text-brand-secondary">Enter contact number for the booking</h6>
+                    <div class="form-group add_bottom_15 yk-booking-phone relative">
+                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="10-digit mobile number" maxlength="10" pattern="\d{10}" autocomplete="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)">
+                        <i class="icon_phone" aria-hidden="true"></i>
+                    </div>
+                    <p class="mt-2 text-xs text-text-muted">
+                        Support: {{ config('yuktione.email', 'info@yuktione.in') }} · {{ config('yuktione.phone_display', '+91 96050 08040') }}
+                    </p>
+                </div>
+
+                <div class="yk-booking-actions">
+                    <a href="javascript:void(0);" class="btn_1 full-width mb_5 booking">Book Now</a>
+                    <a href="{{ route('user.reset-booking') }}" class="btn_1 full-width outline mb_25">Change Booking</a>
+                </div>
+            </div>
+        </article>
+    @else
+        <article class="yk-booking-card">
+            <div class="yk-booking-card__body main text-center">
+                <h2 class="font-display text-lg font-semibold text-brand-secondary">No booking data available</h2>
+                <p class="mt-2 text-sm text-text-secondary">Select a service and professional before you can proceed with booking.</p>
+                <div class="yk-booking-actions mt-6">
+                    <a href="{{ route('professionals') }}" class="btn_1">View Professionals</a>
+                    <a href="{{ route('user.dashboard') }}" class="btn_1 outline">Back to Dashboard</a>
+                </div>
+            </div>
+        </article>
+    @endif
+</div>
 @endsection
 
 @section('script')
@@ -248,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         key: data.key,
                         amount: data.amount,
                         currency: "INR",
-                        name: "Tazen",
+                        name: @json(config('yuktione.name', 'YuktiOne')),
                         description: "Booking Payment",
                         order_id: data.order_id,
                         handler: function (response) {
@@ -333,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                             text: data.message,
                                             icon: 'warning',
                                             confirmButtonText: 'Login Again',
-                                            confirmButtonColor: '#3399cc'
+                                            confirmButtonColor: '#36877F'
                                         }).then(() => {
                                             window.location.href = data.redirect;
                                         });
@@ -396,7 +415,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             contact: data.phone
                         },
                         theme: {
-                            color: "#3399cc"
+                            color: "#36877F"
                         }
                     };
                     const rzp = new Razorpay(options);
@@ -459,7 +478,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 confirmButton: 'login-popup-btn',
                                 closeButton: 'login-popup-close'
                             },
-                            confirmButtonColor: '#1e0d60'
+                            confirmButtonColor: '#36877F'
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 window.location.href = data.redirect;
@@ -527,7 +546,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <i class="fa fa-shield"></i> No amount has been deducted from your account.
                     </p>
                     ${logData?.notifications_sent ? 
-                        '<p style="margin-bottom: 15px; color: #28a745; font-size: 14px;"><i class="fa fa-check"></i> Your assigned professional and our support team have been notified.</p>' : 
+                        '<p style="margin-bottom: 15px; color: #36877F; font-size: 14px;"><i class="fa fa-check"></i> Your assigned professional and our support team have been notified.</p>' : 
                         ''
                     }
                 </div>
@@ -536,7 +555,7 @@ document.addEventListener('DOMContentLoaded', function () {
             showCancelButton: true,
             confirmButtonText: isRetryable ? '<i class="fa fa-refresh"></i> Retry Payment' : '<i class="fa fa-phone"></i> Contact Support',
             cancelButtonText: '<i class="fa fa-arrow-left"></i> Modify Booking',
-            confirmButtonColor: isRetryable ? '#dc3545' : '#17a2b8',
+            confirmButtonColor: isRetryable ? '#dc3545' : '#36877F',
             cancelButtonColor: '#6c757d',
             allowOutsideClick: false
         }).then((result) => {
@@ -572,11 +591,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div style="text-align: left; margin: 20px 0;">
                     <p style="margin-bottom: 15px;">Our team will help you complete your appointment booking.</p>
                     <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                        <p style="margin: 5px 0;"><strong><i class="fa fa-phone"></i> Call:</strong> +91-XXXX-XXXX-XX</p>
-                        <p style="margin: 5px 0;"><strong><i class="fa fa-envelope"></i> Email:</strong> support@yourwebsite.com</p>
-                        <p style="margin: 5px 0;"><strong><i class="fa fa-clock"></i> Hours:</strong> 9 AM - 9 PM (Mon-Sun)</p>
+                        <p style="margin: 5px 0;"><strong><i class="fa fa-phone"></i> Call:</strong> {{ config('yuktione.phone_display', '+91 96050 08040') }}</p>
+                        <p style="margin: 5px 0;"><strong><i class="fa fa-envelope"></i> Email:</strong> {{ config('yuktione.email', 'info@yuktione.in') }}</p>
+                        <p style="margin: 5px 0;"><strong><i class="fa fa-clock"></i> Hours:</strong> {{ config('yuktione.hours', 'Monday to Friday, 9am–6pm. Saturday, 9am–2pm.') }}</p>
                     </div>
-                    <p style="margin-bottom: 15px; color: #28a745; font-size: 14px;">
+                    <p style="margin-bottom: 15px; color: #36877F; font-size: 14px;">
                         <i class="fa fa-user-md"></i> Your assigned professional has been notified about the payment issue.
                     </p>
                 </div>
@@ -585,7 +604,7 @@ document.addEventListener('DOMContentLoaded', function () {
             showCancelButton: true,
             confirmButtonText: '<i class="fa fa-refresh"></i> Try Again',
             cancelButtonText: '<i class="fa fa-home"></i> Go to Dashboard',
-            confirmButtonColor: '#28a745',
+            confirmButtonColor: '#36877F',
             cancelButtonColor: '#6c757d'
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1132,8 +1151,8 @@ document.addEventListener('DOMContentLoaded', function () {
             showCancelButton: true,
             confirmButtonText: '<i class="fa fa-check"></i> Yes, Skip',
             cancelButtonText: '<i class="fa fa-times"></i> Continue Questions',
-            confirmButtonColor: '#6c757d',
-            cancelButtonColor: '#667eea',
+            confirmButtonColor: '#36877F',
+            cancelButtonColor: '#718096',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1174,7 +1193,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-<!-- Enhanced Payment Failure Styles -->
+<!-- YuktiOne booking interaction styles -->
 <style>
 .payment-failure-popup {
     font-family: "DM Sans", sans-serif;
@@ -1182,76 +1201,56 @@ document.addEventListener('DOMContentLoaded', function () {
 
 .payment-failure-confirm,
 .payment-failure-cancel {
-    padding: 10px 20px !important;
+    border-radius: 0.75rem !important;
     font-weight: 600 !important;
-    border-radius: 6px !important;
-    transition: all 0.3s ease !important;
-}
-
-.payment-failure-confirm:hover {
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
-}
-
-.payment-failure-cancel:hover {
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+    padding: 10px 20px !important;
 }
 
 .swal2-icon.swal2-error {
-    border-color: #dc3545 !important;
-    color: #dc3545 !important;
+    border-color: #C85B65 !important;
+    color: #C85B65 !important;
 }
 
 .swal2-icon.swal2-warning {
-    border-color: #ffc107 !important;
-    color: #ffc107 !important;
+    border-color: #B78538 !important;
+    color: #B78538 !important;
 }
 
 .swal2-icon.swal2-info {
-    border-color: #17a2b8 !important;
-    color: #17a2b8 !important;
+    border-color: #36877F !important;
+    color: #36877F !important;
 }
 
-/* Button loading animation */
 .btn_1[disabled] {
-    opacity: 0.7;
     cursor: not-allowed;
-    position: relative;
+    opacity: 0.7;
 }
 
 .btn_1 .fa-spinner {
-    animation: spin 1s linear infinite;
+    animation: yk-spin 1s linear infinite;
 }
 
-@keyframes spin {
+@keyframes yk-spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
-/* Smooth transitions for buttons */
 .btn_1 {
-    transition: all 0.3s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.btn_1:not([disabled]):hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-/* Loading overlay for better UX */
 .loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    display: none;
-    z-index: 9999;
-    justify-content: center;
     align-items: center;
     backdrop-filter: blur(2px);
+    background: rgba(247, 250, 251, 0.92);
+    display: none;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
 }
 
 .loading-overlay.show {
@@ -1259,453 +1258,241 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 
 .loading-spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3399cc;
+    animation: yk-spin 1s linear infinite;
+    border: 4px solid #E2E9EE;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    border-top-color: #36877F;
+    height: 50px;
+    width: 50px;
 }
 
-/* MCQ Modal Styles - Premium Design */
 #mcqModal .modal-content {
-    border-radius: 25px;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
-    border: none;
+    background: #ffffff;
+    border: 1px solid #E2E9EE;
+    border-radius: 1.25rem;
+    box-shadow: 0 18px 42px -20px rgb(20 43 77 / 0.24);
     overflow: hidden;
-    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-}
-
-#mcqModal .modal-backdrop {
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
 }
 
 #mcqModal .modal-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-    color: white;
-    border-radius: 25px 25px 0 0;
-    border-bottom: none;
-    padding: 30px;
-    position: relative;
-    overflow: hidden;
-}
-
-#mcqModal .modal-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.1) 75%), 
-                linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.1) 75%);
-    background-size: 20px 20px;
-    background-position: 0 0, 10px 10px;
-    animation: slidePattern 20s linear infinite;
-}
-
-@keyframes slidePattern {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(40px); }
+    background: #EAF6F2;
+    border-bottom: 1px solid #E2E9EE;
+    color: #142B4D;
+    padding: 1.25rem 1.5rem;
 }
 
 #mcqModal .modal-title {
-    font-weight: 700;
-    font-size: 1.5rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    z-index: 2;
-    position: relative;
-    display: flex;
     align-items: center;
+    color: #142B4D;
+    display: flex;
+    font-size: 1.125rem;
+    font-weight: 700;
+    gap: 0.75rem;
 }
 
 #mcqModal .modal-title i {
-    background: linear-gradient(45deg, #ffd700, #ffed4e);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-right: 12px;
-    font-size: 1.8rem;
-    filter: drop-shadow(0 2px 4px rgba(255,215,0,0.5));
-    animation: pulseGlow 2s ease-in-out infinite alternate;
+    color: #36877F;
 }
 
-@keyframes pulseGlow {
-    0% { filter: drop-shadow(0 2px 4px rgba(255,215,0,0.5)); }
-    100% { filter: drop-shadow(0 4px 8px rgba(255,215,0,0.8)); }
+#mcqModal .modal-body {
+    background: #ffffff;
+    padding: 1.5rem;
+}
+
+#mcqModal .modal-footer {
+    align-items: center;
+    background: #F7FAFB;
+    border-top: 1px solid #E2E9EE;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+}
+
+#mcqModal .modal-footer .navigation-buttons {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
 }
 
 .question-card {
-    background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%);
-    padding: 35px;
-    border-radius: 20px;
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    margin-bottom: 25px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08), 0 0 0 1px rgba(255,255,255,0.9);
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.question-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 5px;
-    height: 100%;
-    background: linear-gradient(180deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-    border-radius: 0 5px 5px 0;
-}
-
-.question-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.9);
+    background: #ffffff;
+    border: 1px solid #E2E9EE;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgb(20 43 77 / 0.05);
+    margin-bottom: 1rem;
+    padding: 1.25rem;
 }
 
 .question-card h6 {
+    color: #142B4D;
+    font-size: 1.05rem;
     font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 25px;
-    font-size: 1.2rem;
-    line-height: 1.6;
-    display: flex;
-    align-items: center;
-    gap: 15px;
+    line-height: 1.5;
+    margin-bottom: 1rem;
 }
 
 .question-card .badge {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    font-size: 0.85rem;
-    padding: 10px 16px;
-    border-radius: 50px;
+    background: #EAF6F2;
+    border-radius: 999px;
+    color: #286E67;
+    font-size: 0.8125rem;
     font-weight: 600;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    border: 2px solid rgba(255,255,255,0.2);
-    min-width: 45px;
-    text-align: center;
-    animation: badgePulse 3s ease-in-out infinite;
-}
-
-@keyframes badgePulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+    padding: 0.35rem 0.7rem;
 }
 
 .options-container {
     display: grid;
-    gap: 15px;
+    gap: 0.75rem;
 }
 
 .options-container .form-check {
-    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-    padding: 20px 25px;
-    border-radius: 15px;
-    border: 2px solid #e2e8f0;
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    background: #F7FAFB;
+    border: 1px solid #E2E9EE;
+    border-radius: 0.75rem;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
     margin-bottom: 0;
-}
-
-.options-container .form-check::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-    transition: left 0.6s ease;
-}
-
-.options-container .form-check:hover::before {
-    left: 100%;
+    padding: 0.9rem 1rem;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .options-container .form-check:hover {
-    border-color: #667eea;
-    background: linear-gradient(145deg, #f8fafc 0%, #ffffff 100%);
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.15);
+    background: #EAF6F2;
+    border-color: #36877F;
 }
 
 .options-container .form-check-label {
-    font-weight: 500;
     color: #475569;
-    font-size: 15px;
-    line-height: 1.5;
     cursor: pointer;
-    transition: all 0.3s ease;
-    margin-left: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-left: 0.5rem;
 }
 
 .options-container .form-check-input {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #cbd5e1;
-    transition: all 0.3s ease;
-    margin-top: 2px;
-}
-
-.options-container .form-check-input:checked {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    accent-color: #36877F;
 }
 
 .options-container .form-check-input:checked + .form-check-label {
-    color: #1e293b;
+    color: #142B4D;
     font-weight: 600;
 }
 
 .options-container .form-check:has(.form-check-input:checked) {
-    border-color: #667eea;
-    background: linear-gradient(145deg, #eef2ff 0%, #f8fafc 100%);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
-    transform: translateY(-2px);
-}
-
-.options-container .form-check:has(.form-check-input:checked)::after {
-    content: '✓';
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    color: #667eea;
-    font-weight: bold;
-    font-size: 18px;
-    animation: checkMark 0.5s ease-in-out;
-}
-
-@keyframes checkMark {
-    0% { transform: scale(0) rotate(180deg); opacity: 0; }
-    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    background: #EAF6F2;
+    border-color: #36877F;
 }
 
 .progress {
-    height: 12px;
-    border-radius: 20px;
-    background: linear-gradient(145deg, #e2e8f0 0%, #cbd5e1 100%);
+    background: #E2E9EE;
+    border-radius: 999px;
+    height: 0.5rem;
     overflow: hidden;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .progress-bar {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-    border-radius: 20px;
-    transition: width 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
-    font-size: 11px;
-    font-weight: 700;
-    color: white;
+    background: #36877F;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 600;
+    line-height: 0.5rem;
     text-align: center;
-    line-height: 12px;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.progress-bar::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    animation: progressShine 2s ease-in-out infinite;
-}
-
-@keyframes progressShine {
-    0% { left: -100%; }
-    100% { left: 100%; }
+    transition: width 0.3s ease;
 }
 
 #mcqModal .btn {
-    border-radius: 50px;
-    padding: 15px 35px;
-    font-weight: 700;
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    border: none;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 0.85rem;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-#mcqModal .btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.6s ease;
-}
-
-#mcqModal .btn:hover::before {
-    left: 100%;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    min-height: 2.75rem;
+    padding: 0.625rem 1.1rem;
+    text-transform: none;
 }
 
 #mcqModal .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    background: #36877F;
+    border-color: #36877F;
+    color: #fff;
 }
 
 #mcqModal .btn-primary:hover {
-    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+    background: #286E67;
+    border-color: #286E67;
 }
 
 #mcqModal .btn-secondary {
-    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-    color: white;
-    box-shadow: 0 8px 25px rgba(100, 116, 139, 0.4);
+    background: #E7F0FB;
+    border-color: #E2E9EE;
+    color: #142B4D;
 }
 
 #mcqModal .btn-secondary:hover {
-    background: linear-gradient(135deg, #475569 0%, #334155 100%);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(100, 116, 139, 0.5);
+    background: #d9e6f5;
+    color: #142B4D;
 }
 
 #mcqModal .btn-success {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+    background: #1D8C65;
+    border-color: #1D8C65;
+    color: #fff;
 }
 
 #mcqModal .btn-success:hover {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5);
-}
-
-#mcqModal .modal-footer {
-    border-top: none;
-    padding: 30px;
-    background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
-    border-radius: 0 0 25px 25px;
-    gap: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#mcqModal .modal-footer .navigation-buttons {
-    display: flex;
-    gap: 15px;
-    align-items: center;
+    background: #177553;
+    border-color: #177553;
 }
 
 #mcqModal .btn-outline-secondary {
     background: transparent;
-    border: 2px solid #6c757d;
-    color: #6c757d;
-    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+    border: 1px solid #E2E9EE;
+    color: #475569;
 }
 
 #mcqModal .btn-outline-secondary:hover {
-    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-    color: white;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+    background: #F7FAFB;
+    border-color: #36877F;
+    color: #36877F;
 }
 
-#mcqModal .modal-body {
-    padding: 30px;
-    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-}
-
-/* Text area styling */
-#mcqModal textarea.form-control {
-    border: 2px solid #e2e8f0;
-    border-radius: 15px;
-    padding: 20px;
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    font-size: 15px;
-    resize: vertical;
-    min-height: 120px;
-    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-    font-family: inherit;
-    line-height: 1.6;
-}
-
-#mcqModal textarea.form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), inset 0 2px 4px rgba(0,0,0,0.05);
-    transform: translateY(-2px);
-    background: #ffffff;
-}
-
-#mcqModal textarea.form-control::placeholder {
-    color: #94a3b8;
-    font-style: italic;
-}
-
-/* Other input styling */
+#mcqModal textarea.form-control,
 #mcqModal input[type="text"].form-control {
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 15px 20px;
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-    font-size: 15px;
-}
-
-#mcqModal input[type="text"].form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), inset 0 2px 4px rgba(0,0,0,0.05);
-    transform: translateY(-2px);
     background: #ffffff;
+    border: 1px solid #E2E9EE;
+    border-radius: 0.75rem;
+    box-shadow: none;
+    font-size: 0.95rem;
+    padding: 0.75rem 0.9rem;
 }
 
-#mcqModal input[type="text"].form-control::placeholder {
-    color: #94a3b8;
-    font-style: italic;
+#mcqModal textarea.form-control:focus,
+#mcqModal input[type="text"].form-control:focus {
+    border-color: #36877F;
+    box-shadow: 0 0 0 3px rgb(54 135 127 / 0.12);
+    transform: none;
 }
 
-/* Animation for modal entrance */
-#mcqModal.fade .modal-dialog {
-    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-    transform: scale(0.8) translateY(50px);
-    opacity: 0;
-}
-
-#mcqModal.show .modal-dialog {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-}
-
-/* Responsive adjustments */
 @media (max-width: 768px) {
     #mcqModal .modal-content {
-        border-radius: 20px;
-        margin: 15px;
+        margin: 0.75rem;
     }
-    
+
     #mcqModal .modal-header,
     #mcqModal .modal-body,
     #mcqModal .modal-footer {
-        padding: 20px;
+        padding: 1rem;
     }
-    
-    .question-card {
-        padding: 25px;
+
+    #mcqModal .modal-footer {
+        align-items: stretch;
+        flex-direction: column;
     }
-    
+
+    #mcqModal .modal-footer .navigation-buttons,
     #mcqModal .btn {
-        padding: 12px 25px;
-        font-size: 0.8rem;
+        width: 100%;
     }
 }
 </style>

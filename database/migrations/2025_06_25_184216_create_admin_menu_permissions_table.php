@@ -8,20 +8,25 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * admin_menu_permissions is already created in 2025_06_14_200000.
+     * On fresh installs this becomes a no-op; on older installs without that
+     * earlier create, build the table here.
      */
     public function up(): void
     {
+        if (Schema::hasTable('admin_menu_permissions')) {
+            return;
+        }
+
         Schema::create('admin_menu_permissions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('admin_id');
             $table->unsignedBigInteger('admin_menu_id');
             $table->timestamps();
-            
-            // Foreign keys
+
             $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
             $table->foreign('admin_menu_id')->references('id')->on('admin_menus')->onDelete('cascade');
-            
-            // Unique constraint to prevent duplicate permissions
             $table->unique(['admin_id', 'admin_menu_id']);
         });
     }
@@ -31,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('admin_menu_permissions');
+        // Do not drop here: earlier migration owns the table on fresh installs.
     }
 };
