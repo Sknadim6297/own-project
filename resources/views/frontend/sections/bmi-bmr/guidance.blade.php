@@ -5,6 +5,7 @@
 @section('body_class', 'yk-bmi-body')
 
 @section('content')
+@php $nutritionExperts = app(\App\Services\ExpertsDiscovery::class)->nutrition(); @endphp
 <main class="yk-bmi">
     <div class="yk-bmi__wrap">
         <section class="yk-bmi__card" aria-labelledby="bmi-guidance-heading">
@@ -55,7 +56,7 @@
 
             <div class="yk-bmi__actions">
                 <a class="yk-bmi__btn-secondary" href="{{ route('tools.bmi-bmr.understand') }}">Back</a>
-                <a class="yk-bmi__btn-secondary" href="{{ route('professionals') }}">Talk to an expert</a>
+                <a class="yk-bmi__btn-secondary" href="{{ $nutritionExperts['url'] }}">{{ $nutritionExperts['label'] }}</a>
                 <form method="post" action="{{ route('tools.bmi-bmr.save') }}">
                     @csrf
                     <button class="yk-bmi__btn" type="submit">{{ $authenticated ? 'Save result' : 'Log in to save' }}</button>

@@ -94,6 +94,41 @@ Route::get('tools/psychology/mood/emotions', [\App\Http\Controllers\Frontend\Moo
 Route::post('tools/psychology/mood/emotions', [\App\Http\Controllers\Frontend\MoodCheckinController::class, 'storeEmotions'])->name('tools.psychology.mood.emotions.store');
 Route::get('tools/psychology/mood', [\App\Http\Controllers\Frontend\MoodCheckinController::class, 'create'])->name('tools.psychology.mood');
 Route::post('tools/psychology/mood', [\App\Http\Controllers\Frontend\MoodCheckinController::class, 'store'])->name('tools.psychology.mood.store');
+Route::get('tools/psychology/gratitude/finish', [\App\Http\Controllers\Frontend\GratitudeJournalController::class, 'finish'])->name('tools.psychology.gratitude.finish');
+Route::get('tools/psychology/gratitude/complete/{entry}', [\App\Http\Controllers\Frontend\GratitudeJournalController::class, 'saved'])
+    ->whereUuid('entry')
+    ->name('tools.psychology.gratitude.complete');
+Route::get('tools/psychology/gratitude/history', [\App\Http\Controllers\Frontend\GratitudeJournalController::class, 'history'])->name('tools.psychology.gratitude.history');
+Route::get('tools/psychology/gratitude/entries/{entry}/edit', [\App\Http\Controllers\Frontend\GratitudeJournalController::class, 'edit'])
+    ->whereNumber('entry')
+    ->name('tools.psychology.gratitude.edit');
+Route::put('tools/psychology/gratitude/entries/{entry}', [\App\Http\Controllers\Frontend\GratitudeJournalController::class, 'update'])
+    ->whereNumber('entry')
+    ->name('tools.psychology.gratitude.update');
+Route::delete('tools/psychology/gratitude/entries/{entry}', [\App\Http\Controllers\Frontend\GratitudeJournalController::class, 'destroy'])
+    ->whereNumber('entry')
+    ->name('tools.psychology.gratitude.destroy');
+Route::get('tools/psychology/gratitude/entries/{entry}', [\App\Http\Controllers\Frontend\GratitudeJournalController::class, 'show'])
+    ->whereNumber('entry')
+    ->name('tools.psychology.gratitude.show');
+Route::get('tools/psychology/gratitude', [\App\Http\Controllers\Frontend\GratitudeJournalController::class, 'create'])->name('tools.psychology.gratitude');
+Route::post('tools/psychology/gratitude', [\App\Http\Controllers\Frontend\GratitudeJournalController::class, 'store'])->name('tools.psychology.gratitude.store');
+Route::get('tools/psychology/journal/finish', [\App\Http\Controllers\Frontend\DigitalJournalController::class, 'finish'])->name('tools.psychology.journal.finish');
+Route::get('tools/psychology/journal/history', [\App\Http\Controllers\Frontend\DigitalJournalController::class, 'history'])->name('tools.psychology.journal.history');
+Route::get('tools/psychology/journal/entries/{entry}/edit', [\App\Http\Controllers\Frontend\DigitalJournalController::class, 'edit'])
+    ->whereNumber('entry')
+    ->name('tools.psychology.journal.edit');
+Route::put('tools/psychology/journal/entries/{entry}', [\App\Http\Controllers\Frontend\DigitalJournalController::class, 'update'])
+    ->whereNumber('entry')
+    ->name('tools.psychology.journal.update');
+Route::delete('tools/psychology/journal/entries/{entry}', [\App\Http\Controllers\Frontend\DigitalJournalController::class, 'destroy'])
+    ->whereNumber('entry')
+    ->name('tools.psychology.journal.destroy');
+Route::get('tools/psychology/journal/entries/{entry}', [\App\Http\Controllers\Frontend\DigitalJournalController::class, 'show'])
+    ->whereNumber('entry')
+    ->name('tools.psychology.journal.show');
+Route::get('tools/psychology/journal', [\App\Http\Controllers\Frontend\DigitalJournalController::class, 'create'])->name('tools.psychology.journal');
+Route::post('tools/psychology/journal', [\App\Http\Controllers\Frontend\DigitalJournalController::class, 'store'])->name('tools.psychology.journal.store');
 Route::get('tools/psychology', [HomeController::class, 'psychology'])->name('tools.psychology');
 
 Route::get('tools/nutrition/search', [\App\Http\Controllers\Frontend\NutritionTrackerController::class, 'search'])->name('tools.nutrition.search');

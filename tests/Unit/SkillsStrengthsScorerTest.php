@@ -23,6 +23,16 @@ class SkillsStrengthsScorerTest extends TestCase
             4 => 'Agree',
             5 => 'Strongly Agree',
         ], SkillsStrengthsCatalog::SCALE);
+        $this->assertSame([
+            1 => '😟',
+            2 => '😕',
+            3 => '😐',
+            4 => '🙂',
+            5 => '🤩',
+        ], SkillsStrengthsCatalog::SCALE_EMOJI);
+        $this->assertSame(1, SkillsStrengthsCatalog::scaleOptions()[1]['value']);
+        $this->assertSame('Strongly Disagree', SkillsStrengthsCatalog::scaleOptions()[1]['label']);
+        $this->assertSame('😟', SkillsStrengthsCatalog::scaleOptions()[1]['emoji']);
 
         foreach (SkillsStrengthsCatalog::CATEGORY_ORDER as $category) {
             $this->assertCount(3, SkillsStrengthsCatalog::questionIdsFor($category), $category);

@@ -1,7 +1,12 @@
 .yk-mood {
+    --yk-navy: #0b2048;
+    --yk-teal: #316d61;
+    --yk-mint: #eaf6f2;
+    --yk-lavender: #9d81db;
+    --yk-line: #e6ebf2;
     --yk-ink: #1c2b28;
-    --yk-eucalyptus: #3c6e62;
-    --yk-sage: #e7f3ec;
+    --yk-eucalyptus: var(--yk-teal);
+    --yk-sage: var(--yk-mint);
     --yk-warm: #fbf8f3;
     --yk-neutral: #f3f1ec;
     --yk-blush: #f6e7e3;
@@ -644,4 +649,23 @@
     align-items: center;
     color: #4e615c;
     font-size: 0.92rem;
+}
+
+.yk-mood__back:focus-visible,
+.yk-mood__continue:focus-visible,
+.yk-complete__history:focus-visible {
+    outline: 2px solid var(--yk-teal);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .yk-mood *,
+    .yk-mood *::before,
+    .yk-mood *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

@@ -9,12 +9,12 @@
     <div class="yk-cit__wrap">
         <form class="yk-cit__card" method="post" action="{{ route('tools.career-interest.about.store') }}">
             @csrf
-            <p class="yk-cit__badge">About you</p>
-            <h1>Tell us a little about yourself.</h1>
+            <p class="yk-cit__badge">Before you begin</p>
+            <h1>Tell us a little about yourself</h1>
             <p class="yk-cit__lead">This helps us show career information relevant to your current stage.</p>
 
             @if ($errors->any())
-                <p class="yk-cit__error">{{ $errors->first() }}</p>
+                <p class="yk-cit__error" role="alert">{{ $errors->first() }}</p>
             @endif
 
             @php
@@ -43,7 +43,7 @@
             @endforeach
 
             <div class="yk-cit__actions">
-                <a class="yk-cit__btn-secondary" href="{{ route('tools.career-interest') }}">Previous</a>
+                <a class="yk-cit__btn-secondary" href="{{ route('tools.career-interest') }}">Back</a>
                 <button class="yk-cit__btn" type="submit">Continue</button>
             </div>
         </form>

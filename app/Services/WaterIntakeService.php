@@ -262,7 +262,7 @@ class WaterIntakeService
             'percent' => $percent,
             'display_unit' => $settings->display_unit,
             'settings' => $settings,
-            'quick_adds' => WaterIntakeCatalog::QUICK_ADD_ML,
+            'quick_adds' => WaterIntakeCatalog::QUICK_ADDS,
             'total_label' => $this->formatAmount($total, $settings->display_unit),
             'goal_label' => $this->formatAmount($goal, $settings->display_unit),
             'remaining_label' => $this->formatAmount($remaining, $settings->display_unit),

@@ -7,6 +7,7 @@
 @section('content')
 <main class="yk-cit">
     <div class="yk-cit__wrap">
+        @include('frontend.sections.partials.tool-back-to-tools')
         <section class="yk-cit__card" aria-labelledby="cit-history-heading">
             <p class="yk-cit__badge">Private</p>
             <h1 id="cit-history-heading">Assessment history</h1>

@@ -28,6 +28,10 @@ class LoginController extends Controller
     // Show login form
     public function showLoginForm()
     {
+        if (Auth::guard('user')->check()) {
+            return redirect()->route('home');
+        }
+
         return view('frontend.login.login');
     }
 
@@ -88,12 +92,7 @@ class LoginController extends Controller
 
                 $this->registerUserSession($user->id, $request);
 
-                $redirectUrl = $request->input('redirect') ?: session()->pull('url.intended');
-                if (!$redirectUrl) {
-                    $redirectUrl = session()->has('booking_data')
-                        ? route('user.booking')
-                        : route('user.dashboard');
-                }
+                $redirectUrl = $this->resolvePostLoginRedirect($request);
 
                 session()->flash('success', 'Login successful — Welcome back to Yuktione!');
 
@@ -123,6 +122,65 @@ class LoginController extends Controller
         }
     }
     
+    /**
+     * Resolve where a customer should land after a successful login.
+     * Prefer an intended/protected destination, then booking resume, else public Home.
+     */
+    private function resolvePostLoginRedirect(Request $request): string
+    {
+        foreach ([$request->input('redirect'), session()->pull('url.intended')] as $candidate) {
+            $safe = $this->safeInternalRedirect(is_string($candidate) ? $candidate : null);
+            if ($safe !== null) {
+                return $safe;
+            }
+        }
+
+        if (session()->has('booking_data')) {
+            return route('user.booking');
+        }
+
+        return route('home');
+    }
+
+    /**
+     * Allow only same-origin relative or absolute paths; block auth loops and externals.
+     */
+    private function safeInternalRedirect(?string $url): ?string
+    {
+        if ($url === null || $url === '') {
+            return null;
+        }
+
+        $appUrl = rtrim((string) config('app.url'), '/');
+        $path = $url;
+
+        if (preg_match('#^https?://#i', $url) === 1) {
+            $isSameOrigin = $appUrl !== ''
+                && ($url === $appUrl || str_starts_with($url, $appUrl.'/'));
+
+            if (! $isSameOrigin) {
+                return null;
+            }
+
+            $path = substr($url, strlen($appUrl)) ?: '/';
+        }
+
+        if (! str_starts_with($path, '/')) {
+            return null;
+        }
+
+        $pathOnly = parse_url($path, PHP_URL_PATH) ?: $path;
+        $blockedPrefixes = ['/login', '/register', '/force-login', '/admin/login', '/professional/login'];
+
+        foreach ($blockedPrefixes as $blocked) {
+            if ($pathOnly === $blocked || str_starts_with($pathOnly, $blocked.'/')) {
+                return null;
+            }
+        }
+
+        return url($path);
+    }
+
     /**
      * Register the user's current session
      */

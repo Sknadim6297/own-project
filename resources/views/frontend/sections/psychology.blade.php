@@ -58,13 +58,13 @@
             <p class="yk-psych__private">Your check-ins, journal notes and gratitude entries stay private. They are not shared automatically, and they are not a diagnosis.</p>
         </section>
 
-        <section class="yk-psych__support" aria-labelledby="support-heading">
-            <div>
-                <h2 id="support-heading">Need someone to talk to?</h2>
-                <p>Connect with a psychologist for a supportive conversation.</p>
-            </div>
-            <a class="yk-psych__support-link" href="{{ $psychologistsUrl }}">Explore Psychologists <span aria-hidden="true">→</span></a>
-        </section>
+        @include('frontend.sections.partials.psychology-connect', [
+            'heading' => 'Need someone to talk to?',
+            'copy' => 'Connect with a psychologist for a supportive conversation.',
+            'cta' => 'Explore Psychologists',
+            'url' => $psychologistsUrl,
+            'headingId' => 'support-heading',
+        ])
     </div>
 </main>
 @endsection

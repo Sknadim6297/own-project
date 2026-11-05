@@ -31,7 +31,7 @@ class PsychologyHomeTest extends TestCase
             ->assertSee('Coming soon')
             ->assertSee('Need someone to talk to?')
             ->assertSee('Explore Psychologists')
-            ->assertSee('category=mental-health', false)
+            ->assertSee(route('professionals', ['category' => 'mental-health']), false)
             ->assertSee('family=DM+Sans', false)
             ->assertSee('yuktione-psychology.css', false)
             ->assertSee('Yuktione_logo.png', false)
@@ -90,7 +90,7 @@ class PsychologyHomeTest extends TestCase
             'slug' => 'digital-journal',
             'module_key' => 'psychology',
             'status' => 'inactive',
-            'route_name' => 'professionals',
+            'route_name' => 'tools.psychology.journal',
             'is_implemented' => true,
             'display_order' => 2,
         ]);
@@ -110,7 +110,63 @@ class PsychologyHomeTest extends TestCase
             ->assertSee('<a class="yk-psych__card-action" href="'.route('professionals').'">Start check-in</a>', false)
             ->assertSee('Unavailable')
             ->assertSee('Coming soon')
-            ->assertDontSee('Open journal');
+            ->assertDontSee('Open journal')
+            ->assertDontSee('Open gratitude');
+    }
+
+    public function test_published_psychology_tools_open_from_home_cards(): void
+    {
+        Schema::create('tool_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->boolean('is_active')->default(true);
+            $table->unsignedInteger('display_order')->default(0);
+            $table->timestamps();
+        });
+        Schema::create('tools', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('tool_category_id')->nullable();
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->string('module_key');
+            $table->string('access_type')->default('free');
+            $table->string('status')->default('coming_soon');
+            $table->unsignedInteger('display_order')->default(0);
+            $table->string('route_name')->nullable();
+            $table->boolean('is_implemented')->default(false);
+            $table->timestamps();
+        });
+
+        $category = ToolCategory::query()->create([
+            'name' => 'Psychology',
+            'slug' => 'psychology',
+            'display_order' => 1,
+        ]);
+
+        foreach ([
+            ['daily-mood-check-in', 'Daily Mood Check-in', 'tools.psychology.mood', 1],
+            ['digital-journal', 'Digital Journal', 'tools.psychology.journal', 2],
+            ['gratitude-journal', 'Gratitude Journal', 'tools.psychology.gratitude', 3],
+        ] as [$slug, $name, $route, $order]) {
+            Tool::query()->create([
+                'tool_category_id' => $category->id,
+                'name' => $name,
+                'slug' => $slug,
+                'module_key' => 'psychology',
+                'status' => 'active',
+                'route_name' => $route,
+                'is_implemented' => true,
+                'display_order' => $order,
+            ]);
+        }
+
+        $this->get(route('tools.psychology'))
+            ->assertOk()
+            ->assertSee('<a class="yk-psych__card-action" href="'.route('tools.psychology.mood').'">Start check-in</a>', false)
+            ->assertSee('<a class="yk-psych__card-action" href="'.route('tools.psychology.journal').'">Open journal</a>', false)
+            ->assertSee('<a class="yk-psych__card-action" href="'.route('tools.psychology.gratitude').'">Open gratitude</a>', false)
+            ->assertDontSee('Coming soon');
     }
 
     public function test_tools_page_keeps_unpublished_psychology_out_of_the_catalogue(): void

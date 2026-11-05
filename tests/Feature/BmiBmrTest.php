@@ -54,7 +54,7 @@ class BmiBmrTest extends TestCase
             ->assertOk()
             ->assertSee('Personalized guidance')
             ->assertSee('Illustrative examples only')
-            ->assertSee(route('professionals'), false);
+            ->assertSee(route('professionals', ['category' => 'nutrition-fitness']), false);
 
         $this->post(route('tools.bmi-bmr.save'))->assertRedirect(route('login'));
         $this->assertTrue(session(BmiBmrDraft::KEY)['awaiting_login']);

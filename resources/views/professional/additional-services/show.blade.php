@@ -1,302 +1,407 @@
 @extends('professional.layout.layout')
 
-@section('title', 'Additional Service Details')
+@section('title', 'Additional Service Details | YuktiOne')
 
 @section('styles')
-<style>.show-shell{display:flex}.show-hero{display:flex}.show-grid{display:grid}.show-card__head{display:flex}.show-card__body{display:flex}.custom-modal{display:none}.custom-modal.show{display:flex}</style>
+<style>
+    .custom-modal { display: none; }
+    .custom-modal.show {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        background: rgb(15 23 42 / .5);
+        overflow-y: auto;
+    }
+    .custom-modal .modal-content {
+        width: min(100%, 32rem);
+        margin: auto;
+        border: 1px solid #E2E9EE;
+        border-radius: 1.25rem;
+        background: #fff;
+        box-shadow: 0 18px 42px -20px rgb(20 43 77 / .24);
+    }
+    .form-control.is-invalid { border-color: #C85B65 !important; }
+    .price-error { color: #C85B65; font-size: .75rem; margin-top: .35rem; }
+</style>
 @endsection
 
 @section('content')
-<div class="additional-service-show min-h-full bg-slate-50 px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
-    <div class="show-shell mx-auto max-w-7xl flex-col gap-6">
-        <section class="show-hero flex-col gap-4 rounded-2xl border border-brand-100 bg-gradient-to-br from-white via-brand-50 to-white p-6 shadow-card sm:flex-row sm:items-center sm:justify-between">
-            <div class="hero-meta">
-                <span class="hero-eyebrow"><i class="fas fa-layer-group"></i>Details</span>
-                <h1 class="mt-2 text-2xl font-bold tracking-tight text-brand-950 sm:text-3xl">Additional Service Details</h1>
-                <ul class="hero-breadcrumb">
-                    <li><a href="{{ route('professional.dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ route('professional.additional-services.index') }}">Additional Services</a></li>
-                    <li class="active" aria-current="page">Details</li>
-                </ul>
-            </div>
-            <div class="status-pills">
-                @if($additionalService->admin_status === 'pending')
-                    <span class="status-pill pending"><i class="fas fa-hourglass-half"></i>Pending Review</span>
-                @elseif($additionalService->admin_status === 'approved')
-                    <span class="status-pill approved"><i class="fas fa-badge-check"></i>Approved</span>
-                @elseif($additionalService->admin_status === 'rejected')
-                    <span class="status-pill rejected"><i class="fas fa-times-circle"></i>Rejected</span>
-                @endif
-                @if($additionalService->payment_status === 'paid')
-                    <span class="status-pill paid"><i class="fas fa-wallet"></i>Paid</span>
-                @endif
-            </div>
-        </section>
+@php
+    $effectiveBasePrice = $additionalService->getEffectiveBasePrice();
+    $cgst = $additionalService->cgst ?? ($effectiveBasePrice * 0.09);
+    $sgst = $additionalService->sgst ?? ($effectiveBasePrice * 0.09);
+    $totalGst = $cgst + $sgst;
+    $effectiveTotalPrice = $additionalService->getEffectiveTotalPrice();
+    $professional = $additionalService->professional;
+    $finalPrice = $additionalService->final_price;
+    $serviceRequestMargin = $professional->service_request_margin ?? 0;
+    $platformCommission = ($finalPrice * $serviceRequestMargin) / 100;
+    $professionalEarning = $finalPrice - $platformCommission;
+@endphp
 
-        <div class="show-grid gap-6 lg:grid-cols-2">
-            <article class="show-card overflow-hidden rounded-2xl border border-brand-100 bg-white shadow-card">
-                <header class="show-card__head border-b border-slate-100 px-5 py-4">
-                    <h2 class="font-semibold text-brand-950"><i class="fas fa-clipboard-list"></i> Service Overview</h2>
+<div class="mx-auto w-full max-w-7xl space-y-5">
+    <header class="flex flex-col gap-4 rounded-panel border border-border bg-white p-5 shadow-card sm:flex-row sm:items-start sm:justify-between sm:p-6">
+        <div class="min-w-0">
+            <nav aria-label="Breadcrumb" class="mb-2 text-xs font-medium text-text-muted">
+                <ol class="flex flex-wrap items-center gap-2">
+                    <li><a class="text-brand-primary hover:text-brand-800" href="{{ route('professional.dashboard') }}">Dashboard</a></li>
+                    <li aria-hidden="true" class="text-border">/</li>
+                    <li><a class="text-brand-primary hover:text-brand-800" href="{{ route('professional.additional-services.index') }}">Additional Services</a></li>
+                    <li aria-hidden="true" class="text-border">/</li>
+                    <li aria-current="page" class="text-text-secondary">Details</li>
+                </ol>
+            </nav>
+            <p class="text-xs font-semibold uppercase tracking-wide text-brand-700">Service management</p>
+            <h1 class="mt-1 truncate text-2xl font-semibold tracking-tight text-brand-950 sm:text-[1.75rem]">{{ $additionalService->service_name }}</h1>
+            <p class="mt-1 text-sm text-text-secondary">Review request details, negotiation, payment and delivery actions.</p>
+            <div class="mt-3 flex flex-wrap gap-2">
+                @if($additionalService->admin_status === 'pending')
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-warning-surface px-2.5 py-1 text-xs font-semibold text-warning">Pending review</span>
+                @elseif($additionalService->admin_status === 'approved')
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-success-surface px-2.5 py-1 text-xs font-semibold text-success">Approved</span>
+                @elseif($additionalService->admin_status === 'rejected')
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-error-surface px-2.5 py-1 text-xs font-semibold text-error">Rejected</span>
+                @endif
+
+                @if($additionalService->payment_status === 'paid')
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-800">Paid</span>
+                @elseif($additionalService->payment_status === 'pending')
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-warning-surface px-2.5 py-1 text-xs font-semibold text-warning">Payment pending</span>
+                @elseif($additionalService->payment_status === 'failed')
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-error-surface px-2.5 py-1 text-xs font-semibold text-error">Payment failed</span>
+                @endif
+
+                @if($additionalService->consulting_status === 'pending')
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-surface-muted px-2.5 py-1 text-xs font-semibold text-text-secondary">Consultation pending</span>
+                @elseif($additionalService->consulting_status === 'in_progress')
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-info-surface px-2.5 py-1 text-xs font-semibold text-info">In progress</span>
+                @elseif($additionalService->consulting_status === 'done')
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-success-surface px-2.5 py-1 text-xs font-semibold text-success">Completed</span>
+                @endif
+            </div>
+        </div>
+        <a href="{{ route('professional.additional-services.index') }}" class="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-control border border-border bg-white px-4 py-2 text-sm font-semibold text-text-secondary transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
+            <i class="fas fa-arrow-left text-xs" aria-hidden="true"></i>
+            Back to list
+        </a>
+    </header>
+
+    <div class="grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.9fr)]">
+        <div class="space-y-5">
+            <section class="overflow-hidden rounded-panel border border-border bg-white shadow-card" aria-labelledby="overview-title">
+                <header class="border-b border-divider px-5 py-4 sm:px-6">
+                    <h2 id="overview-title" class="text-base font-semibold text-brand-950">Service overview</h2>
+                    <p class="mt-1 text-sm text-text-muted">Core request details and pricing.</p>
                 </header>
-                <div class="show-card__body flex-col gap-5 p-5">
-                    <div class="info-grid grid gap-4 sm:grid-cols-2">
-                        <div class="info-block">
-                            <label>Service Name</label>
-                            <p>{{ $additionalService->service_name }}</p>
+                <div class="space-y-5 p-5 sm:p-6">
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <p class="text-xs font-medium text-text-muted">Service name</p>
+                            <p class="mt-1 text-sm font-semibold text-text-primary">{{ $additionalService->service_name }}</p>
                         </div>
-                        <div class="info-block">
-                            <label>Consultation Status</label>
-                            <p>
-                                @if($additionalService->consulting_status === 'pending')
-                                    <span class="status-pill pending">Pending</span>
-                                @elseif($additionalService->consulting_status === 'in_progress')
-                                    <span class="status-pill info">In Progress</span>
-                                @elseif($additionalService->consulting_status === 'done')
-                                    <span class="status-pill approved">Completed</span>
-                                @endif
-                            </p>
+                        <div>
+                            <p class="text-xs font-medium text-text-muted">Created</p>
+                            <p class="mt-1 text-sm text-text-primary">{{ $additionalService->created_at->format('M d, Y h:i A') }}</p>
                         </div>
                         @if($additionalService->delivery_date)
-                            <div class="info-block">
-                                <label>Delivery Date</label>
-                                <p><i class="fas fa-calendar"></i> {{ \Carbon\Carbon::parse($additionalService->delivery_date)->format('M d, Y') }}</p>
+                            <div>
+                                <p class="text-xs font-medium text-text-muted">Delivery date</p>
+                                <p class="mt-1 text-sm text-text-primary">{{ \Carbon\Carbon::parse($additionalService->delivery_date)->format('M d, Y') }}</p>
                             </div>
                         @endif
-                        <div class="info-block">
-                            <label>Created</label>
-                            <p>{{ $additionalService->created_at->format('M d, Y h:i A') }}</p>
-                        </div>
+                        @if($additionalService->booking)
+                            <div>
+                                <p class="text-xs font-medium text-text-muted">Related booking</p>
+                                <p class="mt-1 text-sm text-text-primary">#{{ $additionalService->booking->id }} · {{ $additionalService->booking->service->name ?? 'Booking' }}</p>
+                            </div>
+                        @endif
                     </div>
 
-                    <div class="description-card">
-                        <strong><i class="fas fa-align-left"></i> Reason for Additional Service</strong>
-                        <p>{{ $additionalService->reason }}</p>
+                    <div class="rounded-control border border-divider bg-surface-muted p-4">
+                        <p class="text-xs font-semibold uppercase tracking-wide text-brand-800">Reason for additional service</p>
+                        <p class="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-text-secondary">{{ $additionalService->reason }}</p>
                     </div>
 
-                    <div class="price-breakdown rounded-xl border border-brand-100 bg-brand-50/60 p-5">
-                        <h3><i class="fas fa-coins"></i> Price Breakdown</h3>
-                        @php
-                            $effectiveBasePrice = $additionalService->getEffectiveBasePrice();
-                            $cgst = $additionalService->cgst ?? ($effectiveBasePrice * 0.09);
-                            $sgst = $additionalService->sgst ?? ($effectiveBasePrice * 0.09);
-                            $totalGst = $cgst + $sgst;
-                            $effectiveTotalPrice = $additionalService->getEffectiveTotalPrice();
-                        @endphp
-                        <div class="price-row">
-                            <span class="price-label">Base Price</span>
-                            <span class="price-value">₹{{ number_format($effectiveBasePrice, 2) }}</span>
-                        </div>
-                        <div class="price-row">
-                            <span class="price-label">GST (18%)</span>
-                            <span class="price-value">₹{{ number_format($totalGst, 2) }} <small>(CGST {{ number_format($cgst, 2) }}, SGST {{ number_format($sgst, 2) }})</small></span>
-                        </div>
-                        <div class="price-row">
-                            <span class="price-label">Negotiation Status</span>
-                            <span class="price-value">
-                                @if($additionalService->negotiation_status === 'none')
-                                    No Negotiation
-                                @elseif($additionalService->negotiation_status === 'user_negotiated')
-                                    Awaiting Response
-                                @else
-                                    Completed
-                                @endif
-                            </span>
-                        </div>
-                        <div class="price-row">
-                            <span class="price-label">Negotiated Values</span>
-                            <span class="price-value">
+                    <div class="rounded-control border border-brand-100 bg-brand-50/50 p-4 sm:p-5">
+                        <h3 class="text-sm font-semibold text-brand-950">Price breakdown</h3>
+                        <dl class="mt-3 space-y-2.5 text-sm">
+                            <div class="flex items-start justify-between gap-3">
+                                <dt class="text-text-secondary">Base price</dt>
+                                <dd class="font-medium text-text-primary">₹{{ number_format($effectiveBasePrice, 2) }}</dd>
+                            </div>
+                            <div class="flex items-start justify-between gap-3">
+                                <dt class="text-text-secondary">GST (18%)</dt>
+                                <dd class="text-right font-medium text-text-primary">
+                                    ₹{{ number_format($totalGst, 2) }}
+                                    <span class="mt-0.5 block text-[11px] font-normal text-text-muted">CGST {{ number_format($cgst, 2) }} · SGST {{ number_format($sgst, 2) }}</span>
+                                </dd>
+                            </div>
+                            <div class="flex items-start justify-between gap-3">
+                                <dt class="text-text-secondary">Negotiation status</dt>
+                                <dd class="font-medium text-text-primary">
+                                    @if($additionalService->negotiation_status === 'none')
+                                        No negotiation
+                                    @elseif($additionalService->negotiation_status === 'user_negotiated')
+                                        Awaiting response
+                                    @else
+                                        Completed
+                                    @endif
+                                </dd>
+                            </div>
+                            <div class="flex items-start justify-between gap-3 border-t border-brand-100 pt-2.5">
+                                <dt class="font-semibold text-brand-950">Final price</dt>
+                                <dd class="text-base font-semibold text-brand-800">₹{{ number_format($effectiveTotalPrice, 2) }}</dd>
+                            </div>
+                        </dl>
+                        @if($additionalService->user_negotiated_price || $additionalService->admin_final_negotiated_price)
+                            <div class="mt-3 rounded-control border border-divider bg-white px-3 py-2.5 text-xs leading-5 text-text-secondary">
                                 @if($additionalService->user_negotiated_price)
-                                    Customer: ₹{{ number_format($additionalService->user_negotiated_price, 2) }}<br>
+                                    <p>Customer requested: <strong class="text-text-primary">₹{{ number_format($additionalService->user_negotiated_price, 2) }}</strong></p>
                                 @endif
                                 @if($additionalService->admin_final_negotiated_price)
-                                    Final: ₹{{ number_format($additionalService->admin_final_negotiated_price, 2) }}
+                                    <p>Final negotiated: <strong class="text-text-primary">₹{{ number_format($additionalService->admin_final_negotiated_price, 2) }}</strong></p>
                                 @else
-                                    <small>No admin update yet</small>
+                                    <p>No admin update yet.</p>
                                 @endif
-                            </span>
-                        </div>
-                        <div class="price-row">
-                            <span class="price-label">Final Price</span>
-                            <span class="price-value total">₹{{ number_format($effectiveTotalPrice, 2) }}</span>
-                        </div>
+                            </div>
+                        @endif
                     </div>
 
                     @if($additionalService->negotiation_status === 'admin_responded')
-                        <div class="alert-card success">
-                            <strong><i class="fas fa-handshake"></i> Negotiation Completed</strong>
-                            <p>
-                                Original Price: ₹{{ number_format($additionalService->total_price, 2) }} → New Price: ₹{{ number_format($additionalService->final_price, 2) }}
-                                <br>
-                                <span>{{ $additionalService->admin_negotiation_response }}</span>
+                        <div class="rounded-control border border-success/20 bg-success-surface p-4">
+                            <p class="text-sm font-semibold text-success">Negotiation completed</p>
+                            <p class="mt-1 text-sm text-text-secondary">
+                                Original price: ₹{{ number_format($additionalService->total_price, 2) }}
+                                → New price: ₹{{ number_format($additionalService->final_price, 2) }}
                             </p>
+                            @if($additionalService->admin_negotiation_response)
+                                <p class="mt-2 whitespace-pre-wrap text-sm text-text-secondary">{{ $additionalService->admin_negotiation_response }}</p>
+                            @endif
                         </div>
                     @elseif($additionalService->negotiation_status === 'user_negotiated')
-                        <div class="alert-card warning">
-                            <strong><i class="fas fa-comments"></i> Customer Price Negotiation Pending</strong>
-                            <p>Requested Price: ₹{{ number_format($additionalService->user_negotiated_price, 2) }}</p>
-                            <p>{{ $additionalService->user_negotiation_reason }}</p>
+                        <div class="rounded-control border border-warning/20 bg-warning-surface p-4 sm:p-5">
+                            <p class="text-sm font-semibold text-warning">Customer price negotiation pending</p>
+                            <p class="mt-1 text-sm text-text-secondary">Requested price: ₹{{ number_format($additionalService->user_negotiated_price, 2) }}</p>
+                            @if($additionalService->user_negotiation_reason)
+                                <p class="mt-2 whitespace-pre-wrap text-sm text-text-secondary">{{ $additionalService->user_negotiation_reason }}</p>
+                            @endif
 
-                            <form id="negotiationResponseForm" class="form-card">
+                            <form id="negotiationResponseForm" class="mt-4 space-y-3 rounded-control border border-border bg-white p-4">
                                 @csrf
-                                <h4><i class="fas fa-reply"></i> Respond to Negotiation</h4>
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <label for="professional_final_price">Your Final Price (₹)</label>
-                                        <input type="number" id="professional_final_price" name="professional_final_price" class="form-control" step="0.01" min="{{ $additionalService->base_price * 0.5 }}" value="{{ $additionalService->user_negotiated_price }}" required>
-                                        <div class="price-error" style="display:none"></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="professional_response">Your Response</label>
-                                        <textarea id="professional_response" name="professional_response" class="form-control" rows="4" maxlength="1000" placeholder="Explain your final decision..." required></textarea>
-                                        <small class="form-text">Max 1000 characters</small>
-                                    </div>
+                                <h3 class="text-sm font-semibold text-brand-950">Respond to negotiation</h3>
+                                <div class="space-y-1.5">
+                                    <label for="professional_final_price" class="block text-xs font-medium text-text-primary">Your final price (₹)</label>
+                                    <input type="number" id="professional_final_price" name="professional_final_price" class="form-control min-h-11 w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20" step="0.01" min="{{ $additionalService->base_price * 0.5 }}" value="{{ $additionalService->user_negotiated_price }}" required>
+                                    <div class="price-error" style="display:none"></div>
                                 </div>
-                                <button type="submit" class="action-btn success">
-                                    <i class="fas fa-paper-plane"></i> Send Response
+                                <div class="space-y-1.5">
+                                    <label for="professional_response" class="block text-xs font-medium text-text-primary">Your response</label>
+                                    <textarea id="professional_response" name="professional_response" class="form-control w-full resize-y rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20" rows="4" maxlength="1000" placeholder="Explain your final decision..." required></textarea>
+                                    <p class="text-[11px] text-text-muted">Max 1000 characters</p>
+                                </div>
+                                <button type="submit" class="action-btn success inline-flex min-h-10 items-center justify-center gap-2 rounded-control bg-brand-primary px-4 text-sm font-semibold text-white transition hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
+                                    <i class="fas fa-paper-plane text-xs" aria-hidden="true"></i> Send response
                                 </button>
                             </form>
                         </div>
                     @endif
 
                     @if($additionalService->admin_status === 'approved' && $additionalService->negotiation_status !== 'user_negotiated')
-                        <form id="priceUpdateForm" class="form-card">
+                        <form id="priceUpdateForm" class="space-y-3 rounded-control border border-border bg-surface-muted p-4 sm:p-5">
                             @csrf
-                            <h4><i class="fas fa-edit"></i> Update Service Price</h4>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="new_price">New Price (₹)</label>
-                                    <input type="number" id="new_price" name="new_price" class="form-control" step="0.01" min="{{ $additionalService->base_price * 0.5 }}" value="{{ $additionalService->final_price }}" required>
+                            <h3 class="text-sm font-semibold text-brand-950">Update service price</h3>
+                            <div class="grid gap-3 sm:grid-cols-2">
+                                <div class="space-y-1.5">
+                                    <label for="new_price" class="block text-xs font-medium text-text-primary">New price (₹)</label>
+                                    <input type="number" id="new_price" name="new_price" class="form-control min-h-11 w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20" step="0.01" min="{{ $additionalService->base_price * 0.5 }}" value="{{ $additionalService->final_price }}" required>
                                     <div class="price-error" style="display:none"></div>
-                                    <small class="form-text">Minimum price enforced automatically.</small>
+                                    <p class="text-[11px] text-text-muted">Minimum price enforced automatically.</p>
                                 </div>
-                                <div class="form-group">
-                                    <label for="price_reason">Reason for Update</label>
-                                    <textarea id="price_reason" name="reason" class="form-control" rows="4" maxlength="1000" placeholder="Explain why you're updating the price..." required></textarea>
-                                    <small class="form-text">Customers will be notified of your reasoning.</small>
+                                <div class="space-y-1.5 sm:col-span-2">
+                                    <label for="price_reason" class="block text-xs font-medium text-text-primary">Reason for update</label>
+                                    <textarea id="price_reason" name="reason" class="form-control w-full resize-y rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20" rows="4" maxlength="1000" placeholder="Explain why you're updating the price..." required></textarea>
+                                    <p class="text-[11px] text-text-muted">Customers will be notified of your reasoning.</p>
                                 </div>
                             </div>
-                            <button type="submit" class="action-btn primary">
-                                <i class="fas fa-save"></i> Update Price
+                            <button type="submit" class="action-btn primary inline-flex min-h-10 items-center justify-center gap-2 rounded-control bg-brand-primary px-4 text-sm font-semibold text-white transition hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
+                                <i class="fas fa-save text-xs" aria-hidden="true"></i> Update price
                             </button>
                         </form>
                     @endif
 
                     @if($additionalService->admin_status === 'rejected' && $additionalService->admin_reason)
-                        <div class="alert-card danger">
-                            <strong><i class="fas fa-times-circle"></i> Rejection Reason</strong>
-                            <p>{{ $additionalService->admin_reason }}</p>
+                        <div class="rounded-control border border-error/20 bg-error-surface p-4">
+                            <p class="text-sm font-semibold text-error">Rejection reason</p>
+                            <p class="mt-1 whitespace-pre-wrap text-sm text-text-secondary">{{ $additionalService->admin_reason }}</p>
                         </div>
                     @endif
                 </div>
-            </article>
-
-            <div class="show-sidebar space-y-6">
-                <section class="info-aside-card rounded-2xl border border-brand-100 bg-white p-5 shadow-card">
-                    <h3 class="mb-4 font-semibold text-brand-950"><i class="fas fa-user-circle"></i> Customer Information</h3>
-                    <div class="info-grid grid gap-4 sm:grid-cols-2">
-                        <div class="info-block">
-                            <label>Customer Name</label>
-                            <p>{{ $additionalService->user->name }}</p>
-                        </div>
-                        <div class="info-block">
-                            <label>Email</label>
-                            <p>{{ $additionalService->user->email }}</p>
-                        </div>
-                        <div class="info-block">
-                            <label>Phone</label>
-                            <p>{{ $additionalService->user->phone }}</p>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="info-aside-card rounded-2xl border border-brand-100 bg-white p-5 shadow-card">
-                    <h3 class="mb-4 font-semibold text-brand-950"><i class="fas fa-calculator"></i> Payment & Commission</h3>
-                    <div class="info-grid grid gap-4 sm:grid-cols-2">
-                        <div class="info-block">
-                            <label>Payment Status</label>
-                            <p>
-                                @if($additionalService->payment_status === 'pending')
-                                    <span class="status-pill pending">Pending</span>
-                                @elseif($additionalService->payment_status === 'paid')
-                                    <span class="status-pill paid">Paid</span>
-                                @elseif($additionalService->payment_status === 'failed')
-                                    <span class="status-pill rejected">Failed</span>
-                                @endif
-                            </p>
-                        </div>
-                    </div>
-                    @php
-                        $professional = $additionalService->professional;
-                        $finalPrice = $additionalService->final_price;
-                        $serviceRequestMargin = $professional->service_request_margin ?? 0;
-                        $serviceRequestOffset = $professional->service_request_offset ?? 0;
-                        $platformCommission = ($finalPrice * $serviceRequestMargin) / 100;
-                        $professionalEarning = $finalPrice - $platformCommission;
-                    @endphp
-                    <div class="commission-grid">
-                        <div class="commission-card">
-                            <span>Platform Margin</span>
-                            <strong>{{ number_format($serviceRequestMargin, 2) }}%</strong>
-                            <small>Applied on service price</small>
-                        </div>
-                        <div class="commission-card danger">
-                            <span>Commission Amount</span>
-                            <strong>₹{{ number_format($platformCommission, 2) }}</strong>
-                            <small>Deducted by platform</small>
-                        </div>
-                        <div class="commission-card success">
-                            <span>Your Earnings</span>
-                            <strong>₹{{ number_format($professionalEarning, 2) }}</strong>
-                            <small>After commission</small>
-                        </div>
-                    </div>
-                    @if($additionalService->payment_status === 'paid')
-                        <div class="alert-card success">
-                            <strong><i class="fas fa-check-circle"></i> Payment Received</strong>
-                            <p>You will receive ₹{{ number_format($professionalEarning, 2) }} ({{ number_format(100 - $serviceRequestMargin, 2) }}% of ₹{{ number_format($finalPrice, 2) }})</p>
-                        </div>
-                    @endif
-                    @if($additionalService->professional_payment_status === 'processed')
-                        <div class="alert-card">
-                            <strong><i class="fas fa-money-bill-wave"></i> Payment Released</strong>
-                            <p>Processed on {{ $additionalService->professional_payment_processed_at->format('M d, Y h:i A') }}</p>
-                            @if($additionalService->payment_transaction_id)
-                                <p>Transaction ID: {{ $additionalService->payment_transaction_id }}</p>
-                            @endif
-                        </div>
-                    @endif
-                </section>
-            </div>
+            </section>
         </div>
+
+        <aside class="space-y-5">
+            <section class="rounded-panel border border-border bg-white p-5 shadow-card" aria-labelledby="customer-title">
+                <h2 id="customer-title" class="text-base font-semibold text-brand-950">Customer information</h2>
+                <dl class="mt-4 space-y-3 text-sm">
+                    <div>
+                        <dt class="text-xs font-medium text-text-muted">Customer name</dt>
+                        <dd class="mt-1 font-medium text-text-primary">{{ $additionalService->user->name }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-xs font-medium text-text-muted">Email</dt>
+                        <dd class="mt-1 break-all text-text-primary">{{ $additionalService->user->email }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-xs font-medium text-text-muted">Phone</dt>
+                        <dd class="mt-1 text-text-primary">{{ $additionalService->user->phone ?: '—' }}</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <section class="rounded-panel border border-border bg-white p-5 shadow-card" aria-labelledby="payment-title">
+                <h2 id="payment-title" class="text-base font-semibold text-brand-950">Payment & commission</h2>
+                <div class="mt-4">
+                    <p class="text-xs font-medium text-text-muted">Payment status</p>
+                    <p class="mt-1">
+                        @if($additionalService->payment_status === 'pending')
+                            <span class="inline-flex rounded-full bg-warning-surface px-2.5 py-1 text-xs font-semibold text-warning">Pending</span>
+                        @elseif($additionalService->payment_status === 'paid')
+                            <span class="inline-flex rounded-full bg-success-surface px-2.5 py-1 text-xs font-semibold text-success">Paid</span>
+                        @elseif($additionalService->payment_status === 'failed')
+                            <span class="inline-flex rounded-full bg-error-surface px-2.5 py-1 text-xs font-semibold text-error">Failed</span>
+                        @else
+                            <span class="text-sm text-text-muted">—</span>
+                        @endif
+                    </p>
+                </div>
+
+                <div class="mt-4 grid gap-3">
+                    <div class="rounded-control border border-divider bg-surface-muted p-3">
+                        <p class="text-[11px] font-medium uppercase tracking-wide text-text-muted">Platform margin</p>
+                        <p class="mt-1 text-lg font-semibold text-brand-950">{{ number_format($serviceRequestMargin, 2) }}%</p>
+                        <p class="mt-0.5 text-[11px] text-text-muted">Applied on service price</p>
+                    </div>
+                    <div class="rounded-control border border-error/15 bg-error-surface/60 p-3">
+                        <p class="text-[11px] font-medium uppercase tracking-wide text-error">Commission amount</p>
+                        <p class="mt-1 text-lg font-semibold text-brand-950">₹{{ number_format($platformCommission, 2) }}</p>
+                        <p class="mt-0.5 text-[11px] text-text-muted">Deducted by platform</p>
+                    </div>
+                    <div class="rounded-control border border-success/15 bg-success-surface p-3">
+                        <p class="text-[11px] font-medium uppercase tracking-wide text-success">Your earnings</p>
+                        <p class="mt-1 text-lg font-semibold text-brand-950">₹{{ number_format($professionalEarning, 2) }}</p>
+                        <p class="mt-0.5 text-[11px] text-text-muted">After commission</p>
+                    </div>
+                </div>
+
+                @if($additionalService->payment_status === 'paid')
+                    <div class="mt-4 rounded-control border border-success/20 bg-success-surface px-3 py-3 text-sm text-text-secondary">
+                        <p class="font-semibold text-success">Payment received</p>
+                        <p class="mt-1">You will receive ₹{{ number_format($professionalEarning, 2) }} ({{ number_format(100 - $serviceRequestMargin, 2) }}% of ₹{{ number_format($finalPrice, 2) }}).</p>
+                    </div>
+                @endif
+
+                @if($additionalService->professional_payment_status === 'processed')
+                    <div class="mt-4 rounded-control border border-divider bg-surface-muted px-3 py-3 text-sm text-text-secondary">
+                        <p class="font-semibold text-brand-950">Payment released</p>
+                        <p class="mt-1">Processed on {{ $additionalService->professional_payment_processed_at->format('M d, Y h:i A') }}</p>
+                        @if($additionalService->payment_transaction_id)
+                            <p class="mt-1 break-all">Transaction ID: {{ $additionalService->payment_transaction_id }}</p>
+                        @endif
+                    </div>
+                @endif
+            </section>
+
+            <section class="rounded-panel border border-border bg-white p-5 shadow-card" aria-labelledby="actions-title">
+                <h2 id="actions-title" class="text-base font-semibold text-brand-950">Actions</h2>
+                <div class="mt-4 flex flex-col gap-2">
+                    @if(method_exists($additionalService, 'canStartConsultation') && $additionalService->canStartConsultation())
+                        <button type="button" class="start-consultation inline-flex min-h-10 items-center justify-center gap-2 rounded-control bg-brand-primary px-4 text-sm font-semibold text-white transition hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
+                            <i class="fas fa-play text-xs" aria-hidden="true"></i> Start consultation
+                        </button>
+                    @endif
+
+                    @if($additionalService->canSetDeliveryDate())
+                        <button type="button" class="set-delivery-date inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border px-4 text-sm font-semibold text-text-secondary transition hover:border-brand-primary hover:text-brand-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
+                            <i class="fas fa-calendar-plus text-xs" aria-hidden="true"></i> Set delivery date
+                        </button>
+                    @endif
+
+                    @if($additionalService->canUpdateDeliveryDate() && $additionalService->delivery_date)
+                        <button type="button" class="update-delivery inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border px-4 text-sm font-semibold text-text-secondary transition hover:border-brand-primary hover:text-brand-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
+                            <i class="fas fa-calendar text-xs" aria-hidden="true"></i> Update delivery date
+                        </button>
+                    @endif
+
+                    @if($additionalService->canBeCompletedByProfessional())
+                        <button type="button" class="mark-completed inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-success/30 px-4 text-sm font-semibold text-success transition hover:bg-success-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
+                            <i class="fas fa-check text-xs" aria-hidden="true"></i> Mark completed
+                        </button>
+                    @endif
+
+                    @if(method_exists($additionalService, 'canCompleteConsultation') && $additionalService->canCompleteConsultation())
+                        <button type="button" class="complete-consultation inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border px-4 text-sm font-semibold text-text-secondary transition hover:border-brand-primary hover:text-brand-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
+                            <i class="fas fa-flag-checkered text-xs" aria-hidden="true"></i> Complete consultation
+                        </button>
+                    @endif
+
+                    @if($additionalService->consulting_status === 'done' && $additionalService->payment_status === 'paid')
+                        <a href="{{ route('professional.additional-services.invoice', $additionalService->id) }}" class="inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border px-4 text-sm font-semibold text-text-secondary transition hover:border-brand-primary hover:text-brand-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
+                            <i class="fas fa-file-invoice text-xs" aria-hidden="true"></i> View invoice
+                        </a>
+                        <a href="{{ route('professional.additional-services.invoice.pdf', $additionalService->id) }}" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border px-4 text-sm font-semibold text-text-secondary transition hover:border-brand-primary hover:text-brand-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
+                            <i class="fas fa-download text-xs" aria-hidden="true"></i> Download invoice
+                        </a>
+                    @endif
+
+                    @if(
+                        !(method_exists($additionalService, 'canStartConsultation') && $additionalService->canStartConsultation())
+                        && !$additionalService->canSetDeliveryDate()
+                        && !($additionalService->canUpdateDeliveryDate() && $additionalService->delivery_date)
+                        && !$additionalService->canBeCompletedByProfessional()
+                        && !(method_exists($additionalService, 'canCompleteConsultation') && $additionalService->canCompleteConsultation())
+                        && !($additionalService->consulting_status === 'done' && $additionalService->payment_status === 'paid')
+                    )
+                        <p class="rounded-control border border-divider bg-surface-muted px-3 py-3 text-sm text-text-muted">No actions are available for this service in its current status.</p>
+                    @endif
+                </div>
+            </section>
+        </aside>
     </div>
 </div>
 
-<!-- Modals -->
+{{-- Modals: IDs, field names, and open/close hooks preserved --}}
 <div class="custom-modal" id="startConsultationModal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">🚀 Start Consultation</h5>
-            <button type="button" class="modal-close" onclick="closeModal('startConsultationModal')">
-                <i class="fas fa-times"></i>
+        <div class="modal-header flex items-start justify-between gap-3 border-b border-divider px-5 py-4">
+            <div>
+                <h5 class="modal-title text-base font-semibold text-brand-950">Start consultation</h5>
+                <p class="mt-1 text-xs text-text-muted">Mark this service as in progress.</p>
+            </div>
+            <button type="button" class="modal-close inline-flex size-9 items-center justify-center rounded-control text-text-secondary hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring" onclick="closeModal('startConsultationModal')" aria-label="Close">
+                <i class="fas fa-times" aria-hidden="true"></i>
             </button>
         </div>
         <form id="startConsultationForm">
-            <div class="modal-body">
-                <div class="alert-card">
-                    <strong><i class="fas fa-info-circle"></i> Heads up!</strong>
-                    <p>This will mark the consultation as "In Progress" and notify the customer.</p>
+            <div class="modal-body space-y-3 px-5 py-4">
+                <div class="rounded-control border border-info/20 bg-info-surface px-3 py-3 text-sm text-text-secondary">
+                    <p class="font-semibold text-info">Heads up</p>
+                    <p class="mt-1">This will mark the consultation as “In Progress” and notify the customer.</p>
                 </div>
-                <div class="form-group">
-                    <label for="consultation_notes">Consultation Notes (Optional)</label>
-                    <textarea class="form-control" id="consultation_notes" name="consultation_notes" rows="4" placeholder="Add any initial notes or instructions..."></textarea>
+                <div class="space-y-1.5">
+                    <label for="consultation_notes" class="block text-xs font-medium text-text-primary">Consultation notes <span class="font-normal text-text-muted">(optional)</span></label>
+                    <textarea class="form-control w-full resize-y rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20" id="consultation_notes" name="consultation_notes" rows="4" placeholder="Add any initial notes or instructions..."></textarea>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="action-btn outline" onclick="closeModal('startConsultationModal')">
-                    <i class="fas fa-times"></i> Cancel
+            <div class="modal-footer flex flex-col-reverse gap-2 border-t border-divider px-5 py-4 sm:flex-row sm:justify-end">
+                <button type="button" class="action-btn outline inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border px-4 text-sm font-semibold text-text-secondary transition hover:bg-surface-muted" onclick="closeModal('startConsultationModal')">
+                    Cancel
                 </button>
-                <button type="submit" class="action-btn success">
-                    <i class="fas fa-play"></i> Start Consultation
+                <button type="submit" class="action-btn success inline-flex min-h-10 items-center justify-center gap-2 rounded-control bg-brand-primary px-4 text-sm font-semibold text-white transition hover:bg-brand-800">
+                    <i class="fas fa-play text-xs" aria-hidden="true"></i> Start consultation
                 </button>
             </div>
         </form>
@@ -305,29 +410,32 @@
 
 <div class="custom-modal" id="markCompletedModal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">✅ Mark Consultation Completed</h5>
-            <button type="button" class="modal-close" onclick="closeModal('markCompletedModal')">
-                <i class="fas fa-times"></i>
+        <div class="modal-header flex items-start justify-between gap-3 border-b border-divider px-5 py-4">
+            <div>
+                <h5 class="modal-title text-base font-semibold text-brand-950">Mark consultation completed</h5>
+                <p class="mt-1 text-xs text-text-muted">Notify the customer to confirm completion.</p>
+            </div>
+            <button type="button" class="modal-close inline-flex size-9 items-center justify-center rounded-control text-text-secondary hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring" onclick="closeModal('markCompletedModal')" aria-label="Close">
+                <i class="fas fa-times" aria-hidden="true"></i>
             </button>
         </div>
         <form id="markCompletedForm">
-            <div class="modal-body">
-                <div class="alert-card success">
-                    <strong><i class="fas fa-check-circle"></i> Confirmation</strong>
-                    <p>This action notifies the customer to confirm the consultation completion.</p>
+            <div class="modal-body space-y-3 px-5 py-4">
+                <div class="rounded-control border border-success/20 bg-success-surface px-3 py-3 text-sm text-text-secondary">
+                    <p class="font-semibold text-success">Confirmation</p>
+                    <p class="mt-1">This action notifies the customer to confirm the consultation completion.</p>
                 </div>
-                <div class="form-group">
-                    <label for="completion_notes">Completion Summary *</label>
-                    <textarea class="form-control" id="completion_notes" name="completion_notes" rows="4" placeholder="Provide a summary of the work completed..." required></textarea>
+                <div class="space-y-1.5">
+                    <label for="completion_notes" class="block text-xs font-medium text-text-primary">Completion summary <span class="text-error">*</span></label>
+                    <textarea class="form-control w-full resize-y rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20" id="completion_notes" name="completion_notes" rows="4" placeholder="Provide a summary of the work completed..." required></textarea>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="action-btn outline" onclick="closeModal('markCompletedModal')">
-                    <i class="fas fa-times"></i> Cancel
+            <div class="modal-footer flex flex-col-reverse gap-2 border-t border-divider px-5 py-4 sm:flex-row sm:justify-end">
+                <button type="button" class="action-btn outline inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border px-4 text-sm font-semibold text-text-secondary transition hover:bg-surface-muted" onclick="closeModal('markCompletedModal')">
+                    Cancel
                 </button>
-                <button type="submit" class="action-btn success">
-                    <i class="fas fa-check-circle"></i> Mark Completed
+                <button type="submit" class="action-btn success inline-flex min-h-10 items-center justify-center gap-2 rounded-control bg-brand-primary px-4 text-sm font-semibold text-white transition hover:bg-brand-800">
+                    <i class="fas fa-check-circle text-xs" aria-hidden="true"></i> Mark completed
                 </button>
             </div>
         </form>
@@ -336,35 +444,38 @@
 
 <div class="custom-modal" id="updateDeliveryModal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">📅 Update Delivery Date</h5>
-            <button type="button" class="modal-close" onclick="closeModal('updateDeliveryModal')">
-                <i class="fas fa-times"></i>
+        <div class="modal-header flex items-start justify-between gap-3 border-b border-divider px-5 py-4">
+            <div>
+                <h5 class="modal-title text-base font-semibold text-brand-950">Update delivery date</h5>
+                <p class="mt-1 text-xs text-text-muted">Change the planned delivery date.</p>
+            </div>
+            <button type="button" class="modal-close inline-flex size-9 items-center justify-center rounded-control text-text-secondary hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring" onclick="closeModal('updateDeliveryModal')" aria-label="Close">
+                <i class="fas fa-times" aria-hidden="true"></i>
             </button>
         </div>
         <form id="updateDeliveryForm">
-            <div class="modal-body">
+            <div class="modal-body space-y-3 px-5 py-4">
                 @if($additionalService->delivery_date)
-                    <div class="alert-card">
-                        <strong>Current Delivery Date:</strong>
-                        <p>{{ \Carbon\Carbon::parse($additionalService->delivery_date)->format('M d, Y') }}</p>
+                    <div class="rounded-control border border-divider bg-surface-muted px-3 py-3 text-sm text-text-secondary">
+                        <p class="font-semibold text-brand-950">Current delivery date</p>
+                        <p class="mt-1">{{ \Carbon\Carbon::parse($additionalService->delivery_date)->format('M d, Y') }}</p>
                     </div>
                 @endif
-                <div class="form-group">
-                    <label for="new_delivery_date">New Delivery Date *</label>
-                    <input type="date" class="form-control" id="new_delivery_date" name="delivery_date" min="{{ date('Y-m-d') }}" value="{{ $additionalService->delivery_date }}" required>
+                <div class="space-y-1.5">
+                    <label for="new_delivery_date" class="block text-xs font-medium text-text-primary">New delivery date <span class="text-error">*</span></label>
+                    <input type="date" class="form-control min-h-11 w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20" id="new_delivery_date" name="delivery_date" min="{{ date('Y-m-d') }}" value="{{ $additionalService->delivery_date }}" required>
                 </div>
-                <div class="form-group">
-                    <label for="delivery_notes">Reason for Date Change *</label>
-                    <textarea class="form-control" id="delivery_notes" name="delivery_notes" rows="3" placeholder="Explain why the delivery date is being changed..." required></textarea>
+                <div class="space-y-1.5">
+                    <label for="delivery_notes" class="block text-xs font-medium text-text-primary">Reason for date change <span class="text-error">*</span></label>
+                    <textarea class="form-control w-full resize-y rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20" id="delivery_notes" name="delivery_notes" rows="3" placeholder="Explain why the delivery date is being changed..." required></textarea>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="action-btn outline" onclick="closeModal('updateDeliveryModal')">
-                    <i class="fas fa-times"></i> Cancel
+            <div class="modal-footer flex flex-col-reverse gap-2 border-t border-divider px-5 py-4 sm:flex-row sm:justify-end">
+                <button type="button" class="action-btn outline inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border px-4 text-sm font-semibold text-text-secondary transition hover:bg-surface-muted" onclick="closeModal('updateDeliveryModal')">
+                    Cancel
                 </button>
-                <button type="submit" class="action-btn warning">
-                    <i class="fas fa-calendar"></i> Update Date
+                <button type="submit" class="action-btn warning inline-flex min-h-10 items-center justify-center gap-2 rounded-control bg-brand-primary px-4 text-sm font-semibold text-white transition hover:bg-brand-800">
+                    <i class="fas fa-calendar text-xs" aria-hidden="true"></i> Update date
                 </button>
             </div>
         </form>
@@ -373,33 +484,36 @@
 
 <div class="custom-modal" id="setDeliveryDateModal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">📅 Set Delivery Date</h5>
-            <button type="button" class="modal-close" onclick="closeModal('setDeliveryDateModal')">
-                <i class="fas fa-times"></i>
+        <div class="modal-header flex items-start justify-between gap-3 border-b border-divider px-5 py-4">
+            <div>
+                <h5 class="modal-title text-base font-semibold text-brand-950">Set delivery date</h5>
+                <p class="mt-1 text-xs text-text-muted">Customers and admin will be notified.</p>
+            </div>
+            <button type="button" class="modal-close inline-flex size-9 items-center justify-center rounded-control text-text-secondary hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring" onclick="closeModal('setDeliveryDateModal')" aria-label="Close">
+                <i class="fas fa-times" aria-hidden="true"></i>
             </button>
         </div>
         <form id="setDeliveryDateForm">
-            <div class="modal-body">
-                <div class="alert-card">
-                    <strong><i class="fas fa-info-circle"></i> Note</strong>
-                    <p>Customers and admin will be notified once you set a delivery date.</p>
+            <div class="modal-body space-y-3 px-5 py-4">
+                <div class="rounded-control border border-info/20 bg-info-surface px-3 py-3 text-sm text-text-secondary">
+                    <p class="font-semibold text-info">Note</p>
+                    <p class="mt-1">Customers and admin will be notified once you set a delivery date.</p>
                 </div>
-                <div class="form-group">
-                    <label for="delivery_date">Delivery Date *</label>
-                    <input type="date" class="form-control" id="delivery_date" name="delivery_date" min="{{ date('Y-m-d', strtotime('+1 day')) }}" required>
+                <div class="space-y-1.5">
+                    <label for="delivery_date" class="block text-xs font-medium text-text-primary">Delivery date <span class="text-error">*</span></label>
+                    <input type="date" class="form-control min-h-11 w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20" id="delivery_date" name="delivery_date" min="{{ date('Y-m-d', strtotime('+1 day')) }}" required>
                 </div>
-                <div class="form-group">
-                    <label for="delivery_reason">Reason/Notes *</label>
-                    <textarea class="form-control" id="delivery_reason" name="delivery_reason" rows="3" placeholder="Explain the delivery plan..." required></textarea>
+                <div class="space-y-1.5">
+                    <label for="delivery_reason" class="block text-xs font-medium text-text-primary">Reason / notes <span class="text-error">*</span></label>
+                    <textarea class="form-control w-full resize-y rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20" id="delivery_reason" name="delivery_reason" rows="3" placeholder="Explain the delivery plan..." required></textarea>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="action-btn outline" onclick="closeModal('setDeliveryDateModal')">
-                    <i class="fas fa-times"></i> Cancel
+            <div class="modal-footer flex flex-col-reverse gap-2 border-t border-divider px-5 py-4 sm:flex-row sm:justify-end">
+                <button type="button" class="action-btn outline inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border px-4 text-sm font-semibold text-text-secondary transition hover:bg-surface-muted" onclick="closeModal('setDeliveryDateModal')">
+                    Cancel
                 </button>
-                <button type="submit" class="action-btn info">
-                    <i class="fas fa-calendar-plus"></i> Set Date
+                <button type="submit" class="action-btn info inline-flex min-h-10 items-center justify-center gap-2 rounded-control bg-brand-primary px-4 text-sm font-semibold text-white transition hover:bg-brand-800">
+                    <i class="fas fa-calendar-plus text-xs" aria-hidden="true"></i> Set date
                 </button>
             </div>
         </form>

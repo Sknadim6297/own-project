@@ -7,7 +7,8 @@
 @section('content')
 <main class="yk-mood yk-history">
     <div class="yk-mood__wrap yk-history__wrap">
-        <a class="yk-mood__back" href="{{ route('tools.psychology') }}">Back</a>
+        @include('frontend.sections.partials.tool-back-to-tools')
+        <a class="yk-mood__back" href="{{ route('tools.psychology') }}">Psychology tools</a>
         <h1>Mood history</h1>
         <p class="yk-mood__lead">A private record of the moments you checked in.</p>
 

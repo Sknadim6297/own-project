@@ -5,28 +5,13 @@
 @section('body_class', 'yk-wj-body')
 
 @section('content')
-@php
-    $svc = app(\App\Services\WeightJourneyService::class);
-    $points = $chart['points'];
-    $w = 640; $h = 220; $pad = 28;
-    $xs = []; $ys = [];
-    if (count($points) >= 1) {
-        $min = min(array_map(fn ($p) => (float) $p['weight_kg'], $points));
-        $max = max(array_map(fn ($p) => (float) $p['weight_kg'], $points));
-        if ($min === $max) { $min -= 1; $max += 1; }
-        foreach ($points as $i => $p) {
-            $t = count($points) === 1 ? 0.5 : $i / (count($points) - 1);
-            $xs[] = $pad + $t * ($w - 2 * $pad);
-            $ys[] = $pad + (1 - (((float) $p['weight_kg'] - $min) / ($max - $min))) * ($h - 2 * $pad);
-        }
-    }
-@endphp
+@php $svc = app(\App\Services\WeightJourneyService::class); @endphp
 <main class="yk-wj">
-    <div class="yk-wj__wrap">
+    <div class="yk-wj__wrap yk-wj__wrap--wide">
         <section class="yk-wj__card">
-            <p class="yk-wj__badge">Progress</p>
+            <p class="yk-wj__badge">Progress · Asia/Kolkata</p>
             <h1>Weight progress</h1>
-            <p class="yk-wj__lead">Charts use real measurements only. Missing days stay missing—not zero. Multiple same-day readings use the latest for the chart point ({{ $aggregation }}).</p>
+            <p class="yk-wj__lead">Real measurements only. Missing days stay blank. Same-day chart points use the latest reading.</p>
 
             <nav class="yk-wj__tabs" aria-label="Chart period">
                 @foreach ($periods as $key => $days)
@@ -36,46 +21,41 @@
                 @endforeach
             </nav>
 
-            <div class="yk-wj__chart">
-                @if ($points === [])
-                    <p class="yk-wj__note">No measurements in this period yet.</p>
-                @else
-                    <svg viewBox="0 0 {{ $w }} {{ $h }}" role="img" aria-label="Weight line chart">
-                        <rect x="0" y="0" width="{{ $w }}" height="{{ $h }}" fill="#fbfcfe"></rect>
-                        @if (count($xs) === 1)
-                            <circle cx="{{ $xs[0] }}" cy="{{ $ys[0] }}" r="5" fill="#316d61"></circle>
-                        @else
-                            <polyline fill="none" stroke="#316d61" stroke-width="3"
-                                points="@foreach($xs as $i){{ $xs[$i] }},{{ $ys[$i] }} @endforeach"></polyline>
-                            @foreach ($xs as $i)
-                                <circle cx="{{ $xs[$i] }}" cy="{{ $ys[$i] }}" r="4" fill="#9d81db"></circle>
-                            @endforeach
-                        @endif
-                    </svg>
-                    <ul class="yk-wj__list" style="margin-top:0.75rem;">
-                        @foreach ($points as $p)
-                            <li><span>{{ $p['date'] }}</span><strong>{{ $p['label'] }}</strong></li>
-                        @endforeach
-                    </ul>
-                @endif
-            </div>
+            @include('frontend.sections.weight-journey.partials.chart', ['chart' => $chart])
 
-            <h2 style="font-size:1.05rem;margin:1rem 0 0.5rem;">All measurements</h2>
+            <h2 class="yk-wj__section-title" style="margin-top:1.15rem;">All measurements</h2>
             @if ($history->isEmpty())
-                <p class="yk-wj__note">No measurements saved.</p>
+                <div class="yk-wj__empty" role="status">No measurements saved.</div>
             @else
-                <ul class="yk-wj__list">
-                    @foreach ($history as $row)
+                <ul class="yk-wj__list yk-wj__list--history">
+                    @foreach ($history as $index => $row)
+                        @php
+                            // Newest-first list; delta vs the next older item when present on this page.
+                            $older = $history->get($index + 1);
+                            $delta = $older
+                                ? $svc->formatNetChange(
+                                    bcsub((string) $row->weight_kg, (string) $older->weight_kg, 3),
+                                    $unit
+                                )
+                                : null;
+                        @endphp
                         <li>
-                            <span>
+                            <div>
                                 <strong>{{ $svc->formatWeight((string) $row->weight_kg, $unit) }}</strong>
-                                <span class="yk-wj__note" style="display:block;margin:0;">{{ $row->recorded_at->timezone($timezone)->format('d M Y, g:i A') }}</span>
-                            </span>
+                                @if ($delta)
+                                    <span class="yk-wj__delta">{{ $delta }}</span>
+                                @endif
+                                <div class="yk-wj__meta">{{ $row->recorded_at->timezone($timezone)->format('d M Y, g:i A') }}</div>
+                                @if ($row->note)
+                                    <div class="yk-wj__meta">{{ $row->note }}</div>
+                                @endif
+                            </div>
+                            <a class="yk-wj__text-link" href="{{ route('tools.weight-journey.log') }}">Edit on log</a>
                         </li>
                     @endforeach
                 </ul>
                 @if ($history->hasPages())
-                    <nav class="yk-wj__pages">
+                    <nav class="yk-wj__pages" aria-label="Measurement pages">
                         @if ($history->previousPageUrl())
                             <a class="yk-wj__btn-secondary" href="{{ $history->previousPageUrl() }}">Newer</a>
                         @endif
@@ -89,7 +69,7 @@
 
             <div class="yk-wj__actions">
                 <a class="yk-wj__btn" href="{{ route('tools.weight-journey.log') }}">Log weight</a>
-                <a class="yk-wj__btn-secondary" href="{{ route('tools.weight-journey') }}">Your journey</a>
+                <a class="yk-wj__btn-secondary" href="{{ route('tools.weight-journey') }}">Dashboard</a>
             </div>
         </section>
     </div>

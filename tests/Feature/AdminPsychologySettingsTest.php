@@ -180,19 +180,42 @@ class AdminPsychologySettingsTest extends TestCase
             ->assertSee('Finish &amp; Save', false)
             ->assertSee('At least one answered card')
             ->assertSee('Save Changes')
-            ->assertSee('Not publicly available')
+            ->assertSee('Public')
             ->assertDontSee('name="reflection"', false)
             ->assertDontSee('name="journal_body"', false)
             ->assertDontSee('name="gratitude_response"', false);
 
-        $this->assertSame(2, Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->whereNull('route_name')->count());
-        $this->assertTrue(Tool::query()->where('slug', 'daily-mood-check-in')->firstOrFail()->canLaunch());
+        $unpublishedSlugs = [
+            'career-interest-test',
+            'skills-strengths-assessment',
+            'bmi-bmr-calculator',
+            'water-intake-tracker',
+            'weight-journey',
+            'calorie-nutrition-tracker',
+        ];
+        $this->assertSame(
+            count($unpublishedSlugs),
+            Tool::query()
+                ->whereIn('slug', $unpublishedSlugs)
+                ->where('status', 'coming_soon')
+                ->where('is_implemented', false)
+                ->whereNull('route_name')
+                ->count()
+        );
+        $this->assertSame(
+            count($unpublishedSlugs),
+            Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->whereNull('route_name')->count()
+        );
+        foreach (['daily-mood-check-in', 'digital-journal', 'gratitude-journal'] as $slug) {
+            $this->assertTrue(Tool::query()->where('slug', $slug)->firstOrFail()->canLaunch(), $slug);
+        }
 
         $this->get(route('tools.index'))
             ->assertOk()
             ->assertSee('Daily Mood Check-in')
+            ->assertSee('Digital Journal')
+            ->assertSee('Gratitude Journal')
             ->assertSee('Start Check-in')
-            ->assertDontSee('Digital Journal')
             ->assertDontSee('Something good today');
 
         $this->get('/tools/daily-mood-check-in')->assertNotFound();
@@ -229,8 +252,21 @@ class AdminPsychologySettingsTest extends TestCase
         $this->assertSame(9, (int) ToolConfigItem::query()->where('item_key', 'my-thoughts')->value('display_order'));
         $this->assertNotNull(ToolConfigItem::query()->where('item_key', 'evening-review')->where('is_system', false)->first());
         $this->assertSame('Which moment felt good today?', ToolConfigItem::query()->where('item_key', 'something-good-today')->value('detail'));
-        $this->assertSame(2, Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->count());
+        $unpublishedSlugs = [
+            'career-interest-test',
+            'skills-strengths-assessment',
+            'bmi-bmr-calculator',
+            'water-intake-tracker',
+            'weight-journey',
+            'calorie-nutrition-tracker',
+        ];
+        $this->assertSame(
+            count($unpublishedSlugs),
+            Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->count()
+        );
         $this->assertTrue(Tool::query()->where('slug', 'daily-mood-check-in')->firstOrFail()->canLaunch());
+        $this->assertTrue(Tool::query()->where('slug', 'digital-journal')->firstOrFail()->canLaunch());
+        $this->assertTrue(Tool::query()->where('slug', 'gratitude-journal')->firstOrFail()->canLaunch());
 
         app(PsychologyConfigRegistrar::class)->sync();
         $this->assertSame(30, ToolConfigItem::query()->count());

@@ -6,76 +6,153 @@
 
 @section('content')
 @php
-    $pct = min(100, $dash['percent']);
+    $ringPct = min(100, max(0, (int) $dash['percent']));
     $radius = 54;
     $circ = 2 * M_PI * $radius;
-    $offset = $circ * (1 - ($pct / 100));
+    $offset = $circ * (1 - ($ringPct / 100));
+    $overGoal = $dash['percent'] > 100;
+    $overMl = max(0, (int) $dash['total_ml'] - (int) $dash['goal_ml']);
 @endphp
 <main class="yk-water">
-    <div class="yk-water__wrap">
+    <div class="yk-water__wrap yk-water__wrap--wide">
         <section class="yk-water__card" aria-labelledby="water-dash-heading">
-            <p class="yk-water__badge">Today · Asia/Kolkata</p>
-            <h1 id="water-dash-heading">Water intake</h1>
-            <p class="yk-water__lead">Personal tracking only. Your goal is a preference, not a prescribed medical target.</p>
+            <p class="yk-water__badge">{{ $isToday ? 'Today' : $dash['date'] }} · Asia/Kolkata</p>
+            <h1 id="water-dash-heading">Water Intake Tracker</h1>
+            <p class="yk-water__lead">Personal daily tracking against your goal—not a medical prescription.</p>
 
             @if ($status)
-                <p class="yk-water__ok">{{ $status }}</p>
+                <p class="yk-water__ok" role="status">{{ $status }}</p>
             @endif
             @if ($errors->any())
-                <p class="yk-water__error">{{ $errors->first() }}</p>
+                <p class="yk-water__error" role="alert">{{ $errors->first() }}</p>
             @endif
 
-            <div class="yk-water__progress" role="img" aria-label="{{ $dash['percent'] }} percent of daily goal">
-                <svg viewBox="0 0 140 140" aria-hidden="true">
-                    <circle cx="70" cy="70" r="{{ $radius }}" fill="none" stroke="#edf1f6" stroke-width="12"></circle>
-                    <circle cx="70" cy="70" r="{{ $radius }}" fill="none" stroke="#316d61" stroke-width="12"
-                        stroke-linecap="round"
-                        stroke-dasharray="{{ $circ }}"
-                        stroke-dashoffset="{{ $offset }}"
-                        transform="rotate(-90 70 70)"></circle>
-                </svg>
-                <div class="yk-water__progress-center">
-                    <strong>{{ $dash['percent'] }}%</strong>
-                    <span>{{ $dash['total_label'] }}</span>
+            <div class="yk-water__dash-grid">
+                <div
+                    class="yk-water__progress {{ $overGoal ? 'is-over' : '' }}"
+                    role="img"
+                    aria-label="{{ $dash['total_label'] }} of {{ $dash['goal_label'] }}, {{ $dash['percent'] }} percent of daily goal{{ $overGoal ? ', over goal' : '' }}"
+                >
+                    <svg viewBox="0 0 140 140" aria-hidden="true">
+                        <circle class="yk-water__ring-track" cx="70" cy="70" r="{{ $radius }}" fill="none" stroke-width="12"></circle>
+                        <circle
+                            class="yk-water__ring-fill"
+                            cx="70" cy="70" r="{{ $radius }}"
+                            fill="none"
+                            stroke-width="12"
+                            stroke-linecap="round"
+                            stroke-dasharray="{{ number_format($circ, 4, '.', '') }}"
+                            stroke-dashoffset="{{ number_format($offset, 4, '.', '') }}"
+                            transform="rotate(-90 70 70)"
+                            style="--yk-water-circ: {{ number_format($circ, 4, '.', '') }}; --yk-water-offset: {{ number_format($offset, 4, '.', '') }};"
+                        ></circle>
+                    </svg>
+                    <div class="yk-water__progress-center">
+                        <strong>{{ $dash['percent'] }}%</strong>
+                        <span>{{ $dash['total_label'] }}</span>
+                        <span class="yk-water__progress-goal">of {{ $dash['goal_label'] }}</span>
+                    </div>
+                </div>
+
+                <div class="yk-water__stats" aria-label="Daily summary">
+                    <div>
+                        <strong>{{ $dash['total_label'] }}</strong>
+                        <span>Consumed</span>
+                    </div>
+                    <div>
+                        <strong>{{ $dash['goal_label'] }}</strong>
+                        <span>Daily goal</span>
+                    </div>
+                    <div>
+                        <strong>{{ $overGoal ? '+'.number_format($overMl).' ml' : $dash['remaining_label'] }}</strong>
+                        <span>{{ $overGoal ? 'Over goal' : 'Remaining' }}</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="yk-water__stats">
-                <div><strong>{{ $dash['total_label'] }}</strong><span>Consumed</span></div>
-                <div><strong>{{ $dash['goal_label'] }}</strong><span>Daily goal</span></div>
-                <div><strong>{{ $dash['remaining_label'] }}</strong><span>Remaining</span></div>
-            </div>
-
-            <p class="yk-water__note">Quick adds are UI presets only—not medical recommendations.</p>
-            <div class="yk-water__quick">
-                @foreach ($dash['quick_adds'] as $ml)
-                    <form method="post" action="{{ route('tools.water-intake.store') }}">
+            <h2 class="yk-water__section-title">Quick add</h2>
+            <div class="yk-water__quick" data-water-quick>
+                @foreach ($dash['quick_adds'] as $preset)
+                    <form method="post" action="{{ route('tools.water-intake.store') }}" data-water-submit-once>
                         @csrf
-                        <input type="hidden" name="amount_ml" value="{{ $ml }}">
+                        <input type="hidden" name="amount_ml" value="{{ $preset['ml'] }}">
                         <input type="hidden" name="idempotency_key" value="{{ (string) \Illuminate\Support\Str::uuid() }}">
-                        <button type="submit">+{{ $ml }} ml</button>
+                        <button type="submit" class="yk-water__quick-card">
+                            <span class="yk-water__quick-emoji" aria-hidden="true">{{ $preset['emoji'] }}</span>
+                            <span class="yk-water__quick-label">{{ $preset['label'] }}</span>
+                            <span class="yk-water__quick-amt">+{{ number_format($preset['ml']) }} ml</span>
+                        </button>
                     </form>
                 @endforeach
             </div>
 
-            <form method="post" action="{{ route('tools.water-intake.store') }}" class="yk-water__field">
-                @csrf
-                <label for="custom-ml">Custom amount (ml)</label>
-                <input id="custom-ml" type="number" name="amount_ml" min="1" max="5000" step="1" inputmode="numeric" required>
-                <input type="hidden" name="idempotency_key" value="{{ (string) \Illuminate\Support\Str::uuid() }}">
-                <label for="custom-time" style="margin-top:0.55rem;">Optional time (Asia/Kolkata)</label>
-                <input id="custom-time" type="datetime-local" name="consumed_at">
-                <div class="yk-water__actions">
+            <details class="yk-water__manual">
+                <summary>Custom amount</summary>
+                <form method="post" action="{{ route('tools.water-intake.store') }}" class="yk-water__manual-form" data-water-submit-once>
+                    @csrf
+                    <div class="yk-water__manual-row">
+                        <div class="yk-water__field">
+                            <label for="custom-ml">Amount (ml)</label>
+                            <input id="custom-ml" type="number" name="amount_ml" min="1" max="5000" step="1" inputmode="numeric" required placeholder="e.g. 200">
+                        </div>
+                        <div class="yk-water__field">
+                            <label for="custom-time">Time (optional)</label>
+                            <input id="custom-time" type="datetime-local" name="consumed_at">
+                        </div>
+                    </div>
+                    <input type="hidden" name="idempotency_key" value="{{ (string) \Illuminate\Support\Str::uuid() }}">
                     <button class="yk-water__btn" type="submit">Add water</button>
+                </form>
+            </details>
+
+            <div class="yk-water__logs">
+                <div class="yk-water__logs-head">
+                    <h2 class="yk-water__section-title">Today’s logs</h2>
+                    <a class="yk-water__text-link" href="{{ route('tools.water-intake.today', ['date' => $dash['date']]) }}">Manage</a>
                 </div>
-            </form>
+                @if ($entries->isEmpty())
+                    <div class="yk-water__empty" role="status">No entries yet today. Use quick add or a custom amount.</div>
+                @else
+                    <ul class="yk-water__list">
+                        @foreach ($entries->sortByDesc(fn ($e) => $e->consumed_at)->take(6) as $entry)
+                            @php $local = $entry->consumed_at->timezone($timezone); @endphp
+                            <li>
+                                <div>
+                                    <strong>{{ number_format($entry->amount_ml) }} ml</strong>
+                                    <div class="yk-water__meta">{{ $local->format('g:i A') }}</div>
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                    @if ($entries->count() > 6)
+                        <p class="yk-water__note" style="margin-top:0.65rem;">Showing latest 6 of {{ $entries->count() }}. <a href="{{ route('tools.water-intake.today', ['date' => $dash['date']]) }}">View all</a></p>
+                    @endif
+                @endif
+            </div>
 
             <div class="yk-water__actions">
-                <a class="yk-water__btn-secondary" href="{{ route('tools.water-intake.today') }}">Today’s intake</a>
-                <a class="yk-water__btn-secondary" href="{{ route('tools.water-intake.week') }}">Weekly hydration</a>
-                <a class="yk-water__btn-secondary" href="{{ route('tools.water-intake.goal') }}">Edit daily goal</a>
+                <a class="yk-water__btn-secondary" href="{{ route('tools.water-intake.week') }}">Weekly history</a>
+                <a class="yk-water__btn-secondary" href="{{ route('tools.water-intake.goal') }}">Edit goal</a>
+                <a class="yk-water__btn-secondary" href="{{ route('tools.water-intake.today') }}">Day detail</a>
             </div>
         </section>
     </div>
 </main>
+<script>
+(function () {
+    document.querySelectorAll('[data-water-submit-once]').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (form.getAttribute('data-submitting') === '1') {
+                event.preventDefault();
+                return;
+            }
+            form.setAttribute('data-submitting', '1');
+            form.querySelectorAll('button[type="submit"]').forEach(function (btn) {
+                btn.disabled = true;
+                btn.classList.add('is-busy');
+            });
+        });
+    });
+})();
+</script>
 @endsection

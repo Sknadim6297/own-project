@@ -5,19 +5,106 @@ namespace App\Services;
 use App\Models\Service;
 use App\Models\Tool;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class PsychologyHome
 {
+    public function __construct(
+        private readonly ExploreCatalog $catalog,
+    ) {
+    }
+
     public function present(): array
     {
         $cards = $this->cards();
+        $discovery = $this->psychologistDiscovery();
 
         return [
             'cards' => $cards,
             'mood' => $cards[0],
-            'psychologistsUrl' => $this->psychologistsUrl(),
+            'psychologistsUrl' => $discovery['url'],
+            'psychologistDiscovery' => $discovery,
         ];
+    }
+
+    /**
+     * Public Experts listing URL for Psychology → Connect with a Psychologist.
+     */
+    public function psychologistsUrl(): string
+    {
+        return $this->psychologistDiscovery()['url'];
+    }
+
+    /**
+     * Resolve Experts filters from live Service + Explore category mappings.
+     *
+     * @return array{
+     *     url: string,
+     *     category: ?string,
+     *     service: ?string,
+     *     resolved_via: string,
+     *     mapping_missing: bool,
+     *     message: ?string
+     * }
+     */
+    public function psychologistDiscovery(): array
+    {
+        $category = $this->catalog->psychologyCategoryKey();
+        $service = $this->safePsychologistService();
+
+        if ($category === null && $service === null) {
+            Log::warning('Psychology discovery mapping missing: no Mental Health category and no psychologist service.');
+
+            return [
+                'url' => route('professionals'),
+                'category' => null,
+                'service' => null,
+                'resolved_via' => 'unfiltered_fallback',
+                'mapping_missing' => true,
+                'message' => 'Psychologist category mapping is missing. Showing the Experts listing without a Psychology filter.',
+            ];
+        }
+
+        $query = [];
+        $resolvedVia = 'category';
+
+        if ($category !== null) {
+            $query['category'] = $category;
+        }
+
+        if ($service !== null) {
+            $query['service'] = $service->slug;
+            $resolvedVia = $category !== null ? 'service_and_category' : 'service';
+        } elseif ($category !== null) {
+            Log::notice('Psychology discovery using category only; no psychologist Service slug found in services table.', [
+                'category' => $category,
+            ]);
+        }
+
+        return [
+            'url' => route('professionals', $query),
+            'category' => $category,
+            'service' => $service?->slug,
+            'resolved_via' => $resolvedVia,
+            'mapping_missing' => $service === null && $category !== null,
+            'message' => $service === null && $category !== null
+                ? 'No psychologist Service record found; Experts will open with the Mental Health category selected.'
+                : null,
+        ];
+    }
+
+    private function safePsychologistService(): ?Service
+    {
+        try {
+            if (! Schema::hasTable('services')) {
+                return null;
+            }
+
+            return $this->catalog->resolvePsychologistService();
+        } catch (QueryException) {
+            return null;
+        }
     }
 
     private function cards(): array
@@ -88,7 +175,7 @@ class PsychologyHome
     private function registryTools(array $slugs)
     {
         try {
-            if (!Schema::hasTable('tools')) {
+            if (! Schema::hasTable('tools')) {
                 return collect();
             }
 
@@ -96,23 +183,5 @@ class PsychologyHome
         } catch (QueryException) {
             return collect();
         }
-    }
-
-    public function psychologistsUrl(): string
-    {
-        try {
-            if (Schema::hasTable('services')) {
-                $service = Service::query()->where('slug', 'best-online-psychologists-india')->first()
-                    ?? Service::query()->where('name', 'like', '%psycholog%')->orderBy('id')->first();
-
-                if ($service && filled($service->slug)) {
-                    return route('professionals', ['service' => $service->slug]);
-                }
-            }
-        } catch (QueryException) {
-            return route('gridlisting', ['category' => 'mental-health', 'type' => 'experts']);
-        }
-
-        return route('gridlisting', ['category' => 'mental-health', 'type' => 'experts']);
     }
 }

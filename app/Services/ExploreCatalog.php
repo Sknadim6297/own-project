@@ -20,6 +20,24 @@ class ExploreCatalog
 {
     public const PER_PAGE = 8;
 
+    /** Explore category that represents Psychology / Psychologist discovery. */
+    public const PSYCHOLOGY_CATEGORY = 'mental-health';
+
+    public const PREFERRED_PSYCHOLOGIST_SERVICE_SLUG = 'best-online-psychologists-india';
+
+    /**
+     * Exact experience values stored on profiles (registration / profile forms).
+     * Do not invent alternate numeric ranges that the database does not use.
+     */
+    public const EXPERIENCE_BUCKETS = [
+        '0-2' => '0–2 years',
+        '2-4' => '2–4 years',
+        '4-6' => '4–6 years',
+        '6-8' => '6–8 years',
+        '8-10' => '8–10 years',
+        '10+' => '10+ years',
+    ];
+
     public const CATEGORIES = [
         'mental-health' => ['label' => 'Mental Health', 'tone' => 'mint', 'icon' => 'lotus', 'needles' => ['mental', 'psycholog', 'mindset', 'therap', 'counsel']],
         'astrology-tarot' => ['label' => 'Astrology & Tarot', 'tone' => 'lavender', 'icon' => 'moon', 'needles' => ['astro', 'tarot', 'vastu', 'horoscope']],
@@ -48,6 +66,7 @@ class ExploreCatalog
             'items' => $items,
             'filters' => $filters,
             'categories' => self::CATEGORIES,
+            'experienceBuckets' => self::EXPERIENCE_BUCKETS,
             'activeTypes' => $this->activeTypes($filters),
             'tab' => $this->tab($filters),
             'counts' => [
@@ -102,6 +121,11 @@ class ExploreCatalog
             $subService = '';
         }
 
+        $experience = (string) $request->query('experience', '');
+        if (! array_key_exists($experience, self::EXPERIENCE_BUCKETS)) {
+            $experience = '';
+        }
+
         $sort = (string) $request->query('sort', 'relevant');
         if (!in_array($sort, ['relevant', 'newest', 'rating', 'price_asc', 'price_desc'], true)) {
             $sort = 'relevant';
@@ -124,6 +148,7 @@ class ExploreCatalog
             'category' => $category,
             'service' => $service,
             'sub_service' => $subService,
+            'experience' => $experience,
             'price' => $price,
             'rating' => $rating,
             'availability' => $availability,
@@ -213,6 +238,9 @@ class ExploreCatalog
         $chips = $this->chipSet($expert->professionalServices
             ->map(fn ($service) => $service->service?->name ?: $service->service_name));
         [$priceLabel, $priceSuffix] = $this->priceParts($price, true);
+        $experienceKey = is_string($expert->profile?->experience) ? $expert->profile->experience : null;
+        $qualification = $this->plain($expert->profile?->education)
+            ?: $this->plain($expert->profile?->education2);
 
         return [
             'kind' => 'expert',
@@ -226,11 +254,16 @@ class ExploreCatalog
             'price_suffix' => $priceSuffix,
             'rating' => $reviewCount > 0 ? number_format((float) $expert->average_rating, 1) : null,
             'review_count' => $reviewCount,
+            'experience' => $experienceKey && isset(self::EXPERIENCE_BUCKETS[$experienceKey])
+                ? self::EXPERIENCE_BUCKETS[$experienceKey]
+                : $this->plain($experienceKey),
+            'qualification' => $qualification,
             'chips' => $chips['chips'],
             'chip_extra' => $chips['extra'],
             'meta' => null,
             'url' => route('professionals.details', ['id' => $expert->id, 'professional_name' => Str::slug($expert->name)]),
-            'cta' => 'Book a Session',
+            'cta' => 'View Profile',
+            'book_cta' => 'Book Consultation',
             'verified' => false,
         ];
     }
@@ -324,6 +357,11 @@ class ExploreCatalog
         if ($filters['service'] !== '') {
             $slug = $filters['service'];
             $query->whereHas('professionalServices.service', fn (Builder $service) => $service->where('slug', $slug));
+        }
+
+        if (($filters['experience'] ?? '') !== '') {
+            $bucket = $filters['experience'];
+            $query->whereHas('profile', fn (Builder $profile) => $profile->where('experience', $bucket));
         }
 
         if ($filters['sub_service'] !== '') {
@@ -701,6 +739,44 @@ class ExploreCatalog
         }
 
         return null;
+    }
+
+    /**
+     * Resolve the Psychology/Mental Health category key used on Experts.
+     * Returns null only if the catalogue mapping was removed (misconfiguration).
+     */
+    public function psychologyCategoryKey(): ?string
+    {
+        return array_key_exists(self::PSYCHOLOGY_CATEGORY, self::CATEGORIES)
+            ? self::PSYCHOLOGY_CATEGORY
+            : null;
+    }
+
+    /**
+     * Find a psychologist-related Service from the live catalogue (no hardcoded IDs).
+     */
+    public function resolvePsychologistService(): ?Service
+    {
+        $preferred = Service::query()
+            ->where('slug', self::PREFERRED_PSYCHOLOGIST_SERVICE_SLUG)
+            ->first();
+
+        if ($preferred) {
+            return $preferred;
+        }
+
+        $needles = self::CATEGORIES[self::PSYCHOLOGY_CATEGORY]['needles'] ?? ['psycholog', 'therap', 'counsel', 'mental'];
+
+        return Service::query()
+            ->where(function (Builder $query) use ($needles) {
+                foreach ($needles as $needle) {
+                    $like = '%'.$needle.'%';
+                    $query->orWhere('slug', 'like', $like)
+                        ->orWhere('name', 'like', $like);
+                }
+            })
+            ->orderBy('id')
+            ->first();
     }
 
     private function selectedKinds(array $filters): array

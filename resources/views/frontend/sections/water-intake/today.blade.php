@@ -6,20 +6,24 @@
 
 @section('content')
 <main class="yk-water">
-    <div class="yk-water__wrap">
+    <div class="yk-water__wrap yk-water__wrap--wide">
         <section class="yk-water__card">
             <p class="yk-water__badge">{{ $dash['date'] }} · Asia/Kolkata</p>
             <h1>Day’s intake</h1>
-            <p class="yk-water__lead">Total {{ $dash['total_label'] }} of {{ $dash['goal_label'] }} ({{ $dash['percent'] }}%).</p>
+            <p class="yk-water__lead">{{ $dash['total_label'] }} of {{ $dash['goal_label'] }} · {{ $dash['percent'] }}%</p>
 
             @if (session('status'))
-                <p class="yk-water__ok">{{ session('status') }}</p>
+                <p class="yk-water__ok" role="status">{{ session('status') }}</p>
             @endif
             @if ($errors->any())
-                <p class="yk-water__error">{{ $errors->first() }}</p>
+                <p class="yk-water__error" role="alert">{{ $errors->first() }}</p>
             @endif
 
-            <div class="yk-water__actions" style="margin-top:0;">
+            <div class="yk-water__day-progress" aria-hidden="true">
+                <div class="yk-water__day-progress-fill" style="width: {{ min(100, max(0, (int) $dash['percent'])) }}%"></div>
+            </div>
+
+            <div class="yk-water__actions" style="margin-top:0.85rem;">
                 <a class="yk-water__btn-secondary" href="{{ route('tools.water-intake.today', ['date' => $prevDate]) }}">Previous day</a>
                 @unless ($isToday)
                     <a class="yk-water__btn-secondary" href="{{ route('tools.water-intake.today', ['date' => $nextDate]) }}">Next day</a>
@@ -28,22 +32,23 @@
             </div>
 
             @if ($entries->isEmpty())
-                <p class="yk-water__lead" style="margin-top:1.2rem;">No entries logged for this day. An empty day means no saved logs—not proof that nothing was drunk.</p>
+                <div class="yk-water__empty" role="status">
+                    <p style="margin:0 0 0.25rem;font-weight:700;color:var(--yk-navy);">No entries logged</p>
+                    <p style="margin:0;">Empty means no saved logs—not proof that nothing was drunk.</p>
+                </div>
             @else
-                <ul class="yk-water__list" style="margin-top:1.2rem;">
+                <ul class="yk-water__list yk-water__list--manage" style="margin-top:1.15rem;">
                     @foreach ($entries as $entry)
-                        @php
-                            $local = $entry->consumed_at->timezone($timezone);
-                        @endphp
+                        @php $local = $entry->consumed_at->timezone($timezone); @endphp
                         <li>
                             <div>
                                 <strong>{{ number_format($entry->amount_ml) }} ml</strong>
-                                <div class="yk-water__note" style="margin:0;">{{ $local->format('g:i A') }}</div>
+                                <div class="yk-water__meta">{{ $local->format('g:i A') }}</div>
                             </div>
-                            <div class="yk-water__actions" style="margin:0;">
+                            <div class="yk-water__entry-actions">
                                 <details>
-                                    <summary class="yk-water__btn-secondary" style="list-style:none;">Edit</summary>
-                                    <form method="post" action="{{ route('tools.water-intake.entries.update', $entry) }}" style="margin-top:0.55rem;">
+                                    <summary>Edit</summary>
+                                    <form method="post" action="{{ route('tools.water-intake.entries.update', $entry) }}" class="yk-water__edit-form" data-water-submit-once>
                                         @csrf
                                         @method('PUT')
                                         <label class="visually-hidden" for="edit-{{ $entry->id }}">Amount ml</label>
@@ -53,7 +58,7 @@
                                         <button class="yk-water__btn" type="submit">Save</button>
                                     </form>
                                 </details>
-                                <form method="post" action="{{ route('tools.water-intake.entries.destroy', $entry) }}" onsubmit="return confirm('Delete this entry?');">
+                                <form method="post" action="{{ route('tools.water-intake.entries.destroy', $entry) }}" onsubmit="return confirm('Delete this entry?');" data-water-submit-once>
                                     @csrf
                                     @method('DELETE')
                                     <button class="yk-water__btn-secondary" type="submit">Delete</button>
@@ -66,4 +71,20 @@
         </section>
     </div>
 </main>
+<script>
+(function () {
+    document.querySelectorAll('[data-water-submit-once]').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (form.getAttribute('data-submitting') === '1') {
+                event.preventDefault();
+                return;
+            }
+            form.setAttribute('data-submitting', '1');
+            form.querySelectorAll('button[type="submit"]').forEach(function (btn) {
+                btn.disabled = true;
+            });
+        });
+    });
+})();
+</script>
 @endsection

@@ -5,6 +5,7 @@
     --yk-lavender: #9d81db;
     --yk-line: #e6ebf2;
     --yk-muted: #41506d;
+    --yk-surface: #ffffff;
     font-family: "DM Sans", sans-serif;
     color: var(--yk-navy);
     background:
@@ -20,8 +21,12 @@
     margin-inline: auto;
 }
 
+.yk-bmi__wrap--wide {
+    width: min(1040px, calc(100% - 2rem));
+}
+
 .yk-bmi__card {
-    background: #fff;
+    background: var(--yk-surface);
     border: 1px solid var(--yk-line);
     border-radius: 22px;
     padding: 1.35rem 1.25rem 1.5rem;
@@ -40,8 +45,8 @@
 }
 
 .yk-bmi h1 {
-    margin: 0 0 0.55rem;
-    font-size: clamp(1.45rem, 4vw, 2rem);
+    margin: 0 0 0.45rem;
+    font-size: clamp(1.4rem, 3.6vw, 1.9rem);
     line-height: 1.15;
     letter-spacing: -0.03em;
 }
@@ -50,11 +55,372 @@
 .yk-bmi__note {
     margin: 0 0 1rem;
     color: var(--yk-muted);
-    line-height: 1.6;
+    line-height: 1.55;
 }
 
 .yk-bmi__note { font-size: 0.88rem; }
 
+.yk-bmi__status {
+    margin: 0 0 0.85rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 12px;
+    background: var(--yk-mint);
+    color: var(--yk-teal);
+    font-weight: 600;
+    font-size: 0.92rem;
+}
+
+.yk-bmi__error {
+    margin: 0 0 0.85rem;
+    color: #9b1c1c;
+    font-weight: 600;
+}
+
+/* —— Metrics row: Gender | Age | Weight | Height —— */
+.yk-bmi__metrics {
+    display: grid;
+    gap: 0.85rem;
+    margin: 0 0 1.15rem;
+}
+
+@media (min-width: 640px) {
+    .yk-bmi__metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .yk-bmi__metrics {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+        align-items: start;
+    }
+}
+
+.yk-bmi__metric {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+}
+
+.yk-bmi__metric > label,
+.yk-bmi__metric > legend {
+    display: block;
+    margin: 0 0 0.4rem;
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--yk-navy);
+}
+
+.yk-bmi__hint {
+    margin: 0.35rem 0 0;
+    font-size: 0.72rem;
+    line-height: 1.35;
+    color: var(--yk-muted);
+}
+
+.yk-bmi__input-unit {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.yk-bmi__input-unit span {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--yk-muted);
+}
+
+.yk-bmi input[type="number"],
+.yk-bmi select {
+    width: 100%;
+    min-height: 46px;
+    border: 1px solid var(--yk-line);
+    border-radius: 12px;
+    padding: 0.55rem 0.75rem;
+    font: inherit;
+    color: var(--yk-navy);
+    background: #fff;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.yk-bmi input:focus,
+.yk-bmi select:focus {
+    outline: 2px solid transparent;
+    border-color: var(--yk-teal);
+    box-shadow: 0 0 0 3px rgba(49, 109, 97, 0.18);
+}
+
+.yk-bmi input:invalid:not(:placeholder-shown):not(:focus) {
+    border-color: #c45c5c;
+}
+
+.yk-bmi__unit-toggle {
+    display: inline-flex;
+    gap: 0.3rem;
+    margin-bottom: 0.4rem;
+}
+
+.yk-bmi__unit-toggle label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.28rem;
+    min-height: 34px;
+    padding: 0 0.65rem;
+    border: 1px solid var(--yk-line);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.yk-bmi__unit-toggle label:has(input:checked) {
+    background: var(--yk-mint);
+    border-color: var(--yk-teal);
+    color: var(--yk-teal);
+}
+
+.yk-bmi__unit-toggle input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+}
+
+.yk-bmi__unit-toggle label:focus-within {
+    outline: 2px solid var(--yk-teal);
+    outline-offset: 2px;
+}
+
+.yk-bmi__ftin {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+}
+
+/* —— Emoji activity cards —— */
+.yk-bmi__activity {
+    margin: 0 0 1rem;
+    padding: 0;
+    border: 0;
+}
+
+.yk-bmi__activity > legend {
+    margin: 0 0 0.55rem;
+    font-weight: 700;
+    font-size: 0.92rem;
+}
+
+.yk-bmi__activity-grid {
+    display: grid;
+    gap: 0.55rem;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 480px) {
+    .yk-bmi__activity-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 900px) {
+    .yk-bmi__activity-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
+.yk-bmi__activity-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.2rem;
+    min-height: 108px;
+    padding: 0.85rem 0.55rem 0.75rem;
+    border: 1.5px solid var(--yk-line);
+    border-radius: 16px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 0.18s ease, background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+}
+
+.yk-bmi__activity-card:hover {
+    border-color: rgba(49, 109, 97, 0.45);
+    background: rgba(234, 246, 242, 0.45);
+}
+
+.yk-bmi__activity-card:has(input:checked) {
+    border-color: var(--yk-teal);
+    background: var(--yk-mint);
+    box-shadow: 0 0 0 3px rgba(49, 109, 97, 0.16);
+}
+
+.yk-bmi__activity-card:has(input:focus-visible) {
+    outline: 2px solid var(--yk-teal);
+    outline-offset: 2px;
+}
+
+.yk-bmi__activity-card input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+}
+
+.yk-bmi__activity-emoji {
+    font-size: 1.55rem;
+    line-height: 1;
+    margin-bottom: 0.15rem;
+}
+
+.yk-bmi__activity-label {
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--yk-navy);
+    line-height: 1.25;
+}
+
+.yk-bmi__activity-desc {
+    font-size: 0.68rem;
+    line-height: 1.3;
+    color: var(--yk-muted);
+}
+
+.yk-bmi__check {
+    display: flex;
+    gap: 0.55rem;
+    align-items: flex-start;
+    font-size: 0.88rem;
+    color: var(--yk-muted);
+    margin: 0.25rem 0 0;
+}
+
+.yk-bmi__check input {
+    margin-top: 0.2rem;
+    accent-color: var(--yk-teal);
+    width: 1.05rem;
+    height: 1.05rem;
+    flex-shrink: 0;
+}
+
+.yk-bmi__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 1.15rem;
+    align-items: center;
+}
+
+.yk-bmi__btn,
+.yk-bmi__btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 1.15rem;
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
+}
+
+.yk-bmi__btn { background: var(--yk-teal); color: #fff; }
+.yk-bmi__btn:hover { background: #28584e; color: #fff; }
+.yk-bmi__btn:active,
+.yk-bmi__btn-secondary:active {
+    transform: scale(0.98);
+}
+
+.yk-bmi__btn-secondary {
+    background: #fff;
+    color: var(--yk-navy);
+    border-color: var(--yk-line);
+}
+.yk-bmi__btn-secondary:hover {
+    border-color: var(--yk-teal);
+    color: var(--yk-teal);
+}
+
+/* —— Result cards —— */
+.yk-bmi__result-grid {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0 0 1rem;
+}
+
+@media (min-width: 768px) {
+    .yk-bmi__result-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.yk-bmi__result-card {
+    padding: 1.05rem 1rem 1.1rem;
+    border-radius: 18px;
+    border: 1px solid var(--yk-line);
+    background: linear-gradient(180deg, #fff 0%, var(--yk-mint) 160%);
+    animation: yk-bmi-reveal 0.35s ease both;
+}
+
+.yk-bmi__result-card:nth-child(2) { animation-delay: 0.06s; }
+.yk-bmi__result-card:nth-child(3) { animation-delay: 0.12s; }
+
+.yk-bmi__result-kicker {
+    margin: 0 0 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--yk-teal);
+}
+
+.yk-bmi__result-value {
+    margin: 0 0 0.35rem;
+    font-size: clamp(1.55rem, 3vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.yk-bmi__result-value small {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--yk-muted);
+}
+
+.yk-bmi__result-tag {
+    display: inline-flex;
+    margin: 0 0 0.55rem;
+    padding: 0.22rem 0.55rem;
+    border-radius: 999px;
+    background: rgba(49, 109, 97, 0.12);
+    color: var(--yk-teal);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.yk-bmi__result-blurb {
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: var(--yk-muted);
+}
+
+@keyframes yk-bmi-reveal {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+}
+
+/* Legacy helpers kept for understand/guidance */
 .yk-bmi__field {
     margin: 0 0 1rem;
 }
@@ -75,25 +441,6 @@
 @media (min-width: 640px) {
     .yk-bmi__row.is-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .yk-bmi__row.is-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
-.yk-bmi input[type="number"],
-.yk-bmi select {
-    width: 100%;
-    min-height: 44px;
-    border: 1px solid var(--yk-line);
-    border-radius: 12px;
-    padding: 0.55rem 0.75rem;
-    font: inherit;
-    color: var(--yk-navy);
-    background: #fff;
-}
-
-.yk-bmi input:focus,
-.yk-bmi select:focus {
-    outline: 2px solid transparent;
-    border-color: var(--yk-teal);
-    box-shadow: 0 0 0 3px rgba(49, 109, 97, 0.18);
 }
 
 .yk-bmi__units {
@@ -149,54 +496,6 @@
 
 .yk-bmi__choices input { margin-top: 0.2rem; accent-color: var(--yk-teal); }
 
-.yk-bmi__check {
-    display: flex;
-    gap: 0.55rem;
-    align-items: flex-start;
-    font-size: 0.9rem;
-    color: var(--yk-muted);
-}
-
-.yk-bmi__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.65rem;
-    margin-top: 1.1rem;
-}
-
-.yk-bmi__btn,
-.yk-bmi__btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 44px;
-    padding: 0 1.15rem;
-    border-radius: 999px;
-    font: inherit;
-    font-weight: 700;
-    text-decoration: none;
-    border: 1px solid transparent;
-    cursor: pointer;
-}
-
-.yk-bmi__btn { background: var(--yk-teal); color: #fff; }
-.yk-bmi__btn:hover { background: #28584e; color: #fff; }
-.yk-bmi__btn-secondary {
-    background: #fff;
-    color: var(--yk-navy);
-    border-color: var(--yk-line);
-}
-.yk-bmi__btn-secondary:hover {
-    border-color: var(--yk-teal);
-    color: var(--yk-teal);
-}
-
-.yk-bmi__error {
-    margin: 0 0 0.85rem;
-    color: #9b1c1c;
-    font-weight: 600;
-}
-
 .yk-bmi__stats {
     display: grid;
     gap: 0.65rem;
@@ -225,9 +524,7 @@
     font-weight: 600;
 }
 
-.yk-bmi__scale {
-    margin: 1rem 0;
-}
+.yk-bmi__scale { margin: 1rem 0; }
 
 .yk-bmi__scale-track {
     position: relative;
@@ -283,6 +580,7 @@
     border: 1px solid var(--yk-line);
 }
 
+/* —— History —— */
 .yk-bmi__history {
     display: grid;
     gap: 0.65rem;
@@ -291,21 +589,96 @@
     list-style: none;
 }
 
-.yk-bmi__history a {
-    display: block;
-    padding: 0.9rem 1rem;
+.yk-bmi__history-card {
+    display: grid;
+    gap: 0.65rem;
+    padding: 0.95rem 1rem;
     border: 1px solid var(--yk-line);
-    border-radius: 14px;
-    text-decoration: none;
-    color: inherit;
+    border-radius: 16px;
+    background: #fff;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.12s ease;
 }
 
-.yk-bmi__history a:hover {
+.yk-bmi__history-card:hover {
     border-color: var(--yk-teal);
-    background: var(--yk-mint);
+    background: rgba(234, 246, 242, 0.55);
 }
 
-.yk-bmi__history small { color: var(--yk-muted); }
+.yk-bmi__history-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    color: var(--yk-muted);
+    font-weight: 600;
+}
+
+.yk-bmi__history-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
+}
+
+.yk-bmi__history-metric {
+    min-width: 0;
+}
+
+.yk-bmi__history-metric strong {
+    display: block;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.yk-bmi__history-metric span {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--yk-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.yk-bmi__history-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.yk-bmi__history-activity {
+    font-size: 0.82rem;
+    color: var(--yk-muted);
+}
+
+.yk-bmi__history-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--yk-line);
+    text-decoration: none;
+    color: var(--yk-navy);
+    font-size: 0.82rem;
+    font-weight: 700;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.yk-bmi__history-link:hover {
+    border-color: var(--yk-teal);
+    color: var(--yk-teal);
+}
+
+.yk-bmi__empty {
+    margin: 1.2rem 0 0;
+    padding: 1.25rem 1rem;
+    border: 1px dashed var(--yk-line);
+    border-radius: 16px;
+    text-align: center;
+    color: var(--yk-muted);
+}
 
 .yk-bmi__pages {
     display: flex;
@@ -313,10 +686,28 @@
     flex-wrap: wrap;
     gap: 0.65rem;
     margin-top: 1rem;
+    align-items: center;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 639px) {
     .yk-bmi__btn,
     .yk-bmi__btn-secondary { width: 100%; }
+    .yk-bmi__actions form { width: 100%; }
+    .yk-bmi__actions form .yk-bmi__btn,
+    .yk-bmi__actions form .yk-bmi__btn-secondary { width: 100%; }
     .yk-bmi__scale-track { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .yk-bmi__history-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .yk-bmi__result-card,
+    .yk-bmi__activity-card,
+    .yk-bmi__btn,
+    .yk-bmi__btn-secondary,
+    .yk-bmi__history-card,
+    .yk-bmi input,
+    .yk-bmi select {
+        animation: none !important;
+        transition: none !important;
+    }
 }

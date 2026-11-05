@@ -44,16 +44,22 @@ class ToolRegistryRegistrar
             [
                 'slug' => 'digital-journal',
                 'name' => 'Digital Journal',
-                'description' => 'A private journal. The workflow is not built yet.',
+                'description' => 'Express your thoughts in your own words.',
                 'icon' => 'ri-book-open-line',
                 'display_order' => 2,
+                'status' => 'active',
+                'route_name' => 'tools.psychology.journal',
+                'is_implemented' => true,
             ],
             [
                 'slug' => 'gratitude-journal',
                 'name' => 'Gratitude Journal',
-                'description' => 'A private gratitude record. The workflow is not built yet.',
+                'description' => 'Notice and appreciate the good in your day.',
                 'icon' => 'ri-heart-2-line',
                 'display_order' => 3,
+                'status' => 'active',
+                'route_name' => 'tools.psychology.gratitude',
+                'is_implemented' => true,
             ],
         ]);
     }
@@ -127,7 +133,7 @@ class ToolRegistryRegistrar
             [
                 'slug' => 'calorie-nutrition-tracker',
                 'name' => 'Calorie & Nutrition Tracker',
-                'description' => 'Log meals against a verified food database. Coming soon.',
+                'description' => 'Log meals from the published food catalogue with optional calorie and macro goals.',
                 'icon' => 'ri-bowl-line',
                 'display_order' => 4,
             ],

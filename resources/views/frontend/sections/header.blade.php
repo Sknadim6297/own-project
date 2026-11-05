@@ -35,7 +35,7 @@
         [
             'label' => 'Tools',
             'href' => route('tools.index'),
-            'active' => request()->routeIs('tools.index', 'tools.psychology', 'tools.psychology.mood', 'tools.psychology.mood.emotions', 'tools.psychology.mood.reflection', 'tools.psychology.mood.finish', 'tools.psychology.mood.complete', 'tools.psychology.mood.history'),
+            'active' => \App\Support\Tools\ToolsSection::isActive(),
             'placeholder' => false,
         ],
         [
@@ -139,8 +139,11 @@
 
                 <div class="yk-navbar__auth">
                     @if ($account)
+                        @if ($user)
+                            <a class="yk-navbar__dashboard" href="{{ route('user.dashboard') }}">View Dashboard</a>
+                        @endif
                         <div class="yk-navbar__account" data-account-menu>
-                            <button class="yk-navbar__account-toggle" type="button" aria-expanded="false" aria-controls="tazen-account-menu" data-account-toggle>
+                            <button class="yk-navbar__account-toggle" type="button" aria-expanded="false" aria-haspopup="menu" aria-controls="tazen-account-menu" data-account-toggle>
                                 <img src="{{ $profilePhoto }}" alt="" width="36" height="36">
                                 <span class="yk-navbar__account-copy">
                                     <span class="yk-navbar__account-name">{{ $account->name }}</span>
@@ -150,26 +153,25 @@
                                     <path d="m6 9 6 6 6-6"></path>
                                 </svg>
                             </button>
-                            <div class="yk-navbar__account-menu" id="tazen-account-menu" hidden>
+                            <div class="yk-navbar__account-menu" id="tazen-account-menu" role="menu" aria-label="Account menu" hidden data-account-panel>
                                 <span class="yk-navbar__account-label">{{ $accountRole }}</span>
                                 @if ($messagesUrl)
-                                    <a href="{{ $messagesUrl }}">Messages</a>
+                                    <a href="{{ $messagesUrl }}" role="menuitem">Messages</a>
                                 @endif
                                 @if ($user)
-                                    <a href="{{ route('user.dashboard') }}">Dashboard</a>
-                                    <a href="{{ route('user.profile.index') }}">My Profile</a>
-                                    <a href="{{ route('user.all-appointment.index') }}">My Bookings</a>
+                                    <a href="{{ route('user.profile.index') }}" role="menuitem">My Profile</a>
+                                    <a href="{{ route('user.all-appointment.index') }}" role="menuitem">My Bookings</a>
                                     <form action="{{ route('user.logout') }}" method="POST">
                                         @csrf
-                                        <button type="submit">Logout</button>
+                                        <button type="submit" role="menuitem">Logout</button>
                                     </form>
                                 @else
-                                    <a href="{{ route('professional.dashboard') }}">Dashboard</a>
-                                    <a href="{{ route('professional.profile.index') }}">My Profile</a>
-                                    <a href="{{ route('professional.booking.index') }}">My Bookings</a>
+                                    <a href="{{ route('professional.dashboard') }}" role="menuitem">Dashboard</a>
+                                    <a href="{{ route('professional.profile.index') }}" role="menuitem">My Profile</a>
+                                    <a href="{{ route('professional.booking.index') }}" role="menuitem">My Bookings</a>
                                     <form action="{{ route('professional.logout') }}" method="POST">
                                         @csrf
-                                        <button type="submit">Logout</button>
+                                        <button type="submit" role="menuitem">Logout</button>
                                     </form>
                                 @endif
                             </div>

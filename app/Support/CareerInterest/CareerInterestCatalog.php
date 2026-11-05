@@ -28,6 +28,18 @@ class CareerInterestCatalog
         5 => 'Love it',
     ];
 
+    /**
+     * Presentation-only emoticons for the existing interest-intensity scale.
+     * Numeric values and labels in SCALE must not change.
+     */
+    public const SCALE_EMOJI = [
+        1 => '😣',
+        2 => '🙁',
+        3 => '😐',
+        4 => '😊',
+        5 => '🤩',
+    ];
+
     public const AGE_GROUPS = [
         'below-15' => 'Below 15',
         '15-18' => '15–18',
@@ -219,6 +231,35 @@ class CareerInterestCatalog
             static fn (array $q) => $q['id'],
             array_filter(self::questions(), static fn (array $q) => $q['category'] === $category)
         ));
+    }
+
+    /**
+     * @return array<int, array{value:int,label:string,emoji:string}>
+     */
+    public static function scaleOptions(): array
+    {
+        $options = [];
+        foreach (self::SCALE as $value => $label) {
+            $options[(int) $value] = [
+                'value' => (int) $value,
+                'label' => $label,
+                'emoji' => self::SCALE_EMOJI[$value] ?? '',
+            ];
+        }
+
+        return $options;
+    }
+
+    public static function progressPercent(int $step): int
+    {
+        $total = count(self::CATEGORY_ORDER);
+
+        return $total > 0 ? (int) round(($step / $total) * 100) : 0;
+    }
+
+    public static function questionCount(): int
+    {
+        return count(self::questions());
     }
 
     public static function scaleValues(): array

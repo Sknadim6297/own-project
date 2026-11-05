@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Listeners\ClaimBmiBmrDraft;
 use App\Listeners\ClaimCareerInterestDraft;
+use App\Listeners\ClaimGratitudeDraft;
+use App\Listeners\ClaimJournalDraft;
 use App\Listeners\ClaimMoodCheckinDraft;
 use App\Listeners\ClaimSkillsStrengthsDraft;
 use Illuminate\Auth\Events\Login;
@@ -27,6 +29,8 @@ class EventServiceProvider extends ServiceProvider
         ],
         Login::class => [
             ClaimMoodCheckinDraft::class,
+            ClaimJournalDraft::class,
+            ClaimGratitudeDraft::class,
             ClaimCareerInterestDraft::class,
             ClaimSkillsStrengthsDraft::class,
             ClaimBmiBmrDraft::class,

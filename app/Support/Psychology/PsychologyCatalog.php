@@ -14,6 +14,12 @@ class PsychologyCatalog
 
     public const GRATITUDE_MIN_ANSWERED = 1;
 
+    public const GRATITUDE_ANSWER_MAX = 1000;
+
+    public const JOURNAL_TITLE_MAX = 120;
+
+    public const JOURNAL_BODY_MAX = 5000;
+
     public const NOTES = [
         'mood' => [
             'Exactly one primary mood is stored for each check-in.',
@@ -108,12 +114,12 @@ class PsychologyCatalog
     public static function prompts(): array
     {
         return [
-            self::item('journal_prompt', 'my-thoughts', 'My thoughts', 1),
-            self::item('journal_prompt', 'personal-growth', 'Personal growth', 2),
-            self::item('journal_prompt', 'work-career', 'Work & career', 3),
-            self::item('journal_prompt', 'relationships', 'Relationships', 4),
-            self::item('journal_prompt', 'difficult-moments', 'Difficult moments', 5),
-            self::item('journal_prompt', 'my-aspirations', 'My aspirations', 6),
+            self::item('journal_prompt', 'my-thoughts', 'My thoughts', 1, null, null, 'What is on your mind right now?'),
+            self::item('journal_prompt', 'personal-growth', 'Personal growth', 2, null, null, 'How are you growing or changing lately?'),
+            self::item('journal_prompt', 'work-career', 'Work & career', 3, null, null, 'What feels important about work or your career today?'),
+            self::item('journal_prompt', 'relationships', 'Relationships', 4, null, null, 'What stands out in your relationships right now?'),
+            self::item('journal_prompt', 'difficult-moments', 'Difficult moments', 5, null, null, 'What has felt hard, and what do you need?'),
+            self::item('journal_prompt', 'my-aspirations', 'My aspirations', 6, null, null, 'What are you hoping for, near or far?'),
         ];
     }
 
@@ -126,8 +132,8 @@ class PsychologyCatalog
                 'Something good today',
                 1,
                 null,
-                'A small moment from today is enough.',
-                'What is something good that happened today?'
+                'A little moment that made you smile.',
+                'What was one good thing about your day?'
             ),
             self::item(
                 'gratitude_card',

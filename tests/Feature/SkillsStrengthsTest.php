@@ -60,9 +60,9 @@ class SkillsStrengthsTest extends TestCase
             ->assertSee('Key strengths')
             ->assertSee('Areas to build')
             ->assertSee('Retake Assessment')
-            ->assertSee('Connect to an Expert')
+            ->assertSee('Browse Career Experts')
             ->assertSee('Explore Career Insights')
-            ->assertSee(route('professionals'), false)
+            ->assertSee(route('professionals', ['category' => 'career-business']), false)
             ->assertSee(route('blog.index'), false)
             ->assertSee('implementation convention', false)
             ->assertSee('Log in to save');

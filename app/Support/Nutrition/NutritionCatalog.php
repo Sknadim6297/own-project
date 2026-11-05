@@ -71,4 +71,20 @@ class NutritionCatalog
 
         return storage_path('app/'.self::IMPORT_PATH.'/'.$meta['filename']);
     }
+
+    /**
+     * @return list<string> Absolute paths to missing approved workbook files.
+     */
+    public static function missingImportWorkbooks(): array
+    {
+        $missing = [];
+        foreach (self::IMPORT_SOURCES as $meta) {
+            $path = storage_path('app/'.self::IMPORT_PATH.'/'.$meta['filename']);
+            if (! is_file($path)) {
+                $missing[] = $path;
+            }
+        }
+
+        return $missing;
+    }
 }

@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Create your Yuktione professional account">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="theme-color" content="#168A80">
-    <title>Professional Registration | Yuktione</title>
+    <meta name="theme-color" content="#36877F">
+    <title>Professional Registration | YuktiOne</title>
     @include('partials.dm-sans')
     <link rel="icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
     @vite(['resources/css/tazen.css', 'resources/css/yuktione-feedback.css', 'resources/css/auth-theme.css'])

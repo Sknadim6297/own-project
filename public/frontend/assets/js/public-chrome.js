@@ -4,10 +4,46 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
     const mobileBackdrop = header.querySelector('[data-mobile-nav-backdrop]');
     const mobileClose = header.querySelector('[data-mobile-nav-close]');
     const accountToggle = header.querySelector('[data-account-toggle]');
-    const accountMenu = header.querySelector('[data-account-menu]');
+    const accountMenuRoot = header.querySelector('[data-account-menu]');
+    const accountMenu = header.querySelector('[data-account-panel]') || accountMenuRoot?.querySelector('.yk-navbar__account-menu');
     const searchToggle = header.querySelector('[data-home-search-toggle]');
     const searchForm = header.querySelector('[data-header-search]');
     const desktopBreakpoint = window.matchMedia('(min-width: 64rem)');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let accountCloseTimer = null;
+
+    const setAccountMenu = (isOpen) => {
+        if (!accountToggle || !accountMenu) {
+            return;
+        }
+
+        window.clearTimeout(accountCloseTimer);
+        accountToggle.setAttribute('aria-expanded', String(isOpen));
+
+        if (isOpen) {
+            accountMenu.hidden = false;
+            accountMenu.setAttribute('aria-hidden', 'false');
+            requestAnimationFrame(() => {
+                accountMenu.classList.add('is-open');
+            });
+            accountMenu.querySelector('a, button')?.focus();
+            return;
+        }
+
+        accountMenu.classList.remove('is-open');
+        accountMenu.setAttribute('aria-hidden', 'true');
+
+        const finalizeClose = () => {
+            accountMenu.hidden = true;
+        };
+
+        if (prefersReducedMotion.matches) {
+            finalizeClose();
+            return;
+        }
+
+        accountCloseTimer = window.setTimeout(finalizeClose, 200);
+    };
 
     const setMobileNavigation = (isOpen) => {
         if (!mobileToggle || !mobileNav || !mobileBackdrop) {
@@ -58,18 +94,14 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
         }
     });
 
-    accountToggle?.addEventListener('click', () => {
+    accountToggle?.addEventListener('click', (event) => {
+        event.stopPropagation();
         if (!accountMenu) {
             return;
         }
 
         const isOpen = accountToggle.getAttribute('aria-expanded') === 'true';
-        accountToggle.setAttribute('aria-expanded', String(!isOpen));
-        accountMenu.hidden = isOpen;
-
-        if (!isOpen) {
-            accountMenu.querySelector('a, button')?.focus();
-        }
+        setAccountMenu(!isOpen);
     });
 
     searchForm?.addEventListener('submit', async (event) => {
@@ -132,9 +164,8 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
             event.preventDefault();
         }
 
-        if (accountMenu && !event.target.closest('[data-account-menu]')) {
-            accountMenu.hidden = true;
-            accountToggle?.setAttribute('aria-expanded', 'false');
+        if (accountMenu && accountToggle?.getAttribute('aria-expanded') === 'true' && !event.target.closest('[data-account-menu]')) {
+            setAccountMenu(false);
         }
 
         if (mobileNav?.classList.contains('is-open') && event.target.closest('a[href]')) {
@@ -148,9 +179,8 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
                 searchForm.classList.remove('is-open');
                 searchToggle?.setAttribute('aria-expanded', 'false');
                 searchToggle?.focus();
-            } else if (accountMenu && !accountMenu.hidden) {
-                accountMenu.hidden = true;
-                accountToggle?.setAttribute('aria-expanded', 'false');
+            } else if (accountMenu && accountToggle?.getAttribute('aria-expanded') === 'true') {
+                setAccountMenu(false);
                 accountToggle?.focus();
             } else if (mobileNav?.classList.contains('is-open')) {
                 setMobileNavigation(false);
@@ -177,6 +207,14 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
         if (searchForm?.classList.contains('is-open') && !header.contains(event.target)) {
             searchForm.classList.remove('is-open');
             searchToggle?.setAttribute('aria-expanded', 'false');
+        }
+
+        if (
+            accountMenu
+            && accountToggle?.getAttribute('aria-expanded') === 'true'
+            && !accountMenuRoot?.contains(event.target)
+        ) {
+            setAccountMenu(false);
         }
     });
 

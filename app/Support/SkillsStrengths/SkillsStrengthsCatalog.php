@@ -32,6 +32,18 @@ class SkillsStrengthsCatalog
         5 => 'Strongly Agree',
     ];
 
+    /**
+     * Presentation-only emoticons for the existing agreement scale.
+     * Numeric values and labels in SCALE must not change.
+     */
+    public const SCALE_EMOJI = [
+        1 => '😟',
+        2 => '😕',
+        3 => '😐',
+        4 => '🙂',
+        5 => '🤩',
+    ];
+
     public static function categories(): array
     {
         return [
@@ -271,6 +283,23 @@ class SkillsStrengthsCatalog
     public static function scaleValues(): array
     {
         return array_map('intval', array_keys(self::SCALE));
+    }
+
+    /**
+     * @return array<int, array{value:int,label:string,emoji:string}>
+     */
+    public static function scaleOptions(): array
+    {
+        $options = [];
+        foreach (self::SCALE as $value => $label) {
+            $options[(int) $value] = [
+                'value' => (int) $value,
+                'label' => $label,
+                'emoji' => self::SCALE_EMOJI[$value] ?? '',
+            ];
+        }
+
+        return $options;
     }
 
     public static function progressPercent(int $step): int

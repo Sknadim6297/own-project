@@ -50,9 +50,20 @@ class WeightJourneyController extends Controller
             ->limit(8)
             ->get();
 
+        $latestChange = null;
+        if ($recent->count() >= 2) {
+            $delta = bcsub((string) $recent[0]->weight_kg, (string) $recent[1]->weight_kg, 3);
+            $latestChange = [
+                'kg' => $delta,
+                'signed' => $this->weights->formatNetChange($delta, $summary['unit']),
+            ];
+        }
+
         return view('frontend.sections.weight-journey.journey', [
             'summary' => $summary,
             'recent' => $recent,
+            'latestChange' => $latestChange,
+            'chart' => $this->weights->chart($userId, 'month', $summary['unit']),
             'timezone' => WeightJourneyCatalog::TIMEZONE,
             'status' => session('status'),
         ]);

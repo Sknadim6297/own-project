@@ -1,8 +1,6 @@
 @extends('professional.layout.layout')
 
-@section('styles')
-@vite('resources/css/tazen.css')
-@endsection
+@section('title', 'Edit Rate | YuktiOne')
 
 @section('content')
 @php
@@ -14,17 +12,26 @@
     }
 @endphp
 
-<div class="content-wrapper rates-edit-page w-full text-text-primary mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-    <div class="rates-shell mx-auto w-full space-y-6">
-        <header class="rates-header flex flex-col gap-5 rounded-panel border border-border bg-gradient-to-br from-white to-brand-50 p-6 shadow-card sm:flex-row sm:items-center sm:justify-between">
-            <div class="header-info">
+<div class="rates-edit-page mx-auto w-full max-w-7xl space-y-5 text-text-primary">
+    <div class="rates-shell mx-auto w-full space-y-5">
+        <header class="rates-header flex flex-col gap-4 rounded-panel border border-border bg-gradient-to-br from-white to-brand-50 p-5 shadow-card sm:flex-row sm:items-start sm:justify-between sm:p-6">
+            <div class="header-info min-w-0">
+                <nav aria-label="Breadcrumb" class="mb-2 text-xs font-medium text-text-muted">
+                    <ol class="flex flex-wrap items-center gap-2">
+                        <li><a class="text-brand-primary hover:text-brand-800" href="{{ route('professional.dashboard') }}">Dashboard</a></li>
+                        <li aria-hidden="true" class="text-border">/</li>
+                        <li><a class="text-brand-primary hover:text-brand-800" href="{{ route('professional.rate.index') }}">Rates</a></li>
+                        <li aria-hidden="true" class="text-border">/</li>
+                        <li aria-current="page" class="text-text-secondary">Edit Rate</li>
+                    </ol>
+                </nav>
                 <span class="pretitle text-xs font-semibold uppercase tracking-[0.16em] text-brand-700">Rates & Packages</span>
-                <h1 class="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">Edit Rate</h1>
-                <p>Fine-tune your pricing details to keep your services competitive and clear for clients.</p>
+                <h1 class="mt-1 text-2xl font-semibold tracking-tight text-brand-950 sm:text-[1.75rem]">Edit Rate</h1>
+                <p class="mt-1 text-sm text-text-secondary">Fine-tune your pricing details to keep your services competitive and clear for clients.</p>
             </div>
             <div class="header-actions">
-                <a href="{{ route('professional.rate.index') }}" class="header-btn inline-flex items-center justify-center gap-2 rounded-control border border-border bg-white px-4 py-2.5 text-sm font-semibold text-text-secondary transition hover:bg-surface-muted">
-                    <i class="fas fa-arrow-left"></i>
+                <a href="{{ route('professional.rate.index') }}" class="header-btn btn-pill btn-pill--outline inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border bg-white px-4 py-2 text-sm font-semibold text-text-secondary transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-800">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
                     Back to Rates
                 </a>
             </div>
@@ -32,13 +39,13 @@
 
         <section class="rates-card overflow-hidden rounded-panel border border-border bg-white shadow-card">
             <div class="rates-card__head border-b border-divider bg-surface-muted p-5 sm:p-7">
-                <h2 class="text-xl font-semibold text-text-primary">Update Rate Information</h2>
-                <p class="subtitle">
+                <h2 class="text-base font-semibold text-brand-950 sm:text-lg">Update Rate Information</h2>
+                <p class="subtitle mt-1 text-sm text-text-secondary">
                     @if($professionalService)
-                        Editing <strong>{{ $professionalService->service_name }}</strong>
+                        Editing <strong class="text-text-primary">{{ $professionalService->service_name }}</strong>
                         @if($isSubServiceRate && $currentSubService)
-                            <span class="dot-divider"></span>
-                            <span>Sub-service: <strong>{{ $currentSubService->name }}</strong></span>
+                            <span class="dot-divider mx-1 text-border" aria-hidden="true">·</span>
+                            <span>Sub-service: <strong class="text-text-primary">{{ $currentSubService->name }}</strong></span>
                         @endif
                     @else
                         Configure your rate details below.
@@ -59,14 +66,14 @@
                     @if($professionalService)
                         @if($isServiceRate)
                             <div class="rate-section service-section space-y-4 rounded-panel border border-border bg-surface-muted p-4 sm:p-5">
-                                <div class="section-heading flex flex-col gap-1 border-b border-divider pb-4">
+                                <div class="section-heading flex flex-col gap-3 border-b border-divider pb-4 sm:flex-row sm:items-center sm:justify-between">
                                     <div>
-                                        <h3>{{ $professionalService->service_name }}</h3>
+                                        <h3 class="text-base font-semibold text-brand-950">{{ $professionalService->service_name }}</h3>
                                         @if($professionalService->service_type)
-                                            <small>{{ $professionalService->service_type }}</small>
+                                            <small class="text-sm text-text-muted">{{ $professionalService->service_type }}</small>
                                         @endif
                                     </div>
-                                    <span class="section-badge rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-800">Service level</span>
+                                    <span class="section-badge inline-flex rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-800">Service level</span>
                                 </div>
 
                                 <div class="table-shell overflow-hidden rounded-control border border-border bg-white">
@@ -107,20 +114,20 @@
                             </div>
                         @else
                             <div class="rate-section sub-service-section space-y-4 rounded-panel border border-border bg-surface-muted p-4 sm:p-5">
-                                <div class="section-heading flex flex-col gap-1 border-b border-divider pb-4">
+                                <div class="section-heading flex flex-col gap-3 border-b border-divider pb-4 sm:flex-row sm:items-center sm:justify-between">
                                     <div>
-                                        <h3>{{ $professionalService->service_name }}</h3>
+                                        <h3 class="text-base font-semibold text-brand-950">{{ $professionalService->service_name }}</h3>
                                         @if($professionalService->service_type)
-                                            <small>{{ $professionalService->service_type }}</small>
+                                            <small class="text-sm text-text-muted">{{ $professionalService->service_type }}</small>
                                         @endif
                                     </div>
-                                    <span class="section-badge rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-800">Sub-service level</span>
+                                    <span class="section-badge inline-flex rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-800">Sub-service level</span>
                                 </div>
 
-                                <div class="sub-service-banner">
+                                <div class="sub-service-banner rounded-control border border-info/20 bg-info-surface px-4 py-3">
                                     <div class="sub-service-title">
-                                        <span class="label">Sub-service</span>
-                                        <h4>{{ $currentSubService->name ?? 'Sub-Service' }}</h4>
+                                        <span class="label text-xs font-semibold uppercase tracking-wide text-info">Sub-service</span>
+                                        <h4 class="mt-1 text-sm font-semibold text-brand-950">{{ $currentSubService->name ?? 'Sub-Service' }}</h4>
                                     </div>
                                 </div>
 
@@ -162,48 +169,52 @@
                             </div>
                         @endif
 
-                        <div class="features-section">
-                            <h5><i class="fas fa-list-ul"></i> Package Features</h5>
-                            <p class="helper-text">Highlight what this package includes to help customers choose confidently.</p>
-                            <div id="featuresContainer">
+                        <div class="features-section space-y-4 rounded-panel border border-border bg-surface-muted p-4 sm:p-5">
+                            <div>
+                                <h5 class="flex items-center gap-2 text-base font-semibold text-brand-950"><i class="fas fa-list-ul text-brand-primary" aria-hidden="true"></i> Package Features</h5>
+                                <p class="helper-text mt-1 text-sm text-text-secondary">Highlight what this package includes to help customers choose confidently.</p>
+                            </div>
+                            <div id="featuresContainer" class="space-y-3">
                                 @if($rates->features && count($rates->features) > 0)
                                     @foreach($rates->features as $feature)
                                         @if($feature)
-                                            <div class="feature-item">
+                                            <div class="feature-item flex items-center gap-2">
                                                 <input type="text" name="features[]" class="form-control feature-input w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary shadow-sm placeholder:text-text-muted focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-200" placeholder="Enter feature" value="{{ $feature }}">
-                                                <button type="button" class="remove-feature" onclick="removeFeature(this)" aria-label="Remove feature">×</button>
+                                                <button type="button" class="remove-feature inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-control border border-border bg-white text-lg text-text-secondary transition hover:border-error/30 hover:bg-error-surface hover:text-error" onclick="removeFeature(this)" aria-label="Remove feature">×</button>
                                             </div>
                                         @endif
                                     @endforeach
                                 @else
-                                    <div class="feature-item">
+                                    <div class="feature-item flex items-center gap-2">
                                         <input type="text" name="features[]" class="form-control feature-input w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary shadow-sm placeholder:text-text-muted focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-200" placeholder="Enter feature">
-                                        <button type="button" class="remove-feature" onclick="removeFeature(this)" aria-label="Remove feature">×</button>
+                                        <button type="button" class="remove-feature inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-control border border-border bg-white text-lg text-text-secondary transition hover:border-error/30 hover:bg-error-surface hover:text-error" onclick="removeFeature(this)" aria-label="Remove feature">×</button>
                                     </div>
                                 @endif
                             </div>
-                            <button type="button" class="add-feature" onclick="addFeature()">
-                                <i class="fas fa-plus"></i>
+                            <button type="button" class="add-feature inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border bg-white px-4 py-2 text-sm font-semibold text-text-secondary transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-800" onclick="addFeature()">
+                                <i class="fas fa-plus" aria-hidden="true"></i>
                                 Add Feature
                             </button>
                         </div>
 
                         <div class="form-footer flex flex-col-reverse gap-3 border-t border-divider pt-5 sm:flex-row sm:justify-end">
-                            <a href="{{ route('professional.rate.index') }}" class="back-link">
-                                <i class="fas fa-arrow-left"></i>
+                            <a href="{{ route('professional.rate.index') }}" class="back-link inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border bg-white px-4 py-2.5 text-sm font-semibold text-text-secondary transition hover:bg-surface-muted">
+                                <i class="fas fa-arrow-left" aria-hidden="true"></i>
                                 Back to Rates
                             </a>
-                            <button type="submit" class="btn primary-btn inline-flex items-center justify-center gap-2 rounded-control bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800 border border-border bg-white text-text-secondary hover:bg-surface-muted">
-                                <i class="fas fa-save"></i>
+                            <button type="submit" class="btn primary-btn inline-flex min-h-10 items-center justify-center gap-2 rounded-control bg-brand-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-300">
+                                <i class="fas fa-save" aria-hidden="true"></i>
                                 Update Rate
                             </button>
                         </div>
                     @else
-                        <div class="empty-state rounded-panel border border-dashed border-border bg-white p-8 text-center text-text-secondary">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <strong>You don't have any services set up yet.</strong>
-                            <p>Please set up your services first to manage rates.</p>
-                            <a href="{{ route('professional.service.create') }}" class="btn inline-flex items-center justify-center gap-2 rounded-control border border-border bg-white px-4 py-2.5 text-sm font-semibold text-text-secondary transition hover:bg-surface-muted">
+                        <div class="empty-state rounded-panel border border-dashed border-border bg-white p-8 text-center sm:p-10">
+                            <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-warning-surface text-warning">
+                                <i class="fas fa-exclamation-triangle text-xl" aria-hidden="true"></i>
+                            </div>
+                            <strong class="block text-base font-semibold text-brand-950">You don't have any services set up yet.</strong>
+                            <p class="mx-auto mt-2 max-w-md text-sm text-text-secondary">Please set up your services first to manage rates.</p>
+                            <a href="{{ route('professional.service.create') }}" class="btn-pill btn-pill--primary mt-5 inline-flex min-h-10 items-center justify-center gap-2 rounded-control bg-brand-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-800">
                                 Create Service
                             </a>
                         </div>
@@ -223,10 +234,10 @@
     function addFeature() {
         const container = document.getElementById('featuresContainer');
         const newFeature = document.createElement('div');
-        newFeature.className = 'feature-item';
+        newFeature.className = 'feature-item flex items-center gap-2';
         newFeature.innerHTML = `
             <input type="text" name="features[]" class="form-control feature-input w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary shadow-sm placeholder:text-text-muted focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-200" placeholder="Enter feature">
-            <button type="button" class="remove-feature" onclick="removeFeature(this)" aria-label="Remove feature">×</button>
+            <button type="button" class="remove-feature inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-control border border-border bg-white text-lg text-text-secondary transition hover:border-error/30 hover:bg-error-surface hover:text-error" onclick="removeFeature(this)" aria-label="Remove feature">×</button>
         `;
         container.appendChild(newFeature);
     }

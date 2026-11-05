@@ -10,25 +10,25 @@
     $fmt = fn ($v) => $v === null ? '—' : rtrim(rtrim(number_format((float) $v, 1, '.', ''), '0'), '.');
 @endphp
 <main class="yk-nut">
-    <div class="yk-nut__wrap">
+    <div class="yk-nut__wrap yk-nut__wrap--wide">
         <section class="yk-nut__card">
             <p class="yk-nut__badge">{{ $summary['date'] }} · Build meal</p>
             <h1>{{ $block['label'] }}</h1>
-            <p class="yk-nut__lead">Multiple foods per meal are allowed. Nutrition values are stored as snapshots.</p>
+            <p class="yk-nut__lead">Nutrition values are stored as snapshots from the time of logging.</p>
 
             @if (session('status'))
-                <p class="yk-nut__ok">{{ session('status') }}</p>
+                <p class="yk-nut__ok" role="status">{{ session('status') }}</p>
             @endif
             @if ($errors->any())
-                <p class="yk-nut__error">{{ $errors->first() }}</p>
+                <p class="yk-nut__error" role="alert">{{ $errors->first() }}</p>
             @endif
 
-            <div class="yk-nut__actions" style="margin-bottom:1rem;">
+            <nav class="yk-nut__tabs" aria-label="Meal type">
                 @foreach ($meals as $key => $label)
-                    <a @class(['yk-nut__btn' => $key === $meal, 'yk-nut__btn-secondary' => $key !== $meal])
-                       href="{{ route('tools.nutrition.meal', ['date' => $summary['date'], 'meal' => $key]) }}">{{ $label }}</a>
+                    <a href="{{ route('tools.nutrition.meal', ['date' => $summary['date'], 'meal' => $key]) }}"
+                       @class(['is-active' => $key === $meal])>{{ $label }}</a>
                 @endforeach
-            </div>
+            </nav>
 
             <div class="yk-nut__stats">
                 <div><strong>{{ $fmt($block['totals']['calories_kcal']) }}</strong><span>Meal kcal</span></div>
@@ -39,32 +39,33 @@
             <p class="yk-nut__note">Daily total: {{ $fmt($summary['totals']['calories_kcal']) }} kcal</p>
 
             @if ($block['entries']->isEmpty())
-                <p class="yk-nut__note">No foods logged for this meal yet.</p>
+                <div class="yk-nut__empty" role="status">No foods logged for this meal yet.</div>
             @else
-                <ul class="yk-nut__list">
+                <ul class="yk-nut__list yk-nut__list--manage">
                     @foreach ($block['entries'] as $entry)
                         <li>
-                            <span>
+                            <div>
                                 <strong>{{ $entry->food_name_snapshot }}</strong>
-                                @if ($entry->brand_snapshot)<span class="yk-nut__note" style="display:block;margin:0;">{{ $entry->brand_snapshot }}</span>@endif
-                                <span class="yk-nut__note" style="display:block;margin:0;">
+                                @if ($entry->brand_snapshot)
+                                    <div class="yk-nut__meta">{{ $entry->brand_snapshot }}</div>
+                                @endif
+                                <div class="yk-nut__meta">
                                     {{ $entry->quantity }} {{ $entry->unit }} · {{ $fmt($entry->calories_kcal_snapshot) }} kcal
-                                    @if ($entry->incomplete_nutrients) · incomplete nutrients @endif
-                                </span>
-                                <span class="yk-nut__note" style="display:block;margin:0;">
-                                    {{ $entry->consumed_at->timezone($timezone)->format('g:i A') }}
-                                </span>
-                                <form method="post" action="{{ route('tools.nutrition.entries.update', $entry) }}" style="margin-top:0.5rem;">
+                                    @if ($entry->incomplete_nutrients) · incomplete @endif
+                                    · {{ $entry->consumed_at->timezone($timezone)->format('g:i A') }}
+                                </div>
+                                <form method="post" action="{{ route('tools.nutrition.entries.update', $entry) }}" class="yk-nut__edit-inline" data-nut-submit-once>
                                     @csrf
                                     @method('PUT')
                                     <input type="hidden" name="meal_type" value="{{ $entry->meal_type }}">
-                                    <label class="yk-nut__note" for="qty-{{ $entry->id }}">Quantity</label>
-                                    <input id="qty-{{ $entry->id }}" type="number" name="quantity" value="{{ $entry->quantity }}" min="0.01" step="0.01" required style="max-width:7rem;display:inline-block;">
-                                    <input type="text" name="unit" value="{{ $entry->unit }}" required style="max-width:5rem;display:inline-block;">
+                                    <label class="visually-hidden" for="qty-{{ $entry->id }}">Quantity</label>
+                                    <input id="qty-{{ $entry->id }}" type="number" name="quantity" value="{{ $entry->quantity }}" min="0.01" step="0.01" required>
+                                    <label class="visually-hidden" for="unit-{{ $entry->id }}">Unit</label>
+                                    <input id="unit-{{ $entry->id }}" type="text" name="unit" value="{{ $entry->unit }}" required>
                                     <button class="yk-nut__btn-secondary" type="submit">Update</button>
                                 </form>
-                            </span>
-                            <form method="post" action="{{ route('tools.nutrition.entries.destroy', $entry) }}" onsubmit="return confirm('Remove this food entry?');">
+                            </div>
+                            <form method="post" action="{{ route('tools.nutrition.entries.destroy', $entry) }}" onsubmit="return confirm('Remove this food entry?');" data-nut-submit-once>
                                 @csrf
                                 @method('DELETE')
                                 <button class="yk-nut__btn-secondary" type="submit">Remove</button>
@@ -81,4 +82,20 @@
         </section>
     </div>
 </main>
+<script>
+(function () {
+    document.querySelectorAll('[data-nut-submit-once]').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (form.getAttribute('data-submitting') === '1') {
+                event.preventDefault();
+                return;
+            }
+            form.setAttribute('data-submitting', '1');
+            form.querySelectorAll('button[type="submit"]').forEach(function (btn) {
+                btn.disabled = true;
+            });
+        });
+    });
+})();
+</script>
 @endsection

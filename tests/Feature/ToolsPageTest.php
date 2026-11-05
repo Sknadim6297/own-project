@@ -10,11 +10,13 @@ class ToolsPageTest extends TestCase
     {
         $this->get(route('tools.index'))
             ->assertOk()
-            ->assertSee('Tools for a')
-            ->assertSee('brighter you.')
+            ->assertSee('Explore Tools')
             ->assertSee('Showing 0 tools')
             ->assertSee('No published tools yet')
             ->assertSee('it will appear in this catalogue')
+            ->assertSee('All Tools')
+            ->assertDontSee('Tools for a')
+            ->assertDontSee('yk-toolpage__hero', false)
             ->assertDontSee('check-ins stay separate')
             ->assertDontSee(route('tools.psychology'), false)
             ->assertSee('family=DM+Sans', false)
@@ -29,11 +31,13 @@ class ToolsPageTest extends TestCase
         $this->get(route('tools.index', ['q' => 'Sleep', 'category' => 'not-a-category']))
             ->assertOk()
             ->assertSee('value="Sleep"', false)
-            ->assertSee('No tools match these filters');
+            ->assertSee('No tools match these filters')
+            ->assertSee('Clear filters');
 
         $this->get(route('tools.index', ['category' => 'mental-health']))
             ->assertOk()
             ->assertSee('Mental Health')
+            ->assertSee('aria-selected="true"', false)
             ->assertSee('No tools match these filters');
     }
 }

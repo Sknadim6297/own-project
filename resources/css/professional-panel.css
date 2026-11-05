@@ -124,8 +124,18 @@ body[data-yuktione-panel="professional"] {
 }
 
 [data-yuktione-panel="professional"] .chat-page {
-    background-color: #F3F7F8;
+    background-color: #F7FAFB;
     color: #142B4D;
+    max-width: 100%;
+    min-width: 0;
+}
+
+[data-yuktione-panel="professional"] .booking-chat-page {
+    overflow-x: clip;
+}
+
+[data-yuktione-panel="professional"] .booking-chat-page #dismissBookingContext {
+    margin-right: 0;
 }
 
 [data-yuktione-panel="professional"] .chat-shell {
@@ -152,10 +162,21 @@ body[data-yuktione-panel="professional"] {
     border-radius: 0.75rem;
     background-color: #36877F;
     color: #ffffff;
+    transition: background-color 0.15s ease;
 }
 
 [data-yuktione-panel="professional"] .btn-send:hover:not(:disabled) {
     background-color: #286E67;
+}
+
+[data-yuktione-panel="professional"] .btn-send:focus-visible {
+    outline: 2px solid #36877F;
+    outline-offset: 2px;
+}
+
+[data-yuktione-panel="professional"] .btn-send:disabled {
+    cursor: wait;
+    opacity: 0.65;
 }
 
 [data-yuktione-panel="professional"] .btn-attach {
@@ -168,6 +189,33 @@ body[data-yuktione-panel="professional"] {
     border-radius: 0.75rem;
     background-color: #ffffff;
     color: #36877F;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+[data-yuktione-panel="professional"] .btn-attach:hover {
+    border-color: #36877F;
+    background-color: #EAF6F2;
+}
+
+[data-yuktione-panel="professional"] .btn-attach:focus-visible {
+    outline: 2px solid #36877F;
+    outline-offset: 2px;
+}
+
+[data-yuktione-panel="professional"] .chat-page .message-input:focus {
+    border-color: #36877F;
+    box-shadow: 0 0 0 2px #EAF6F2;
+}
+
+[data-yuktione-panel="professional"] .booking-chat-page #messageInput:focus-visible {
+    border-color: #36877F;
+    box-shadow: 0 0 0 2px #EAF6F2;
+    outline: none;
+}
+
+[data-yuktione-panel="professional"] .booking-chat-page #btnSend:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
 }
 
 [data-yuktione-panel="professional"] .chat-card__head,

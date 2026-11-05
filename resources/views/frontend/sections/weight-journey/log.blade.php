@@ -7,73 +7,93 @@
 @section('content')
 @php $svc = app(\App\Services\WeightJourneyService::class); @endphp
 <main class="yk-wj">
-    <div class="yk-wj__wrap">
+    <div class="yk-wj__wrap yk-wj__wrap--wide">
         <section class="yk-wj__card">
-            <p class="yk-wj__badge">Log</p>
+            <p class="yk-wj__badge">Log · Asia/Kolkata</p>
             <h1>Log weight</h1>
-            <p class="yk-wj__lead">Store measurements in kilograms (fixed precision). Multiple readings on the same day are allowed.</p>
+            <p class="yk-wj__lead">Multiple same-day readings are allowed. Stored precisely in kilograms.</p>
 
             @if (session('status'))
-                <p class="yk-wj__ok">{{ session('status') }}</p>
+                <p class="yk-wj__ok" role="status">{{ session('status') }}</p>
             @endif
             @if ($errors->any())
-                <p class="yk-wj__error">{{ $errors->first() }}</p>
+                <p class="yk-wj__error" role="alert">{{ $errors->first() }}</p>
             @endif
 
-            <form method="post" action="{{ route('tools.weight-journey.measurements.store') }}">
+            <form method="post" action="{{ route('tools.weight-journey.measurements.store') }}" class="yk-wj__log-form" data-wj-submit-once>
                 @csrf
-                <fieldset class="yk-wj__field">
-                    <legend>Unit</legend>
-                    <div class="yk-wj__units">
-                        <label><input type="radio" name="unit" value="kg" @checked(old('unit', $unit) === 'kg')> kg</label>
-                        <label><input type="radio" name="unit" value="lb" @checked(old('unit', $unit) === 'lb')> lb</label>
+                <div class="yk-wj__log-grid">
+                    <fieldset class="yk-wj__field">
+                        <legend>Unit</legend>
+                        <div class="yk-wj__units" role="radiogroup" aria-label="Weight unit">
+                            <label><input type="radio" name="unit" value="kg" @checked(old('unit', $unit) === 'kg')> kg</label>
+                            <label><input type="radio" name="unit" value="lb" @checked(old('unit', $unit) === 'lb')> lb</label>
+                        </div>
+                    </fieldset>
+                    <div class="yk-wj__field">
+                        <label for="weight">Weight</label>
+                        <input id="weight" type="number" name="weight" step="0.001" min="0" inputmode="decimal" value="{{ old('weight') }}" required placeholder="e.g. 70.5">
                     </div>
-                </fieldset>
-                <div class="yk-wj__field">
-                    <label for="weight">Weight</label>
-                    <input id="weight" type="number" name="weight" step="0.001" min="0" value="{{ old('weight') }}" required>
-                </div>
-                <div class="yk-wj__field">
-                    <label for="recorded">Date/time (Asia/Kolkata, optional)</label>
-                    <input id="recorded" type="datetime-local" name="recorded_at" value="{{ old('recorded_at') }}">
+                    <div class="yk-wj__field">
+                        <label for="recorded">Date/time (optional)</label>
+                        <input id="recorded" type="datetime-local" name="recorded_at" value="{{ old('recorded_at') }}">
+                    </div>
                 </div>
                 <div class="yk-wj__field">
                     <label for="note">Optional note</label>
-                    <textarea id="note" name="note" maxlength="240">{{ old('note') }}</textarea>
+                    <textarea id="note" name="note" maxlength="240" placeholder="Context for this reading">{{ old('note') }}</textarea>
                 </div>
                 <input type="hidden" name="idempotency_key" value="{{ (string) \Illuminate\Support\Str::uuid() }}">
-                <div class="yk-wj__actions">
+                <div class="yk-wj__actions" style="margin-top:0.35rem;">
                     <button class="yk-wj__btn" type="submit">Save measurement</button>
-                    <a class="yk-wj__btn-secondary" href="{{ route('tools.weight-journey') }}">Your journey</a>
+                    <a class="yk-wj__btn-secondary" href="{{ route('tools.weight-journey') }}">Dashboard</a>
                 </div>
             </form>
 
-            <h2 style="font-size:1.05rem;margin:1.3rem 0 0.5rem;">Recent measurements</h2>
+            <h2 class="yk-wj__section-title" style="margin-top:1.35rem;">Recent measurements</h2>
             @if ($recent->isEmpty())
-                <p class="yk-wj__note">No measurements yet. When you log one, it will appear here.</p>
+                <div class="yk-wj__empty" role="status">No measurements yet.</div>
             @else
-                <ul class="yk-wj__list">
-                    @foreach ($recent as $row)
-                        @php $local = $row->recorded_at->timezone($timezone); @endphp
+                <ul class="yk-wj__list yk-wj__list--manage">
+                    @foreach ($recent as $index => $row)
+                        @php
+                            $local = $row->recorded_at->timezone($timezone);
+                            $older = $recent->get($index + 1);
+                            $delta = $older
+                                ? $svc->formatNetChange(
+                                    bcsub((string) $row->weight_kg, (string) $older->weight_kg, 3),
+                                    $unit
+                                )
+                                : null;
+                        @endphp
                         <li>
                             <div>
                                 <strong>{{ $svc->formatWeight((string) $row->weight_kg, $unit) }}</strong>
-                                <div class="yk-wj__note" style="margin:0;">{{ $local->format('d M Y, g:i A') }}@if($row->note) · {{ $row->note }}@endif</div>
+                                @if ($delta)
+                                    <span class="yk-wj__delta">{{ $delta }}</span>
+                                @endif
+                                <div class="yk-wj__meta">{{ $local->format('d M Y, g:i A') }}</div>
+                                @if ($row->note)
+                                    <div class="yk-wj__meta">{{ $row->note }}</div>
+                                @endif
                             </div>
-                            <div class="yk-wj__actions" style="margin:0;">
+                            <div class="yk-wj__entry-actions">
                                 <details>
-                                    <summary class="yk-wj__btn-secondary" style="list-style:none;">Edit</summary>
-                                    <form method="post" action="{{ route('tools.weight-journey.measurements.update', $row) }}" style="margin-top:0.5rem;">
+                                    <summary>Edit</summary>
+                                    <form method="post" action="{{ route('tools.weight-journey.measurements.update', $row) }}" class="yk-wj__edit-form" data-wj-submit-once>
                                         @csrf
                                         @method('PUT')
                                         <input type="hidden" name="unit" value="{{ $unit }}">
-                                        <input type="number" name="weight" step="0.001" value="{{ $unit === 'lb' ? $svc->kgToLb((string)$row->weight_kg) : $row->weight_kg }}" required>
-                                        <input type="datetime-local" name="recorded_at" value="{{ $local->format('Y-m-d\TH:i') }}">
-                                        <input type="text" name="note" maxlength="240" value="{{ $row->note }}">
+                                        <label class="visually-hidden" for="edit-w-{{ $row->id }}">Weight</label>
+                                        <input id="edit-w-{{ $row->id }}" type="number" name="weight" step="0.001" value="{{ $unit === 'lb' ? $svc->kgToLb((string)$row->weight_kg) : $row->weight_kg }}" required>
+                                        <label class="visually-hidden" for="edit-t-{{ $row->id }}">Time</label>
+                                        <input id="edit-t-{{ $row->id }}" type="datetime-local" name="recorded_at" value="{{ $local->format('Y-m-d\TH:i') }}">
+                                        <label class="visually-hidden" for="edit-n-{{ $row->id }}">Note</label>
+                                        <input id="edit-n-{{ $row->id }}" type="text" name="note" maxlength="240" value="{{ $row->note }}">
                                         <button class="yk-wj__btn" type="submit">Update</button>
                                     </form>
                                 </details>
-                                <form method="post" action="{{ route('tools.weight-journey.measurements.destroy', $row) }}" onsubmit="return confirm('Delete this measurement?');">
+                                <form method="post" action="{{ route('tools.weight-journey.measurements.destroy', $row) }}" onsubmit="return confirm('Delete this measurement?');" data-wj-submit-once>
                                     @csrf
                                     @method('DELETE')
                                     <button class="yk-wj__btn-secondary" type="submit">Delete</button>
@@ -86,4 +106,20 @@
         </section>
     </div>
 </main>
+<script>
+(function () {
+    document.querySelectorAll('[data-wj-submit-once]').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (form.getAttribute('data-submitting') === '1') {
+                event.preventDefault();
+                return;
+            }
+            form.setAttribute('data-submitting', '1');
+            form.querySelectorAll('button[type="submit"]').forEach(function (btn) {
+                btn.disabled = true;
+            });
+        });
+    });
+})();
+</script>
 @endsection

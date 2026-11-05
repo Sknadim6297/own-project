@@ -2,12 +2,6 @@
 
 @section('title', 'Booking Chat | Yuktione')
 
-@section('styles')
-    @if($userType === 'professional')
-        @vite('resources/css/tazen.css')
-    @endif
-@endsection
-
 @section('content')
 @php
     $otherParticipant = $userType === 'customer'
@@ -17,8 +11,28 @@
     $subServiceName = $booking->sub_service_name ?? ($booking->subservice->name ?? null);
 @endphp
 
-<div class="mx-auto flex w-full max-w-6xl justify-center">
-    <section class="flex h-[min(640px,calc(100dvh-190px))] min-h-[420px] w-full max-w-[440px] flex-col overflow-hidden rounded-panel border border-border bg-surface shadow-popover max-sm:h-[calc(100dvh-150px)] max-sm:min-h-[390px]" aria-label="Chat with {{ $otherParticipant }}">
+@if($userType === 'professional')
+<div class="chat-page booking-chat-page mx-auto w-full max-w-7xl space-y-5 text-text-primary">
+    <section class="flex flex-col gap-4 rounded-panel border border-border bg-gradient-to-br from-white to-brand-50 p-5 shadow-card sm:flex-row sm:items-start sm:justify-between sm:p-6">
+        <div class="hero-meta min-w-0">
+            <nav aria-label="Breadcrumb" class="mb-2 text-xs font-medium text-text-muted">
+                <ol class="flex flex-wrap items-center gap-2">
+                    <li><a class="text-brand-primary hover:text-brand-800" href="{{ route('professional.dashboard') }}">Dashboard</a></li>
+                    <li aria-hidden="true" class="text-border">/</li>
+                    <li><a class="text-brand-primary hover:text-brand-800" href="{{ route('professional.booking.index') }}">Bookings</a></li>
+                    <li aria-hidden="true" class="text-border">/</li>
+                    <li aria-current="page" class="text-text-secondary">Chat</li>
+                </ol>
+            </nav>
+            <span class="hero-eyebrow inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-brand-700"><i class="ri-chat-3-line" aria-hidden="true"></i>Booking chat</span>
+            <h1 class="mt-1 text-2xl font-semibold tracking-tight text-brand-950 sm:text-[1.75rem]">Message {{ $otherParticipant }}</h1>
+            <p class="mt-1 text-sm text-text-secondary">Booking #{{ $booking->id }}@if($serviceName) · {{ $serviceName }}@endif</p>
+        </div>
+    </section>
+@endif
+
+<div class="mx-auto flex w-full max-w-6xl justify-center {{ $userType === 'professional' ? 'pb-2' : '' }}">
+    <section class="flex h-[min(640px,calc(100dvh-190px))] min-h-[420px] w-full max-w-[440px] flex-col overflow-hidden rounded-panel border border-border bg-surface shadow-popover max-sm:h-[calc(100dvh-150px)] max-sm:min-h-[390px] {{ $userType === 'professional' ? 'max-sm:h-[calc(100dvh-220px)]' : '' }}" aria-label="Chat with {{ $otherParticipant }}">
         <header class="flex shrink-0 items-center gap-3 bg-brand-primary px-4 py-3 text-white">
             @if($userType === 'customer')
                 <a href="{{ route('user.all-appointment.index') }}" class="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-white/90 transition-colors hover:bg-white/15 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" aria-label="Back to appointments">
@@ -169,6 +183,9 @@
         </div>
     </section>
 </div>
+@if($userType === 'professional')
+</div>
+@endif
 @endsection
 
 @section('scripts')

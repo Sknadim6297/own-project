@@ -5,68 +5,102 @@
 @section('body_class', 'yk-wj-body')
 
 @section('content')
+@php
+    $goal = $summary['goal'];
+    $directionLabel = $goal
+        ? (\App\Support\WeightJourney\WeightJourneyCatalog::DIRECTIONS[$goal->direction] ?? $goal->direction)
+        : null;
+@endphp
 <main class="yk-wj">
-    <div class="yk-wj__wrap">
-        <section class="yk-wj__card">
-            <p class="yk-wj__badge">Your journey</p>
-            <h1>Weight overview</h1>
-            <p class="yk-wj__lead">Neutral tracking of recorded weights. Changes are not labeled as success or failure.</p>
+    <div class="yk-wj__wrap yk-wj__wrap--wide">
+        <section class="yk-wj__card" aria-labelledby="wj-journey-heading">
+            <p class="yk-wj__badge">Your journey · Asia/Kolkata</p>
+            <h1 id="wj-journey-heading">Weight Journey</h1>
+            <p class="yk-wj__lead">Personal tracking only—changes are not labeled as success or failure.</p>
 
             @if ($status)
-                <p class="yk-wj__ok">{{ $status }}</p>
+                <p class="yk-wj__ok" role="status">{{ $status }}</p>
             @endif
 
-            <div class="yk-wj__stats">
-                <div><strong>{{ $summary['starting_label'] ?? '—' }}</strong><span>Starting</span></div>
-                <div><strong>{{ $summary['latest_label'] ?? '—' }}</strong><span>Latest</span></div>
-                <div><strong>{{ $summary['net_label'] ?? '—' }}</strong><span>Net change</span></div>
+            <div class="yk-wj__stats yk-wj__stats--4">
+                <div>
+                    <strong>{{ $summary['goal_starting_label'] ?? $summary['starting_label'] ?? '—' }}</strong>
+                    <span>Starting</span>
+                </div>
+                <div>
+                    <strong>{{ $summary['latest_label'] ?? '—' }}</strong>
+                    <span>Current</span>
+                </div>
+                <div>
+                    <strong>{{ $summary['target_label'] ?? '—' }}</strong>
+                    <span>Target</span>
+                </div>
+                <div>
+                    <strong>{{ $summary['net_label'] ?? '—' }}</strong>
+                    <span>Net change</span>
+                </div>
             </div>
 
-            @if ($summary['goal'])
-                <p class="yk-wj__lead">
-                    Active goal: <strong>{{ \App\Support\WeightJourney\WeightJourneyCatalog::DIRECTIONS[$summary['goal']->direction] ?? $summary['goal']->direction }}</strong>
-                    @if ($summary['goal']->target_weight_kg)
-                        · target {{ app(\App\Services\WeightJourneyService::class)->formatWeight((string) $summary['goal']->target_weight_kg, $summary['unit']) }}
+            @if ($goal)
+                <div class="yk-wj__goal-panel">
+                    <div class="yk-wj__goal-meta">
+                        <span class="yk-wj__pill">{{ $directionLabel }}</span>
+                        @if ($summary['distance_label'] !== null)
+                            <span class="yk-wj__meta">From target {{ $summary['distance_label'] }}</span>
+                        @endif
+                    </div>
+                    @if (($summary['progress']['meaningful'] ?? false) && isset($summary['progress']['percent']))
+                        <div class="yk-wj__progress-bar" role="img" aria-label="{{ $summary['progress']['percent'] }} percent of directional distance toward target">
+                            <span style="width: {{ $summary['progress']['percent'] }}%"></span>
+                        </div>
+                        <p class="yk-wj__note" style="margin:0.45rem 0 0;">{{ $summary['progress']['percent'] }}% of distance toward target (geometric only).</p>
+                    @elseif (in_array($summary['progress']['reason'] ?? null, ['maintain', 'track'], true))
+                        <p class="yk-wj__note" style="margin:0.35rem 0 0;">Maintain / track goals do not use a percentage-complete indicator.</p>
                     @endif
-                </p>
-                @if (($summary['progress']['meaningful'] ?? false) && isset($summary['progress']['percent']))
-                    <p class="yk-wj__note">Progress toward target (directional distance): {{ $summary['progress']['percent'] }}%. This is geometric progress only—not a health judgement.</p>
-                @elseif (($summary['progress']['reason'] ?? null) === 'maintain' || ($summary['progress']['reason'] ?? null) === 'track')
-                    <p class="yk-wj__note">Maintain / track-only goals do not use a percentage-complete indicator.</p>
-                @endif
+                </div>
             @else
-                <p class="yk-wj__lead">No active goal. You can track measurements anytime or set an optional goal.</p>
+                <div class="yk-wj__empty" role="status">No active goal. Track anytime or set an optional goal.</div>
             @endif
 
-            <h2 style="font-size:1.05rem;margin:1rem 0 0.5rem;">Recent measurements</h2>
+            @if ($latestChange)
+                <p class="yk-wj__change">Latest change vs previous log: <strong>{{ $latestChange['signed'] }}</strong></p>
+            @endif
+
+            <div class="yk-wj__chart-head">
+                <h2 class="yk-wj__section-title">Progress (30 days)</h2>
+                <a class="yk-wj__text-link" href="{{ route('tools.weight-journey.progress') }}">Full chart &amp; history</a>
+            </div>
+            @include('frontend.sections.weight-journey.partials.chart', ['chart' => $chart])
+
+            <div class="yk-wj__logs-head">
+                <h2 class="yk-wj__section-title">Recent measurements</h2>
+                <a class="yk-wj__text-link" href="{{ route('tools.weight-journey.log') }}">Manage</a>
+            </div>
             @if ($recent->isEmpty())
-                <p class="yk-wj__note">No measurements yet.</p>
+                <div class="yk-wj__empty" role="status">No measurements yet. Log a weight to begin.</div>
             @else
                 <ul class="yk-wj__list">
-                    @foreach ($recent as $row)
+                    @foreach ($recent as $index => $row)
+                        @php
+                            $prev = $recent->get($index + 1);
+                            $delta = $prev
+                                ? app(\App\Services\WeightJourneyService::class)->formatNetChange(
+                                    bcsub((string) $row->weight_kg, (string) $prev->weight_kg, 3),
+                                    $summary['unit']
+                                )
+                                : null;
+                        @endphp
                         <li>
-                            <span>
+                            <div>
                                 <strong>{{ app(\App\Services\WeightJourneyService::class)->formatWeight((string) $row->weight_kg, $summary['unit']) }}</strong>
-                                <span class="yk-wj__note" style="display:block;margin:0;">{{ $row->recorded_at->timezone($timezone)->format('d M Y, g:i A') }}</span>
-                            </span>
-                        </li>
-                    @endforeach
-                </ul>
-            @endif
-
-            @if ($summary['history']->isNotEmpty())
-                <h2 style="font-size:1.05rem;margin:1.2rem 0 0.5rem;">Goal history</h2>
-                <ul class="yk-wj__list">
-                    @foreach ($summary['history'] as $g)
-                        <li>
-                            <span>
-                                <strong>{{ \App\Support\WeightJourney\WeightJourneyCatalog::DIRECTIONS[$g->direction] ?? $g->direction }}</strong>
-                                · {{ $g->status }}
-                                <span class="yk-wj__note" style="display:block;margin:0;">
-                                    From {{ optional($g->effective_from)->timezone($timezone)?->format('d M Y') }}
-                                    @if ($g->effective_to) to {{ $g->effective_to->timezone($timezone)->format('d M Y') }} @endif
-                                </span>
-                            </span>
+                                @if ($delta)
+                                    <span class="yk-wj__delta">{{ $delta }}</span>
+                                @endif
+                                <div class="yk-wj__meta">{{ $row->recorded_at->timezone($timezone)->format('d M Y, g:i A') }}</div>
+                                @if ($row->note)
+                                    <div class="yk-wj__meta">{{ $row->note }}</div>
+                                @endif
+                            </div>
                         </li>
                     @endforeach
                 </ul>
@@ -75,7 +109,7 @@
             <div class="yk-wj__actions">
                 <a class="yk-wj__btn" href="{{ route('tools.weight-journey.log') }}">Log weight</a>
                 <a class="yk-wj__btn-secondary" href="{{ route('tools.weight-journey.goal') }}">Edit goal</a>
-                <a class="yk-wj__btn-secondary" href="{{ route('tools.weight-journey.progress') }}">Weight progress</a>
+                <a class="yk-wj__btn-secondary" href="{{ route('tools.weight-journey.progress') }}">History</a>
             </div>
         </section>
     </div>

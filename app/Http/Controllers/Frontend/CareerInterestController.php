@@ -120,11 +120,14 @@ class CareerInterestController extends Controller
             'category' => $meta,
             'questions' => $questions,
             'scale' => CareerInterestCatalog::SCALE,
+            'scaleOptions' => CareerInterestCatalog::scaleOptions(),
             'answers' => $draft->answers(),
             'step' => $meta['step'],
             'totalSteps' => count(CareerInterestCatalog::CATEGORY_ORDER),
+            'questionCount' => CareerInterestCatalog::questionCount(),
+            'progress' => CareerInterestCatalog::progressPercent($meta['step']),
             'previousUrl' => $this->previousCategoryUrl($category),
-            'nextLabel' => $meta['step'] === 6 ? 'See results' : 'Next',
+            'nextLabel' => $meta['step'] === 6 ? 'See results' : 'Continue',
         ]);
     }
 

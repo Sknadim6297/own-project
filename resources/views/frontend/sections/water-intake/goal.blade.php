@@ -10,13 +10,13 @@
         <section class="yk-water__card">
             <p class="yk-water__badge">Preference</p>
             <h1>Daily water goal</h1>
-            <p class="yk-water__lead">This is your personal tracking target—not a medically prescribed hydration amount. Changing it keeps a previous goal for earlier chart days when available.</p>
+            <p class="yk-water__lead">Your personal tracking target—not a medically prescribed amount.</p>
 
             @if ($errors->any())
-                <p class="yk-water__error">{{ $errors->first() }}</p>
+                <p class="yk-water__error" role="alert">{{ $errors->first() }}</p>
             @endif
 
-            <form method="post" action="{{ route('tools.water-intake.goal.update') }}">
+            <form method="post" action="{{ route('tools.water-intake.goal.update') }}" data-water-submit-once>
                 @csrf
                 <div class="yk-water__field">
                     <label for="goal-ml">Daily goal (ml)</label>

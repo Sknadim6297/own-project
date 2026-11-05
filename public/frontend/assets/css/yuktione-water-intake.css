@@ -5,11 +5,13 @@
     --yk-lavender: #9d81db;
     --yk-line: #e6ebf2;
     --yk-muted: #41506d;
+    --yk-water-accent: #3d7ea6;
+    --yk-water-soft: #e8f3f9;
     font-family: "DM Sans", sans-serif;
     color: var(--yk-navy);
     background:
-        radial-gradient(circle at 12% 0%, rgba(49, 109, 97, 0.14), transparent 28%),
-        radial-gradient(circle at 90% 8%, rgba(157, 129, 219, 0.12), transparent 26%),
+        radial-gradient(circle at 12% 0%, rgba(49, 109, 97, 0.12), transparent 28%),
+        radial-gradient(circle at 90% 8%, rgba(61, 126, 166, 0.1), transparent 26%),
         #fff;
     min-height: 70vh;
     padding: 1.25rem 0 3rem;
@@ -18,6 +20,10 @@
 .yk-water__wrap {
     width: min(720px, calc(100% - 2rem));
     margin-inline: auto;
+}
+
+.yk-water__wrap--wide {
+    width: min(920px, calc(100% - 2rem));
 }
 
 .yk-water__card {
@@ -30,7 +36,7 @@
 
 .yk-water__badge {
     display: inline-flex;
-    margin: 0 0 0.7rem;
+    margin: 0 0 0.65rem;
     padding: 0.28rem 0.7rem;
     border-radius: 999px;
     background: var(--yk-mint);
@@ -40,9 +46,10 @@
 }
 
 .yk-water h1 {
-    margin: 0 0 0.55rem;
-    font-size: clamp(1.45rem, 4vw, 2rem);
+    margin: 0 0 0.4rem;
+    font-size: clamp(1.4rem, 3.6vw, 1.9rem);
     letter-spacing: -0.03em;
+    line-height: 1.15;
 }
 
 .yk-water__lead,
@@ -54,14 +61,49 @@
 
 .yk-water__note { font-size: 0.86rem; }
 
+.yk-water__section-title {
+    margin: 0 0 0.55rem;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+
+.yk-water__dash-grid {
+    display: grid;
+    gap: 1rem;
+    align-items: center;
+    margin: 0.35rem 0 1.15rem;
+}
+
+@media (min-width: 768px) {
+    .yk-water__dash-grid {
+        grid-template-columns: minmax(180px, 220px) 1fr;
+        gap: 1.35rem;
+    }
+}
+
+/* —— Progress ring —— */
 .yk-water__progress {
-    width: min(220px, 70vw);
-    margin: 0.5rem auto 1.1rem;
+    width: min(200px, 62vw);
+    margin: 0 auto;
     aspect-ratio: 1;
     position: relative;
 }
 
 .yk-water__progress svg { width: 100%; height: auto; display: block; }
+
+.yk-water__ring-track {
+    stroke: #edf1f6;
+}
+
+.yk-water__ring-fill {
+    stroke: var(--yk-teal);
+    transition: stroke-dashoffset 0.55s ease;
+}
+
+.yk-water__progress.is-over .yk-water__ring-fill {
+    stroke: var(--yk-water-accent);
+}
 
 .yk-water__progress-center {
     position: absolute;
@@ -69,80 +111,170 @@
     display: grid;
     place-content: center;
     text-align: center;
+    padding: 0.5rem;
 }
 
 .yk-water__progress-center strong {
-    font-size: 1.8rem;
+    font-size: clamp(1.55rem, 4vw, 1.85rem);
     letter-spacing: -0.03em;
+    line-height: 1.1;
 }
 
 .yk-water__progress-center span {
     color: var(--yk-muted);
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 600;
+}
+
+.yk-water__progress-goal {
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
 }
 
 .yk-water__stats {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.55rem;
-    margin-bottom: 1rem;
 }
 
 .yk-water__stats div {
     background: var(--yk-mint);
     border-radius: 14px;
-    padding: 0.75rem 0.6rem;
+    padding: 0.8rem 0.55rem;
     text-align: center;
+    border: 1px solid transparent;
 }
 
-.yk-water__stats strong { display: block; font-size: 1.05rem; }
-.yk-water__stats span { color: var(--yk-muted); font-size: 0.75rem; font-weight: 600; }
+.yk-water__stats strong {
+    display: block;
+    font-size: clamp(0.95rem, 2.4vw, 1.1rem);
+    letter-spacing: -0.02em;
+}
 
+.yk-water__stats span {
+    color: var(--yk-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+/* —— Quick add cards —— */
 .yk-water__quick {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.45rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
     margin: 0 0 1rem;
 }
 
-.yk-water__quick button,
-.yk-water__btn,
-.yk-water__btn-secondary {
-    display: inline-flex;
+@media (min-width: 640px) {
+    .yk-water__quick {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.yk-water__quick form { margin: 0; }
+
+.yk-water__quick-card {
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 44px;
-    padding: 0 1rem;
-    border-radius: 999px;
-    font: inherit;
-    font-weight: 700;
-    border: 1px solid transparent;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.yk-water__quick button,
-.yk-water__btn {
-    background: var(--yk-teal);
-    color: #fff;
-}
-
-.yk-water__btn-secondary {
+    gap: 0.15rem;
+    width: 100%;
+    min-height: 104px;
+    padding: 0.75rem 0.5rem;
+    border-radius: 16px;
+    border: 1.5px solid var(--yk-line);
     background: #fff;
     color: var(--yk-navy);
-    border-color: var(--yk-line);
+    font: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
 }
 
-.yk-water__actions {
+.yk-water__quick-card:hover {
+    border-color: rgba(49, 109, 97, 0.45);
+    background: rgba(234, 246, 242, 0.55);
+}
+
+.yk-water__quick-card:focus-visible {
+    outline: 2px solid var(--yk-teal);
+    outline-offset: 2px;
+}
+
+.yk-water__quick-card:active,
+.yk-water__btn:active,
+.yk-water__btn-secondary:active {
+    transform: scale(0.98);
+}
+
+.yk-water__quick-card.is-busy,
+.yk-water__quick-card:disabled {
+    opacity: 0.65;
+    cursor: wait;
+}
+
+.yk-water__quick-emoji {
+    font-size: 1.45rem;
+    line-height: 1;
+}
+
+.yk-water__quick-label {
+    font-weight: 700;
+    font-size: 0.8rem;
+    line-height: 1.25;
+}
+
+.yk-water__quick-amt {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--yk-teal);
+}
+
+/* —— Manual entry —— */
+.yk-water__manual {
+    margin: 0 0 1.15rem;
+    border: 1px solid var(--yk-line);
+    border-radius: 14px;
+    padding: 0.15rem 0.85rem 0.15rem;
+}
+
+.yk-water__manual > summary {
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.9rem;
+    min-height: 44px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem;
-    margin-top: 1rem;
+    align-items: center;
+    list-style: none;
 }
 
-.yk-water__field { margin: 0 0 0.85rem; }
-.yk-water__field label { display: block; font-weight: 700; margin-bottom: 0.35rem; }
+.yk-water__manual > summary::-webkit-details-marker { display: none; }
+
+.yk-water__manual[open] {
+    padding-bottom: 0.9rem;
+}
+
+.yk-water__manual-form { margin-top: 0.35rem; }
+
+.yk-water__manual-row {
+    display: grid;
+    gap: 0.65rem;
+}
+
+@media (min-width: 640px) {
+    .yk-water__manual-row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.yk-water__field { margin: 0 0 0.75rem; }
+.yk-water__field label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    font-size: 0.88rem;
+}
+
 .yk-water input[type="number"],
 .yk-water input[type="datetime-local"],
 .yk-water select {
@@ -152,17 +284,116 @@
     border-radius: 12px;
     padding: 0.5rem 0.75rem;
     font: inherit;
+    color: var(--yk-navy);
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.yk-water__error { color: #9b1c1c; font-weight: 600; margin: 0 0 0.75rem; }
-.yk-water__ok { color: var(--yk-teal); font-weight: 600; margin: 0 0 0.75rem; }
+.yk-water input:focus,
+.yk-water select:focus {
+    outline: 2px solid transparent;
+    border-color: var(--yk-teal);
+    box-shadow: 0 0 0 3px rgba(49, 109, 97, 0.18);
+}
+
+.yk-water__btn,
+.yk-water__btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 1.1rem;
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 700;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
+}
+
+.yk-water__btn {
+    background: var(--yk-teal);
+    color: #fff;
+}
+
+.yk-water__btn:hover { background: #28584e; color: #fff; }
+
+.yk-water__btn-secondary {
+    background: #fff;
+    color: var(--yk-navy);
+    border-color: var(--yk-line);
+}
+
+.yk-water__btn-secondary:hover {
+    border-color: var(--yk-teal);
+    color: var(--yk-teal);
+}
+
+.yk-water__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 1rem;
+}
+
+.yk-water__error {
+    color: #9b1c1c;
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+}
+
+.yk-water__ok {
+    margin: 0 0 0.75rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 12px;
+    background: var(--yk-mint);
+    color: var(--yk-teal);
+    font-weight: 600;
+    font-size: 0.92rem;
+}
+
+.yk-water__text-link {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--yk-teal);
+    text-decoration: none;
+}
+
+.yk-water__text-link:hover { text-decoration: underline; }
+
+.yk-water__logs-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.55rem;
+}
+
+.yk-water__logs-head .yk-water__section-title { margin: 0; }
+
+.yk-water__meta {
+    color: var(--yk-muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.yk-water__empty {
+    margin: 0.35rem 0 0;
+    padding: 1.05rem 1rem;
+    border: 1px dashed var(--yk-line);
+    border-radius: 14px;
+    text-align: center;
+    color: var(--yk-muted);
+    font-size: 0.9rem;
+}
 
 .yk-water__list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 0.55rem;
+    gap: 0.5rem;
 }
 
 .yk-water__list li {
@@ -171,11 +402,64 @@
     gap: 0.55rem;
     align-items: center;
     justify-content: space-between;
-    padding: 0.8rem 0.9rem;
+    padding: 0.75rem 0.9rem;
     border: 1px solid var(--yk-line);
     border-radius: 14px;
+    background: #fff;
+    transition: border-color 0.15s ease, background 0.15s ease;
 }
 
+.yk-water__list li:hover {
+    border-color: rgba(49, 109, 97, 0.35);
+    background: rgba(234, 246, 242, 0.35);
+}
+
+.yk-water__entry-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    align-items: flex-start;
+}
+
+.yk-water__entry-actions details > summary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 0 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--yk-line);
+    background: #fff;
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+    list-style: none;
+}
+
+.yk-water__entry-actions details > summary::-webkit-details-marker { display: none; }
+
+.yk-water__edit-form {
+    display: grid;
+    gap: 0.4rem;
+    margin-top: 0.45rem;
+    min-width: min(220px, 70vw);
+}
+
+.yk-water__day-progress {
+    height: 10px;
+    border-radius: 999px;
+    background: #edf1f6;
+    overflow: hidden;
+}
+
+.yk-water__day-progress-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--yk-teal);
+    transition: width 0.45s ease;
+}
+
+/* —— Week bars + history —— */
 .yk-water__bars {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -187,16 +471,20 @@
 
 .yk-water__bar {
     display: grid;
-    gap: 0.35rem;
+    gap: 0.3rem;
     justify-items: center;
+    text-decoration: none;
+    color: inherit;
+    min-width: 0;
 }
 
 .yk-water__bar-fill {
     width: 100%;
     max-width: 36px;
     border-radius: 10px 10px 4px 4px;
-    background: linear-gradient(180deg, var(--yk-lavender), var(--yk-teal));
+    background: linear-gradient(180deg, var(--yk-water-accent), var(--yk-teal));
     min-height: 4px;
+    transition: height 0.35s ease;
 }
 
 .yk-water__bar.is-today .yk-water__bar-fill {
@@ -205,16 +493,133 @@
 
 .yk-water__bar small {
     color: var(--yk-muted);
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-weight: 700;
+    text-align: center;
+    line-height: 1.2;
 }
 
 .yk-water__bar.is-empty .yk-water__bar-fill {
     background: #edf1f6;
 }
 
-@media (max-width: 640px) {
-    .yk-water__quick { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.yk-water__history {
+    list-style: none;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+}
+
+.yk-water__history-card {
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--yk-line);
+    border-radius: 16px;
+    background: #fff;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.yk-water__history-card:hover {
+    border-color: rgba(49, 109, 97, 0.4);
+    background: rgba(234, 246, 242, 0.4);
+}
+
+.yk-water__history-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.65rem;
+    margin-bottom: 0.55rem;
+}
+
+.yk-water__pill {
+    display: inline-flex;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: var(--yk-mint);
+    color: var(--yk-teal);
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.yk-water__history-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.4rem;
+    margin-bottom: 0.55rem;
+}
+
+.yk-water__history-metrics strong {
+    display: block;
+    font-size: 1.02rem;
+    letter-spacing: -0.02em;
+}
+
+.yk-water__history-metrics span {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--yk-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.yk-water__history-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.yk-water__mini-bar {
+    flex: 1;
+    height: 6px;
+    border-radius: 999px;
+    background: #edf1f6;
+    overflow: hidden;
+}
+
+.yk-water__mini-bar span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--yk-teal);
+}
+
+/* —— Welcome —— */
+.yk-water__welcome-preview {
+    margin: 0.25rem 0 1rem;
+}
+
+.yk-water__progress.is-demo {
+    pointer-events: none;
+}
+
+.yk-water__welcome-points {
+    margin: 0 0 1rem;
+    padding-left: 1.15rem;
+    color: var(--yk-muted);
+    line-height: 1.55;
+}
+
+.yk-water__welcome-points li { margin-bottom: 0.25rem; }
+
+@media (max-width: 639px) {
     .yk-water__stats { grid-template-columns: 1fr; }
-    .yk-water__btn, .yk-water__btn-secondary { width: 100%; }
+    .yk-water__btn,
+    .yk-water__btn-secondary { width: 100%; }
+    .yk-water__history-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .yk-water__ring-fill,
+    .yk-water__quick-card,
+    .yk-water__btn,
+    .yk-water__btn-secondary,
+    .yk-water__bar-fill,
+    .yk-water__day-progress-fill,
+    .yk-water input,
+    .yk-water select {
+        transition: none !important;
+        animation: none !important;
+    }
 }

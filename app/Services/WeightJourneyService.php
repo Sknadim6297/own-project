@@ -297,7 +297,7 @@ class WeightJourneyService
         ];
     }
 
-    private function formatNetChange(?string $netKg, string $unit): ?string
+    public function formatNetChange(?string $netKg, string $unit): ?string
     {
         if ($netKg === null) {
             return null;
@@ -336,15 +336,25 @@ class WeightJourneyService
             $progress = ['percent' => null, 'meaningful' => false, 'reason' => $goal->direction];
         }
 
+        $targetKg = ($goal && $goal->target_weight_kg !== null) ? (string) $goal->target_weight_kg : null;
+        $distance = ($latestKg !== null && $targetKg !== null) ? bcsub($latestKg, $targetKg, 3) : null;
+        $goalStartKg = $goal ? (string) $goal->starting_weight_kg : null;
+
         return [
             'goal' => $goal,
             'unit' => $unit,
             'starting' => $startKg,
             'latest' => $latestKg,
             'net_kg' => $net,
+            'target' => $targetKg,
+            'distance_kg' => $distance,
+            'goal_starting' => $goalStartKg,
             'starting_label' => $startKg ? $this->formatWeight($startKg, $unit) : null,
             'latest_label' => $latestKg ? $this->formatWeight($latestKg, $unit) : null,
             'net_label' => $this->formatNetChange($net, $unit),
+            'target_label' => $targetKg ? $this->formatWeight($targetKg, $unit) : null,
+            'distance_label' => $this->formatNetChange($distance, $unit),
+            'goal_starting_label' => $goalStartKg ? $this->formatWeight($goalStartKg, $unit) : null,
             'progress' => $progress,
             'history' => $this->goalHistory($userId),
         ];

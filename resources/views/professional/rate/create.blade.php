@@ -1,21 +1,28 @@
 @extends('professional.layout.layout')
 
-@section('styles')
-@vite('resources/css/tazen.css')
-@endsection
+@section('title', 'Add Rate | YuktiOne')
 
 @section('content')
-<div class="content-wrapper rates-create-page w-full text-text-primary mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-    <div class="rates-shell mx-auto w-full space-y-6">
-        <header class="rates-header flex flex-col gap-5 rounded-panel border border-border bg-gradient-to-br from-white to-brand-50 p-6 shadow-card sm:flex-row sm:items-center sm:justify-between">
-            <div class="header-info">
+<div class="rates-create-page mx-auto w-full max-w-7xl space-y-5 text-text-primary">
+    <div class="rates-shell mx-auto w-full space-y-5">
+        <header class="rates-header flex flex-col gap-4 rounded-panel border border-border bg-gradient-to-br from-white to-brand-50 p-5 shadow-card sm:flex-row sm:items-start sm:justify-between sm:p-6">
+            <div class="header-info min-w-0">
+                <nav aria-label="Breadcrumb" class="mb-2 text-xs font-medium text-text-muted">
+                    <ol class="flex flex-wrap items-center gap-2">
+                        <li><a class="text-brand-primary hover:text-brand-800" href="{{ route('professional.dashboard') }}">Dashboard</a></li>
+                        <li aria-hidden="true" class="text-border">/</li>
+                        <li><a class="text-brand-primary hover:text-brand-800" href="{{ route('professional.rate.index') }}">Rates</a></li>
+                        <li aria-hidden="true" class="text-border">/</li>
+                        <li aria-current="page" class="text-text-secondary">Add Rate</li>
+                    </ol>
+                </nav>
                 <span class="pretitle text-xs font-semibold uppercase tracking-[0.16em] text-brand-700">Rates & Packages</span>
-                <h1 class="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">Add Rate</h1>
-                <p>Set up clear, structured pricing so clients immediately understand the value of your offerings.</p>
+                <h1 class="mt-1 text-2xl font-semibold tracking-tight text-brand-950 sm:text-[1.75rem]">Add Rate</h1>
+                <p class="mt-1 text-sm text-text-secondary">Set up clear, structured pricing so clients immediately understand the value of your offerings.</p>
             </div>
             <div class="header-actions">
-                <a href="{{ route('professional.rate.index') }}" class="header-btn inline-flex items-center justify-center gap-2 rounded-control border border-border bg-white px-4 py-2.5 text-sm font-semibold text-text-secondary transition hover:bg-surface-muted">
-                    <i class="fas fa-arrow-left"></i>
+                <a href="{{ route('professional.rate.index') }}" class="header-btn btn-pill btn-pill--outline inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border bg-white px-4 py-2 text-sm font-semibold text-text-secondary transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-800">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
                     Back to Rates
                 </a>
             </div>
@@ -23,8 +30,8 @@
 
         <section class="rates-card overflow-hidden rounded-panel border border-border bg-white shadow-card">
             <div class="rates-card__head border-b border-divider bg-surface-muted p-5 sm:p-7">
-                <h2 class="text-xl font-semibold text-text-primary">Create Rate Packages</h2>
-                <p class="subtitle">Configure pricing for your service and any sub-services. Add multiple session bundles and rates without altering existing logic.</p>
+                <h2 class="text-base font-semibold text-brand-950 sm:text-lg">Create Rate Packages</h2>
+                <p class="subtitle mt-1 text-sm text-text-secondary">Configure pricing for your service and any sub-services. Add multiple session bundles as needed.</p>
             </div>
 
             <div class="rates-card__body space-y-6 p-5 sm:p-7">
@@ -33,18 +40,18 @@
 
                     @if($professionalServices && count($professionalServices) > 0)
                         @php $currentService = $professionalServices[0]; @endphp
-                        <div class="info-card rounded-panel border border-brand-100 bg-brand-50/60 p-5">
-                            <div class="info-card__header">
-                                <h3>{{ $currentService->service_name }}</h3>
-                                <span class="info-badge rounded-full bg-success-surface px-3 py-1 text-xs font-semibold text-success">
-                                    <i class="fas fa-briefcase"></i>
+                        <div class="info-card rounded-panel border border-brand-200 bg-brand-50/60 p-5">
+                            <div class="info-card__header flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                <h3 class="text-base font-semibold text-brand-950">{{ $currentService->service_name }}</h3>
+                                <span class="info-badge inline-flex items-center gap-1.5 rounded-full bg-success-surface px-3 py-1 text-xs font-semibold text-success">
+                                    <i class="fas fa-briefcase" aria-hidden="true"></i>
                                     Active Service
                                 </span>
                             </div>
-                            <p class="info-card__hint">All rate plans you create below will attach to this service. You can add as many session-based packages as you need.</p>
+                            <p class="info-card__hint mt-2 text-sm text-text-secondary">All rate plans you create below will attach to this service. You can add as many session-based packages as you need.</p>
 
-                            <div class="info-grid grid gap-5 md:grid-cols-2">
-                                <div class="info-field">
+                            <div class="info-grid mt-4 grid gap-5 md:grid-cols-2">
+                                <div class="info-field space-y-2">
                                     <label class="block text-sm font-medium text-text-secondary">Your Service</label>
                                     <input type="text" class="form-control info-input w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary shadow-sm placeholder:text-text-muted focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-200" value="{{ $currentService->service_name }}" readonly>
                                     <input type="hidden" id="serviceId" value="{{ $currentService->id }}">
@@ -53,11 +60,13 @@
                             </div>
                         </div>
                     @else
-                        <div class="empty-state rounded-panel border border-dashed border-border bg-white p-8 text-center text-text-secondary">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <strong>No service found yet.</strong>
-                            <p>Please create a service first before setting up rate packages.</p>
-                            <a href="{{ route('professional.service.create') }}" class="btn inline-flex items-center justify-center gap-2 rounded-control border border-border bg-white px-4 py-2.5 text-sm font-semibold text-text-secondary transition hover:bg-surface-muted">
+                        <div class="empty-state rounded-panel border border-dashed border-border bg-white p-8 text-center sm:p-10">
+                            <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-warning-surface text-warning">
+                                <i class="fas fa-exclamation-triangle text-xl" aria-hidden="true"></i>
+                            </div>
+                            <strong class="block text-base font-semibold text-brand-950">No service found yet.</strong>
+                            <p class="mx-auto mt-2 max-w-md text-sm text-text-secondary">Please create a service first before setting up rate packages.</p>
+                            <a href="{{ route('professional.service.create') }}" class="btn-pill btn-pill--primary mt-5 inline-flex min-h-10 items-center justify-center gap-2 rounded-control bg-brand-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-800">
                                 Create Service
                             </a>
                         </div>
@@ -65,8 +74,8 @@
 
                     <div class="rate-section space-y-4 rounded-panel border border-border bg-surface-muted p-4 sm:p-5" id="serviceRateTableContainer" style="display: none">
                         <div class="section-heading flex flex-col gap-1 border-b border-divider pb-4">
-                            <h4>Service Level Rates</h4>
-                            <p>Add session-based plans for your main service offering.</p>
+                            <h4 class="text-base font-semibold text-brand-950">Service Level Rates</h4>
+                            <p class="text-sm text-text-secondary">Add session-based plans for your main service offering.</p>
                         </div>
                         <div class="table-shell overflow-hidden rounded-control border border-border bg-white">
                             <div class="table-responsive w-full overflow-x-auto">
@@ -97,17 +106,17 @@
 
                     <div class="rate-section space-y-4 rounded-panel border border-border bg-surface-muted p-4 sm:p-5" id="subServiceRateContainer" style="display: none">
                         <div class="section-heading flex flex-col gap-1 border-b border-divider pb-4">
-                            <h4>Sub-Service Level Rates</h4>
-                            <p>Need different pricing for specific sub-services? Configure them here.</p>
+                            <h4 class="text-base font-semibold text-brand-950">Sub-Service Level Rates</h4>
+                            <p class="text-sm text-text-secondary">Need different pricing for specific sub-services? Configure them here.</p>
                         </div>
-                        <div id="subServiceRatesList">
+                        <div id="subServiceRatesList" class="space-y-5">
                             <!-- Sub-service rate tables will be dynamically added here -->
                         </div>
                     </div>
 
                     <div class="form-footer flex flex-col-reverse gap-3 border-t border-divider pt-5 sm:flex-row sm:justify-end" id="saveButtonContainer" style="display: none">
-                        <button type="submit" class="btn primary-btn inline-flex items-center justify-center gap-2 rounded-control bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800 border border-border bg-white text-text-secondary hover:bg-surface-muted">
-                            <i class="fas fa-save"></i>
+                        <button type="submit" class="btn primary-btn inline-flex min-h-10 items-center justify-center gap-2 rounded-control bg-brand-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-300">
+                            <i class="fas fa-save" aria-hidden="true"></i>
                             Save Rates
                         </button>
                     </div>
@@ -206,11 +215,11 @@ document.addEventListener('DOMContentLoaded', function() {
             subServiceRateCounters[subService.id] = 0;
             
             const subServiceDiv = document.createElement('div');
-            subServiceDiv.className = 'sub-service-rate-section';
+            subServiceDiv.className = 'sub-service-rate-section space-y-4 rounded-panel border border-border bg-white p-4';
             subServiceDiv.innerHTML = `
-                <div class="sub-service-heading">
-                    <h5>${subService.name}</h5>
-                    <span>Add session plans specific to this sub-service.</span>
+                <div class="sub-service-heading flex flex-col gap-1">
+                    <h5 class="text-sm font-semibold text-brand-950">${subService.name}</h5>
+                    <span class="text-sm text-text-secondary">Add session plans specific to this sub-service.</span>
                 </div>
                 <div class="table-shell overflow-hidden rounded-control border border-border bg-white">
                     <div class="table-responsive w-full overflow-x-auto">

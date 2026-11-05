@@ -35,6 +35,9 @@ class WaterIntakeController extends Controller
 
         return view('frontend.sections.water-intake.dashboard', [
             'dash' => $dash,
+            'entries' => $this->water->dayEntries($userId, $date),
+            'timezone' => WaterIntakeCatalog::TIMEZONE,
+            'isToday' => $date === $this->water->today()->toDateString(),
             'status' => session('status'),
         ]);
     }

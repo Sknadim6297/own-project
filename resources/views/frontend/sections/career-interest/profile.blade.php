@@ -23,28 +23,30 @@
                     @foreach ($primary as $row)
                         <div class="yk-cit__bar-row">
                             <strong><span>{{ $row['label'] }}</span><span>{{ $row['percent'] }}%</span></strong>
-                            <div class="yk-cit__bar" aria-hidden="true"><span style="width: {{ $row['percent'] }}%"></span></div>
+                            <div class="yk-cit__bar" aria-hidden="true"><span style="width: {{ max(0, min(100, (int) $row['percent'])) }}%"></span></div>
                         </div>
                     @endforeach
                 </div>
             </div>
 
-            <h2 class="yk-cit__kicker" style="margin-top:1rem;">Other interests</h2>
+            <h2 class="yk-cit__section-title">Other interests</h2>
             <div class="yk-cit__bars">
                 @foreach ($others as $row)
                     <div class="yk-cit__bar-row">
                         <strong><span>{{ $row['label'] }}</span><span>{{ $row['percent'] }}%</span></strong>
-                        <div class="yk-cit__bar" aria-hidden="true"><span style="width: {{ $row['percent'] }}%"></span></div>
-                        <p class="yk-cit__lead" style="margin:0.35rem 0 0;font-size:0.88rem;">{{ $row['description'] }}</p>
+                        <div class="yk-cit__bar" aria-hidden="true"><span style="width: {{ max(0, min(100, (int) $row['percent'])) }}%"></span></div>
+                        <p class="yk-cit__bar-desc">{{ $row['description'] }}</p>
                     </div>
                 @endforeach
             </div>
 
             <p class="yk-cit__lead">{{ $scored['interpretation'] }}</p>
-            <p class="yk-cit__lead" style="font-size:0.86rem;">Score display uses an implementation convention (sum of three answers ÷ 15 × 100). It is not a scientifically validated psychometric score.</p>
+            <p class="yk-cit__note">Score display uses an implementation convention (sum of three answers ÷ 15 × 100). It is not a scientifically validated psychometric score.</p>
 
             <div class="yk-cit__actions">
                 <a class="yk-cit__btn" href="{{ route('tools.career-interest.suggestions') }}">View Career Suggestions</a>
+                @php $careerExperts = app(\App\Services\ExpertsDiscovery::class)->career(); @endphp
+                <a class="yk-cit__btn-secondary" href="{{ $careerExperts['url'] }}">{{ $careerExperts['label'] }}</a>
             </div>
         </section>
     </div>

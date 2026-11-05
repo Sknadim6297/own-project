@@ -1,67 +1,65 @@
 @extends('professional.layout.layout')
 
-@section('title', 'Chat with Admin')
-
-@section('styles')
-@vite('resources/css/tazen.css')
-@endsection
+@section('title', 'Chat with Admin | YuktiOne')
 
 @section('content')
-<div class="chat-page min-h-full bg-surface-muted px-3 py-4 text-text-primary sm:px-5 sm:py-5">
-<div class="chat-shell mx-auto max-w-2xl space-y-4">
-        <section class="chat-hero flex flex-col gap-4 rounded-2xl border border-brand-100 bg-gradient-to-br from-white via-brand-50 to-white p-6 shadow-card sm:flex-row sm:items-center sm:justify-between">
-            <div class="hero-meta">
-                <span class="hero-eyebrow"><i class="ri-message-3-line"></i>Support</span>
-                <h1 class="mt-2 text-2xl font-bold tracking-tight text-brand-950 sm:text-3xl">Chat with Admin</h1>
-                <ul class="hero-breadcrumb">
-                    <li><a href="{{ route('professional.dashboard') }}">Home</a></li>
-                    <li class="active" aria-current="page">Chat</li>
-                </ul>
+<div class="chat-page mx-auto w-full max-w-7xl space-y-5 text-text-primary">
+    <div class="chat-shell mx-auto w-full max-w-2xl space-y-5">
+        <section class="chat-hero flex flex-col gap-4 rounded-panel border border-border bg-gradient-to-br from-white to-brand-50 p-5 shadow-card sm:flex-row sm:items-start sm:justify-between sm:p-6">
+            <div class="hero-meta min-w-0">
+                <nav aria-label="Breadcrumb" class="mb-2 text-xs font-medium text-text-muted">
+                    <ol class="flex flex-wrap items-center gap-2">
+                        <li><a class="text-brand-primary hover:text-brand-800" href="{{ route('professional.dashboard') }}">Dashboard</a></li>
+                        <li aria-hidden="true" class="text-border">/</li>
+                        <li aria-current="page" class="text-text-secondary">Chat</li>
+                    </ol>
+                </nav>
+                <span class="hero-eyebrow inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-brand-700"><i class="ri-message-3-line" aria-hidden="true"></i>Support</span>
+                <h1 class="mt-1 text-2xl font-semibold tracking-tight text-brand-950 sm:text-[1.75rem]">Chat with Admin</h1>
+                <p class="mt-1 text-sm text-text-secondary">Message the YuktiOne admin team for account or booking support.</p>
             </div>
-            <span class="status-pill" id="connectionStatus">
-                <i class="ri-flashlight-line"></i>
+            <span class="status-pill inline-flex items-center gap-2 rounded-full bg-success-surface px-3 py-1.5 text-xs font-semibold text-success" id="connectionStatus">
+                <span class="size-1.5 rounded-full bg-success" aria-hidden="true"></span>
                 Connected
             </span>
         </section>
 
-        <section class="chat-card overflow-hidden rounded-2xl border border-brand-100 bg-white shadow-card">
-            <header class="chat-card__head border-b border-slate-100 px-5 py-4">
-                <h2 class="font-semibold text-brand-950"><i class="ri-chat-voice-line"></i>Conversation</h2>
-                <p>Stay connected with the admin team for quick assistance.</p>
+        <section class="chat-card overflow-hidden rounded-panel border border-border bg-white shadow-card">
+            <header class="chat-card__head border-b border-divider px-5 py-4">
+                <h2 class="flex items-center gap-2 text-base font-semibold"><i class="ri-chat-voice-line" aria-hidden="true"></i>Conversation</h2>
+                <p class="mt-1 text-sm opacity-90">Stay connected with the admin team for quick assistance.</p>
             </header>
             <div class="chat-card__body">
-                <div class="chat-messages-wrapper min-h-[18rem] max-h-[55vh] overflow-y-auto p-4 sm:p-5">
-                    <div id="chatMessages">
-                        <div class="loading-spinner">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <span class="mt-3">Loading chat...</span>
+                <div class="chat-messages-wrapper min-h-[18rem] max-h-[55vh] overflow-y-auto bg-background p-4 sm:p-5">
+                    <div id="chatMessages" class="space-y-3">
+                        <div class="loading-spinner flex min-h-64 flex-col items-center justify-center text-brand-700">
+                            <div class="h-8 w-8 animate-spin rounded-full border-4 border-brand-200 border-t-brand-700" role="status" aria-label="Loading"></div>
+                            <span class="mt-3 text-sm text-text-muted">Loading chat...</span>
                         </div>
                     </div>
                 </div>
                 <div class="chat-input-area">
-                    <form id="chatMessageForm" class="border-t border-slate-100 p-4" enctype="multipart/form-data">
+                    <form id="chatMessageForm" class="border-t border-divider p-4" enctype="multipart/form-data">
                         @csrf
                         <div class="input-group flex items-center gap-2">
-                            <input type="text" class="form-control form-control-lg min-w-0 flex-1 rounded-xl border border-slate-300 px-4 py-3 text-slate-800 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none" id="messageInput" name="message" placeholder="Type your message to admin..." autocomplete="off">
-                            <input type="file" id="fileInput" name="attachment" style="display:none" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.jpg,.jpeg,.png,.gif">
-                            <button type="button" class="btn-attach" id="attachBtn" title="Attach File">
-                                <i class="fas fa-paperclip"></i>
+                            <input type="text" class="message-input min-w-0 flex-1 rounded-control border border-border bg-white px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-200" id="messageInput" name="message" placeholder="Type your message to admin..." autocomplete="off">
+                            <input type="file" id="fileInput" name="attachment" class="sr-only" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.jpg,.jpeg,.png,.gif">
+                            <button type="button" class="btn-attach" id="attachBtn" title="Attach File" aria-label="Attach file">
+                                <i class="fas fa-paperclip" aria-hidden="true"></i>
                             </button>
-                            <button type="submit" class="btn-send" id="sendBtn">
-                                <i class="fas fa-paper-plane"></i>
+                            <button type="submit" class="btn-send" id="sendBtn" aria-label="Send message">
+                                <i class="fas fa-paper-plane" aria-hidden="true"></i>
                             </button>
                         </div>
-                        <div id="filePreview" class="attachment-preview" style="display:none">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="ri-attachment-line"></i>
-                                    <span id="fileName"></span>
-                                    <span id="fileSize" class="text-muted"></span>
+                        <div id="filePreview" class="attachment-preview mt-3 hidden rounded-control border border-brand-200 bg-brand-50 px-3 py-2.5 text-sm text-brand-800">
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="flex min-w-0 items-center gap-2">
+                                    <i class="ri-attachment-line shrink-0" aria-hidden="true"></i>
+                                    <span id="fileName" class="min-w-0 truncate font-medium"></span>
+                                    <span id="fileSize" class="shrink-0 text-xs text-text-muted"></span>
                                 </div>
-                                <button type="button" class="btn btn-sm btn-link text-danger p-0" id="removeFileBtn">
-                                    <i class="ri-close-line"></i> Remove
+                                <button type="button" class="inline-flex items-center gap-1 rounded-control px-2 py-1 text-xs font-semibold text-error transition hover:bg-error-surface" id="removeFileBtn">
+                                    <i class="ri-close-line" aria-hidden="true"></i> Remove
                                 </button>
                             </div>
                         </div>
@@ -113,17 +111,19 @@ $(document).ready(function() {
     }
     function buildMessageHtml(message) {
         const isProfessional = message.sender_type === 'App\\Models\\Professional';
-        const bubbleClass = isProfessional ? 'message-bubble max-w-[85%] rounded-2xl rounded-br-md bg-brand-700 px-4 py-3 text-white shadow-sm sm:max-w-[70%]' : 'message-bubble max-w-[85%] rounded-2xl rounded-bl-md border border-brand-100 bg-white px-4 py-3 text-slate-800 shadow-sm sm:max-w-[70%]';
+        const bubbleClass = isProfessional
+            ? 'message-bubble max-w-[85%] rounded-2xl rounded-br-md bg-brand-primary px-4 py-3 text-white shadow-sm sm:max-w-[70%]'
+            : 'message-bubble max-w-[85%] rounded-2xl rounded-bl-md border border-border bg-white px-4 py-3 text-text-primary shadow-sm sm:max-w-[70%]';
         const alignClass = isProfessional ? 'text-right' : 'text-left';
         let attachmentHtml = '';
         if (message.attachments && message.attachments.length > 0) {
             message.attachments.forEach(function(attachment) {
                 attachmentHtml += `
-                    <div class="attachment-card mt-2 rounded-lg border border-white/30 p-2">
-                        <a href="/professional/admin-chat/attachment/${attachment.id}/download" target="_blank">
-                            <i class="${attachment.file_icon || 'ri-attachment-line'}"></i>
-                            ${attachment.original_name}
-                            <small>(${attachment.human_file_size || 'N/A'})</small>
+                    <div class="attachment-card mt-2 rounded-control border ${isProfessional ? 'border-white/30 bg-white/10' : 'border-border bg-surface-muted'} p-2">
+                        <a class="inline-flex items-center gap-2 text-sm ${isProfessional ? 'text-white' : 'text-brand-800'}" href="/professional/admin-chat/attachment/${attachment.id}/download" target="_blank" rel="noopener noreferrer">
+                            <i class="${attachment.file_icon || 'ri-attachment-line'}" aria-hidden="true"></i>
+                            <span class="min-w-0 break-all">${escapeHtml(attachment.original_name || 'Attachment')}</span>
+                            <small class="opacity-80">(${escapeHtml(attachment.human_file_size || 'N/A')})</small>
                         </a>
                     </div>`;
             });
@@ -131,10 +131,10 @@ $(document).ready(function() {
         return `
             <div class="message-row flex ${isProfessional ? 'justify-end' : 'justify-start'}">
                 <div class="${bubbleClass}">
-                    <div class="message-sender ${alignClass}">${isProfessional ? 'You' : (message.sender_name || 'Admin')}</div>
-                    ${message.message ? `<div class="message-text whitespace-pre-wrap break-words">${escapeHtml(message.message)}</div>` : ''}
+                    <div class="message-sender mb-1 text-[11px] font-semibold ${isProfessional ? 'text-white/80' : 'text-text-muted'} ${alignClass}">${isProfessional ? 'You' : escapeHtml(message.sender_name || 'Admin')}</div>
+                    ${message.message ? `<div class="message-text whitespace-pre-wrap break-words text-sm leading-5">${escapeHtml(message.message)}</div>` : ''}
                     ${attachmentHtml}
-                    <div class="message-time mt-2 text-xs opacity-75 ${alignClass}">${formatDateTime(message.created_at)}</div>
+                    <div class="message-time mt-2 text-[10px] opacity-75 ${alignClass}">${formatDateTime(message.created_at)}</div>
                 </div>
             </div>`;
     }
@@ -146,7 +146,7 @@ $(document).ready(function() {
         const formData = new FormData(this);
         const sendBtn = $('#sendBtn');
         const originalBtnHtml = sendBtn.html();
-        sendBtn.prop('disabled', true).html('<i class="ri-loader-4-line fa-spin"></i>');
+        sendBtn.prop('disabled', true).html('<i class="ri-loader-4-line fa-spin" aria-hidden="true"></i>');
         $('#messageInput').prop('disabled', true);
         $.ajax({
             url: '{{ route("professional.admin-chat.send-message") }}',
@@ -170,6 +170,8 @@ $(document).ready(function() {
                 if (xhr.responseJSON && xhr.responseJSON.errors) {
                     const errors = xhr.responseJSON.errors;
                     errorMsg = Object.values(errors).flat().join(', ');
+                } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMsg = xhr.responseJSON.message;
                 }
                 toastr.error(errorMsg);
                 updateConnectionStatus(false);
@@ -194,49 +196,57 @@ $(document).ready(function() {
     function showFilePreview(file) {
         $('#fileName').text(file.name);
         $('#fileSize').text(`(${formatFileSize(file.size)})`);
-        $('#filePreview').show();
+        $('#filePreview').removeClass('hidden').addClass('block');
     }
     function clearFileSelection() {
         $('#fileInput').val('');
-        $('#filePreview').hide();
+        $('#filePreview').addClass('hidden').removeClass('block');
         $('#fileName').text('');
         $('#fileSize').text('');
     }
     function scrollToBottom() {
-        const container = $('#chatMessages');
-        container.scrollTop(container[0].scrollHeight);
+        const container = document.querySelector('.chat-messages-wrapper');
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
     }
     function showLoadingState() {
         $('#chatMessages').html(`
             <div class="loading-spinner flex min-h-64 flex-col items-center justify-center text-brand-700">
-                <div class="h-8 w-8 animate-spin rounded-full border-4 border-brand-200 border-t-brand-700" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <span class="mt-3 text-sm text-slate-500">Loading chat...</span>
+                <div class="h-8 w-8 animate-spin rounded-full border-4 border-brand-200 border-t-brand-700" role="status" aria-label="Loading"></div>
+                <span class="mt-3 text-sm text-text-muted">Loading chat...</span>
             </div>`);
     }
     function showEmptyState() {
         $('#chatMessages').html(`
-            <div class="chat-empty-state flex min-h-64 flex-col items-center justify-center text-center text-slate-500">
-            <i class="ri-message-3-line text-3xl text-brand-500"></i>
-            <h5 class="mt-3 font-semibold text-brand-950">No messages yet</h5>
-            <p class="mt-1 text-sm">Start a conversation with the admin team</p>
+            <div class="chat-empty-state flex min-h-64 flex-col items-center justify-center px-4 text-center text-text-secondary">
+                <span class="inline-flex size-12 items-center justify-center rounded-full bg-brand-50 text-brand-primary">
+                    <i class="ri-message-3-line text-xl" aria-hidden="true"></i>
+                </span>
+                <h5 class="mt-3 text-base font-semibold text-brand-950">No messages yet</h5>
+                <p class="mt-1 max-w-xs text-sm">Start a conversation with the admin team</p>
             </div>`);
     }
     function showErrorState(message) {
         $('#chatMessages').html(`
-            <div class="chat-empty-state text-danger">
-                <i class="ri-error-warning-line"></i>
-                <h5>Error</h5>
-                <p class="mb-0">${message}</p>
+            <div class="chat-empty-state flex min-h-64 flex-col items-center justify-center px-4 text-center">
+                <span class="inline-flex size-12 items-center justify-center rounded-full bg-error-surface text-error">
+                    <i class="ri-error-warning-line text-xl" aria-hidden="true"></i>
+                </span>
+                <h5 class="mt-3 text-base font-semibold text-brand-950">Error</h5>
+                <p class="mt-1 max-w-sm text-sm text-error">${escapeHtml(message)}</p>
             </div>`);
     }
     function updateConnectionStatus(connected) {
         const statusEl = $('#connectionStatus');
         if (connected) {
-            statusEl.removeClass('badge bg-danger').addClass('status-pill').html('<i class="ri-flashlight-line"></i> Connected');
+            statusEl
+                .attr('class', 'status-pill inline-flex items-center gap-2 rounded-full bg-success-surface px-3 py-1.5 text-xs font-semibold text-success')
+                .html('<span class="size-1.5 rounded-full bg-success" aria-hidden="true"></span> Connected');
         } else {
-            statusEl.removeClass('status-pill').addClass('badge bg-danger').text('Disconnected');
+            statusEl
+                .attr('class', 'status-pill inline-flex items-center gap-2 rounded-full bg-error-surface px-3 py-1.5 text-xs font-semibold text-error')
+                .html('<span class="size-1.5 rounded-full bg-error" aria-hidden="true"></span> Disconnected');
         }
     }
     function formatDateTime(dateTime) {

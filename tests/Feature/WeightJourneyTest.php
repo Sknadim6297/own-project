@@ -135,13 +135,14 @@ class WeightJourneyTest extends TestCase
             'idempotency_key' => 'future',
         ])->assertSessionHasErrors();
 
-        $day = CarbonImmutable::now('Asia/Kolkata')->startOfDay();
+        // Use yesterday so setTime(8/20) cannot land in the future when tests run early IST.
+        $day = CarbonImmutable::now('Asia/Kolkata')->subDay()->startOfDay();
         $svc->addMeasurement($user->id, '70.000', 'c1', $day->setTime(8, 0));
         $svc->addMeasurement($user->id, '70.500', 'c2', $day->setTime(20, 0));
         $chart = $svc->chart($user->id, 'week', 'kg');
-        $todayPoints = array_values(array_filter($chart['points'], fn ($p) => $p['date'] === $day->toDateString()));
-        $this->assertCount(1, $todayPoints);
-        $this->assertSame('70.500', $todayPoints[0]['weight_kg']);
+        $dayPoints = array_values(array_filter($chart['points'], fn ($p) => $p['date'] === $day->toDateString()));
+        $this->assertCount(1, $dayPoints);
+        $this->assertSame('70.500', $dayPoints[0]['weight_kg']);
         $this->assertSame('latest_per_local_day', $chart['aggregation']);
 
         $this->get(route('tools.weight-journey.progress', ['period' => 'month']))

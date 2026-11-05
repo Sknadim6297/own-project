@@ -2,11 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\Providers\RouteServiceProvider;
 use Closure;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 
 class RedirectIfAuthenticated
 {
@@ -17,22 +14,22 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, ...$guards)
     {
-        foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
-                // Redirect admin user
-                if ($guard === 'admin') {
-                    return redirect('/admin/dashboard');
-                }
+        // Default `guest` uses the web guard; also recognise app-specific guards.
+        if ($guards === []) {
+            $guards = [null, 'web', 'user', 'admin', 'professional'];
+        }
 
-                // Redirect regular user
-                elseif ($guard === 'user') {
-                    return redirect('/user/dashboard');
-                }
-                // Redirect professional user
-                elseif ($guard === 'professional') {
-                    return redirect('/professional/dashboard');
-                }
+        foreach ($guards as $guard) {
+            if (! Auth::guard($guard)->check()) {
+                continue;
             }
+
+            return match ($guard) {
+                'admin' => redirect('/admin/dashboard'),
+                'professional' => redirect('/professional/dashboard'),
+                'user' => redirect()->route('home'),
+                default => redirect()->route('home'),
+            };
         }
 
         return $next($request);

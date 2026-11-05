@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\NutritionFood;
 use App\Models\Tool;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -98,17 +99,66 @@ class ToolsCatalog
 
         $category = $this->exploreCategory($tool);
         $description = str_replace("\0", '', strip_tags((string) $tool->description));
+        $cataloguePending = $tool->slug === 'calorie-nutrition-tracker'
+            && $this->nutritionCataloguePending();
+
+        if ($cataloguePending) {
+            $description = 'Food logging unlocks after the verified catalogue is published. You can open the tracker to check status.';
+        }
 
         return [
             'name' => $tool->name,
             'description' => Str::limit(trim($description), 140),
             'url' => $url,
-            'cta' => $tool->slug === 'daily-mood-check-in' ? 'Start Check-in' : 'Open',
+            'cta' => $cataloguePending
+                ? 'View status'
+                : ($tool->slug === 'daily-mood-check-in' ? 'Start Check-in' : 'Open'),
             'access' => $tool->access_type === 'paid' ? 'Paid' : 'Free',
+            'availability' => $cataloguePending ? 'Food Catalogue Pending' : 'Available',
+            'availability_state' => $cataloguePending ? 'pending' : 'available',
             'category' => $category,
             'category_label' => $category ? ExploreCatalog::CATEGORIES[$category]['label'] : '',
-            'icon' => $tool->slug === 'daily-mood-check-in' ? 'mood' : 'leaf',
+            'icon' => $this->iconKey($tool),
+            'slug' => $tool->slug,
         ];
+    }
+
+    /**
+     * True when the Nutrition Tracker has no published catalogue foods.
+     * Does not invent foods; pending clears automatically once foods are published.
+     */
+    private function nutritionCataloguePending(): bool
+    {
+        try {
+            if (! Schema::hasTable('nutrition_foods')) {
+                return true;
+            }
+
+            return NutritionFood::query()->catalogueVisible()->doesntExist();
+        } catch (QueryException) {
+            return true;
+        }
+    }
+
+    private function iconKey(Tool $tool): string
+    {
+        return match ($tool->slug) {
+            'daily-mood-check-in' => 'mood',
+            'digital-journal' => 'journal',
+            'gratitude-journal' => 'gratitude',
+            'career-interest-test' => 'career',
+            'skills-strengths-assessment' => 'skills',
+            'bmi-bmr-calculator' => 'bmi',
+            'water-intake-tracker' => 'water',
+            'weight-journey' => 'weight',
+            'calorie-nutrition-tracker' => 'nutrition',
+            default => match ($tool->module_key) {
+                'psychology' => 'mood',
+                'career-guidance' => 'career',
+                'nutrition' => 'nutrition',
+                default => 'leaf',
+            },
+        };
     }
 
     private function isPublicEntry(Tool $tool): bool

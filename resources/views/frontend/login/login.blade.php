@@ -18,8 +18,8 @@
     </style>
 @endpush
 
-@section('title', 'Sign In | Yuktione')
-@section('meta_description', 'Sign in to your Yuktione account to manage consultations and bookings.')
+@section('title', 'Sign In | YuktiOne')
+@section('meta_description', 'Sign in to your YuktiOne account to manage consultations and bookings.')
 @section('body_class', 'yuktione-auth-page')
 
 @section('content')

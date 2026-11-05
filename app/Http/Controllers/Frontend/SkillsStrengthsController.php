@@ -108,12 +108,13 @@ class SkillsStrengthsController extends Controller
             'category' => $meta,
             'questions' => $questions,
             'scale' => SkillsStrengthsCatalog::SCALE,
+            'scaleOptions' => SkillsStrengthsCatalog::scaleOptions(),
             'answers' => $draft->answers(),
             'step' => $meta['step'],
             'totalSteps' => count(SkillsStrengthsCatalog::CATEGORY_ORDER),
             'progress' => SkillsStrengthsCatalog::progressPercent($meta['step']),
             'previousUrl' => $this->previousCategoryUrl($category),
-            'nextLabel' => $meta['step'] === 8 ? 'See results' : 'Next',
+            'nextLabel' => $meta['step'] === 8 ? 'See results' : 'Continue',
         ]);
     }
 

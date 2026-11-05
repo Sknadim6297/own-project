@@ -1,31 +1,124 @@
 @extends('professional.layout.layout')
-@section('styles')
-@vite('resources/css/tazen.css')
-<style>.photo-crop-modal{display:none}</style>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
 
+@section('title', 'Edit Profile | YuktiOne')
+
+@section('styles')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+<style>
+    /* Crop modal + aspect controls — Dom-independent panel styles; IDs/hooks unchanged */
+    .photo-crop-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 70;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        background: rgb(20 43 77 / .55);
+        overflow-y: auto;
+    }
+    .photo-crop-modal.is-open,
+    .photo-crop-modal[style*="display: block"] {
+        display: flex !important;
+    }
+    .crop-modal-content { margin: auto; }
+    .crop-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        border: 0;
+        border-radius: 0.75rem;
+        background: transparent;
+        color: #475569;
+        cursor: pointer;
+    }
+    .crop-close:hover { background: #F7FAFB; color: #142B4D; }
+    .crop-controls { margin-bottom: 1rem; }
+    .aspect-ratio-buttons { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .5rem; }
+    .aspect-btn {
+        min-height: 2.25rem;
+        padding: .4rem .9rem;
+        border: 1px solid #E2E9EE;
+        border-radius: .75rem;
+        background: #fff;
+        color: #475569;
+        font-size: .8125rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .aspect-btn.active,
+    .aspect-btn:hover {
+        border-color: #36877F;
+        background: #EAF6F2;
+        color: #245E59;
+    }
+    .crop-container { width: 100%; max-height: 360px; margin-bottom: 1rem; }
+    .crop-container img { max-width: 100%; display: block; }
+    .crop-preview { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: .5rem; }
+    .preview-box { text-align: center; }
+    .preview-box h6 { margin: 0 0 .5rem; font-size: .75rem; font-weight: 600; color: #475569; }
+    .preview-circle,
+    .preview-square {
+        margin: 0 auto;
+        overflow: hidden;
+        border: 1px solid #E2E9EE;
+        background: #F7FAFB;
+    }
+    .preview-circle { width: 80px; height: 80px; border-radius: 9999px; }
+    .preview-square { width: 100px; height: 80px; border-radius: .75rem; }
+    .crop-buttons { display: flex; flex-wrap: wrap; gap: .75rem; }
+    .btn-crop {
+        display: inline-flex;
+        min-height: 2.5rem;
+        align-items: center;
+        gap: .4rem;
+        padding: .5rem 1rem;
+        border: 0;
+        border-radius: .75rem;
+        font-size: .875rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .btn-crop-cancel { background: #fff; border: 1px solid #E2E9EE; color: #475569; }
+    .btn-crop-cancel:hover { background: #F7FAFB; }
+    .btn-crop-save { background: #36877F; color: #fff; }
+    .btn-crop-save:hover { background: #245E59; }
+    .form-section-title {
+        margin: 0 0 .25rem;
+        font-size: .95rem;
+        font-weight: 600;
+        color: #142B4D;
+    }
+</style>
 @endsection
+
 @section('content')
-<div class="profile-edit-page mx-auto w-full max-w-7xl px-4 py-8 text-text-primary sm:px-6 lg:px-8">
-    <div class="profile-edit-shell mx-auto w-full space-y-6">
-        <section class="profile-hero flex flex-col gap-5 rounded-panel border border-border bg-gradient-to-br from-white to-brand-50 p-6 shadow-card sm:flex-row sm:items-center sm:justify-between">
-            <div class="profile-hero__meta">
-                <span class="profile-hero__eyebrow inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-brand-700"><i class="fas fa-user-cog"></i>Profile Management</span>
-                <h1 class="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">Edit Your Professional Profile</h1>
-                <p>Keep your personal, professional, and banking information up to date so clients always see your best self.</p>
-                <ul class="profile-hero__breadcrumb mt-3 flex flex-wrap items-center gap-2 text-sm text-text-muted">
-                    <li><a href="{{ route('professional.dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ route('professional.profile.index') }}">Profile</a></li>
-                    <li class="active" aria-current="page">Edit Profile</li>
-                </ul>
+<div class="profile-edit-page mx-auto w-full max-w-7xl space-y-5 text-text-primary">
+    <div class="profile-edit-shell mx-auto w-full space-y-5">
+        <section class="profile-hero flex flex-col gap-4 rounded-panel border border-border bg-gradient-to-br from-white to-brand-50 p-5 shadow-card sm:flex-row sm:items-start sm:justify-between sm:p-6">
+            <div class="profile-hero__meta min-w-0">
+                <nav aria-label="Breadcrumb" class="mb-2 text-xs font-medium text-text-muted">
+                    <ol class="profile-hero__breadcrumb flex flex-wrap items-center gap-2">
+                        <li><a class="text-brand-primary hover:text-brand-800" href="{{ route('professional.dashboard') }}">Dashboard</a></li>
+                        <li aria-hidden="true" class="text-border">/</li>
+                        <li><a class="text-brand-primary hover:text-brand-800" href="{{ route('professional.profile.index') }}">Profile</a></li>
+                        <li aria-hidden="true" class="text-border">/</li>
+                        <li class="active text-text-secondary" aria-current="page">Edit Profile</li>
+                    </ol>
+                </nav>
+                <span class="profile-hero__eyebrow inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-brand-700"><i class="fas fa-user-cog" aria-hidden="true"></i>Profile Management</span>
+                <h1 class="mt-1 text-2xl font-semibold tracking-tight text-brand-950 sm:text-[1.75rem]">Edit Your Professional Profile</h1>
+                <p class="mt-1 text-sm text-text-secondary">Keep your personal, professional, and banking information up to date so clients always see your best self.</p>
             </div>
-            <div class="profile-hero__actions">
-                <a href="{{ route('professional.profile.index') }}" class="btn-pill btn-pill--outline inline-flex items-center justify-center gap-2 rounded-full border border-border bg-white px-5 py-2.5 text-sm font-semibold text-text-secondary transition hover:bg-surface-muted">
-                    <i class="fas fa-arrow-left"></i>
+            <div class="profile-hero__actions flex flex-wrap gap-2">
+                <a href="{{ route('professional.profile.index') }}" class="btn-pill btn-pill--outline inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border bg-white px-4 py-2 text-sm font-semibold text-text-secondary transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-800">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
                     Back to Overview
                 </a>
-                <a href="{{ route('professional.events.create') }}" class="btn-pill btn-pill--primary inline-flex items-center justify-center gap-2 rounded-full bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800">
-                    <i class="fas fa-calendar-plus"></i>
+                <a href="{{ route('professional.events.create') }}" class="btn-pill btn-pill--primary inline-flex min-h-10 items-center justify-center gap-2 rounded-control bg-brand-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-800">
+                    <i class="fas fa-calendar-plus" aria-hidden="true"></i>
                     Create Event
                 </a>
             </div>
@@ -34,11 +127,11 @@
         <section class="form-card add-profile-form fade-in rounded-panel border border-border bg-white p-5 shadow-card sm:p-7">
             <header class="form-card__head flex flex-col gap-4 border-b border-divider pb-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h2 class="text-xl font-semibold text-text-primary"><i class="fas fa-file-signature"></i>Complete Your Profile</h2>
-                    <p>All the details you provide help us match you with the right clients and opportunities.</p>
+                    <h2 class="flex items-center gap-2 text-lg font-semibold text-brand-950"><i class="fas fa-file-signature text-brand-primary" aria-hidden="true"></i>Complete Your Profile</h2>
+                    <p class="mt-1 text-sm text-text-secondary">All the details you provide help us match you with the right clients and opportunities.</p>
                 </div>
-                <span class="status-pill inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-2 text-sm font-medium text-brand-800">
-                    <i class="fas fa-clock"></i>
+                <span class="status-pill inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-2 text-xs font-medium text-brand-800">
+                    <i class="fas fa-clock" aria-hidden="true"></i>
                     Updated {{ $profile->updated_at ? $profile->updated_at->diffForHumans() : 'just now' }}
                 </span>
             </header>
@@ -46,7 +139,7 @@
                 <form id="profileForm">
                     @csrf
                     <div class="form-section space-y-5 border-b border-divider pb-6 last:border-0 last:pb-0">
-                        <h4 class="form-section-title">Profile Information</h4>
+                        <h4 class="form-section-title border-b border-divider pb-2">Profile Information</h4>
                         <div class="form-group col-full mb-5 space-y-2 md:col-span-2">
                             <label for="photo" class="block text-sm font-medium text-text-secondary">Profile Photo</label>
                             <div class="crop-info mb-4 rounded-control border border-info/20 bg-info-surface p-4 text-sm text-info">
@@ -73,8 +166,8 @@
                                     </div>
                                 @endif
                                 <div class="photo-instructions text-sm text-text-secondary">
-                                    <h6>Photo Requirements:</h6>
-                                    <ul>
+                                    <h6 class="text-sm font-semibold text-brand-950">Photo Requirements</h6>
+                                    <ul class="mt-2 list-disc space-y-1 pl-5 text-xs leading-5 text-text-muted">
                                         <li>High resolution (minimum 400x400px)</li>
                                         <li>Clear, professional headshot</li>
                                         <li>Good lighting and focus</li>
@@ -111,12 +204,12 @@
                         </div>
                         <div class="form-group col-2 mb-5 space-y-2 grid gap-5 md:grid-cols-2">
                             <div>
-                                <label for="Name" class="block text-sm font-medium text-text-secondary">Name</label>
+                                <label for="name" class="block text-sm font-medium text-text-secondary">Name <span class="text-error">*</span></label>
                                 <input type="text" id="name" name="name" value="{{ old('name', $profile->professional->name ?? 'N/A' ) }}" required class="w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary shadow-sm placeholder:text-text-muted focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-200">
                                 <div class="form-control-feedback hidden text-xs text-error"></div>
                             </div>
                             <div>
-                                <label for="email" class="block text-sm font-medium text-text-secondary">Email Address</label>
+                                <label for="email" class="block text-sm font-medium text-text-secondary">Email Address <span class="text-error">*</span></label>
                                 <input type="email" id="email" name="email" value="{{ old('email', $profile->email) }}" required class="w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary shadow-sm placeholder:text-text-muted focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-200">
                                 <div class="form-control-feedback hidden text-xs text-error"></div>
                             </div>
@@ -134,7 +227,7 @@
                     </div>
 
                     <div class="form-section space-y-5 border-b border-divider pb-6 last:border-0 last:pb-0">
-                        <h4 class="form-section-title">Professional Details</h4>
+                        <h4 class="form-section-title border-b border-divider pb-2">Professional Details</h4>
                         <div class="form-group col-2 mb-5 space-y-2 grid gap-5 md:grid-cols-2">
                             <div>
                                 <label for="experience" class="block text-sm font-medium text-text-secondary">Years of Experience</label>
@@ -156,7 +249,7 @@
                     </div>
 
                     <div class="form-section space-y-5 border-b border-divider pb-6 last:border-0 last:pb-0">
-                        <h4 class="form-section-title">GST Information (Optional)</h4>
+                        <h4 class="form-section-title border-b border-divider pb-2">GST Information (Optional)</h4>
                         <div class="form-group col-2 mb-5 space-y-2 grid gap-5 md:grid-cols-2">
                             <div>
                                 <label for="gst_number" class="block text-sm font-medium text-text-secondary">GST Number</label>
@@ -168,7 +261,7 @@
                                 <input type="file" id="gst_certificate" name="gst_certificate" accept=".pdf,.jpg,.jpeg,.png" class="block w-full cursor-pointer rounded-control border border-border bg-white text-sm text-text-secondary file:mr-4 file:rounded-control file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:font-medium file:text-brand-800 hover:file:bg-brand-100">
                                 <div class="file-input-wrapper">
                                     @if($profile->gst_certificate)
-                                        <a href="{{ asset('storage/'.$profile->gst_certificate) }}" target="_blank">View GST Certificate</a>
+                                        <a href="{{ asset('storage/'.$profile->gst_certificate) }}" target="_blank" rel="noopener noreferrer" class="mt-2 inline-flex text-sm font-semibold text-brand-primary hover:text-brand-800">View GST Certificate</a>
                                     @endif
                                 </div>
                             </div>
@@ -236,7 +329,7 @@
                     </div>
 
                     <div class="form-section space-y-5 border-b border-divider pb-6 last:border-0 last:pb-0">
-                        <h4 class="form-section-title">Bank Account Details</h4>
+                        <h4 class="form-section-title border-b border-divider pb-2">Bank Account Details</h4>
                         <div class="form-group col-2 mb-5 space-y-2 grid gap-5 md:grid-cols-2">
                             <div>
                                 <label for="account_holder_name" class="block text-sm font-medium text-text-secondary">Account Holder Name</label>
@@ -282,7 +375,7 @@
                             <input type="file" id="bank_document" name="bank_document" accept=".pdf,.jpg,.jpeg,.png" class="block w-full cursor-pointer rounded-control border border-border bg-white text-sm text-text-secondary file:mr-4 file:rounded-control file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:font-medium file:text-brand-800 hover:file:bg-brand-100">
                             <div class="file-input-wrapper">
                                 @if($profile->bank_document)
-                                    <a href="{{ asset('storage/'.$profile->bank_document) }}" target="_blank">View Bank Document</a>
+                                    <a href="{{ asset('storage/'.$profile->bank_document) }}" target="_blank" rel="noopener noreferrer" class="mt-2 inline-flex text-sm font-semibold text-brand-primary hover:text-brand-800">View Bank Document</a>
                                 @endif
                             </div>
                             <small class="text-muted text-text-muted">Upload cancelled cheque or passbook first page for verification</small>
@@ -290,13 +383,13 @@
                     </div>
 
                     <div class="form-section space-y-5 border-b border-divider pb-6 last:border-0 last:pb-0">
-                        <h4 class="form-section-title">Documents</h4>
+                        <h4 class="form-section-title border-b border-divider pb-2">Documents</h4>
                         <div class="form-group col-full mb-5 space-y-2 md:col-span-2">
                             <label for="qualificationDocument" class="block text-sm font-medium text-text-secondary">Qualification Document</label>
                             <input type="file" id="qualificationDocument" name="qualificationDocument" accept=".pdf,.doc,.docx,image/*" class="block w-full cursor-pointer rounded-control border border-border bg-white text-sm text-text-secondary file:mr-4 file:rounded-control file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:font-medium file:text-brand-800 hover:file:bg-brand-100">
                             <div class="file-input-wrapper">
                                 @if($profile->qualification_document)
-                                    <a href="{{ asset('storage/'.$profile->qualification_document) }}" target="_blank">View Document</a>
+                                    <a href="{{ asset('storage/'.$profile->qualification_document) }}" target="_blank" rel="noopener noreferrer" class="mt-2 inline-flex text-sm font-semibold text-brand-primary hover:text-brand-800">View Document</a>
                                 @endif
                             </div>
                         </div>
@@ -306,7 +399,7 @@
                                 <input type="file" id="idProofDocument" name="idProofDocument" accept=".pdf,.jpg,.jpeg,.png" class="block w-full cursor-pointer rounded-control border border-border bg-white text-sm text-text-secondary file:mr-4 file:rounded-control file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:font-medium file:text-brand-800 hover:file:bg-brand-100">
                                 <div class="file-input-wrapper">
                                     @if($profile->id_proof_document)
-                                        <a href="{{ asset('storage/'.$profile->id_proof_document) }}" target="_blank">View ID Proof</a>
+                                        <a href="{{ asset('storage/'.$profile->id_proof_document) }}" target="_blank" rel="noopener noreferrer" class="mt-2 inline-flex text-sm font-semibold text-brand-primary hover:text-brand-800">View ID Proof</a>
                                     @endif
                                 </div>
                             </div>
@@ -314,7 +407,7 @@
                     </div>
 
                     <div class="form-section space-y-5 border-b border-divider pb-6 last:border-0 last:pb-0">
-                        <h4 class="form-section-title">Additional Information</h4>
+                        <h4 class="form-section-title border-b border-divider pb-2">Additional Information</h4>
                         <div class="form-group col-full mb-5 space-y-2 md:col-span-2">
                             <label for="comments" class="block text-sm font-medium text-text-secondary">Additional Comments</label>
                             <textarea id="comments" name="comments" rows="3" class="w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary shadow-sm placeholder:text-text-muted focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-200">{{ old('comments', $profile->comments) }}</textarea>
@@ -326,8 +419,8 @@
                     </div>
 
                     <div class="form-group col-full mb-5 space-y-2 md:col-span-2">
-                        <button type="submit" id="submitBtn" class="btn btn-primary inline-flex items-center justify-center gap-2 rounded-control bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-300">
-                            <i class="fas fa-save"></i>
+                        <button type="submit" id="submitBtn" class="btn btn-primary inline-flex min-h-10 items-center justify-center gap-2 rounded-control bg-brand-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
+                            <i class="fas fa-save" aria-hidden="true"></i>
                             Save Profile
                         </button>
                     </div>
@@ -341,9 +434,9 @@
 <div id="photoCropModal" class="photo-crop-modal">
     <div class="crop-modal-content mx-auto w-full max-w-3xl overflow-hidden rounded-panel border border-border bg-white shadow-popover">
         <div class="crop-modal-header flex items-center justify-between border-b border-divider p-5">
-            <h4><i class="fas fa-crop-alt"></i> Crop Your Profile Photo</h4>
-            <button type="button" class="crop-close" id="closeCropModal">
-                <i class="fas fa-times"></i>
+            <h4 class="text-base font-semibold text-brand-950"><i class="fas fa-crop-alt text-brand-primary" aria-hidden="true"></i> Crop Your Profile Photo</h4>
+            <button type="button" class="crop-close" id="closeCropModal" aria-label="Close crop modal">
+                <i class="fas fa-times" aria-hidden="true"></i>
             </button>
         </div>
         <div class="crop-modal-body max-h-[70vh] overflow-auto p-5">

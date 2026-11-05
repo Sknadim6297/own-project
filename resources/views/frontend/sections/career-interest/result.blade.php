@@ -29,8 +29,8 @@
                 @foreach ($ranked as $row)
                     <div class="yk-cit__bar-row">
                         <strong><span>{{ $row['label'] }}</span><span>{{ $row['percent'] }}%</span></strong>
-                        <div class="yk-cit__bar" aria-hidden="true"><span style="width: {{ $row['percent'] }}%"></span></div>
-                        <p class="yk-cit__lead" style="margin:0.35rem 0 0;font-size:0.88rem;">{{ $row['description'] }}</p>
+                        <div class="yk-cit__bar" aria-hidden="true"><span style="width: {{ max(0, min(100, (int) $row['percent'])) }}%"></span></div>
+                        <p class="yk-cit__bar-desc">{{ $row['description'] }}</p>
                     </div>
                 @endforeach
             </div>
@@ -39,10 +39,10 @@
                 <p class="yk-cit__lead">{{ $attempt->interpretation }}</p>
             @endif
 
-            <p class="yk-cit__lead" style="font-size:0.86rem;">Displayed scores use implementation convention {{ $attempt->scoring_version }} (sum ÷ 15 × 100)—not a validated psychometric claim.</p>
+            <p class="yk-cit__note">Displayed scores use implementation convention {{ $attempt->scoring_version }} (sum ÷ 15 × 100)—not a validated psychometric claim.</p>
 
             @if ($recommendations !== [])
-                <h2 class="yk-cit__kicker" style="margin-top:1rem;">Career suggestions</h2>
+                <h2 class="yk-cit__section-title">Career suggestions</h2>
                 <ul class="yk-cit__suggest">
                     @foreach ($recommendations as $item)
                         <li>

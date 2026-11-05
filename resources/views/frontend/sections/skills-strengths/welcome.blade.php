@@ -7,10 +7,11 @@
 @section('content')
 <main class="yk-ssa">
     <div class="yk-ssa__wrap">
-        <section class="yk-ssa__card" aria-labelledby="ssa-welcome-heading">
+        @include('frontend.sections.partials.tool-back-to-tools')
+        <section class="yk-ssa__card yk-ssa__card--hero" aria-labelledby="ssa-welcome-heading">
             <p class="yk-ssa__badge">Career tool</p>
             <h1 id="ssa-welcome-heading">Skills &amp; Strengths Assessment</h1>
-            <p class="yk-ssa__lead">A simple way to understand your current strengths. This is a self-rating snapshot—not a measure of proven ability or hiring fitness.</p>
+            <p class="yk-ssa__lead">A clear self-rating snapshot of your current strengths across eight skill areas — not a measure of proven ability or hiring fitness.</p>
 
             <ul class="yk-ssa__bullets">
                 <li>Know your key strengths</li>

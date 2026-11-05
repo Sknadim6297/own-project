@@ -35,31 +35,43 @@ class BmiBmrCatalog
             'label' => 'Sedentary',
             'description' => 'Little or no exercise',
             'factor' => 1.2,
+            'emoji' => '🪑',
         ],
         'lightly-active' => [
             'key' => 'lightly-active',
             'label' => 'Lightly active',
             'description' => 'Light exercise 1–3 days/week',
             'factor' => 1.375,
+            'emoji' => '🚶',
         ],
         'moderately-active' => [
             'key' => 'moderately-active',
             'label' => 'Moderately active',
             'description' => 'Moderate exercise 3–5 days/week',
             'factor' => 1.55,
+            'emoji' => '🚴',
         ],
         'very-active' => [
             'key' => 'very-active',
             'label' => 'Very active',
             'description' => 'Hard exercise 6–7 days/week',
             'factor' => 1.725,
+            'emoji' => '🏃',
         ],
         'extra-active' => [
             'key' => 'extra-active',
             'label' => 'Extra active',
             'description' => 'Very hard exercise & physical job',
             'factor' => 1.9,
+            'emoji' => '🏋️',
         ],
+    ];
+
+    /** Concise educational blurbs for result cards (not medical advice). */
+    public const RESULT_BLURBS = [
+        'bmi' => 'Body Mass Index compares weight to height. It is a population screening ratio—not a diagnosis of health or body fat.',
+        'bmr' => 'Basal Metabolic Rate estimates calories your body may use at rest. Mifflin–St Jeor is an equation estimate, not a lab measurement.',
+        'tdee' => 'Total Daily Energy Expenditure multiplies BMR by an activity factor to approximate daily calorie needs. Factors are rough guides only.',
     ];
 
     /** Adult BMI bands — classify with unrounded BMI; round only for display. */

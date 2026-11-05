@@ -44,15 +44,37 @@ class ToolsCatalogueTest extends TestCase
         app(ToolRegistryRegistrar::class)->register();
     }
 
-    public function test_only_the_daily_mood_check_in_is_published(): void
+    public function test_psychology_tools_are_published_in_the_catalogue(): void
     {
-        $mood = Tool::query()->where('slug', 'daily-mood-check-in')->firstOrFail();
-        $this->assertSame('active', $mood->status);
-        $this->assertTrue($mood->is_implemented);
-        $this->assertSame('tools.psychology.mood', $mood->route_name);
-        $this->assertTrue($mood->canLaunch());
+        foreach ([
+            'daily-mood-check-in' => 'tools.psychology.mood',
+            'digital-journal' => 'tools.psychology.journal',
+            'gratitude-journal' => 'tools.psychology.gratitude',
+        ] as $slug => $route) {
+            $tool = Tool::query()->where('slug', $slug)->firstOrFail();
+            $this->assertSame('active', $tool->status, $slug);
+            $this->assertTrue($tool->is_implemented, $slug);
+            $this->assertSame($route, $tool->route_name, $slug);
+            $this->assertTrue($tool->canLaunch(), $slug);
+        }
 
-        $this->assertSame(2, Tool::query()->whereIn('slug', ['digital-journal', 'gratitude-journal'])->where('status', 'coming_soon')->where('is_implemented', false)->whereNull('route_name')->count());
+        $stillComingSoon = [
+            'career-interest-test',
+            'skills-strengths-assessment',
+            'bmi-bmr-calculator',
+            'water-intake-tracker',
+            'weight-journey',
+            'calorie-nutrition-tracker',
+        ];
+        $this->assertSame(
+            count($stillComingSoon),
+            Tool::query()
+                ->whereIn('slug', $stillComingSoon)
+                ->where('status', 'coming_soon')
+                ->where('is_implemented', false)
+                ->whereNull('route_name')
+                ->count()
+        );
 
         $category = ToolCategory::query()->firstOrFail();
         Tool::query()->create([
@@ -71,15 +93,20 @@ class ToolsCatalogueTest extends TestCase
         $page = $this->get(route('tools.index'));
 
         $page->assertOk()
-            ->assertSee('Showing 1 tool')
+            ->assertSee('Showing 3 tools')
             ->assertSee('Daily Mood Check-in')
             ->assertSee('Understand and track your emotions.')
+            ->assertSee('Digital Journal')
+            ->assertSee('Express your thoughts in your own words.')
+            ->assertSee('Gratitude Journal')
+            ->assertSee('Notice and appreciate the good in your day.')
             ->assertSee('Free')
             ->assertSee('Start Check-in')
+            ->assertSee('Open')
             ->assertSee('href="'.route('tools.psychology.mood').'"', false)
+            ->assertSee('href="'.route('tools.psychology.journal').'"', false)
+            ->assertSee('href="'.route('tools.psychology.gratitude').'"', false)
             ->assertDontSee('No published tools yet')
-            ->assertDontSee('Digital Journal')
-            ->assertDontSee('Gratitude Journal')
             ->assertDontSee('Career Interest Test')
             ->assertDontSee('Skills & Strengths Assessment')
             ->assertDontSee('BMI & BMR Calculator')
@@ -92,24 +119,34 @@ class ToolsCatalogueTest extends TestCase
             ->assertDontSee(route('tools.psychology.mood.complete', '11111111-1111-4111-8111-111111111111'), false)
             ->assertDontSee('name="reflection"', false);
 
-        $this->get(route('tools.psychology.mood'))
-            ->assertOk()
-            ->assertSee('How are you feeling today?');
+        $this->get(route('tools.psychology.mood'))->assertOk()->assertSee('How are you feeling today?');
+        $this->get(route('tools.psychology.journal'))->assertOk()->assertSee('Digital Journal');
+        $this->get(route('tools.psychology.gratitude'))->assertOk()->assertSee('Gratitude Journal');
 
         $this->get('/tools/daily-mood-check-in')->assertNotFound();
+        $this->get('/tools/digital-journal')->assertNotFound();
+        $this->get('/tools/gratitude-journal')->assertNotFound();
     }
 
-    public function test_search_and_mental_health_category_find_the_published_tool(): void
+    public function test_search_and_mental_health_category_find_the_published_tools(): void
     {
         $this->get(route('tools.index', ['q' => 'Mood']))
             ->assertOk()
             ->assertSee('Daily Mood Check-in')
             ->assertSee('Showing 1 tool');
 
+        $this->get(route('tools.index', ['q' => 'Journal']))
+            ->assertOk()
+            ->assertSee('Digital Journal')
+            ->assertSee('Gratitude Journal')
+            ->assertSee('Showing 2 tools');
+
         $this->get(route('tools.index', ['category' => 'mental-health']))
             ->assertOk()
             ->assertSee('Daily Mood Check-in')
-            ->assertSee('(1)', false);
+            ->assertSee('Digital Journal')
+            ->assertSee('Gratitude Journal')
+            ->assertSee('(3)', false);
 
         $this->get(route('tools.index', ['q' => 'Sleep']))
             ->assertOk()

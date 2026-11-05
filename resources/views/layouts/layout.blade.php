@@ -195,17 +195,26 @@
 	@if (config('yuktione.programmes_enabled') && request()->routeIs('event.list', 'event.details'))
 		<link href="{{ asset('frontend/assets/css/yuktione-programmes.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-programmes.css')) }}" rel="stylesheet">
 	@endif
-	@if (request()->routeIs('gridlisting', 'professionals'))
+	@if (request()->routeIs('gridlisting'))
 		<link href="{{ asset('frontend/assets/css/yuktione-explore.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-explore.css')) }}" rel="stylesheet">
 	@endif
-	@if (request()->routeIs('tools.index', 'professionals'))
+	@if (request()->routeIs('professionals'))
+		<link href="{{ asset('frontend/assets/css/yuktione-experts.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-experts.css')) }}" rel="stylesheet">
+	@endif
+	@if (request()->routeIs('tools.index'))
 		<link href="{{ asset('frontend/assets/css/yuktione-tools-page.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools-page.css')) }}" rel="stylesheet">
 	@endif
-	@if (request()->routeIs('tools.psychology'))
+	@if (request()->routeIs('tools.psychology', 'tools.psychology.*'))
 		<link href="{{ asset('frontend/assets/css/yuktione-psychology.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-psychology.css')) }}" rel="stylesheet">
 	@endif
 	@if (request()->routeIs('tools.psychology.mood', 'tools.psychology.mood.emotions', 'tools.psychology.mood.reflection', 'tools.psychology.mood.finish', 'tools.psychology.mood.complete', 'tools.psychology.mood.history'))
 		<link href="{{ asset('frontend/assets/css/yuktione-mood.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-mood.css')) }}" rel="stylesheet">
+	@endif
+	@if (request()->routeIs('tools.psychology.journal', 'tools.psychology.journal.finish', 'tools.psychology.journal.history', 'tools.psychology.journal.show', 'tools.psychology.journal.edit'))
+		<link href="{{ asset('frontend/assets/css/yuktione-journal.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-journal.css')) }}" rel="stylesheet">
+	@endif
+	@if (request()->routeIs('tools.psychology.gratitude', 'tools.psychology.gratitude.finish', 'tools.psychology.gratitude.complete', 'tools.psychology.gratitude.history', 'tools.psychology.gratitude.show', 'tools.psychology.gratitude.edit'))
+		<link href="{{ asset('frontend/assets/css/yuktione-gratitude.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-gratitude.css')) }}" rel="stylesheet">
 	@endif
 	@if (request()->routeIs('tools.career-interest*'))
 		<link href="{{ asset('frontend/assets/css/yuktione-career-interest.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-career-interest.css')) }}" rel="stylesheet">
@@ -226,6 +235,9 @@
 		<link href="{{ asset('frontend/assets/css/yuktione-nutrition.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-nutrition.css')) }}" rel="stylesheet">
 	@endif
 	<link href="{{ asset('frontend/assets/css/yuktione-navbar.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-navbar.css')) }}" rel="stylesheet">
+	@if (request()->routeIs('tools.*'))
+		<link href="{{ asset('frontend/assets/css/yuktione-tool-chrome.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tool-chrome.css')) }}" rel="stylesheet">
+	@endif
 
 	<link href="{{ asset('frontend/assets/css/yuktione-document.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-document.css')) }}" rel="stylesheet">
 	@endif

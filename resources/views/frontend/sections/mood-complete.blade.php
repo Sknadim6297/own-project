@@ -39,14 +39,17 @@
             @endif
         </section>
 
-        <section class="yk-complete__support">
-            <h2>Would you like to talk to someone?</h2>
-            <p>A supportive conversation with a psychologist can help you explore your feelings and thoughts.</p>
-            <a class="yk-complete__psychologist" href="{{ $psychologistsUrl }}">Connect with a Psychologist →</a>
-        </section>
+        @include('frontend.sections.partials.psychology-connect', [
+            'heading' => 'Would you like to talk to someone?',
+            'copy' => 'A supportive conversation with a psychologist can help you explore your feelings and thoughts.',
+            'cta' => 'Connect with a Psychologist',
+            'url' => $psychologistsUrl,
+            'headingId' => 'mood-connect-heading',
+        ])
 
         <a class="yk-mood__continue yk-complete__home" href="{{ route('tools.psychology') }}">Go to Psychology Home</a>
         <a class="yk-complete__history" href="{{ route('tools.psychology.mood.history') }}">View Mood History</a>
+        @include('frontend.sections.partials.tool-back-to-tools', ['class' => 'yk-complete__history'])
     </div>
 </main>
 @endsection

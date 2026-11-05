@@ -31,7 +31,10 @@ class NutritionTrackerController extends Controller
             return view('frontend.sections.nutrition.closed');
         }
         if (! Auth::guard('user')->check()) {
-            return view('frontend.sections.nutrition.welcome', ['open' => true]);
+            return view('frontend.sections.nutrition.welcome', [
+                'open' => true,
+                'catalogueCount' => $this->catalogueCount(),
+            ]);
         }
 
         $date = $this->resolveDate($request->query('date'));
@@ -43,9 +46,12 @@ class NutritionTrackerController extends Controller
             'summary' => $summary,
             'goals' => $goals,
             'meals' => NutritionCatalog::MEAL_TYPES,
+            'catalogueCount' => $this->catalogueCount(),
+            'importWorkbooksMissing' => NutritionCatalog::missingImportWorkbooks() !== [],
             'prev' => CarbonImmutable::createFromFormat('Y-m-d', $date, NutritionCatalog::TIMEZONE)->subDay()->toDateString(),
             'next' => CarbonImmutable::createFromFormat('Y-m-d', $date, NutritionCatalog::TIMEZONE)->addDay()->toDateString(),
             'isToday' => $date === $this->tracker->today(),
+            'status' => session('status'),
         ]);
     }
 
@@ -84,6 +90,8 @@ class NutritionTrackerController extends Controller
             'states' => NutritionCatalog::PREPARATION_STATES,
             'meal' => $request->query('meal', 'breakfast'),
             'authenticated' => Auth::guard('user')->check(),
+            'catalogueCount' => $this->catalogueCount(),
+            'importWorkbooksMissing' => NutritionCatalog::missingImportWorkbooks() !== [],
         ]);
     }
 
@@ -301,5 +309,14 @@ class NutritionTrackerController extends Controller
         }
 
         return $tool ? $tool->canLaunch() : false;
+    }
+
+    private function catalogueCount(): int
+    {
+        try {
+            return (int) NutritionFood::query()->catalogueVisible()->count();
+        } catch (QueryException) {
+            return 0;
+        }
     }
 }

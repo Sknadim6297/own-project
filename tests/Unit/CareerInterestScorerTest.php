@@ -92,6 +92,17 @@ class CareerInterestScorerTest extends TestCase
             4 => 'Very much',
             5 => 'Love it',
         ], CareerInterestCatalog::SCALE);
+        $this->assertSame([
+            1 => '😣',
+            2 => '🙁',
+            3 => '😐',
+            4 => '😊',
+            5 => '🤩',
+        ], CareerInterestCatalog::SCALE_EMOJI);
+        $this->assertSame(1, CareerInterestCatalog::scaleOptions()[1]['value']);
+        $this->assertSame('Not at all', CareerInterestCatalog::scaleOptions()[1]['label']);
+        $this->assertSame('😣', CareerInterestCatalog::scaleOptions()[1]['emoji']);
+        $this->assertSame(18, CareerInterestCatalog::questionCount());
     }
 
     private function baseAnswers(array $overrides): array

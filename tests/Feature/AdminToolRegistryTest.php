@@ -108,7 +108,7 @@ class AdminToolRegistryTest extends TestCase
             ->assertRedirect(route('admin.login'));
     }
 
-    public function test_psychology_tools_register_once_and_keep_journals_unpublished(): void
+    public function test_psychology_tools_register_once_and_block_admin_publish_of_unimplemented_tools(): void
     {
         $registrar = app(ToolRegistryRegistrar::class);
         $registrar->register();
@@ -116,12 +116,29 @@ class AdminToolRegistryTest extends TestCase
 
         $this->assertSame(3, ToolCategory::query()->count());
         $this->assertSame(9, Tool::query()->count());
-        $this->assertSame(8, Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->whereNull('route_name')->count());
-        $mood = Tool::query()->where('slug', 'daily-mood-check-in')->firstOrFail();
-        $this->assertSame('active', $mood->status);
-        $this->assertTrue($mood->is_implemented);
-        $this->assertSame('tools.psychology.mood', $mood->route_name);
-        $this->assertTrue($mood->canLaunch());
+        $unpublishedSlugs = [
+            'career-interest-test',
+            'skills-strengths-assessment',
+            'bmi-bmr-calculator',
+            'water-intake-tracker',
+            'weight-journey',
+            'calorie-nutrition-tracker',
+        ];
+        $this->assertSame(
+            count($unpublishedSlugs),
+            Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->whereNull('route_name')->count()
+        );
+        foreach ([
+            'daily-mood-check-in' => 'tools.psychology.mood',
+            'digital-journal' => 'tools.psychology.journal',
+            'gratitude-journal' => 'tools.psychology.gratitude',
+        ] as $slug => $route) {
+            $published = Tool::query()->where('slug', $slug)->firstOrFail();
+            $this->assertSame('active', $published->status, $slug);
+            $this->assertTrue($published->is_implemented, $slug);
+            $this->assertSame($route, $published->route_name, $slug);
+            $this->assertTrue($published->canLaunch(), $slug);
+        }
 
         $admin = Admin::query()->create([
             'name' => 'Super',
@@ -141,7 +158,7 @@ class AdminToolRegistryTest extends TestCase
             ->assertSee('Coming Soon')
             ->assertDontSee('>Enable<', false);
 
-        $tool = Tool::query()->where('slug', 'digital-journal')->firstOrFail();
+        $tool = Tool::query()->where('slug', 'calorie-nutrition-tracker')->firstOrFail();
 
         $this->actingAs($admin, 'admin')
             ->post(route('admin.tools.toggle', $tool))
@@ -154,13 +171,13 @@ class AdminToolRegistryTest extends TestCase
             ->put(route('admin.tools.update', $tool), [
                 'name' => $tool->name,
                 'slug' => $tool->slug,
-                'module_key' => 'psychology',
+                'module_key' => 'nutrition',
                 'tool_category_id' => $tool->tool_category_id,
                 'description' => $tool->description,
                 'icon' => $tool->icon,
                 'access_type' => 'free',
                 'status' => 'active',
-                'display_order' => 2,
+                'display_order' => 4,
             ])
             ->assertStatus(422);
 
@@ -197,7 +214,7 @@ class AdminToolRegistryTest extends TestCase
             ])
             ->assertRedirect(route('admin.tool-settings.edit'));
 
-        $this->assertSame(8, Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->count());
+        $this->assertSame(count($unpublishedSlugs), Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->count());
         $this->assertSame(9, Tool::query()->where('access_type', 'paid')->count());
         $published = Tool::query()->where('slug', 'daily-mood-check-in')->firstOrFail();
         $this->assertSame('tools.psychology.mood', $published->route_name);
@@ -240,16 +257,20 @@ class AdminToolRegistryTest extends TestCase
         $this->get(route('tools.index'))
             ->assertOk()
             ->assertSee('Daily Mood Check-in')
+            ->assertSee('Digital Journal')
+            ->assertSee('Gratitude Journal')
             ->assertSee('Start Check-in')
             ->assertSee(route('tools.psychology.mood'), false)
-            ->assertDontSee('Digital Journal')
-            ->assertDontSee('Gratitude Journal')
+            ->assertSee(route('tools.psychology.journal'), false)
+            ->assertSee(route('tools.psychology.gratitude'), false)
             ->assertDontSee('Career Interest Test')
             ->assertDontSee('Calorie & Nutrition Tracker')
             ->assertDontSee('Extra Tool')
             ->assertDontSee(route('tools.psychology.mood.history'), false);
 
         $this->get('/tools/daily-mood-check-in')->assertNotFound();
+        $this->get('/tools/digital-journal')->assertNotFound();
+        $this->get('/tools/gratitude-journal')->assertNotFound();
     }
 
     public function test_admin_without_the_menu_cannot_list_tools(): void

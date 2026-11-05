@@ -7,6 +7,7 @@
 @section('content')
 <main class="yk-ssa">
     <div class="yk-ssa__wrap">
+        @include('frontend.sections.partials.tool-back-to-tools')
         <section class="yk-ssa__card" aria-labelledby="ssa-history-heading">
             <p class="yk-ssa__badge">Private</p>
             <h1 id="ssa-history-heading">Assessment history</h1>

@@ -1,21 +1,29 @@
 @extends('professional.layout.layout')
 
-@section('styles')
-@vite('resources/css/tazen.css')
-@endsection
+@section('title', 'Add Service | YuktiOne')
 
 @section('content')
-<div class="service-create-page mx-auto w-full max-w-7xl px-4 py-8 text-text-primary sm:px-6 lg:px-8">
-    <div class="service-create-shell mx-auto w-full space-y-6">
-        <section class="service-create-hero flex flex-col gap-5 rounded-panel border border-border bg-gradient-to-br from-white to-brand-50 p-6 shadow-card sm:flex-row sm:items-center sm:justify-between">
-            <div class="hero-meta">
-                <span class="hero-eyebrow inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-brand-700"><i class="fas fa-plus-circle"></i>Add Service</span>
-                <h1 class="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">Add Service</h1>
-                <ul class="hero-breadcrumb mt-3 flex flex-wrap items-center gap-2 text-sm text-text-muted">
-                    <li><a href="{{ route('professional.dashboard') }}">Home</a></li>
-                    <li class="active" aria-current="page">Add Service</li>
-                </ul>
+<div class="service-create-page mx-auto w-full max-w-7xl space-y-5 text-text-primary">
+    <div class="service-create-shell mx-auto w-full space-y-5">
+        <section class="service-create-hero flex flex-col gap-4 rounded-panel border border-border bg-gradient-to-br from-white to-brand-50 p-5 shadow-card sm:flex-row sm:items-start sm:justify-between sm:p-6">
+            <div class="hero-meta min-w-0">
+                <nav aria-label="Breadcrumb" class="mb-2 text-xs font-medium text-text-muted">
+                    <ol class="flex flex-wrap items-center gap-2">
+                        <li><a class="text-brand-primary hover:text-brand-800" href="{{ route('professional.dashboard') }}">Dashboard</a></li>
+                        <li aria-hidden="true" class="text-border">/</li>
+                        <li><a class="text-brand-primary hover:text-brand-800" href="{{ route('professional.service.index') }}">Services</a></li>
+                        <li aria-hidden="true" class="text-border">/</li>
+                        <li aria-current="page" class="text-text-secondary">Add Service</li>
+                    </ol>
+                </nav>
+                <span class="hero-eyebrow inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-brand-700"><i class="fas fa-plus-circle" aria-hidden="true"></i>Add Service</span>
+                <h1 class="mt-1 text-2xl font-semibold tracking-tight text-brand-950 sm:text-[1.75rem]">Add Service</h1>
+                <p class="mt-1 text-sm text-text-secondary">Create the service offering clients will see when booking with you.</p>
             </div>
+            <a href="{{ route('professional.service.index') }}" class="btn-pill btn-pill--outline inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border bg-white px-4 py-2 text-sm font-semibold text-text-secondary transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-800">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                Back to Services
+            </a>
         </section>
 
         <section class="form-card rounded-panel border border-border bg-white p-5 shadow-card sm:p-7">
@@ -23,13 +31,17 @@
                 @csrf
                 <input type="hidden" name="serviceDuration" value="60">
 
-                <div class="form-section space-y-5 border-b border-divider pb-6 last:border-0 last:pb-0">
+                <div class="form-section space-y-5 border-b border-divider pb-6">
                     <header>
-                        <h2 class="text-xl font-semibold text-text-primary">Service Details</h2>
+                        <h2 class="text-base font-semibold text-brand-950 sm:text-lg">Service Details</h2>
+                        <p class="mt-1 text-sm text-text-secondary">Your category is limited to the specialization on your registration.</p>
                     </header>
                     <div class="form-grid grid gap-5 md:grid-cols-2">
-                        <div class="form-group mb-5 space-y-2">
-                            <label for="serviceCategory" class="block text-sm font-medium text-text-secondary">Service Category * <span class="badge bg-primary bg-brand-700">Based on Your Registration</span></label>
+                        <div class="form-group space-y-2 md:col-span-2 lg:col-span-1">
+                            <label for="serviceCategory" class="block text-sm font-medium text-text-secondary">
+                                Service Category *
+                                <span class="ml-1 inline-flex rounded-full bg-brand-50 px-2 py-0.5 text-[11px] font-semibold text-brand-800">Based on Your Registration</span>
+                            </label>
                             <select name="serviceId" id="serviceCategory" class="form-control w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary shadow-sm placeholder:text-text-muted focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-200" required>
                                 <option value="">Select Category</option>
                                 @forelse($services as $service)
@@ -44,51 +56,53 @@
                     </div>
                 </div>
 
-                <div class="form-section space-y-5 border-b border-divider pb-6 last:border-0 last:pb-0">
+                <div class="form-section space-y-5 border-b border-divider py-6">
                     <header>
-                        <h2 class="text-xl font-semibold text-text-primary">Sub-Services</h2>
+                        <h2 class="text-base font-semibold text-brand-950 sm:text-lg">Sub-Services</h2>
+                        <p class="mt-1 text-sm text-text-secondary">Optionally select up to two sub-services within your category.</p>
                     </header>
-                    <div class="form-group mb-5 space-y-2">
+                    <div class="form-group space-y-2">
                         <label for="subServices" class="block text-sm font-medium text-text-secondary">Sub-Services (Optional)</label>
                         <div id="subServiceContainer" class="sub-service-container grid gap-3 sm:grid-cols-2">
-                            <p class="text-muted text-text-muted">Please select a service category first to see available sub-services.</p>
+                            <p class="text-muted rounded-control border border-dashed border-border bg-surface-muted px-4 py-5 text-sm text-text-muted">Please select a service category first to see available sub-services.</p>
                         </div>
                         <span class="muted-note mt-2 block text-sm text-text-muted">Select the specific sub-services you offer within your service category.</span>
                     </div>
                 </div>
 
-                <div class="form-section space-y-5 border-b border-divider pb-6 last:border-0 last:pb-0">
+                <div class="form-section space-y-5 pt-6">
                     <header>
-                        <h2 class="text-xl font-semibold text-text-primary">Additional Information</h2>
+                        <h2 class="text-base font-semibold text-brand-950 sm:text-lg">Additional Information</h2>
+                        <p class="mt-1 text-sm text-text-secondary">Help clients understand what to expect before booking.</p>
                     </header>
                     <div class="form-grid grid gap-5 md:grid-cols-2">
-                        <div class="form-group mb-5 space-y-2">
+                        <div class="form-group space-y-2">
                             <label class="block text-sm font-medium text-text-secondary">Service Features</label>
                             <div class="checkbox-group">
-                                <label class="checkbox-item block text-sm font-medium text-text-secondary">
+                                <label class="checkbox-item flex items-center gap-3 rounded-control border border-border bg-surface-muted px-3 py-3 text-sm font-medium text-text-secondary">
                                     <input type="checkbox" name="features[]" value="online" checked class="h-4 w-4 rounded border-border text-brand-600 focus:ring-brand-500"> Online Sessions
                                 </label>
                             </div>
                         </div>
-                        <div class="form-group mb-5 space-y-2">
+                        <div class="form-group space-y-2">
                             <label for="serviceTags" class="block text-sm font-medium text-text-secondary">Tags</label>
                             <input type="text" name="serviceTags" id="serviceTags" class="form-control w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary shadow-sm placeholder:text-text-muted focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-200" placeholder="Add tags separated by commas">
                             <span class="muted-note mt-2 block text-sm text-text-muted">Example: coaching, business, career</span>
                         </div>
                     </div>
-                    <div class="form-group mb-5 space-y-2">
+                    <div class="form-group space-y-2">
                         <label for="serviceRequirements" class="block text-sm font-medium text-text-secondary">Client Requirements</label>
                         <textarea name="serviceRequirements" id="serviceRequirements" class="form-control w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary shadow-sm placeholder:text-text-muted focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-200" placeholder="List any requirements clients should know before booking" rows="3"></textarea>
                     </div>
                 </div>
 
                 <div class="form-actions flex flex-col-reverse gap-3 border-t border-divider pt-5 sm:flex-row sm:justify-end">
-                    <a href="{{ route('professional.service.index') }}" class="btn btn-outline inline-flex items-center justify-center gap-2 rounded-control border border-border bg-white px-4 py-2.5 text-sm font-semibold text-text-secondary transition hover:bg-surface-muted">
-                        <i class="fas fa-arrow-left"></i>
+                    <a href="{{ route('professional.service.index') }}" class="btn btn-outline inline-flex min-h-10 items-center justify-center gap-2 rounded-control border border-border bg-white px-4 py-2.5 text-sm font-semibold text-text-secondary transition hover:bg-surface-muted">
+                        <i class="fas fa-arrow-left" aria-hidden="true"></i>
                         Cancel
                     </a>
-                    <button type="submit" class="btn btn-primary inline-flex items-center justify-center gap-2 rounded-control bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-300">
-                        <i class="fas fa-save"></i>
+                    <button type="submit" class="btn btn-primary inline-flex min-h-10 items-center justify-center gap-2 rounded-control bg-brand-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-300">
+                        <i class="fas fa-save" aria-hidden="true"></i>
                         Save Service
                     </button>
                 </div>
@@ -115,11 +129,11 @@ function loadSubServices(serviceId) {
     const container = $('#subServiceContainer');
 
     if (!serviceId) {
-        container.html('<p class="text-muted text-text-muted">Please select a service category first to see available sub-services.</p>');
+        container.html('<p class="text-muted rounded-control border border-dashed border-border bg-surface-muted px-4 py-5 text-sm text-text-muted">Please select a service category first to see available sub-services.</p>');
         return;
     }
 
-    container.html('<div class="sub-service-loading">Loading sub-services...</div>');
+    container.html('<div class="sub-service-loading flex items-center gap-2 rounded-control border border-border bg-surface-muted px-4 py-5 text-sm text-text-secondary"><i class="fas fa-spinner fa-spin text-brand-primary" aria-hidden="true"></i> Loading sub-services...</div>');
 
     $.ajax({
         url: "{{ route('professional.service.getSubServices') }}",
@@ -139,11 +153,11 @@ function loadSubServices(serviceId) {
                 container.html(html);
                 enforceSubServiceLimit(container);
             } else {
-                container.html('<p class="text-muted text-text-muted">No sub-services available for this category.</p>');
+                container.html('<p class="text-muted rounded-control border border-dashed border-border bg-surface-muted px-4 py-5 text-sm text-text-muted">No sub-services available for this category.</p>');
             }
         },
         error: function(xhr) {
-            container.html('<p class="text-danger text-error">Error loading sub-services. Please try again.</p>');
+            container.html('<p class="text-danger rounded-control border border-error/20 bg-error-surface px-4 py-5 text-sm text-error">Error loading sub-services. Please try again.</p>');
         }
     });
 }
@@ -186,6 +200,8 @@ $('#serviceForm').submit(function(e) {
                 }, 1500);
             } else {
                 toastr.error(response.message || "Something went wrong");
+                submitButton.disabled = false;
+                submitButton.innerHTML = submitButton.dataset.originalText;
             }
         },
         error: function(xhr) {

@@ -6,8 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="user-type" content="professional">
     <meta name="user-id" content="{{ Auth::guard('professional')->id() }}">
-    <meta name="theme-color" content="#168A80">
-    <title>@yield('title', 'Professional workspace | Yuktione')</title>
+    <meta name="theme-color" content="#36877F">
+    <title>@yield('title', 'Professional workspace | YuktiOne')</title>
 
     @include('partials.dm-sans')
     <link rel="icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
