@@ -4,7 +4,7 @@
 
     <div class="yk-home-experience__layout yk-home-container">
         <header class="yk-home-experience__intro" data-home-reveal>
-            <p class="yk-home-experience__eyebrow">The Yuktione Experience</p>
+            <p class="yk-home-experience__eyebrow">The {{ config('yuktione.name', 'YuktiOne') }} Experience</p>
             <h2 id="yk-home-experience-title">One Platform. Endless Possibilities.</h2>
             <p class="yk-home-experience__summary">
                 Explore professional guidance, personalised support and practical resources in one connected experience.

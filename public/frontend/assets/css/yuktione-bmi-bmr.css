@@ -1,5 +1,5 @@
 .yk-bmi {
-    --yk-navy: #0b2048;
+    --yk-navy: #142B4D;
     --yk-teal: #316d61;
     --yk-mint: #eaf6f2;
     --yk-lavender: #9d81db;
@@ -539,7 +539,7 @@
 .yk-bmi__scale-track span:nth-child(1) { background: #9d81db; }
 .yk-bmi__scale-track span:nth-child(2) { background: #316d61; }
 .yk-bmi__scale-track span:nth-child(3) { background: #7ea36a; }
-.yk-bmi__scale-track span:nth-child(4) { background: #0b2048; }
+.yk-bmi__scale-track span:nth-child(4) { background: #142B4D; }
 
 .yk-bmi__scale-marker {
     position: absolute;

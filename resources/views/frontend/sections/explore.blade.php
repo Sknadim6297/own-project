@@ -135,7 +135,7 @@
                     </label>
                 @endforeach
                 @unless ($toolsAvailable)
-                    <p class="yk-explore__note">Tools are not published as a catalogue yet.</p>
+                    <p class="yk-explore__note">Tools are listed separately. <a href="{{ route('tools.index') }}">Open the Tools catalogue</a>.</p>
                 @endunless
             </fieldset>
 
@@ -229,7 +229,7 @@
             </div>
 
             @if ($tab === 'tools')
-                <p class="yk-explore__empty">YuktiOne does not have a public tools catalogue yet. Experts{{ config('yuktione.programmes_enabled') ? ', programmes' : '' }} and articles are available from the other tabs.</p>
+                <p class="yk-explore__empty">Tools live in the dedicated catalogue. <a href="{{ route('tools.index') }}">Browse Tools</a> — or switch tabs for experts{{ config('yuktione.programmes_enabled') ? ', programmes' : '' }} and articles.</p>
             @elseif ($items->isEmpty())
                 <p class="yk-explore__empty">No results match these filters. Try another topic or <a href="{{ route('gridlisting') }}">reset Explore</a>.</p>
             @else

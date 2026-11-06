@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#36877F">
+    <meta name="theme-color" content="#316D61">
     <title>Forgot Password | YuktiOne</title>
     @include('partials.dm-sans')
     <link rel="icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
@@ -71,3 +71,4 @@
     </script>
 </body>
 </html>
+

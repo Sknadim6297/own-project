@@ -9,10 +9,10 @@
         <strong>500</strong>
         <h2>We hit an unexpected problem</h2>
         <p class="yk-doc__lead">Please try again in a moment. If it continues, contact support and we will help.</p>
-        <div class="yk-doc__actions" style="display: flex; flex-wrap: wrap; gap: 0.6rem;">
+        <div class="yk-doc__actions">
             <a class="yk-doc__button" href="{{ route('home') }}">Go home</a>
             <a class="yk-doc__button-secondary" href="javascript:history.back()">Go back</a>
-            <a class="yk-doc__button-secondary" href="{{ url('/contact') }}">Contact</a>
+            <a class="yk-doc__button-secondary" href="{{ route('contact') }}">Contact</a>
         </div>
     </div>
 </x-yuktione.page>

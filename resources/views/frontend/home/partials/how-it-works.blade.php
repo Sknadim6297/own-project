@@ -14,7 +14,7 @@
             ],
             [
                 'title' => 'Enjoy the Consultation',
-                'description' => 'Book an appointment or connect through the consultation options currently available on Yuktione.',
+                'description' => 'Book an appointment or connect through the consultation options currently available on '.config('yuktione.name', 'YuktiOne').'.',
                 'image' => $howwork->image3,
             ],
         ];
@@ -23,7 +23,7 @@
     <section class="yk-home-how" aria-labelledby="yk-home-how-title">
         <div class="yk-home-container">
             <header class="yk-home-how__heading">
-                <p class="yk-home-how__eyebrow">How Yuktione Works</p>
+                <p class="yk-home-how__eyebrow">How {{ config('yuktione.name', 'YuktiOne') }} Works</p>
                 <h2 id="yk-home-how-title">Expert Guidance in Three Simple Steps</h2>
                 <p>Discover professionals, explore their expertise and connect in a way that works for you.</p>
             </header>

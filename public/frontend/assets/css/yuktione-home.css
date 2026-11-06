@@ -40,7 +40,7 @@
     padding: .55rem .9rem;
     border-radius: 999px;
     background: #e3f4f1;
-    color: #11776f;
+    color: #27574e;
     font-size: .72rem;
     font-weight: 600;
     letter-spacing: .09em;
@@ -50,7 +50,7 @@
 
 .yuktione-home-hero__eyebrow span + span::before {
     margin-right: .65rem;
-    color: #168a80;
+    color: #316d61;
     content: "•";
 }
 
@@ -68,7 +68,7 @@
 }
 
 .yuktione-home-hero__title em {
-    color: #168a80;
+    color: #316d61;
     font-style: normal;
 }
 
@@ -123,7 +123,7 @@
 }
 
 .yuktione-home-hero__search input:focus-visible {
-    outline: 2px solid #168a80;
+    outline: 2px solid #316d61;
     outline-offset: 3px;
 }
 
@@ -135,7 +135,7 @@
     place-items: center;
     border: 0;
     border-radius: 13px;
-    background: #168a80;
+    background: #316d61;
     color: #fff;
     cursor: pointer;
     transition: background-color .18s ease;
@@ -143,7 +143,7 @@
 
 .yuktione-home-hero__search button:hover,
 .yuktione-home-hero__search button:focus-visible {
-    background: #11776f;
+    background: #27574e;
 }
 
 .yuktione-home-hero__search button svg {
@@ -189,7 +189,7 @@
 
 .yuktione-home-hero #searchResults .list-group-item:hover {
     background: #f0faf8;
-    color: #11776f;
+    color: #27574e;
 }
 
 .yuktione-home-hero__media {
@@ -226,7 +226,7 @@
     width: clamp(150px, 19vw, 280px);
     height: auto;
     overflow: visible;
-    color: #168a80;
+    color: #316d61;
     opacity: .86;
     pointer-events: none;
 }
@@ -273,7 +273,7 @@
 }
 
 .yuktione-home-hero__journey-icon {
-    color: #168a80;
+    color: #316d61;
 }
 
 .yuktione-home-hero__journey-icon svg {
@@ -538,7 +538,7 @@
     border: 1px solid #d4eee8;
     border-radius: 999px;
     background: #eaf8f5;
-    color: #11776f;
+    color: #27574e;
     font-size: .72rem;
     font-weight: 600;
     letter-spacing: .09em;
@@ -586,14 +586,14 @@
     border: 1px solid #c8e6e0;
     border-radius: 50%;
     background: #fff;
-    color: #168a80;
+    color: #316d61;
     cursor: pointer;
     transition: background-color .18s ease, border-color .18s ease, color .18s ease;
 }
 
 .homepage-category-slider__arrow:hover:not(:disabled),
 .homepage-category-slider__arrow:focus-visible {
-    border-color: #168a80;
+    border-color: #316d61;
     background: #eaf8f5;
     color: #0f625b;
 }
@@ -631,7 +631,7 @@
 }
 
 .homepage-category-slider__track:focus-visible {
-    outline: 2px solid #168a80;
+    outline: 2px solid #316d61;
     outline-offset: 3px;
 }
 
@@ -676,7 +676,7 @@
     overflow: hidden;
     border-radius: 16px;
     background: rgb(255 255 255 / 62%);
-    color: #168a80;
+    color: #316d61;
     font-size: 3.4rem;
 }
 
@@ -734,7 +734,7 @@
     flex: 0 0 38px;
     place-items: center;
     border-radius: 50%;
-    background: #168a80;
+    background: #316d61;
     color: #fff;
     transition: background-color .18s ease, transform .18s ease;
 }
@@ -742,7 +742,7 @@
 .homepage-category-card:hover .homepage-category-card__arrow,
 .homepage-category-card:focus-visible .homepage-category-card__arrow {
     transform: translateX(2px);
-    background: #11776f;
+    background: #27574e;
 }
 
 .homepage-category-card:only-child {
@@ -772,10 +772,10 @@
     justify-content: center;
     gap: .55rem;
     padding: .65rem 1.1rem;
-    border: 1px solid #168a80;
+    border: 1px solid #316d61;
     border-radius: 999px;
     background: #fff;
-    color: #11776f;
+    color: #27574e;
     font-size: .9rem;
     font-weight: 600;
     text-decoration: none;
@@ -784,7 +784,7 @@
 
 .homepage-category-slider__view-all:hover,
 .homepage-category-slider__view-all:focus-visible {
-    background: #168a80;
+    background: #316d61;
     color: #fff;
 }
 
@@ -880,7 +880,7 @@
 .yk-home-eyebrow,
 .yk-home-professional__eyebrow {
     margin: 0 0 .65rem;
-    color: #168a80;
+    color: #316d61;
     font-size: .75rem;
     font-weight: 700;
     letter-spacing: .12em;
@@ -993,7 +993,7 @@
 }
 
 .yk-home-blog-card__category {
-    color: #11776f;
+    color: #27574e;
     font-weight: 600;
 }
 
@@ -1017,7 +1017,7 @@
 
 .yk-home-blog-card h3 a:hover,
 .yk-home-blog-card h3 a:focus-visible {
-    color: #11776f;
+    color: #27574e;
 }
 
 .yk-home-blog-card__excerpt {
@@ -1060,14 +1060,14 @@
     border: 1px solid #cce8e3;
     border-radius: 50%;
     background: #eaf8f5;
-    color: #168a80;
+    color: #316d61;
     transition: background-color .18s ease, color .18s ease, transform .18s ease;
 }
 
 .yk-home-blog-card__read-link:hover,
 .yk-home-blog-card__read-link:focus-visible {
     transform: translateX(2px);
-    background: #168a80;
+    background: #316d61;
     color: #fff;
 }
 
@@ -1112,14 +1112,14 @@
 }
 
 .yk-home-button--outline {
-    border-color: #168a80;
+    border-color: #316d61;
     background: #fff;
-    color: #11776f;
+    color: #27574e;
 }
 
 .yk-home-button--outline:hover,
 .yk-home-button--outline:focus-visible {
-    background: #168a80;
+    background: #316d61;
     color: #fff;
 }
 
@@ -1160,7 +1160,7 @@
     min-height: 44px;
     align-items: center;
     margin-top: 1.25rem;
-    color: #11776f;
+    color: #27574e;
     font-size: .9rem;
     font-weight: 600;
     text-decoration: underline;
@@ -1225,7 +1225,7 @@
     place-items: center;
     border-radius: 50%;
     background: #eaf8f5;
-    color: #168a80;
+    color: #316d61;
 }
 
 .yk-home-faq__icon::before,
@@ -1287,7 +1287,7 @@
     border-radius: 26px;
     background:
         radial-gradient(ellipse at 8% 100%, rgb(119 209 195 / 18%), transparent 32%),
-        linear-gradient(125deg, #0f625b, #11776f 60%, #168a80);
+        linear-gradient(125deg, #0f625b, #27574e 60%, #316d61);
     isolation: isolate;
 }
 
@@ -1555,7 +1555,7 @@
 
 .yk-home-testimonials__eyebrow {
     margin: 0 0 .7rem;
-    color: #168a80;
+    color: #316d61;
     font-size: .75rem;
     font-weight: 700;
     letter-spacing: .12em;
@@ -1594,15 +1594,15 @@
     border: 1px solid #d5e6e3;
     border-radius: 50%;
     background: #fff;
-    color: #11776f;
+    color: #27574e;
     cursor: pointer;
     transition: background-color .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
 }
 
 .yk-home-testimonials__arrow:hover:not(:disabled) {
     transform: translateY(-2px);
-    border-color: #168a80;
-    background: #168a80;
+    border-color: #316d61;
+    background: #316d61;
     color: #fff;
 }
 
@@ -1670,7 +1670,7 @@
     height: 37px;
     flex: 0 0 37px;
     margin-bottom: .8rem;
-    fill: #168a80;
+    fill: #316d61;
 }
 
 .yk-home-testimonial-card__review {
@@ -1704,7 +1704,7 @@
     border: 2px solid #e3f4f1;
     border-radius: 50%;
     background: #eaf8f5;
-    color: #168a80;
+    color: #316d61;
 }
 
 .yk-home-testimonial-card__avatar {
@@ -1823,7 +1823,7 @@
 
 .yk-home-how__eyebrow {
     margin: 0 0 .7rem;
-    color: #168a80;
+    color: #316d61;
     font-size: .75rem;
     font-weight: 700;
     letter-spacing: .12em;
@@ -1873,7 +1873,7 @@
     border: 1px solid #d7eeea;
     border-radius: 999px;
     background: #eaf8f5;
-    color: #11776f;
+    color: #27574e;
     font-size: .68rem;
     font-weight: 700;
     letter-spacing: .1em;
@@ -1906,10 +1906,10 @@
     gap: .45rem;
     margin-bottom: .1rem;
     padding: .58rem .8rem;
-    border: 1px solid #168a80;
+    border: 1px solid #316d61;
     border-radius: 10px;
     background: #fff;
-    color: #11776f;
+    color: #27574e;
     font-size: .8rem;
     font-weight: 600;
     line-height: 1.3;
@@ -1919,8 +1919,8 @@
 }
 
 .yk-home-events__all-link:hover {
-    border-color: #11776f;
-    background: #11776f;
+    border-color: #27574e;
+    background: #27574e;
     color: #fff;
     text-decoration: none;
 }
@@ -2005,7 +2005,7 @@
     inset: 0;
     display: grid;
     place-items: center;
-    color: #168a80;
+    color: #316d61;
 }
 
 .yk-home-event-card__image-fallback[hidden] {
@@ -2049,7 +2049,7 @@
     border: 1px solid #d7eeea;
     border-radius: 999px;
     background: #eaf8f5;
-    color: #11776f;
+    color: #27574e;
     font-size: .68rem;
     font-weight: 600;
     line-height: 1.25;
@@ -2122,7 +2122,7 @@
     width: 14px;
     height: 14px;
     fill: none;
-    stroke: #168a80;
+    stroke: #316d61;
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke-width: 1.7;
@@ -2160,9 +2160,9 @@
     justify-content: center;
     gap: .35rem;
     padding: .5rem .7rem;
-    border: 1px solid #168a80;
+    border: 1px solid #316d61;
     border-radius: 9px;
-    background: #168a80;
+    background: #316d61;
     color: #fff;
     font-size: .78rem;
     font-weight: 600;
@@ -2173,8 +2173,8 @@
 }
 
 .yk-home-event-card__button:hover {
-    border-color: #11776f;
-    background: #11776f;
+    border-color: #27574e;
+    background: #27574e;
     color: #fff;
     text-decoration: none;
 }
@@ -2207,7 +2207,7 @@
     border-radius: 24px;
     background:
         radial-gradient(ellipse at 92% 10%, rgb(67 177 165 / 35%), transparent 20rem),
-        linear-gradient(120deg, #0f625b, #11776f);
+        linear-gradient(120deg, #0f625b, #27574e);
     box-shadow: 0 16px 40px rgb(15 98 91 / 18%);
 }
 
@@ -2373,7 +2373,7 @@
     border: 1px solid #d7eeea;
     border-radius: 50%;
     background: #eaf8f5;
-    color: #11776f;
+    color: #27574e;
     font-size: .85rem;
     font-weight: 700;
 }
@@ -2387,7 +2387,7 @@
     width: 34px;
     height: 24px;
     place-items: center;
-    color: #168a80;
+    color: #316d61;
 }
 
 .yk-home-how-card__connector svg {
@@ -2427,7 +2427,7 @@
     height: 100%;
     min-height: 0;
     place-items: center;
-    color: #168a80;
+    color: #316d61;
 }
 
 .yk-home-how-card__image-fallback[hidden] {
@@ -2694,7 +2694,7 @@
 .yk-home-experience__eyebrow,
 .yk-home-why__eyebrow {
     margin: 0 0 .9rem;
-    color: #168a80;
+    color: #316d61;
     font-size: .75rem;
     font-weight: 700;
     letter-spacing: .13em;
@@ -2728,9 +2728,9 @@
     gap: .65rem;
     margin-top: 1.65rem;
     padding: .8rem 1.2rem;
-    border: 1px solid #168a80;
+    border: 1px solid #316d61;
     border-radius: 12px;
-    background: #168a80;
+    background: #316d61;
     color: #fff;
     font-size: .9rem;
     font-weight: 600;
@@ -2741,7 +2741,7 @@
 
 .yk-home-experience__cta:hover {
     transform: translateY(-2px);
-    background: #11776f;
+    background: #27574e;
     box-shadow: 0 12px 24px rgb(15 98 91 / 18%);
     color: #fff;
 }
@@ -2803,13 +2803,13 @@
     border: 1px solid rgb(22 138 128 / 13%);
     border-radius: 15px;
     background: #eaf8f5;
-    color: #168a80;
+    color: #316d61;
     transition: transform .22s ease, background-color .22s ease, color .22s ease;
 }
 
 .yk-home-experience-card:hover .yk-home-experience-card__icon {
     transform: rotate(-5deg) scale(1.04);
-    background: #168a80;
+    background: #316d61;
     color: #fff;
 }
 
@@ -2929,7 +2929,7 @@
     place-items: center;
     border-radius: 12px;
     background: #eaf8f5;
-    color: #168a80;
+    color: #316d61;
 }
 
 .yk-home-why__note-icon svg {
@@ -2977,7 +2977,7 @@
 
 .yk-home-why-item__number {
     padding-top: .15rem;
-    color: #168a80;
+    color: #316d61;
     font-size: .9rem;
     font-weight: 600;
     letter-spacing: .02em;
@@ -2990,7 +2990,7 @@
     place-items: center;
     border-radius: 12px;
     background: #eaf8f5;
-    color: #168a80;
+    color: #316d61;
 }
 
 .yk-home-why-item__icon svg {

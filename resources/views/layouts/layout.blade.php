@@ -162,14 +162,15 @@
 		}
 	</style>
 
-	<!-- Tazen Favicon -->
-	<link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
-	<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('tazen-favicon.png') }}">
+	<!-- YuktiOne Favicon -->
+	<link rel="icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
+	<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
+	<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
 	<link rel="icon" type="image/png" sizes="192x192" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
 	<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
-	<link rel="shortcut icon" href="{{ asset('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}">
-	<meta name="msapplication-TileImage" content="{{ asset('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}">
-	<meta name="theme-color" content="#ffffff">
+	<link rel="shortcut icon" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
+	<meta name="msapplication-TileImage" content="{{ asset('frontend/assets/Yuktione_logo.png') }}">
+	<meta name="theme-color" content="#316d61">
 	
 	<!-- Schema Markup -->
 	@yield('schema')
@@ -699,3 +700,4 @@ $(document).ready(function () {
 	@endif
 </body>
 </html>
+

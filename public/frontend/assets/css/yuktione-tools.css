@@ -3,7 +3,7 @@
     margin: 0;
     padding: 0.35rem 1rem 2.5rem;
     background: #fffefc;
-    color: #0b2048;
+    color: #142B4D;
     font-family: "DM Sans", sans-serif;
 }
 
@@ -55,7 +55,7 @@
 }
 
 .yk-tools__heading-navy {
-    color: #0b2048;
+    color: #142B4D;
 }
 
 .yk-tools__heading-lavender {
@@ -87,6 +87,17 @@
     font-weight: 600;
     line-height: 1;
     white-space: nowrap;
+    text-decoration: none;
+}
+
+.yk-tools__all:hover {
+    background: #316d61;
+    color: #fff;
+}
+
+.yk-tools__card-link {
+    text-decoration: none;
+    color: inherit;
 }
 
 .yk-tools__leaves {
@@ -167,7 +178,7 @@
 
 .yk-tools__name {
     margin: 0;
-    color: #0b2048;
+    color: #142B4D;
     font-size: 1.125rem;
     font-weight: 700;
     line-height: 1.25;
@@ -196,7 +207,7 @@
 }
 
 .yk-tools__cta--purple {
-    color: #6e52c0;
+    color: #316d61;
 }
 
 .yk-tools__cta--teal {
@@ -204,11 +215,11 @@
 }
 
 .yk-tools__cta--pink {
-    color: #d45b7c;
+    color: #316d61;
 }
 
 .yk-tools__cta--orange {
-    color: #d9892d;
+    color: #316d61;
 }
 
 .yk-tools__arrow {

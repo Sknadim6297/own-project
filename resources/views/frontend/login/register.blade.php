@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Create your Yuktione customer account and connect with trusted professionals.">
+    <meta name="description" content="Create your YuktiOne customer account and connect with trusted professionals.">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="theme-color" content="#EFF9FF">
-    <title>Create a Customer Account | Yuktione</title>
+    <meta name="theme-color" content="#316D61">
+    <title>Create a Customer Account | YuktiOne</title>
 
     @include('partials.dm-sans')
-    <link rel="icon" type="image/png" href="{{ asset('tazen-favicon.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
     @vite([
         'resources/css/tazen.css',
         'resources/css/yuktione-feedback.css',
@@ -21,14 +21,14 @@
     <main class="relative isolate flex min-h-dvh w-full items-center justify-center px-4 py-6 sm:px-6 sm:py-8">
         <section class="relative w-full max-w-[440px] rounded-panel border border-divider bg-white p-5 shadow-popover sm:p-7" aria-labelledby="registration-title">
             <header class="mb-6 text-center">
-                <a href="{{ route('home') }}" aria-label="Yuktione home" class="mb-4 inline-flex items-center justify-center rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus-ring">
-                    <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="Yuktione" width="180" height="58" class="h-10 w-auto max-w-44 object-contain">
+                <a href="{{ route('home') }}" aria-label="YuktiOne home" class="mb-4 inline-flex items-center justify-center rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus-ring">
+                    <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" width="180" height="58" class="h-10 w-auto max-w-44 object-contain">
                 </a>
                 <h1 id="registration-title" class="font-display text-2xl font-semibold leading-tight tracking-tight text-brand-950 sm:text-[1.75rem]">
                     Create your account
                 </h1>
                 <p class="mt-2 text-sm leading-5 text-text-secondary">
-                    Join Yuktione to connect with trusted professionals.
+                    Join YuktiOne to connect with trusted professionals.
                 </p>
             </header>
 
@@ -208,7 +208,7 @@
                             <div class="flex items-start gap-2.5 text-xs leading-5 text-text-secondary">
                                 <input id="terms_accepted" name="terms_accepted" type="checkbox" value="1" class="mt-0.5 size-4 shrink-0 rounded border-border accent-brand-primary focus-visible:outline-2 focus-visible:outline-focus-ring">
                                 <p class="m-0">
-                                    <label for="terms_accepted" class="cursor-pointer">I agree to Yuktione's</label>
+                                    <label for="terms_accepted" class="cursor-pointer">I agree to YuktiOne's</label>
                                     <button type="button" id="openTerms" class="font-semibold text-brand-primary underline underline-offset-2 hover:text-brand-800">Terms and Conditions</button>.
                                 </p>
                             </div>
@@ -231,7 +231,7 @@
                 </p>
             </form>
 
-            <p class="mt-5 text-center text-xs text-text-muted">© {{ date('Y') }} Yuktione</p>
+            <p class="mt-5 text-center text-xs text-text-muted">© {{ date('Y') }} YuktiOne</p>
         </section>
     </main>
 

@@ -573,7 +573,7 @@ Route::get('contact', function () {
     $contactdetails = ContactDetail::latest()->get();
     $services = Service::latest()->get();
     return view('frontend.sections.contact', compact('contactbanners', 'contactdetails', 'services'));
-});
+})->name('contact');
 
 Route::get('influencer', function () {
     return view('frontend.sections.influencer');

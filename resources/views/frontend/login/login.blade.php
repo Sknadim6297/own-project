@@ -9,8 +9,8 @@
 @push('head')
     <style>
         .yuktione-auth-page #signInButton:disabled {
-            border-color: #36877F;
-            background-color: #36877F;
+            border-color: #316D61;
+            background-color: #316D61;
             color: #ffffff;
             opacity: 0.72;
             cursor: wait;
@@ -26,8 +26,8 @@
 <main id="loginPanel" data-yuktione-auth class="yuktione-auth-page flex min-h-dvh w-full items-center justify-center bg-background px-4 py-8 sm:px-6">
     <section class="w-full max-w-md rounded-panel border border-border bg-surface p-5 shadow-popover sm:p-8" aria-labelledby="login-heading">
         <div class="mx-auto w-full max-w-md">
-            <a href="{{ route('home') }}" class="inline-flex items-center rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus-ring" aria-label="Yuktione home">
-                <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="Yuktione" width="155" height="50" class="h-10 w-auto object-contain object-left">
+            <a href="{{ route('home') }}" class="inline-flex items-center rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus-ring" aria-label="YuktiOne home">
+                <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" width="155" height="50" class="h-10 w-auto object-contain object-left">
             </a>
 
             <div class="mt-4">
@@ -35,7 +35,7 @@
                     {{ $initialRole === 'customer' ? 'Customer account' : 'Professional account' }}
                 </p>
                 <h1 id="login-heading" class="mt-1 font-display text-3xl font-semibold tracking-tight text-brand-secondary">Welcome back</h1>
-                <p class="mt-1.5 text-sm leading-5 text-text-secondary">Sign in to continue to your Yuktione account.</p>
+                <p class="mt-1.5 text-sm leading-5 text-text-secondary">Sign in to continue to your YuktiOne account.</p>
             </div>
 
             <div class="mt-4 grid grid-cols-2 rounded-control border border-border bg-surface-muted p-1" role="tablist" aria-label="Choose account type">
@@ -127,7 +127,7 @@
                 </button>
 
                 <p class="text-center text-sm text-text-secondary">
-                    <span id="registerPrompt">{{ $initialRole === 'professional' ? 'Join Yuktione as a professional?' : 'New to Yuktione?' }}</span>
+                    <span id="registerPrompt">{{ $initialRole === 'professional' ? 'Join YuktiOne as a professional?' : 'New to YuktiOne?' }}</span>
                     <a id="registerLink" href="{{ $initialRole === 'professional' ? route('professional.register') : route('register') }}" class="font-semibold text-brand-primary underline-offset-4 hover:underline focus-visible:rounded focus-visible:outline-2 focus-visible:outline-focus-ring">
                         {{ $initialRole === 'professional' ? 'Start onboarding' : 'Create an account' }}
                     </a>
@@ -187,7 +187,7 @@
             forgot: @json(route('forgot.form')),
             register: @json(route('register')),
             label: 'Create an account',
-            prompt: 'New to Yuktione?',
+            prompt: 'New to YuktiOne?',
             eyebrow: 'Customer account',
         },
         professional: {
@@ -195,7 +195,7 @@
             forgot: @json(route('professional.forgot.form')),
             register: @json(route('professional.register')),
             label: 'Start onboarding',
-            prompt: 'Join Yuktione as a professional?',
+            prompt: 'Join YuktiOne as a professional?',
             eyebrow: 'Professional account',
         },
     };

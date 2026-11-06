@@ -468,14 +468,14 @@
     </div>
 </div>
 
-<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+<div class="modal fade yk-profile-modal" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content yk-profile-modal__content">
+            <div class="modal-header yk-profile-modal__header">
                 <h5 class="modal-title" id="reviewModalLabel">Rate your experience</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body yk-profile-modal__body">
                 @if(Auth::guard('user')->check())
                     <form id="reviewForm">
                         @csrf
@@ -486,17 +486,17 @@
                                 <label for="star{{ $star }}">{{ $star }} stars</label>
                             @endforeach
                         </div>
-                        <label for="review_text">Your review</label>
-                        <textarea class="form-control" name="review_text" id="review_text" rows="4"></textarea>
+                        <label class="yk-profile-modal__label" for="review_text">Your review</label>
+                        <textarea class="yk-profile-modal__textarea" name="review_text" id="review_text" rows="4"></textarea>
                     </form>
                 @else
                     <p>Please <a href="{{ route('login') }}?redirect={{ url()->current() }}">sign in</a> to leave a review.</p>
                 @endif
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <div class="modal-footer yk-profile-modal__footer">
+                <button type="button" class="yk-profile-modal__cancel" data-bs-dismiss="modal">Cancel</button>
                 @if(Auth::guard('user')->check())
-                    <button type="button" class="btn_1" id="submitReview">Submit review</button>
+                    <button type="button" class="yk-profile-modal__submit" id="submitReview">Submit review</button>
                 @endif
             </div>
         </div>

@@ -1,11 +1,12 @@
 :root {
-    --tazen-chrome-navy: #263238;
-    --tazen-chrome-teal: #168a80;
+    /* Align public chrome with yk-navbar / toolpage tokens */
+    --tazen-chrome-navy: #0b2048;
+    --tazen-chrome-teal: #316d61;
     --tazen-chrome-white: #fff;
-    --tazen-chrome-soft: #eaf8f5;
-    --tazen-chrome-border: #e0e9f0;
+    --tazen-chrome-soft: #eaf6f2;
+    --tazen-chrome-border: #e0e4ea;
     --tazen-chrome-muted: #64748b;
-    --tazen-chrome-shadow: 0 8px 24px rgb(38 50 56 / 7%);
+    --tazen-chrome-shadow: 0 8px 24px rgb(11 32 72 / 7%);
 }
 
 #cookie-bar {
@@ -37,12 +38,12 @@
 }
 
 #cookie-bar .cb-enable {
-    background: #168a80;
+    background: var(--tazen-chrome-teal);
     color: #fff;
 }
 
 #cookie-bar .cb-enable:hover {
-    background: #11776f;
+    background: #27574e;
     color: #fff;
 }
 
@@ -53,8 +54,8 @@
 }
 
 #cookie-bar .cb-policy:hover {
-    background: #eaf8f5;
-    color: #0f625b;
+    background: var(--tazen-chrome-soft);
+    color: #0b2048;
 }
 
 @media (max-width: 575px) {
@@ -623,7 +624,7 @@
 }
 
 .tazen-footer__contact-form button:hover {
-    background: #116f69;
+    background: #27574e;
 }
 
 .tazen-footer__bottom {
@@ -1861,7 +1862,7 @@ html.tazen-public-nav-open body {
 }
 
 .whatsapp-float:focus-visible {
-    outline: 3px solid #081b42;
+    outline: 3px solid #142B4D;
     outline-offset: 4px;
 }
 

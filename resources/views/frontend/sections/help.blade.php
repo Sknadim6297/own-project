@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('title', 'Help and Support | YuktiOne')
-@section('meta_description', 'Search questions and useful articles about bookings, payments, programmes, and your account.')
+@section('meta_description', 'Search questions and useful articles about bookings, payments, and your YuktiOne account.')
 
 @section('content')
 <x-yuktione.page

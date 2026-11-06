@@ -1,11 +1,13 @@
 @if(isset($whychooses) && $whychooses->isNotEmpty())
     @php
+        $brand = config('yuktione.name', 'YuktiOne');
+        $brandize = static fn (?string $text): string => str_ireplace(['Tazen', 'Yuktione'], $brand, (string) $text);
         $whychoose = $whychooses->first();
         $whyChooseItems = [
-            ['heading' => $whychoose->card1_heading, 'description' => $whychoose->card1_description],
-            ['heading' => $whychoose->card2_heading, 'description' => $whychoose->card2_description],
-            ['heading' => $whychoose->card3_heading, 'description' => $whychoose->card3_description],
-            ['heading' => $whychoose->card4_heading, 'description' => $whychoose->card4_description],
+            ['heading' => $brandize($whychoose->card1_heading), 'description' => $brandize($whychoose->card1_description)],
+            ['heading' => $brandize($whychoose->card2_heading), 'description' => $brandize($whychoose->card2_description)],
+            ['heading' => $brandize($whychoose->card3_heading), 'description' => $brandize($whychoose->card3_description)],
+            ['heading' => $brandize($whychoose->card4_heading), 'description' => $brandize($whychoose->card4_description)],
         ];
     @endphp
 
@@ -36,9 +38,9 @@
 
             <div class="yk-home-why__content">
                 <header class="yk-home-why__heading" data-home-reveal>
-                    <p class="yk-home-why__eyebrow">Why Choose Yuktione</p>
-                    <h2 id="yk-home-why-title">{{ str_ireplace('Tazen', 'Yuktione', $whychoose->section_heading) }}</h2>
-                    <p>{{ $whychoose->section_sub_heading }}</p>
+                    <p class="yk-home-why__eyebrow">Why Choose {{ $brand }}</p>
+                    <h2 id="yk-home-why-title">{{ $brandize($whychoose->section_heading) }}</h2>
+                    <p>{{ $brandize($whychoose->section_sub_heading) }}</p>
                 </header>
 
                 <div class="yk-home-why__list">

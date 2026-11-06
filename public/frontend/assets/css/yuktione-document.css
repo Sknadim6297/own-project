@@ -1,5 +1,5 @@
 .yk-doc {
-    --yk-navy: #0b2048;
+    --yk-navy: #142B4D;
     --yk-teal: #316d61;
     --yk-lavender: #9d81db;
     --yk-mint: #eaf6f2;
@@ -99,6 +99,24 @@
 
 .yk-doc__button-secondary:hover { border-color: var(--yk-teal); color: var(--yk-teal); }
 
+.yk-doc__button:focus-visible,
+.yk-doc__button-secondary:focus-visible,
+.yk-doc__crumb a:focus-visible,
+.yk-doc__card:focus-visible,
+.yk-doc__share a:focus-visible,
+.yk-doc__share button:focus-visible,
+.yk-doc__faq summary:focus-visible {
+    outline: 3px solid rgba(49, 109, 97, 0.35);
+    outline-offset: 2px;
+}
+
+.yk-doc__button:disabled,
+.yk-doc__button-secondary:disabled,
+.yk-doc__share button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
 .yk-doc__article,
 .yk-doc__panel,
 .yk-doc__card {
@@ -173,10 +191,18 @@
 .yk-doc__search input { border-radius: 999px; }
 .yk-doc__form textarea { min-height: 8.5rem; resize: vertical; }
 .yk-doc__search input:focus,
+.yk-doc__search input:focus-visible,
 .yk-doc__form input:focus,
-.yk-doc__form textarea:focus {
+.yk-doc__form input:focus-visible,
+.yk-doc__form textarea:focus,
+.yk-doc__form textarea:focus-visible {
     border-color: var(--yk-teal);
     outline: 3px solid rgba(49, 109, 97, 0.16);
+}
+
+.yk-doc__search button:focus-visible {
+    outline: 3px solid rgba(49, 109, 97, 0.35);
+    outline-offset: 2px;
 }
 
 .yk-doc__search button { flex: 0 0 auto; }
@@ -191,7 +217,26 @@
     background: #fff;
     padding: 0.85rem 1rem;
 }
-.yk-doc__faq summary { cursor: pointer; color: var(--yk-navy); font-weight: 700; }
+.yk-doc__faq summary {
+    cursor: pointer;
+    color: var(--yk-navy);
+    font-weight: 700;
+    border-radius: 6px;
+}
+
+.yk-doc__faq summary::-webkit-details-marker { display: none; }
+
+a.yk-doc__card {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+a.yk-doc__card:hover {
+    border-color: rgba(49, 109, 97, 0.35);
+    box-shadow: 0 8px 22px rgba(20, 43, 77, 0.06);
+}
 .yk-doc__faq details p { margin: 0.65rem 0 0; color: var(--yk-muted); line-height: 1.65; }
 
 .yk-doc__empty {
@@ -283,6 +328,19 @@
     font-weight: 700;
     letter-spacing: -0.05em;
     line-height: 0.9;
+}
+
+.yk-doc__error .yk-doc__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.yk-doc__error h2 {
+    margin: 0;
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+    font-weight: 700;
+    line-height: 1.2;
 }
 
 @media (min-width: 768px) {
@@ -448,7 +506,9 @@
 .yk-contact__form textarea { min-height: 8.5rem; resize: vertical; }
 
 .yk-contact__form input:focus,
-.yk-contact__form textarea:focus {
+.yk-contact__form input:focus-visible,
+.yk-contact__form textarea:focus,
+.yk-contact__form textarea:focus-visible {
     border-color: var(--yk-teal);
     outline: none;
     box-shadow: 0 0 0 4px rgba(49, 109, 97, 0.14);

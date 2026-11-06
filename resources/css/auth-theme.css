@@ -4,13 +4,13 @@
     --color-brand-200: #D9EDE7;
     --color-brand-300: #A9D0C0;
     --color-brand-400: #7EB0A5;
-    --color-brand-500: #36877F;
-    --color-brand-600: #2C726B;
-    --color-brand-700: #245E59;
-    --color-brand-800: #1E4F4C;
+    --color-brand-500: #316D61;
+    --color-brand-600: #2A5E54;
+    --color-brand-700: #245048;
+    --color-brand-800: #1E4340;
     --color-brand-900: #142B4D;
     --color-brand-950: #0F1F36;
-    --color-brand-primary: #36877F;
+    --color-brand-primary: #316D61;
     --color-brand-secondary: #142B4D;
     --color-brand-accent: #8EB5DD;
 
@@ -22,9 +22,9 @@
     --color-text-muted: #718096;
     --color-border: #E2E9EE;
     --color-divider: #EAF1F4;
-    --color-info: #36877F;
+    --color-info: #316D61;
     --color-info-surface: #EAF6F2;
-    --color-focus-ring: #36877F;
+    --color-focus-ring: #316D61;
     --font-sans: "DM Sans", sans-serif;
     --font-display: "DM Sans", sans-serif;
 
@@ -43,7 +43,7 @@ body.yuktione-auth-page {
 }
 
 .yuktione-auth-page :where(a:not([class])) {
-    color: #36877F;
+    color: #316D61;
 }
 
 .yuktione-auth-page :where(button, input, select, textarea) {
@@ -51,7 +51,7 @@ body.yuktione-auth-page {
 }
 
 .yuktione-auth-page :where(button, input, select, textarea):focus-visible {
-    outline-color: #36877F;
+    outline-color: #316D61;
 }
 
 .yuktione-auth-page button:disabled {
@@ -62,15 +62,15 @@ body.yuktione-auth-page {
 }
 
 .yuktione-auth-page #signInButton:disabled {
-    border-color: #36877F;
-    background-color: #36877F;
+    border-color: #316D61;
+    background-color: #316D61;
     color: #ffffff;
     opacity: 0.72;
     cursor: wait;
 }
 
 .yuktione-auth-page [role="tab"][aria-selected="true"] {
-    background-color: #36877F;
+    background-color: #316D61;
     color: #ffffff;
     box-shadow: none;
 }
@@ -80,7 +80,7 @@ body.yuktione-auth-page {
 }
 
 .yuktione-auth-page [role="tab"][aria-selected="false"]:hover {
-    color: #245E59;
+    color: #245048;
 }
 
 .yuktione-auth-page [data-registration-step] h2:focus {
@@ -89,7 +89,7 @@ body.yuktione-auth-page {
 }
 
 .yuktione-auth-page .login-hero {
-    background: linear-gradient(135deg, #245E59 0%, #36877F 45%, #8EB5DD 100%);
+    background: linear-gradient(135deg, #245048 0%, #316D61 45%, #8EB5DD 100%);
 }
 
 .yuktione-auth-page .login-hero :where(h1, h2, h3, p, a) {

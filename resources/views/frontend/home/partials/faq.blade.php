@@ -3,11 +3,15 @@
         <header class="yk-home-section-heading">
             <p class="yk-home-eyebrow">Have Questions?</p>
             <h2 id="yk-home-faq-title">Frequently Asked Questions</h2>
-            <p>Find answers to common questions about getting started with Yuktione.</p>
+            <p>Find answers to common questions about getting started with {{ config('yuktione.name', 'YuktiOne') }}.</p>
             <a class="yk-home-faq__more-link" href="{{ route('help.index') }}">More FAQs</a>
         </header>
 
         @if ($faqs->isNotEmpty())
+            @php
+                $brand = config('yuktione.name', 'YuktiOne');
+                $brandizeFaq = static fn (?string $text): string => str_ireplace(['Tazen', 'Yuktione'], $brand, (string) $text);
+            @endphp
             <div class="yk-home-faq__list">
                 @foreach ($faqs as $faq)
                     <article class="yk-home-faq__item">
@@ -20,7 +24,7 @@
                                 aria-controls="home-faq-answer-{{ $faq->id }}"
                                 data-home-faq-toggle
                             >
-                                <span>{{ $faq->question }}</span>
+                                <span>{{ $brandizeFaq($faq->question) }}</span>
                                 <span class="yk-home-faq__icon" aria-hidden="true"></span>
                             </button>
                         </h3>
@@ -33,7 +37,7 @@
                             inert
                             data-home-faq-panel
                         >
-                            <div class="yk-home-faq__answer">{{ $faq->answer }}</div>
+                            <div class="yk-home-faq__answer">{{ $brandizeFaq($faq->answer) }}</div>
                         </div>
                     </article>
                 @endforeach

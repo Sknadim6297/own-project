@@ -3,7 +3,7 @@
         <header class="yk-home-section-heading">
             <p class="yk-home-eyebrow">Insights &amp; Stories</p>
             <h2 id="yk-home-blogs-title">Explore Our Latest Blogs</h2>
-            <p>Ideas, perspectives and practical guidance from the Yuktione community.</p>
+            <p>Ideas, perspectives and practical guidance from the {{ config('yuktione.name', 'YuktiOne') }} community.</p>
         </header>
 
         @if ($blogPosts->isNotEmpty())
@@ -38,7 +38,7 @@
                                         <path d="M17 43 28 31l8 8 6-6 9 10"/>
                                         <circle cx="23" cy="22" r="4"/>
                                     </svg>
-                                    <span>Yuktione Journal</span>
+                                    <span>{{ config('yuktione.name', 'YuktiOne') }} Journal</span>
                                 </span>
                             @else
                                 <span class="yk-home-blog-placeholder" aria-hidden="true">
@@ -47,7 +47,7 @@
                                         <path d="M17 43 28 31l8 8 6-6 9 10"/>
                                         <circle cx="23" cy="22" r="4"/>
                                     </svg>
-                                    <span>Yuktione Journal</span>
+                                    <span>{{ config('yuktione.name', 'YuktiOne') }} Journal</span>
                                 </span>
                             @endif
                         </a>

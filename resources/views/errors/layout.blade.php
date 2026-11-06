@@ -24,7 +24,7 @@
         <strong>{{ $code }}</strong>
         <h2>{{ $heading }}</h2>
         <p class="yk-doc__lead">{{ $copy }}</p>
-        <div class="yk-doc__actions" style="display: flex; flex-wrap: wrap; gap: 0.6rem;">
+        <div class="yk-doc__actions">
             <a class="yk-doc__button" href="{{ route('home') }}">Go home</a>
             <a class="yk-doc__button-secondary" href="javascript:history.back()">Go back</a>
         </div>

@@ -678,78 +678,78 @@ body[data-yuktione-panel="customer"]#customer-auth-page {
 }
 
 [data-yuktione-panel="customer"].customer-registration-page {
-    --yk-primary: #168a80;
-    --yk-primary-hover: #11776f;
-    --yk-primary-light: #eaf8f5;
-    --yk-heading: #263238;
+    --yk-primary: #316D61;
+    --yk-primary-hover: #2A5E54;
+    --yk-primary-light: #EAF6F2;
+    --yk-heading: #142B4D;
     --yk-body: #475569;
-    --yk-muted: #64748b;
-    --yk-background: #eaf8f5;
+    --yk-muted: #718096;
+    --yk-background: #F7FAFB;
     --yk-surface: #ffffff;
-    --yk-border: #e0e9f0;
-    --yk-eucalyptus: #d5f0eb;
-    --yk-soft-blue: #eaf8f5;
-    --yk-lavender: #eaf8f5;
-    --yk-mint: #eaf8f5;
-    --yk-success: #168a80;
+    --yk-border: #E2E9EE;
+    --yk-eucalyptus: #D9EDE7;
+    --yk-soft-blue: #EAF6F2;
+    --yk-lavender: #EAF6F2;
+    --yk-mint: #EAF6F2;
+    --yk-success: #316D61;
     --yk-danger: #b42318;
 
     --font-sans: "DM Sans", sans-serif;
     --font-display: "DM Sans", sans-serif;
-    --color-brand-50: #eaf8f5;
-    --color-brand-100: #d5f0eb;
-    --color-brand-200: #b2e3db;
-    --color-brand-300: #86d0c4;
-    --color-brand-400: #51b7a8;
-    --color-brand-500: #168a80;
-    --color-brand-600: #11776f;
-    --color-brand-700: #11776f;
-    --color-brand-800: #11776f;
-    --color-brand-900: #155a55;
-    --color-brand-950: #263238;
-    --color-brand-primary: #168a80;
-    --color-brand-secondary: #263238;
-    --color-brand-accent: #168a80;
-    --color-background: #eaf8f5;
+    --color-brand-50: #F3F8F9;
+    --color-brand-100: #EAF6F2;
+    --color-brand-200: #D9EDE7;
+    --color-brand-300: #A9D0C0;
+    --color-brand-400: #7EB0A5;
+    --color-brand-500: #316D61;
+    --color-brand-600: #2A5E54;
+    --color-brand-700: #245048;
+    --color-brand-800: #1E4340;
+    --color-brand-900: #142B4D;
+    --color-brand-950: #0F1F36;
+    --color-brand-primary: #316D61;
+    --color-brand-secondary: #142B4D;
+    --color-brand-accent: #8EB5DD;
+    --color-background: #F7FAFB;
     --color-surface: #ffffff;
-    --color-surface-muted: #f5fbf9;
-    --color-text-primary: #263238;
+    --color-surface-muted: #F3F7F8;
+    --color-text-primary: #142B4D;
     --color-text-secondary: #475569;
-    --color-text-muted: #64748b;
-    --color-border: #e0e9f0;
-    --color-divider: #e0e9f0;
-    --color-success: #168a80;
-    --color-success-surface: #eaf8f5;
+    --color-text-muted: #718096;
+    --color-border: #E2E9EE;
+    --color-divider: #EAF1F4;
+    --color-success: #316D61;
+    --color-success-surface: #EAF6F2;
     --color-error: #b42318;
     --color-error-surface: #fef3f2;
     --color-warning: #a16207;
     --color-warning-surface: #fffbeb;
-    --color-info: #168a80;
-    --color-info-surface: #eaf8f5;
-    --color-focus-ring: #168a80;
-    --shadow-card: 0 1px 2px rgb(38 50 56 / 0.04), 0 12px 32px -20px rgb(38 50 56 / 0.2);
-    --shadow-popover: 0 16px 40px -24px rgb(38 50 56 / 0.24);
+    --color-info: #316D61;
+    --color-info-surface: #EAF6F2;
+    --color-focus-ring: #316D61;
+    --shadow-card: 0 1px 2px rgb(20 43 77 / 0.04), 0 12px 32px -20px rgb(20 43 77 / 0.2);
+    --shadow-popover: 0 16px 40px -24px rgb(20 43 77 / 0.24);
 
     font-family: "DM Sans", sans-serif;
 }
 
 body.customer-registration-page {
-    background: #eaf8f5;
+    background: #F7FAFB;
     color: #475569;
-    --yk-feedback-primary: #168a80;
-    --yk-feedback-cyan: #168a80;
-    --yk-feedback-navy: #263238;
-    --yk-feedback-background: #eaf8f5;
-    --yk-feedback-text: #263238;
-    --yk-feedback-muted: #64748b;
-    --yk-feedback-border: #e0e9f0;
-    --yk-feedback-success: #168a80;
+    --yk-feedback-primary: #316D61;
+    --yk-feedback-cyan: #316D61;
+    --yk-feedback-navy: #142B4D;
+    --yk-feedback-background: #F7FAFB;
+    --yk-feedback-text: #142B4D;
+    --yk-feedback-muted: #718096;
+    --yk-feedback-border: #E2E9EE;
+    --yk-feedback-success: #316D61;
     --yk-feedback-warning: #a16207;
-    --yk-feedback-shadow: 0 18px 50px rgb(38 50 56 / 0.16);
+    --yk-feedback-shadow: 0 18px 50px rgb(20 43 77 / 0.16);
 }
 
 body.customer-registration-page :where(h1, h2, h3, h4, h5, h6) {
-    color: #263238;
+    color: #142B4D;
 }
 
 body.customer-registration-page [data-yuktione-feedback] :where(.yk-toast, .yk-inline-alert, .yk-dialog) {

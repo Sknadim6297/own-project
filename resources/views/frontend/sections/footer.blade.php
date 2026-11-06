@@ -5,8 +5,8 @@
     </svg>
     <div class="tazen-footer__main">
         <div class="tazen-footer__brand">
-            <a class="tazen-footer__logo" href="{{ url('/') }}" aria-label="Yuktione home">
-                <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="Yuktione" width="300" height="100" loading="lazy">
+            <a class="tazen-footer__logo" href="{{ url('/') }}" aria-label="{{ config('yuktione.name', 'YuktiOne') }} home">
+                <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="{{ config('yuktione.name', 'YuktiOne') }}" width="300" height="100" loading="lazy">
             </a>
             <p>Discover trusted professionals and services for your next step.</p>
             <h2 class="tazen-footer__social-title">Connect With Us</h2>
@@ -62,6 +62,12 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path></svg>
                 <span>{{ config('yuktione.email', 'info@yuktione.in') }}</span>
             </a>
+            @if (config('yuktione.phone_tel'))
+                <a href="tel:{{ config('yuktione.phone_tel') }}">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.5-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2Z"></path></svg>
+                    <span>{{ config('yuktione.phone_display') }}</span>
+                </a>
+            @endif
             <p>For support and enquiries, contact the {{ config('yuktione.name', 'YuktiOne') }} team.</p>
             <form class="tazen-footer__contact-form" data-contact-redirect>
                 <label for="tazen-footer-email">Send us your email</label>
@@ -79,7 +85,7 @@
 
     <div class="tazen-footer__bottom">
         <div class="tazen-footer__copyright">
-            <span>&copy; {{ date('Y') }} Tazen. All rights reserved.</span>
+            <span>&copy; {{ date('Y') }} {{ config('yuktione.name', 'YuktiOne') }}. All rights reserved.</span>
             <span>Building a trusted community for a brighter tomorrow.</span>
         </div>
         <div class="tazen-footer__preferences">

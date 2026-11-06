@@ -76,7 +76,7 @@
                 <path d="M124 286c18 24 16 54 2 80-24-16-36-44-32-70 8-4 18-8 30-10Z" fill="#8fb278"></path>
                 <path d="M176 118c-6 22-2 40 12 54 8-20 6-38-12-54Z" fill="#6d945c"></path>
             </svg>
-            <h2 class="yk-hero__script yk:relative yk:z-[1] yk:m-0 yk:max-w-[11rem] yk:pr-2 yk:text-[1.85rem] yk:leading-[1.2] yk:text-[#34386f] yk:xl:text-[2.05rem]">Smarter Choices<br>Happier You ♡</h2>
+            <h2 class="yk-hero__script yk:relative yk:z-[1] yk:m-0 yk:max-w-[11rem] yk:pr-2 yk:text-[1.85rem] yk:leading-[1.2] yk:text-[#34386f] yk:xl:text-[2.05rem]">Smarter Choices<br>Happier You</h2>
             <ul class="yk:relative yk:z-[1] yk:m-0 yk:mt-5 yk:flex yk:list-none yk:flex-col yk:gap-3 yk:p-0">
                 @foreach (['Practical guidance', 'Trusted experts', 'A supportive community'] as $benefit)
                     <li class="yk:flex yk:items-center yk:gap-2.5 yk:text-[0.98rem] yk:font-medium yk:text-[#0B2048]">

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="theme-color" content="#36877F">
+    <meta name="theme-color" content="#316D61">
     <meta name="description" content="Update your Yuktione professional application">
     <title>Update Your Application | YuktiOne</title>
     @include('partials.dm-sans')
@@ -867,3 +867,4 @@
 </script>
 </body>
 </html>
+

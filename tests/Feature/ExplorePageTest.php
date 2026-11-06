@@ -154,7 +154,8 @@ class ExplorePageTest extends TestCase
             ->assertDontSee('Hidden Programme')
             ->assertDontSee('Hidden Article')
             ->assertSee('family=DM+Sans', false)
-            ->assertSee('Tools are not published as a catalogue yet.');
+            ->assertSee('Tools are listed separately.')
+            ->assertSee('Open the Tools catalogue');
 
         // Programmes stay hidden while config('yuktione.programmes_enabled') is false.
         if (! config('yuktione.programmes_enabled')) {
@@ -174,7 +175,8 @@ class ExplorePageTest extends TestCase
 
         $this->get(route('gridlisting', ['type' => 'tools']))
             ->assertOk()
-            ->assertSee('does not have a public tools catalogue yet');
+            ->assertSee('Tools live in the dedicated catalogue')
+            ->assertSee('Browse Tools');
 
         $this->get(route('gridlisting', ['category' => 'astrology-tarot']))
             ->assertOk()
