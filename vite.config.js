@@ -3,6 +3,12 @@ import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+    // Bind IPv4 explicitly. Default [::1] breaks auth CSS when the app is opened via 127.0.0.1.
+    server: {
+        host: '127.0.0.1',
+        port: 5173,
+        strictPort: true,
+    },
     plugins: [
         laravel({
             input: [

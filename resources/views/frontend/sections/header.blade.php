@@ -103,12 +103,21 @@
                         <li>
                             <a
                                 href="{{ $link['href'] }}"
-                                @class(['is-active' => $link['active']])
+                                @class([
+                                    'is-active' => $link['active'],
+                                    'is-placeholder' => $link['placeholder'],
+                                ])
                                 @if ($link['active']) aria-current="page" @endif
-                                @if ($link['placeholder']) data-placeholder-link aria-disabled="true" @endif
+                                @if ($link['placeholder'])
+                                    data-placeholder-link
+                                    aria-disabled="true"
+                                    tabindex="-1"
+                                    title="Not available yet"
+                                @endif
                             >
                                 {{ $link['label'] }}
                                 @if ($link['placeholder'])
+                                    <span class="yk-navbar__soon" aria-hidden="true">Soon</span>
                                     <span class="visually-hidden">, not available yet</span>
                                 @endif
                             </a>
@@ -138,9 +147,12 @@
                 </button>
 
                 <div class="yk-navbar__auth">
-                    @if ($account)
+                    @if ($user || $professional)
                         @if ($user)
-                            <a class="yk-navbar__dashboard" href="{{ route('user.dashboard') }}">View Dashboard</a>
+                            <a class="yk-navbar__dashboard" href="{{ route('user.dashboard') }}">Go to Customer Dashboard</a>
+                        @endif
+                        @if ($professional)
+                            <a class="yk-navbar__dashboard" href="{{ route('professional.dashboard') }}">Go to Professional Dashboard</a>
                         @endif
                         <div class="yk-navbar__account" data-account-menu>
                             <button class="yk-navbar__account-toggle" type="button" aria-expanded="false" aria-haspopup="menu" aria-controls="tazen-account-menu" data-account-toggle>
@@ -159,14 +171,15 @@
                                     <a href="{{ $messagesUrl }}" role="menuitem">Messages</a>
                                 @endif
                                 @if ($user)
+                                    <a href="{{ route('user.dashboard') }}" role="menuitem">Customer Dashboard</a>
                                     <a href="{{ route('user.profile.index') }}" role="menuitem">My Profile</a>
                                     <a href="{{ route('user.all-appointment.index') }}" role="menuitem">My Bookings</a>
                                     <form action="{{ route('user.logout') }}" method="POST">
                                         @csrf
                                         <button type="submit" role="menuitem">Logout</button>
                                     </form>
-                                @else
-                                    <a href="{{ route('professional.dashboard') }}" role="menuitem">Dashboard</a>
+                                @elseif ($professional)
+                                    <a href="{{ route('professional.dashboard') }}" role="menuitem">Professional Dashboard</a>
                                     <a href="{{ route('professional.profile.index') }}" role="menuitem">My Profile</a>
                                     <a href="{{ route('professional.booking.index') }}" role="menuitem">My Bookings</a>
                                     <form action="{{ route('professional.logout') }}" method="POST">

@@ -61,8 +61,8 @@
 			'resources/css/yuktione-feedback.css',
 		])
 	@else
-	<!-- Font Awesome -->
-	<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/all.css">
+	<!-- Font Awesome (cdnjs — same reliable source used by customer/professional panels) -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
 
 	<!-- slick / owl kept for pages that still initialise those carousels -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
@@ -163,11 +163,10 @@
 	</style>
 
 	<!-- Tazen Favicon -->
-	<link rel="icon" type="image/x-icon" href="{{ asset('tazen-favicon.png') }}">
-	<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}">
-	<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}">
-	<link rel="icon" type="image/png" sizes="192x192" href="{{ asset('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}">
-	<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}">
+	<link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+	<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('tazen-favicon.png') }}">
+	<link rel="icon" type="image/png" sizes="192x192" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
+	<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
 	<link rel="shortcut icon" href="{{ asset('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}">
 	<meta name="msapplication-TileImage" content="{{ asset('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}">
 	<meta name="theme-color" content="#ffffff">
@@ -281,11 +280,12 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+	<!-- Project JS (common_scripts bundles its own jQuery and would wipe earlier plugins) -->
+	<script src="{{ asset('frontend/assets/js/common_scripts.min.js') }}"></script>
+	{{-- Load carousel plugins after common_scripts so they attach to the final jQuery instance --}}
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-
-	<!-- Project JS -->
-	<script src="{{ asset('frontend/assets/js/common_scripts.min.js') }}"></script>
 	<script src="{{ asset('frontend/assets/js/isotope.pkgd.min.js') }}"></script>
 	<script src="{{ asset('frontend/assets/js/common_func.js') }}"></script>
 	<script src="{{ asset('frontend/assets/validate.js') }}"></script>
@@ -296,7 +296,7 @@
 	<script src="{{ asset('frontend/assets/js/jquery.cookiebar.js') }}"></script>
 	<script>
 		$(document).ready(function () {
-			if (typeof $.fn.slick === 'function') {
+			if (typeof $.fn.slick === 'function' && $('.slick_slider').length) {
 				$('.slick_slider').slick();
 			}
 		});
@@ -318,32 +318,28 @@
 
 	<script>
 		$(document).ready(function () {
+			if (typeof $.fn.owlCarousel !== 'function' || !$('.services-carousal').length) {
+				return;
+			}
+			if ($('.services-carousal').hasClass('owl-loaded')) {
+				return;
+			}
 			$('.services-carousal').owlCarousel({
 				loop: true,
 				margin: 10,
 				responsiveClass: true,
-
 				nav: false,
 				dots: false,
-				autoplay: true,               // Enable autoplay
-				autoplayTimeout: 2000,        // Time between slides (1 second)
-				autoplayHoverPause: true,     // Pause on mouse hover
+				autoplay: true,
+				autoplayTimeout: 2000,
+				autoplayHoverPause: true,
 				ltr: true,
 				responsive: {
-					0: {
-						items: 1,
-
-					},
-					600: {
-						items: 2,
-
-					},
-					1000: {
-						items: 3,
-
-					}
+					0: { items: 1 },
+					600: { items: 2 },
+					1000: { items: 3 }
 				}
-			})
+			});
 		});
 	</script>
 
@@ -363,37 +359,37 @@
 
 
 function initSlider() {
-        
     var slider = $(".slider");
-        
+    if (!slider.length) {
+        return;
+    }
+
+    if (!(typeof jQuery !== 'undefined' && typeof jQuery.fn !== 'undefined' && typeof jQuery.fn.slick === 'function')) {
+        return;
+    }
+
     slider.on("init", function(slick) {
         checkSlides(this, 0);
     });
-    
+
     slider.on("beforeChange", function(event, slick, currentSlide, nextSlide) {
         $(this).addClass("changing");
     });
-    
+
     slider.on("afterChange", function(event, slick, currentSlide) {
         $(this).removeClass("changing");
         checkSlides(this, currentSlide);
     });
-    
-    
-	if (typeof jQuery !== 'undefined' && typeof jQuery.fn !== 'undefined' && typeof jQuery.fn.slick === 'function') {
-		slider.slick({
+
+    slider.slick({
         prevArrow: "<button type='button' class='slick-prev' aria-label='Previous picture'></button>",
         nextArrow: "<button type='button' class='slick-next' aria-label='Next Picture'></button>",
         centerMode: true,
         variableWidth: true,
         dots: true,
-    autoplay: true,
-    slidesToShow: 1,
-		});
-	} else {
-		console.warn('Slick is not available. initSlider will skip slider initialization.');
-	}
-    
+        autoplay: true,
+        slidesToShow: 1,
+    });
 }
 
 function checkSlides(slider, currentSlide) {
@@ -407,91 +403,66 @@ function checkSlides(slider, currentSlide) {
     </script>
 
     <script type="text/javascript">
-		if (typeof jQuery !== 'undefined' && typeof jQuery.fn !== 'undefined' && typeof jQuery.fn.slick === 'function') {
-			jQuery(".property-slide").slick({
-          dots: false,
-          infinite: true,
-          speed: 300,
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          arrows: true,
-          autoplay: true,
-          autoplaySpeed: 6000,
-          prevArrow:
-            '<button class="slick-prev fa-solid fa-arrow-left" aria-label="Prev"></button>',
-          nextArrow:
-            '<button class="slick-next fa-solid fa-arrow-right" aria-label="Next"></button>',
-          responsive: [
-            {
-              breakpoint: 992,
-              settings: {
-                slidesToShow: 2,
-                slidesToScroll: 2
-              }
-            },
-            {
-              breakpoint: 600,
-              settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1
-              }
-            },
-            {
-              breakpoint: 480,
-              settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1
-              }
-            }
-            // You can unslick at a given breakpoint now by adding:
-            // settings: "unslick"
-            // instead of a settings object
-          ]
+		(function ($) {
+			if (typeof $ === 'undefined' || typeof $.fn === 'undefined' || typeof $.fn.slick !== 'function') {
+				return;
+			}
+			var $slides = $(".property-slide");
+			if (!$slides.length) {
+				return;
+			}
+			$slides.slick({
+				dots: false,
+				infinite: true,
+				speed: 300,
+				slidesToShow: 2,
+				slidesToScroll: 2,
+				arrows: true,
+				autoplay: true,
+				autoplaySpeed: 6000,
+				prevArrow: '<button class="slick-prev fa-solid fa-arrow-left" aria-label="Prev"></button>',
+				nextArrow: '<button class="slick-next fa-solid fa-arrow-right" aria-label="Next"></button>',
+				responsive: [
+					{ breakpoint: 992, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+					{ breakpoint: 600, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+					{ breakpoint: 480, settings: { slidesToShow: 1, slidesToScroll: 1 } }
+				]
 			});
-		} else {
-			console.warn('Slick is not available. Skipping property-slide initialization.');
-		}
-
+		})(jQuery);
     </script>
 	<script>
 		$(document).ready(function(){
-				if (typeof jQuery !== 'undefined' && typeof jQuery.fn !== 'undefined' && typeof jQuery.fn.slick === 'function') {
-					$('.slick_slider').slick();
-				} else {
-					console.warn('Slick is not available. Skipping slick_slider initialization.');
-				}
-			});
+			if (typeof $.fn.slick === 'function' && $('.slick_slider').length && !$('.slick_slider').hasClass('slick-initialized')) {
+				$('.slick_slider').slick();
+			}
+		});
 	</script>
 	
 
 	<script>
 		$(document).ready(function () {
+			if (typeof $.fn.owlCarousel !== 'function' || !$('.services-carousal').length) {
+				return;
+			}
+			if ($('.services-carousal').hasClass('owl-loaded')) {
+				return;
+			}
 			$('.services-carousal').owlCarousel({
 				loop: true,
 				margin: 10,
 				responsiveClass: true,
-
 				nav: false,
 				dots: false,
-				autoplay: true,               // Enable autoplay
-				autoplayTimeout: 2000,        // Time between slides (1 second)
-				autoplayHoverPause: true,     // Pause on mouse hover
+				autoplay: true,
+				autoplayTimeout: 2000,
+				autoplayHoverPause: true,
 				ltr: true,
 				responsive: {
-					0: {
-						items: 1,
-
-					},
-					600: {
-						items: 2,
-
-					},
-					1000: {
-						items: 3,
-
-					}
+					0: { items: 1 },
+					600: { items: 2 },
+					1000: { items: 3 }
 				}
-			})
+			});
 		});
 	</script>
 	<script>

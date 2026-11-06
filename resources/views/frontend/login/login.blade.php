@@ -339,8 +339,6 @@
         }
 
         const formData = new FormData(form);
-        const redirect = new URLSearchParams(window.location.search).get('redirect');
-        if (redirect && role === 'customer') formData.set('redirect', redirect);
         if (forceLogin && role === 'customer') formData.set('force_login', '1');
         const url = forceLogin && role === 'customer' ? @json(route('force.login')) : form.action;
 

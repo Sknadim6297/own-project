@@ -7,7 +7,8 @@ use App\Mail\OtpVerificationMail;
 use App\Models\Professional;
 use App\Models\ProfessionalRejection;
 use App\Models\Profile;
-use App\Models\Service; 
+use App\Models\Service;
+use App\Support\Auth\IntendedUrl;
 use App\Traits\ImageUploadTraits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,20 @@ class ProfessionalController extends Controller
 
     public function showLoginForm()
     {
+        if (Auth::guard('professional')->check()) {
+            $professional = Auth::guard('professional')->user();
+
+            if ($professional->status === 'accepted' && $professional->active) {
+                return redirect(IntendedUrl::resolve('professional'));
+            }
+
+            if ($professional->status === 'rejected') {
+                return redirect()->route('professional.rejected.view');
+            }
+
+            return redirect()->route('professional.pending.view');
+        }
+
         return view('frontend.login.login');
     }
 
@@ -74,7 +89,7 @@ class ProfessionalController extends Controller
 
                     return response()->json([
                         'status'  => 'success',
-                        'redirect_url' => route('professional.dashboard'),
+                        'redirect_url' => IntendedUrl::resolve('professional'),
                         'message' => 'You are successfully logged in!',
                     ]);
                 }

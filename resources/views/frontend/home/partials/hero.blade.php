@@ -1,10 +1,11 @@
 @php
+    // Use Explore search chips — CMS service-detail slugs are often missing in QA/local.
     $heroTopics = [
-        ['label' => 'Astrology', 'url' => route('service.show', ['service' => 'top-online-astrologers-india'])],
+        ['label' => 'Astrology', 'query' => 'Astrology'],
         ['label' => 'Relationships', 'query' => 'Relationships'],
-        ['label' => 'Career', 'url' => route('service.show', ['service' => 'best-career-counsellor-online-india'])],
-        ['label' => 'Mental Health', 'url' => route('service.show', ['service' => 'best-online-psychologists-india'])],
-        ['label' => 'Money', 'url' => route('service.show', ['service' => 'top-accounting-tax-filing-consultant-online-services-india'])],
+        ['label' => 'Career', 'query' => 'Career'],
+        ['label' => 'Mental Health', 'query' => 'Mental Health'],
+        ['label' => 'Money', 'query' => 'Money'],
         ['label' => 'Wellness', 'query' => 'Wellness'],
     ];
 @endphp

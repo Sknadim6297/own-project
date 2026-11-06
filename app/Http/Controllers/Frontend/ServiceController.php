@@ -12,9 +12,11 @@ class ServiceController extends Controller
     {
         $service->load('detail');
         
-        // Check if service has detail, if not redirect to home or show error
+        // Detail CMS content is optional; without it send users to Explore for that service.
         if (!$service->detail) {
-            return redirect()->route('home')->with('error', 'Service details are not available yet. Please check back later.');
+            return redirect()
+                ->route('gridlisting', ['service' => $service->slug])
+                ->with('info', 'Detailed service page is not available yet. Browse matching experts instead.');
         }
         
         $testimonials = Testimonial::latest()->get();

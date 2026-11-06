@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\Auth\IntendedUrl;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
 
@@ -16,13 +17,29 @@ class Authenticate extends Middleware
             return null;
         }
         if ($request->is('admin') || $request->is('admin/*')) {
-            return route('admin.login'); 
+            return route('admin.login');
         }
 
-        elseif ($request->is('professional') || $request->is('professional/*')) {
-            return route('professional.login'); 
+        if ($request->is('professional') || $request->is('professional/*')) {
+            return route('professional.login');
         }
 
         return route('login');
+    }
+
+    /**
+     * Remember a guard-specific intended URL before Laravel's guest redirect.
+     *
+     * @param  array<int, string>  $guards
+     */
+    protected function unauthenticated($request, array $guards)
+    {
+        $guard = $guards[0] ?? null;
+
+        if (in_array($guard, ['user', 'professional'], true)) {
+            IntendedUrl::remember($request, $guard);
+        }
+
+        parent::unauthenticated($request, $guards);
     }
 }

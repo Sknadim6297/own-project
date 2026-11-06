@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Support\Auth\IntendedUrl;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
@@ -45,7 +46,7 @@ class CustomerLoginHomeRedirectTest extends TestCase
         });
     }
 
-    public function test_successful_customer_login_redirects_to_home_by_default(): void
+    public function test_successful_customer_login_redirects_to_dashboard_by_default(): void
     {
         $this->member('home-login@example.test');
 
@@ -57,7 +58,7 @@ class CustomerLoginHomeRedirectTest extends TestCase
 
         $response->assertOk()
             ->assertJsonPath('status', 'success')
-            ->assertJsonPath('redirect_url', route('home'));
+            ->assertJsonPath('redirect_url', route('user.dashboard'));
     }
 
     public function test_customer_login_preserves_safe_intended_destination(): void
@@ -65,7 +66,7 @@ class CustomerLoginHomeRedirectTest extends TestCase
         $this->member('intended-login@example.test');
 
         $response = $this->withSession([
-            'url.intended' => url('/user/all-appointment'),
+            IntendedUrl::USER_KEY => url('/user/all-appointment'),
         ])->postJson(route('login.submit'), [
             'email' => 'intended-login@example.test',
             'password' => 'password-123',
@@ -75,6 +76,40 @@ class CustomerLoginHomeRedirectTest extends TestCase
         $response->assertOk()
             ->assertJsonPath('status', 'success')
             ->assertJsonPath('redirect_url', url('/user/all-appointment'));
+    }
+
+    public function test_customer_login_accepts_intended_url_with_alternate_local_host(): void
+    {
+        $this->member('host-login@example.test');
+
+        $response = $this->withSession([
+            'url.intended' => 'http://127.0.0.1:8000/tools/psychology/mood',
+        ])->postJson(route('login.submit'), [
+            'email' => 'host-login@example.test',
+            'password' => 'password-123',
+            'terms_accepted' => '1',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('redirect_url', url('/tools/psychology/mood'));
+    }
+
+    public function test_customer_login_rejects_professional_intended_destination(): void
+    {
+        $this->member('cross-guard@example.test');
+
+        $response = $this->withSession([
+            'url.intended' => url('/professional/dashboard'),
+        ])->postJson(route('login.submit'), [
+            'email' => 'cross-guard@example.test',
+            'password' => 'password-123',
+            'terms_accepted' => '1',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('redirect_url', route('user.dashboard'));
     }
 
     public function test_customer_login_rejects_external_redirect_targets(): void
@@ -90,19 +125,19 @@ class CustomerLoginHomeRedirectTest extends TestCase
 
         $response->assertOk()
             ->assertJsonPath('status', 'success')
-            ->assertJsonPath('redirect_url', route('home'));
+            ->assertJsonPath('redirect_url', route('user.dashboard'));
     }
 
-    public function test_authenticated_customer_visiting_login_is_sent_home(): void
+    public function test_authenticated_customer_visiting_login_is_sent_to_dashboard(): void
     {
         $member = $this->member('already-in@example.test');
 
         $this->actingAs($member, 'user')
             ->get(route('login'))
-            ->assertRedirect(route('home'));
+            ->assertRedirect(route('user.dashboard'));
     }
 
-    public function test_public_header_exposes_view_dashboard_for_customers(): void
+    public function test_public_header_exposes_customer_dashboard_cta(): void
     {
         $member = $this->member('header-dash@example.test');
 
@@ -110,19 +145,21 @@ class CustomerLoginHomeRedirectTest extends TestCase
 
         $html = view('frontend.sections.header')->render();
 
-        $this->assertStringContainsString('View Dashboard', $html);
+        $this->assertStringContainsString('Go to Customer Dashboard', $html);
         $this->assertStringContainsString('yk-navbar__dashboard', $html);
         $this->assertStringContainsString(route('user.dashboard'), $html);
         $this->assertStringContainsString('My Profile', $html);
     }
 
-    public function test_guest_middleware_sends_authenticated_customers_home(): void
+    public function test_guest_middleware_sends_authenticated_customers_to_dashboard(): void
     {
         $member = $this->member('guest-mw@example.test');
 
+        // Exercise RedirectIfAuthenticated directly — /forgot-password is registered
+        // twice in web.php and the first match is not behind `guest`.
         $this->actingAs($member, 'user')
-            ->get(route('forgot.form'))
-            ->assertRedirect(route('home'));
+            ->get(route('login'))
+            ->assertRedirect(route('user.dashboard'));
     }
 
     private function member(string $email): User

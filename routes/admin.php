@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\ProfessionalRequestedController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\ManageAdminController;
 use App\Http\Controllers\Admin\AdminMenuController;
+use App\Http\Controllers\Admin\PlanPurchaseController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ProfessionalEventController;
 use App\Http\Controllers\Admin\CategoryBoxController;

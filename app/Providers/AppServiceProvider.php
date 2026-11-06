@@ -23,6 +23,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Refuse an unsafe production debug posture (including stale config:cache).
+        if ($this->app->environment('production') && config('app.debug') === true) {
+            throw new \RuntimeException(
+                'Unsafe configuration: APP_DEBUG must be false when APP_ENV is production. Clear config cache after correcting .env (php artisan config:clear).'
+            );
+        }
+
         // Configure morph map for polymorphic relationships
         Relation::morphMap([
             'admin' => Admin::class,

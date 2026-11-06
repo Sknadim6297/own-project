@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\Auth\IntendedUrl;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,8 +16,10 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, ...$guards)
     {
         // Default `guest` uses the web guard; also recognise app-specific guards.
+        // Prefer named guards first — a null/default guard must not fall through to Home
+        // when the customer (`user`) session is authenticated.
         if ($guards === []) {
-            $guards = [null, 'web', 'user', 'admin', 'professional'];
+            $guards = ['user', 'professional', 'admin', 'web'];
         }
 
         foreach ($guards as $guard) {
@@ -26,9 +29,16 @@ class RedirectIfAuthenticated
 
             return match ($guard) {
                 'admin' => redirect('/admin/dashboard'),
-                'professional' => redirect('/professional/dashboard'),
-                'user' => redirect()->route('home'),
-                default => redirect()->route('home'),
+                'professional' => redirect(IntendedUrl::resolve('professional')),
+                'user' => redirect(IntendedUrl::resolve('user')),
+                'web' => Auth::guard('user')->check()
+                    ? redirect(IntendedUrl::resolve('user'))
+                    : redirect()->route('home'),
+                default => Auth::guard('user')->check()
+                    ? redirect(IntendedUrl::resolve('user'))
+                    : (Auth::guard('professional')->check()
+                        ? redirect(IntendedUrl::resolve('professional'))
+                        : redirect()->route('home')),
             };
         }
 

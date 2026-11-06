@@ -797,10 +797,11 @@
                 });
             }
 
-            // Star rating selection with enhanced feedback
-            const starInputs = document.querySelectorAll('.star-rating input');
+            // Star rating selection — only when the review form exists (logged-in customers).
+            const starRating = document.querySelector('.star-rating');
+            const starInputs = starRating ? starRating.querySelectorAll('input') : [];
             const ratingValue = document.getElementById('selected-rating');
-            
+
             starInputs.forEach(input => {
                 input.addEventListener('change', function() {
                     const value = parseInt(this.value);
@@ -833,15 +834,15 @@
                             emoji = '';
                     }
                     
-                    if (value >= 1 && value <= 5) {
+                    if (ratingValue && value >= 1 && value <= 5) {
                         ratingValue.innerHTML = `<span style="color: #ffa500; font-weight: 600;">${emoji} ${text}</span> <span style="color: #666;">(${value}/5)</span>`;
-                        
+
                         // Visual feedback with animation
                         ratingValue.style.transform = 'scale(1.1)';
                         setTimeout(() => {
                             ratingValue.style.transform = 'scale(1)';
                         }, 200);
-                        
+
                         // Show success message for higher ratings
                         if (value >= 4) {
                             if (typeof toastr !== 'undefined') {
@@ -850,12 +851,12 @@
                         }
                     }
                 });
-                
+
                 // Add hover effect for better UX
                 input.addEventListener('mouseover', function() {
                     const value = parseInt(this.value);
-                    const labels = document.querySelectorAll('.star-rating label');
-                    
+                    const labels = starRating.querySelectorAll('label');
+
                     labels.forEach((label, index) => {
                         const starValue = 5 - index; // Since we're using reverse order
                         if (starValue <= value) {
@@ -868,23 +869,25 @@
                     });
                 });
             });
-            
+
             // Reset stars on mouse leave
-            document.querySelector('.star-rating').addEventListener('mouseleave', function() {
-                const checkedInput = document.querySelector('.star-rating input:checked');
-                const labels = document.querySelectorAll('.star-rating label');
-                
-                labels.forEach((label, index) => {
-                    const starValue = 5 - index;
-                    if (checkedInput && starValue <= parseInt(checkedInput.value)) {
-                        label.style.color = '#ffa500';
-                        label.style.transform = 'scale(1.1)';
-                    } else {
-                        label.style.color = '#ddd';
-                        label.style.transform = 'scale(1)';
-                    }
+            if (starRating) {
+                starRating.addEventListener('mouseleave', function() {
+                    const checkedInput = starRating.querySelector('input:checked');
+                    const labels = starRating.querySelectorAll('label');
+
+                    labels.forEach((label, index) => {
+                        const starValue = 5 - index;
+                        if (checkedInput && starValue <= parseInt(checkedInput.value)) {
+                            label.style.color = '#ffa500';
+                            label.style.transform = 'scale(1.1)';
+                        } else {
+                            label.style.color = '#ddd';
+                            label.style.transform = 'scale(1)';
+                        }
+                    });
                 });
-            });
+            }
 
             // Submit review with enhanced validation and feedback
             const submitReviewBtn = document.getElementById('submitReview');
