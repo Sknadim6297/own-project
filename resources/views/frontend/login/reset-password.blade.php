@@ -7,6 +7,8 @@
     <title>Reset Password | YuktiOne</title>
     @include('partials.dm-sans')
     <link rel="icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
     @vite(['resources/css/tazen.css', 'resources/css/auth-theme.css', 'resources/css/yuktione-feedback.css'])
     <style>
         .password-strength { height: 4px; margin-top: .5rem; overflow: hidden; border-radius: 9999px; background: #e0e9f0; }

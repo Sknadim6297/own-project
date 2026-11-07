@@ -70,6 +70,14 @@ class User extends Authenticatable
             $this->attributes['password'] = Hash::make($value);
         }
     }
+
+    /**
+     * Send the YuktiOne-branded password reset notification.
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new \App\Notifications\CustomerResetPassword($token));
+    }
     
     public function bookings()
     {

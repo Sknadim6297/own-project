@@ -7,6 +7,7 @@ use App\Models\Tool;
 use App\Models\ToolCategory;
 use App\Models\User;
 use App\Services\CareerInterestDraft;
+use App\Support\Auth\IntendedUrl;
 use App\Support\CareerInterest\CareerInterestCatalog;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Database\Schema\Blueprint;
@@ -83,11 +84,91 @@ class CareerInterestTest extends TestCase
 
         $this->get(route('tools.career-interest.result', $attempt))
             ->assertOk()
-            ->assertSee('Your Interest Profile');
+            ->assertSee('Your Interest Profile')
+            ->assertSee('View History')
+            ->assertSee(route('tools.career-interest.history'), false);
 
         $this->get(route('tools.career-interest.history'))
             ->assertOk()
-            ->assertSee('Assessment history');
+            ->assertSee('Assessment history')
+            ->assertSee('View Result')
+            ->assertSee(route('tools.career-interest.result', $attempt), false);
+    }
+
+    public function test_customer_can_open_own_history_and_result(): void
+    {
+        $this->storage(true);
+        $owner = $this->member('cit-history-owner@example.com');
+        $attempt = $this->seedAttempt($owner);
+
+        $this->actingAs($owner, 'user')
+            ->get(route('tools.career-interest.history'))
+            ->assertOk()
+            ->assertSee('Assessment history')
+            ->assertSee('Investigative')
+            ->assertSee('View Result');
+
+        $this->actingAs($owner, 'user')
+            ->get(route('tools.career-interest.result', $attempt))
+            ->assertOk()
+            ->assertSee('Your Interest Profile')
+            ->assertSee('View History')
+            ->assertDontSee('Back to history');
+    }
+
+    public function test_customer_cannot_open_another_customers_result(): void
+    {
+        $this->storage(true);
+        $owner = $this->member('cit-owner-a@example.com');
+        $other = $this->member('cit-owner-b@example.com');
+        $attempt = $this->seedAttempt($owner);
+
+        $this->actingAs($other, 'user')
+            ->get(route('tools.career-interest.result', $attempt))
+            ->assertForbidden();
+
+        $this->actingAs($other, 'user')
+            ->get(route('tools.career-interest.history'))
+            ->assertOk()
+            ->assertSee('No saved assessments yet')
+            ->assertDontSee(route('tools.career-interest.result', $attempt), false);
+    }
+
+    public function test_guest_history_and_result_redirect_to_login_with_intended_url(): void
+    {
+        $this->storage(true);
+        $owner = $this->member('cit-guest-intended@example.com');
+        $attempt = $this->seedAttempt($owner);
+
+        $this->get(route('tools.career-interest.history'))
+            ->assertRedirect(route('login'));
+        $this->assertSame(
+            route('tools.career-interest.history'),
+            session('url.intended')
+        );
+
+        $this->get(route('tools.career-interest.result', $attempt))
+            ->assertRedirect(route('login'));
+        $this->assertSame(
+            route('tools.career-interest.result', $attempt),
+            session('url.intended')
+        );
+
+        $resolved = IntendedUrl::pull('user');
+        $this->assertSame(route('tools.career-interest.result', $attempt), $resolved);
+    }
+
+    public function test_empty_history_displays_friendly_state(): void
+    {
+        $this->storage(true);
+        $member = $this->member('cit-empty-history@example.com');
+
+        $this->actingAs($member, 'user')
+            ->get(route('tools.career-interest.history'))
+            ->assertOk()
+            ->assertSee('No saved assessments yet')
+            ->assertSee('Complete the Career Interest Test')
+            ->assertDontSee('View Result');
     }
 
     public function test_validation_rejects_incomplete_about_and_answers(): void

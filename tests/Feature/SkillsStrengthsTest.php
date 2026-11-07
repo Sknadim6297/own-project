@@ -61,9 +61,8 @@ class SkillsStrengthsTest extends TestCase
             ->assertSee('Areas to build')
             ->assertSee('Retake Assessment')
             ->assertSee('Browse Career Experts')
-            ->assertSee('Explore Career Insights')
+            ->assertDontSee('Explore Career Insights')
             ->assertSee(route('professionals', ['category' => 'career-business']), false)
-            ->assertSee(route('blog.index'), false)
             ->assertSee('implementation convention', false)
             ->assertSee('Log in to save');
 
@@ -86,7 +85,8 @@ class SkillsStrengthsTest extends TestCase
 
         $this->get(route('tools.skills-strengths.result', $attempt))
             ->assertOk()
-            ->assertSee('Your Skills Profile');
+            ->assertSee('Your Skills Profile')
+            ->assertDontSee('Explore Career Insights');
 
         $this->get(route('tools.skills-strengths.history'))
             ->assertOk()

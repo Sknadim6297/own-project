@@ -108,8 +108,10 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'support@tazen.in'),
-        'name' => env('MAIL_FROM_NAME', 'Support Tazen'),
+        // Display name defaults to YuktiOne. Do not invent a production sending address here.
+        // Set MAIL_FROM_ADDRESS to an authorized YuktiOne-domain mailbox (never a legacy Tazen mailbox).
+        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        'name' => env('MAIL_FROM_NAME', 'YuktiOne'),
     ],
 
     /*

@@ -4,9 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\Professional;
 use App\Models\User;
+use App\Notifications\CustomerResetPassword;
 use App\Notifications\ProfessionalResetPassword;
 use App\Services\AccountRecovery;
-use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
@@ -87,7 +87,7 @@ class AccountRecoveryTest extends TestCase
             ->assertSessionMissing('recovery_unregistered');
 
         $this->assertStringNotContainsString($user->email, (string) session('status'));
-        Notification::assertSentTo($user, ResetPassword::class);
+        Notification::assertSentTo($user, CustomerResetPassword::class);
 
         session()->flash('status', AccountRecovery::SENT_MESSAGE);
         $html = view('frontend.login.forget-password')->render();

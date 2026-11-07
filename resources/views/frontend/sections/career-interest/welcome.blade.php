@@ -31,7 +31,7 @@
                         <button class="yk-cit__btn" type="submit">{{ $hasDraft ? 'Continue Assessment' : 'Start Assessment' }}</button>
                     </form>
                     @auth('user')
-                        <a class="yk-cit__btn-secondary" href="{{ route('tools.career-interest.history') }}">View history</a>
+                        <a class="yk-cit__btn-secondary" href="{{ route('tools.career-interest.history') }}">View History</a>
                     @endauth
                 </div>
                 <p class="yk-cit__meta">Free · Save results to your YuktiOne profile when you are ready</p>

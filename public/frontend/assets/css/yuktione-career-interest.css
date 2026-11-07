@@ -143,12 +143,30 @@
 .yk-cit__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6rem;
+    align-items: stretch;
+    gap: 0.65rem;
     margin-top: 1.15rem;
+}
+
+.yk-cit__actions--flush {
+    margin-top: 0;
 }
 
 .yk-cit__card--hero .yk-cit__actions {
     justify-content: center;
+}
+
+/* Forms wrapping POST buttons must participate in the flex row like links. */
+.yk-cit__actions > form {
+    margin: 0;
+    display: flex;
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+.yk-cit__actions > form .yk-cit__btn,
+.yk-cit__actions > form .yk-cit__btn-secondary {
+    width: 100%;
 }
 
 .yk-cit__btn,
@@ -156,13 +174,17 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
     min-height: 44px;
     padding: 0 1.1rem;
     border-radius: 999px;
     font: inherit;
     font-weight: 700;
     font-size: 0.9rem;
+    line-height: 1.2;
     text-decoration: none;
+    text-align: center;
+    white-space: nowrap;
     border: 1px solid transparent;
     cursor: pointer;
     transition: background var(--yk-ease), color var(--yk-ease), border-color var(--yk-ease), transform 120ms ease;
@@ -552,17 +574,80 @@
     color: var(--yk-muted);
 }
 
+.yk-cit__list-cta {
+    display: inline-block;
+    margin-top: 0.45rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--yk-teal);
+}
+
 .yk-cit__pages {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 0.65rem;
     margin-top: 1rem;
     flex-wrap: wrap;
 }
 
+.yk-cit__empty {
+    margin-top: 1.2rem;
+}
+
+.yk-cit__empty .yk-cit__lead {
+    margin: 0;
+}
+
+.yk-cit__empty .yk-cit__note {
+    margin: 0.5rem 0 0;
+}
+
+.yk-cit__list-block {
+    margin-top: 1.2rem;
+}
+
 @media (max-width: 720px) {
+    .yk-cit {
+        min-height: 0;
+        padding: 0.55rem 0 2rem;
+    }
+
+    .yk-cit__wrap {
+        width: min(760px, calc(100% - 1.5rem));
+    }
+
+    .yk-cit__card {
+        padding: 1rem 0.9rem 1.1rem;
+    }
+
+    .yk-cit__card--hero {
+        padding-top: 0.95rem;
+    }
+
+    .yk-cit__hero-icon {
+        width: 2.75rem;
+        height: 2.75rem;
+        margin-bottom: 0.65rem;
+    }
+
+    .yk-cit h1 {
+        font-size: clamp(1.28rem, 5vw, 1.55rem);
+    }
+
+    .yk-cit__lead {
+        margin-bottom: 0.75rem;
+        font-size: 0.9rem;
+    }
+
     .yk-cit__stats {
         grid-template-columns: 1fr;
+        gap: 0.45rem;
+        margin-bottom: 0.9rem;
+    }
+
+    .yk-cit__stats div {
+        padding: 0.65rem 0.5rem;
     }
 
     .yk-cit__scale {
@@ -586,8 +671,33 @@
         font-size: 0.82rem;
     }
 
+    .yk-cit__actions {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        margin-top: 0.95rem;
+        gap: 0.55rem;
+    }
+
+    .yk-cit__actions > a,
+    .yk-cit__actions > form {
+        flex: 1 1 auto;
+        width: 100%;
+        max-width: 100%;
+    }
+
     .yk-cit__btn,
     .yk-cit__btn-secondary {
+        width: 100%;
+        white-space: normal;
+    }
+
+    .yk-cit__pages {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .yk-cit__pages .yk-cit__btn-secondary {
         width: 100%;
     }
 }

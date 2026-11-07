@@ -7,6 +7,8 @@
     <title>Forgot Password | YuktiOne</title>
     @include('partials.dm-sans')
     <link rel="icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
     @vite(['resources/css/tazen.css', 'resources/css/auth-theme.css', 'resources/css/yuktione-feedback.css'])
 </head>
 <body class="yuktione-auth-page min-h-screen bg-background px-4 py-8 font-sans text-text-primary sm:px-6">

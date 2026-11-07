@@ -529,12 +529,97 @@
 }
 
 @media (max-width: 639px) {
+    .yk-tools {
+        padding: 0.5rem 0 2rem;
+    }
+
+    .yk-tools__wrap {
+        width: min(1180px, calc(100% - 1.5rem));
+    }
+
+    .yk-tools__intro {
+        margin-bottom: 0.45rem;
+    }
+
+    .yk-tools__intro h1 {
+        font-size: 1.35rem;
+    }
+
+    .yk-tools__lead {
+        margin-top: 0.3rem;
+        font-size: 0.88rem;
+        line-height: 1.45;
+    }
+
+    .yk-tools__cats {
+        margin-bottom: 0.45rem;
+        gap: 0.35rem;
+    }
+
+    .yk-tools__chip {
+        min-height: 2rem;
+        padding: 0.28rem 0.7rem;
+        font-size: 0.78rem;
+    }
+
+    .yk-tools__toolbar {
+        gap: 0.45rem 0.75rem;
+        padding: 0.35rem 0;
+        margin-bottom: 0.65rem;
+    }
+
     .yk-tools__toolbar-actions {
         width: 100%;
     }
 
     .yk-tools__search {
         flex: 1 1 100%;
+    }
+
+    .yk-tools__grid {
+        gap: 0.7rem;
+    }
+
+    /* Drop forced body height — main source of empty card space on phones. */
+    .yk-tool-card__media {
+        aspect-ratio: 2.35 / 1;
+        max-height: 4.5rem;
+    }
+
+    .yk-tool-card__mark {
+        width: 2.35rem;
+        height: 2.35rem;
+        border-radius: 10px;
+    }
+
+    .yk-tool-card__mark svg {
+        width: 1.15rem;
+        height: 1.15rem;
+    }
+
+    .yk-tool-card__body {
+        min-height: 0;
+        gap: 0.22rem;
+        padding: 0.65rem 0.75rem 0.7rem;
+    }
+
+    .yk-tool-card__desc {
+        min-height: 0;
+        font-size: 0.78rem;
+    }
+
+    .yk-tool-card__name {
+        font-size: 0.92rem;
+    }
+
+    .yk-tool-card__cta {
+        margin-top: 0.45rem;
+    }
+
+    .yk-tools__btn {
+        min-height: 40px;
+        padding: 0.45rem 0.75rem;
+        font-size: 0.82rem;
     }
 }
 

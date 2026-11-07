@@ -59,7 +59,6 @@
             <div class="yk-ssa__actions">
                 <a class="yk-ssa__btn-secondary" href="{{ route('tools.skills-strengths.history') }}">Back to history</a>
                 <a class="yk-ssa__btn-secondary" href="{{ $careerExperts['url'] }}">{{ $careerExperts['label'] }}</a>
-                <a class="yk-ssa__btn-secondary" href="{{ route('blog.index') }}">Explore Career Insights</a>
                 <form method="post" action="{{ route('tools.skills-strengths.retake') }}">
                     @csrf
                     <button class="yk-ssa__btn" type="submit">Retake</button>

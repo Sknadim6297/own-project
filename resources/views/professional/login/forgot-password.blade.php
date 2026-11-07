@@ -7,13 +7,15 @@
     <title>Forgot Password | YuktiOne</title>
     @include('partials.dm-sans')
     <link rel="icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
     @vite(['resources/css/tazen.css', 'resources/css/auth-theme.css', 'resources/css/yuktione-feedback.css'])
 </head>
 <body class="yuktione-auth-page min-h-screen bg-background px-4 py-8 font-sans text-text-primary sm:px-6">
     <main class="mx-auto flex min-h-[75vh] w-full max-w-lg items-center justify-center">
         <section class="w-full rounded-panel border border-border bg-white p-6 shadow-card sm:p-9">
-            <a href="{{ route('home') }}" class="mb-7 flex justify-center" aria-label="Yuktione home">
-                <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="Yuktione" class="h-auto max-h-16 w-auto max-w-[210px] object-contain">
+            <a href="{{ route('home') }}" class="mb-7 flex justify-center" aria-label="YuktiOne home">
+                <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="h-auto max-h-16 w-auto max-w-[210px] object-contain">
             </a>
             <div class="mb-7">
                 <p class="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-brand-primary">Account recovery</p>

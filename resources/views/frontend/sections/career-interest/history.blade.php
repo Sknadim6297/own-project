@@ -20,18 +20,21 @@
                 <p class="yk-cit__error">{{ $errors->first() }}</p>
             @endif
 
-            <div class="yk-cit__actions" style="margin-top:0;">
+            <div class="yk-cit__actions yk-cit__actions--flush" aria-label="History actions">
                 <form method="post" action="{{ route('tools.career-interest.retake') }}">
                     @csrf
-                    <button class="yk-cit__btn" type="submit">Retake assessment</button>
+                    <button class="yk-cit__btn" type="submit">Retake Assessment</button>
                 </form>
                 <a class="yk-cit__btn-secondary" href="{{ route('tools.career-interest') }}">Assessment home</a>
             </div>
 
             @if ($items->isEmpty())
-                <p class="yk-cit__lead" style="margin-top:1.2rem;">No saved assessments yet.</p>
+                <div class="yk-cit__empty" role="status">
+                    <p class="yk-cit__lead">No saved assessments yet.</p>
+                    <p class="yk-cit__note">Complete the Career Interest Test and save it to your profile to build your history.</p>
+                </div>
             @else
-                <ul class="yk-cit__list" style="margin-top:1.2rem;">
+                <ul class="yk-cit__list yk-cit__list-block">
                     @foreach ($items as $item)
                         @php
                             $tops = collect($item->top_categories ?? [])
@@ -44,6 +47,7 @@
                                 <strong>{{ $tops !== '' ? $tops : 'Interest profile' }}</strong>
                                 <br>
                                 <small>{{ $when }} · Asia/Kolkata</small>
+                                <span class="yk-cit__list-cta">View Result</span>
                             </a>
                         </li>
                     @endforeach

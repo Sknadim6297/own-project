@@ -53,11 +53,11 @@
                 </ul>
             @endif
 
-            <div class="yk-cit__actions">
-                <a class="yk-cit__btn-secondary" href="{{ route('tools.career-interest.history') }}">Back to history</a>
+            <div class="yk-cit__actions" aria-label="Result actions">
+                <a class="yk-cit__btn" href="{{ route('tools.career-interest.history') }}">View History</a>
                 <form method="post" action="{{ route('tools.career-interest.retake') }}">
                     @csrf
-                    <button class="yk-cit__btn" type="submit">Retake</button>
+                    <button class="yk-cit__btn-secondary" type="submit">Retake Assessment</button>
                 </form>
                 <form method="post" action="{{ route('tools.career-interest.destroy', $attempt) }}" onsubmit="return confirm('Delete this saved assessment?');">
                     @csrf

@@ -249,6 +249,8 @@ class CareerInterestController extends Controller
     public function history(Request $request)
     {
         if (! Auth::guard('user')->check()) {
+            $this->rememberCustomerIntended(route('tools.career-interest.history'));
+
             return redirect()->route('login');
         }
 
@@ -266,8 +268,14 @@ class CareerInterestController extends Controller
         ]);
     }
 
-    public function result(CareerInterestAttempt $attempt)
+    public function result(Request $request, CareerInterestAttempt $attempt)
     {
+        if (! Auth::guard('user')->check()) {
+            $this->rememberCustomerIntended(route('tools.career-interest.result', $attempt));
+
+            return redirect()->route('login');
+        }
+
         $this->authorizeAttempt($attempt);
 
         return view('frontend.sections.career-interest.result', [
@@ -277,8 +285,14 @@ class CareerInterestController extends Controller
         ]);
     }
 
-    public function destroy(CareerInterestAttempt $attempt)
+    public function destroy(Request $request, CareerInterestAttempt $attempt)
     {
+        if (! Auth::guard('user')->check()) {
+            $this->rememberCustomerIntended(route('tools.career-interest.history'));
+
+            return redirect()->route('login');
+        }
+
         $this->authorizeAttempt($attempt);
         $attempt->delete();
 
@@ -315,6 +329,15 @@ class CareerInterestController extends Controller
         if (! Auth::guard('user')->check() || (int) $attempt->user_id !== (int) Auth::guard('user')->id()) {
             abort(403);
         }
+    }
+
+    /**
+     * Remember a customer post-login destination.
+     * Uses Laravel's shared key (same pattern as Mood / Journal history).
+     */
+    private function rememberCustomerIntended(string $url): void
+    {
+        session(['url.intended' => $url]);
     }
 
     private function guardPriorCategories(string $category, CareerInterestDraft $draft): ?\Illuminate\Http\RedirectResponse
