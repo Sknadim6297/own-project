@@ -29,46 +29,22 @@ class PaymentFailureNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable)
     {
-        $subject = $this->userType === 'professional' 
+        $subject = $this->userType === 'professional'
             ? 'Payment Failed - Customer Booking Alert'
             : 'Payment Failure Alert - Immediate Attention Required';
 
-        $mailMessage = (new MailMessage)
+        $isAppointment = ($this->paymentData['booking_type'] ?? '') === 'appointment'
+            || isset($this->paymentData['service_name']);
+
+        return (new MailMessage)
             ->subject($subject)
-            ->greeting($this->getGreeting())
-            ->line($this->getMainMessage())
-            ->line('')
-            ->line('**Payment Details:**')
-            ->line('• Amount: ₹' . number_format($this->paymentData['amount'] / 100, 2))
-            ->line('• Error: ' . ($this->paymentData['error_description'] ?? 'Unknown error'))
-            ->line('• Reference ID: ' . ($this->paymentData['reference_id'] ?? 'N/A'))
-            ->line('• Time: ' . now()->format('d M Y, h:i A'))
-            ->line('')
-            ->line('**Customer Details:**')
-            ->line('• Name: ' . ($this->userDetails['name'] ?? 'N/A'))
-            ->line('• Email: ' . ($this->userDetails['email'] ?? 'N/A'))
-            ->line('• Phone: ' . ($this->paymentData['phone'] ?? 'N/A'));
-
-        if ($this->userType === 'professional') {
-            $mailMessage->line('')
-                ->line('**Next Steps for Professional:**')
-                ->line('• Contact the customer to provide alternative payment options')
-                ->line('• Offer manual booking assistance if needed')
-                ->line('• Keep this booking slot reserved for 24 hours')
-                ->action('View Customer Details', url('/professional/dashboard'))
-                ->line('Please reach out to the customer promptly to ensure a positive experience.');
-        } else {
-            $mailMessage->line('')
-                ->line('**Immediate Actions Required:**')
-                ->line('• Review the payment failure reason')
-                ->line('• Contact the customer if needed')
-                ->line('• Monitor for retry attempts')
-                ->action('View Admin Dashboard', url('/admin/dashboard'))
-                ->line('This requires immediate attention to maintain customer satisfaction.');
-        }
-
-        return $mailMessage->line('')
-            ->line('Thank you for maintaining excellent service quality!');
+            ->view('emails.payment-failure', [
+                'paymentData' => $this->paymentData,
+                'userDetails' => $this->userDetails ?? ['name' => 'N/A', 'email' => 'N/A'],
+                'recipientType' => $this->userType,
+                'isAppointment' => $isAppointment,
+                'isEvent' => !$isAppointment,
+            ]);
     }
 
     public function toArray($notifiable)

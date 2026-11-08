@@ -1,191 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $subject }}</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            color: #333333;
-        }
-        
-        .email-container {
-            max-width: 600px;
-            margin: 20px auto;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        
-        .email-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #ffffff;
-            text-align: center;
-            padding: 30px 20px;
-        }
-        
-        .logo {
-            max-width: 150px;
-            height: auto;
-            margin-bottom: 10px;
-        }
-        
-        .company-name {
-            font-size: 28px;
-            font-weight: bold;
-            margin: 10px 0;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        .email-body {
-            padding: 40px 30px;
-            background-color: #ffffff;
-        }
-        
-        .greeting {
-            font-size: 18px;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-        
-        .admin-message-intro {
-            font-size: 16px;
-            color: #34495e;
-            margin-bottom: 25px;
-            font-weight: 500;
-        }
-        
-        .message-content {
-            background-color: #f8f9fa;
-            border-left: 4px solid #667eea;
-            padding: 20px;
-            margin: 25px 0;
-            border-radius: 5px;
-            font-size: 15px;
-            line-height: 1.7;
-            color: #2c3e50;
-        }
-        
-        .email-footer {
-            background-color: #2c3e50;
-            color: #ffffff;
-            text-align: center;
-            padding: 30px 20px;
-        }
-        
-        .regards {
-            font-size: 16px;
-            margin-bottom: 15px;
-            font-weight: 500;
-        }
-        
-        .company-logo {
-            max-width: 120px;
-            height: auto;
-            margin: 15px 0;
-        }
-        
-        .footer-info {
-            font-size: 12px;
-            color: #95a5a6;
-            margin-top: 20px;
-            line-height: 1.5;
-        }
-        
-        .divider {
-            height: 2px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 30px 0;
-            border: none;
-        }
-        
-        @media (max-width: 600px) {
-            .email-container {
-                margin: 10px;
-                border-radius: 5px;
-            }
-            
-            .email-body {
-                padding: 25px 20px;
-            }
-            
-            .email-header {
-                padding: 25px 15px;
-            }
-            
-            .company-name {
-                font-size: 24px;
-            }
-            
-            .greeting {
-                font-size: 16px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="email-container">
-        <!-- Header -->
-        {{-- <div class="email-header">
-            <img src="{{ url('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}" alt="Tazen Logo" class="logo" style="max-width: 120px; height: auto; margin-bottom: 10px;">
-            <div class="company-name">TAZEN</div>
-            <p style="margin: 0; font-size: 14px; opacity: 0.9;">Professional Services Platform</p>
-        </div> --}}
-        
-        <!-- Body -->
-        <div class="email-body">
-            <!-- Greeting -->
-            <div class="greeting">
-                Dear {{ $recipientName }},
-            </div>
-            
-            <!-- Admin Message Introduction -->
-            <div class="admin-message-intro">
-                Admin wants to inform you that:
-            </div>
-            
-            <!-- Divider -->
-            <hr class="divider">
-            
-            <!-- Message Content -->
-            <div class="message-content">
+@extends('emails.layouts.base')
+
+@section('title', $subject ?? 'YuktiOne notification')
+@section('preheader', 'You have a new message from the YuktiOne administration team.')
+@section('heading', $subject ?? 'Admin notification')
+@section('subtitle', 'Official communication from YuktiOne')
+
+@section('content')
+    <p style="margin:0 0 16px;">Dear {{ $recipientName }},</p>
+    <p style="margin:0 0 14px;">The YuktiOne administration team wants to share the following update:</p>
+
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:8px 0 18px;background-color:#f8fbfa;border:1px solid #e2e8ee;border-radius:10px;">
+        <tr>
+            <td style="padding:18px;font-size:15px;line-height:1.65;color:#142B4D;">
                 {!! nl2br(e($messageContent)) !!}
-            </div>
-            
-            <!-- Divider -->
-            <hr class="divider">
-            
-            <p style="margin-top: 30px; color: #7f8c8d; font-size: 14px;">
-                This is an official communication from the Tazen administration team. 
-                If you have any questions or concerns, please don't hesitate to contact our support team.
-            </p>
-        </div>
-        
-        <!-- Footer -->
-        <div class="email-footer">
-            <div class="regards">
-                Regards,<br>
-                <strong>Tazen Team</strong>
-            </div>
-            
-            <!-- Company Logo -->
-            <div style="margin: 20px 0;">
-                <img src="{{ url('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}" alt="Tazen Logo" style="max-width: 100px; height: auto; filter: brightness(0) invert(1);">
-            </div>
-            
-            <div class="footer-info">
-                © {{ date('Y') }} Tazen. All rights reserved.<br>
-                Professional Services Platform<br>
-                <em>Connecting professionals with clients seamlessly</em>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+            </td>
+        </tr>
+    </table>
+
+    <p style="margin:0;color:#5b6b7c;font-size:14px;">
+        If you have questions about this message, contact
+        <a href="mailto:{{ config('yuktione.email', 'info@yuktione.in') }}" style="color:#316D61;text-decoration:none;">{{ config('yuktione.email', 'info@yuktione.in') }}</a>.
+    </p>
+@endsection

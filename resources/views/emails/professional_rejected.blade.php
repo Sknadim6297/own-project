@@ -1,19 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Application Rejected</title>
-</head>
-<body>
-    <p>Dear {{ $professional->name }},</p>
+@extends('emails.layouts.base')
 
-    <p>Thank you for applying to our platform. We appreciate your interest, but unfortunately, we are unable to approve your application at this time.</p>
+@section('title', 'Application update')
+@section('preheader', 'An update on your YuktiOne professional application.')
+@section('heading', 'Application not approved')
+@section('subtitle', 'Please review the reason below')
 
-    <p><strong>Reason for Rejection:</strong></p>
-    <blockquote>{{ $reason }}</blockquote>
+@section('content')
+    <p style="margin:0 0 16px;">Dear {{ $professional->name }},</p>
+    <p style="margin:0 0 14px;">Thank you for applying to YuktiOne. After careful review, we are unable to approve your application at this time.</p>
 
-    <p>If you believe this was a mistake or wish to update your information, you may log in and resubmit the necessary details for reconsideration.</p>
+    @include('emails.partials.info-card', [
+        'title' => 'Reason',
+        'rows' => [
+            ['label' => 'Details', 'value' => e($reason)],
+        ],
+    ])
 
-    <p>Regards,<br>Admin Team</p>
-</body>
-</html>
+    <p style="margin:0 0 14px;">If you believe this was a mistake or you would like to update your information, you may log in and resubmit the required details for reconsideration.</p>
+
+    @include('emails.partials.button', [
+        'url' => route('professional.login'),
+        'label' => 'Sign in to update',
+    ])
+@endsection
