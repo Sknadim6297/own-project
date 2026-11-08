@@ -1,5 +1,5 @@
-<div id="loader" >
-            <img src="assets/images/media/loader.svg" alt="">
+            <div id="loader" >
+            <img src="{{ asset('admin/assets/images/media/loader.svg') }}" alt="">
         </div>
         <!-- Loader -->
 <header class="app-header sticky" id="header">
@@ -14,10 +14,10 @@
             <div class="header-element">
                 <div class="horizontal-logo">
                     <a href="{{ route('admin.dashboard') }}" class="header-logo">
-                        <img src="{{ asset('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}" alt="logo" class="desktop-logo">
-                        <img src="{{ asset('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}" alt="logo" class="toggle-logo">
-                        <img src="{{ asset('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}" alt="logo" class="desktop-dark">
-                        <img src="{{ asset('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}" alt="logo" class="toggle-dark">
+                        <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="desktop-logo">
+                        <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="toggle-logo">
+                        <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="desktop-dark">
+                        <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="toggle-dark">
                     </a>
                 </div>
             </div>

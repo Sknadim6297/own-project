@@ -12,10 +12,10 @@
     <meta name="Author" content="Spruko Technologies Private Limited">
     <meta name="keywords" content="admin panel template, bootstrap, bootstrap admin template, bootstrap codeigniter, bootstrap dashboard, bootstrap framework, bootstrap template, codeigniter, codeigniter admin, codeigniter dashboard, codeigniter template, codeigniter ui, dashboard bootstrap, framework codeigniter, template codeigniter, template dashboard codeigniter.">
     
-    <title>Tazen-Admin </title>
+    <title>YuktiOne Admin</title>
     @include('partials.dm-sans')
 
-    <link rel="icon" href="{{ asset('admin/assets/images/brand-logos/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('frontend/assets/Yuktione_logo.png') }}" type="image/png">
 
     <!-- Styles -->
     <script src="{{ asset('admin/assets/js/asset-path-fix.js') }}"></script>

@@ -25,6 +25,10 @@ class ProfessionalController extends Controller
 
     public function showLoginForm()
     {
+        if (Auth::guard('user')->check()) {
+            return redirect(IntendedUrl::resolve('user'));
+        }
+
         if (Auth::guard('professional')->check()) {
             $professional = Auth::guard('professional')->user();
 

@@ -33,6 +33,20 @@ class LoginController extends Controller
             return redirect(IntendedUrl::resolve('user'));
         }
 
+        if (Auth::guard('professional')->check()) {
+            $professional = Auth::guard('professional')->user();
+
+            if ($professional->status === 'accepted' && $professional->active) {
+                return redirect(IntendedUrl::resolve('professional'));
+            }
+
+            if ($professional->status === 'rejected') {
+                return redirect()->route('professional.rejected.view');
+            }
+
+            return redirect()->route('professional.pending.view');
+        }
+
         return view('frontend.login.login');
     }
 

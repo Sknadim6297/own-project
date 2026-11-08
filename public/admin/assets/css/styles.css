@@ -67,8 +67,8 @@ typography
 /* Plus Jakarta Sans */
 :root {
   --body-bg-rgb:250, 250, 250;
-  --primary-color:88 ,155 ,255;
-  --primary-rgb:88 ,155, 255;
+  --primary-color:49 ,109 ,97;
+  --primary-rgb:49 ,109, 97;
   --secondary-rgb:175 ,109, 237;
   --warning-rgb:254, 164, 90;
   --info-rgb:71, 139, 243;
@@ -2813,7 +2813,7 @@ typography
 /* Start::button colors */
 /* btn-primary starts */
 .btn-primary {
-  background: rgb(15, 15, 88) !important;
+  background: rgb(var(--primary-rgb)) !important;
   border:none;
   color: #f6f5f5 !important;
 }
@@ -9488,7 +9488,8 @@ caption {
 }
 .authentication-background {
   position: relative;
-  background-image: url(../images/media/backgrounds/2.jpg);
+  background-image: none;
+  background-color: #EAF6F2;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -9498,7 +9499,6 @@ caption {
   content: "";
   width: 100%;
   height: 100%;
-  /* background-color: rgba(var(--primary-rgb), 0.95); */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

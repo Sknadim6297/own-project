@@ -129,7 +129,7 @@
                 </article>
             </div>
         </div>
-    </section>
+    </section> 
 
     <section class="yk-about__section" aria-labelledby="about-steps">
         <div class="yk-doc__wrap">
@@ -201,11 +201,11 @@
                             $portrait = ($testimonial->image && is_file(public_path('storage/'.$testimonial->image)))
                                 ? asset('storage/'.$testimonial->image)
                                 : null;
-                        @endphp
+                    @endphp
                         <figure class="yk-about__quote" data-reveal style="--reveal-delay: {{ ($loop->index % 3) * 70 }}ms">
                             @if ($portrait)
                                 <img src="{{ $portrait }}" alt="" width="64" height="64">
-                            @endif
+                                    @endif
                             <blockquote>
                                 <p>{{ $testimonial->description }}</p>
                             </blockquote>

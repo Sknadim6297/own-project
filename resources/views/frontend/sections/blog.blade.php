@@ -41,7 +41,7 @@
         <label class="visually-hidden" for="blog-search">Search blogs or categories</label>
         <input id="blog-search" type="search" name="search" value="{{ $search }}" placeholder="Search blogs or categories..." maxlength="100" autocomplete="off">
         <button class="yk-doc__button" type="submit">Search</button>
-    </form>
+                    </form>
 
     <div class="yk-blog__layout">
         <aside class="yk-blog__aside" aria-label="Blog filters">
@@ -80,10 +80,10 @@
                                 <small>({{ $cat->post_count }})</small>
                             </a>
                         </li>
-                    @endforeach
-                </ul>
-            </div>
-
+                        @endforeach
+                    </ul>
+                </div>
+                
             @if ($categoryCounts->isNotEmpty())
                 <div class="yk-blog__panel">
                     <h2>Popular tags</h2>
@@ -125,7 +125,7 @@
                                         @endif
                                         <span>{{ $blogPost->author_name }}</span>
                                         <span>{{ $blogPost->comment_count }} comments</span>
-                                    </div>
+                                            </div>
                                 </div>
                             </article>
                         </li>
@@ -149,6 +149,6 @@
                 @endif
             @endif
         </section>
-    </div>
+                </div>
 </x-yuktione.page>
 @endsection

@@ -7,10 +7,11 @@
    
 
     <!-- Title -->
-    <title>Tazen- admin </title>
+    <title>YuktiOne Admin</title>
+    @include('partials.dm-sans')
 
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('admin/assets/images/brand-logos/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('frontend/assets/Yuktione_logo.png') }}" type="image/png">
 
     <!-- Bootstrap Css -->
     <link id="style" href="{{ asset('admin/assets/libs/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -31,7 +32,7 @@
                     
                     <div class="card-body p-5">
                             <div class="d-flex justify-content-center"> 
-				<a href="{{ route('home') }}"><img src="{{ asset('customer-css/assets/images/tazen_logo.png') }}" width="auto" height="100" alt="" class="logo_sticky"></a>
+				<a href="{{ route('home') }}"><img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" width="auto" height="72" alt="YuktiOne" class="logo_sticky"></a>
                 </div>
                         <p class="h4 mb-2 fw-semibold">Sign In</p>
 

@@ -35,7 +35,7 @@
             >
         </div>
     </section>
-
+    
     <section class="yk-doc__topics" aria-labelledby="service-steps">
         <h2 id="service-steps">{{ $service->detail->content_heading ?? 'How it works' }}</h2>
         <p class="yk-doc__lead">{{ $service->detail->how_it_works_subheading ?? $service->detail->content_sub_heading ?? 'Follow these simple steps to get started' }}</p>
@@ -49,7 +49,7 @@
             @endforeach
         </div>
     </section>
-
+    
     <section class="yk-doc__topics" aria-labelledby="service-stories">
         <h2 id="service-stories">What clients say</h2>
         @if ($testimonials->isEmpty())
@@ -82,7 +82,7 @@
             <li><button type="button" data-share="whatsapp">WhatsApp</button></li>
             <li><button type="button" data-share="instagram">Instagram</button></li>
             <li><button type="button" data-share="copy">Copy link</button></li>
-        </ul>
+                        </ul>
     </section>
 </x-yuktione.page>
 @endsection
@@ -130,6 +130,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
-});
+    });
 </script>
 @endpush

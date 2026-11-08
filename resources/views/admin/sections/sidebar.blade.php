@@ -5,10 +5,10 @@
         <!-- Start::main-sidebar-header -->
         <div class="main-sidebar-header">
             <a href="{{ route('admin.dashboard') }}" class="header-logo">
-                <img src="{{ asset('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}" alt="logo" class="desktop-logo" style="width: 130px; height: auto;">
-                <img src="assets/images/brand-logos/toggle-dark.png" alt="logo" class="toggle-dark">
-                <img src="{{ asset('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}" alt="logo" class="desktop-dark" style="width: 130px; height: 130px;">
-                <img src="{{ asset('frontend/assets/img/tazen_logo-01-removebg-preview.png') }}" alt="logo" class="toggle-logo">
+                <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="desktop-logo" style="width: 130px; height: auto;">
+                <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="toggle-dark" style="width: 40px; height: auto;">
+                <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="desktop-dark" style="width: 130px; height: auto;">
+                <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="toggle-logo" style="width: 40px; height: auto;">
             </a>
         </div>
         <!-- End::main-sidebar-header -->
