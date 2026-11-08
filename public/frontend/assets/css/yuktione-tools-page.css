@@ -226,6 +226,12 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.7rem;
+    align-items: stretch;
+}
+
+.yk-tools__grid > li {
+    display: flex;
+    min-width: 0;
 }
 
 @media (min-width: 640px) {
@@ -653,9 +659,12 @@
     }
 
     .yk-tool-card__cta {
-        margin-top: 0.4rem;
+        margin-top: auto;
+        padding-top: 0.45rem;
         min-height: 2rem;
-        padding: 0.3rem 0.4rem;
+        padding-left: 0.3rem;
+        padding-right: 0.3rem;
+        padding-bottom: 0.3rem;
         font-size: 0.72rem;
         border-radius: 8px;
     }
