@@ -121,8 +121,8 @@
 
 .yk-talk__grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.9rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -261,13 +261,69 @@
     background: #27574e;
 }
 
+@media (max-width: 639px) {
+    .yk-talk__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.65rem;
+    }
+
+    .yk-talk__card {
+        padding: 0.85rem 0.55rem 0.7rem;
+        border-radius: 14px;
+    }
+
+    .yk-talk__portrait {
+        width: 88px;
+        height: 88px;
+        margin-bottom: 0.5rem;
+    }
+
+    .yk-talk__photo,
+    .yk-talk__initials {
+        width: 64px;
+        height: 64px;
+        border-width: 2px;
+    }
+
+    .yk-talk__initials {
+        font-size: 1rem;
+    }
+
+    .yk-talk__name {
+        font-size: 0.82rem;
+    }
+
+    .yk-talk__role {
+        margin-top: 0.2rem;
+        font-size: 0.68rem;
+    }
+
+    .yk-talk__rating {
+        margin-top: 0.3rem;
+        font-size: 0.7rem;
+        gap: 0.2rem;
+    }
+
+    .yk-talk__rating svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .yk-talk__book {
+        margin-top: 0.55rem;
+        padding: 0.55rem 0.4rem;
+        font-size: 0.72rem;
+        border-radius: 8px;
+    }
+}
+
 @media (min-width: 640px) {
     .yk-talk {
         padding-inline: 1.25rem;
     }
 
     .yk-talk__grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.9rem;
     }
 }
 

@@ -176,6 +176,18 @@
     display: block;
 }
 
+.yk-tools__emoji {
+    display: grid;
+    place-items: center;
+    width: 5.75rem;
+    height: 5.75rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 6px 18px rgba(11, 32, 72, 0.06);
+    font-size: 2.65rem;
+    line-height: 1;
+}
+
 .yk-tools__name {
     margin: 0;
     color: #142B4D;
@@ -261,6 +273,12 @@
         height: 68px;
     }
 
+    .yk-tools__emoji {
+        width: 3.5rem;
+        height: 3.5rem;
+        font-size: 1.7rem;
+    }
+
     .yk-tools__name {
         font-size: 1rem;
     }
@@ -289,6 +307,12 @@
     .yk-tools__art svg {
         width: 58px;
         height: 58px;
+    }
+
+    .yk-tools__emoji {
+        width: 3.15rem;
+        height: 3.15rem;
+        font-size: 1.55rem;
     }
 }
 

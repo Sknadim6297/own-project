@@ -1,6 +1,17 @@
 @php
     $tones = ['lavender', 'mint', 'blush', 'blue', 'cream', 'mint'];
     $accents = ['purple', 'teal', 'pink', 'purple', 'orange', 'teal'];
+    $toolEmojis = [
+        'daily-mood-check-in' => '😊',
+        'digital-journal' => '📓',
+        'gratitude-journal' => '🙏',
+        'career-interest-test' => '🎯',
+        'skills-strengths-assessment' => '💪',
+        'bmi-bmr-calculator' => '⚖️',
+        'water-intake-tracker' => '💧',
+        'weight-journey' => '🏃',
+        'calorie-nutrition-tracker' => '🥗',
+    ];
     $homeTools = \App\Models\Tool::query()
         ->publiclyAvailable()
         ->orderBy('display_order')
@@ -41,15 +52,12 @@
                         $tone = $tones[$loop->index % count($tones)];
                         $accent = $accents[$loop->index % count($accents)];
                         $href = route($tool->route_name);
+                        $emoji = $toolEmojis[$tool->slug] ?? '✨';
                     @endphp
                     <li>
                         <a class="yk-tools__card yk-tools__card--{{ $tone }} yk-tools__card-link" href="{{ $href }}">
                             <div class="yk-tools__art" aria-hidden="true">
-                                <svg viewBox="0 0 160 160" focusable="false">
-                                    <circle cx="80" cy="82" r="54" fill="#EAF6F2"></circle>
-                                    <circle cx="80" cy="82" r="36" fill="#fff" stroke="#316d61" stroke-width="2"></circle>
-                                    <path d="M62 82h36M80 64v36" fill="none" stroke="#316d61" stroke-width="3" stroke-linecap="round"></path>
-                                </svg>
+                                <span class="yk-tools__emoji">{{ $emoji }}</span>
                             </div>
                             <h3 class="yk-tools__name">{{ $tool->name }}</h3>
                             <p class="yk-tools__text">{{ \Illuminate\Support\Str::limit($tool->description ?: ('Open this tool on '.config('yuktione.name', 'YuktiOne').'.'), 90) }}</p>

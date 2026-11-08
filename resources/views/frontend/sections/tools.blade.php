@@ -102,13 +102,30 @@
                     @endif
                 </div>
             @else
+                @php
+                    $toolEmojis = [
+                        'mood' => '😊',
+                        'journal' => '📓',
+                        'gratitude' => '🙏',
+                        'career' => '🎯',
+                        'skills' => '💪',
+                        'bmi' => '⚖️',
+                        'water' => '💧',
+                        'weight' => '🏃',
+                        'nutrition' => '🥗',
+                        'leaf' => '🌿',
+                    ];
+                @endphp
                 <ul class="yk-tools__grid">
                     @foreach ($items as $tool)
+                        @php
+                            $toolEmoji = $toolEmojis[$tool['icon'] ?? ''] ?? '✨';
+                        @endphp
                         <li>
                             <article class="yk-tool-card">
-                                <div class="yk-tool-card__media" aria-hidden="true">
+                                <div class="yk-tool-card__media yk-tool-card__media--{{ $tool['icon'] }}" aria-hidden="true">
                                     <span class="yk-tool-card__mark yk-tool-card__mark--{{ $tool['icon'] }}">
-                                        @include('frontend.sections.partials.tool-icon', ['icon' => $tool['icon']])
+                                        <span class="yk-tool-card__emoji">{{ $toolEmoji }}</span>
                                     </span>
                                 </div>
                                 <div class="yk-tool-card__body">

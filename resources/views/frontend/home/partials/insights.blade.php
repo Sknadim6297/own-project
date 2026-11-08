@@ -7,6 +7,7 @@
             'text' => 'A short private check-in to notice how you feel today.',
             'tone' => 'blush',
             'accent' => 'pink',
+            'emoji' => '😊',
             'cta' => 'Start Check-in',
             'url' => route('tools.psychology.mood'),
         ],
@@ -16,6 +17,7 @@
             'text' => 'Map your interests and explore career directions that fit.',
             'tone' => 'mint',
             'accent' => 'teal',
+            'emoji' => '🎯',
             'cta' => 'Open Assessment',
             'url' => route('tools.career-interest'),
         ],
@@ -25,6 +27,7 @@
             'text' => 'Browse verified experts and book a consultation that fits your goals.',
             'tone' => 'lavender',
             'accent' => 'purple',
+            'emoji' => '🌟',
             'cta' => 'Explore Experts',
             'url' => route('professionals'),
         ],
@@ -34,6 +37,7 @@
             'text' => 'Ideas and practical guidance from the '.$brand.' community.',
             'tone' => 'cream',
             'accent' => 'orange',
+            'emoji' => '✨',
             'cta' => 'Read the Blog',
             'url' => route('blog.index'),
         ],
@@ -73,11 +77,7 @@
                             </a>
                         </div>
                         <div class="yk-insight__art" aria-hidden="true">
-                            <svg viewBox="0 0 160 160" focusable="false">
-                                <circle cx="80" cy="80" r="48" fill="#EAF6F2"></circle>
-                                <circle cx="80" cy="80" r="28" fill="#fff" stroke="#316d61" stroke-width="2"></circle>
-                                <path d="M68 80h24M80 68v24" fill="none" stroke="#316d61" stroke-width="2.5" stroke-linecap="round"></path>
-                            </svg>
+                            <span class="yk-insight__emoji">{{ $card['emoji'] }}</span>
                         </div>
                     </article>
                 </li>

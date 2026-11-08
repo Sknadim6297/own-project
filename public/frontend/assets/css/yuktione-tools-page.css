@@ -273,20 +273,36 @@
     background: linear-gradient(145deg, var(--yk-mint), #e8eef8);
 }
 
+.yk-tool-card__media--mood { background: linear-gradient(145deg, #fde7ef, #f7f0ff); }
+.yk-tool-card__media--journal { background: linear-gradient(145deg, #e7eefb, #eef4ff); }
+.yk-tool-card__media--gratitude { background: linear-gradient(145deg, #fce8ef, #fff1f5); }
+.yk-tool-card__media--career { background: linear-gradient(145deg, #ece6ff, #f4f0ff); }
+.yk-tool-card__media--skills { background: linear-gradient(145deg, #e8eef8, #eef3ff); }
+.yk-tool-card__media--bmi { background: linear-gradient(145deg, #e7f4ef, #eef8f4); }
+.yk-tool-card__media--water { background: linear-gradient(145deg, #e3f3fb, #eef8ff); }
+.yk-tool-card__media--weight { background: linear-gradient(145deg, #eaf6f2, #eef4ff); }
+.yk-tool-card__media--nutrition { background: linear-gradient(145deg, #eaf6e8, #f3fae9); }
+.yk-tool-card__media--leaf { background: linear-gradient(145deg, #eaf6f2, #e8eef8); }
+
 .yk-tool-card__mark {
     display: grid;
     place-items: center;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 12px;
+    width: 3.65rem;
+    height: 3.65rem;
+    border-radius: 999px;
     background: rgba(255, 255, 255, 0.92);
     color: var(--yk-teal);
-    box-shadow: 0 4px 12px rgba(11, 32, 72, 0.06);
+    box-shadow: 0 6px 16px rgba(11, 32, 72, 0.08);
     transition: transform var(--yk-ease);
 }
 
 .yk-tool-card:hover .yk-tool-card__mark {
-    transform: translateY(-1px) scale(1.03);
+    transform: translateY(-1px) scale(1.04);
+}
+
+.yk-tool-card__emoji {
+    font-size: 1.7rem;
+    line-height: 1;
 }
 
 .yk-tool-card__mark svg {
@@ -591,9 +607,13 @@
     }
 
     .yk-tool-card__mark {
-        width: 2rem;
-        height: 2rem;
-        border-radius: 9px;
+        width: 2.35rem;
+        height: 2.35rem;
+        border-radius: 999px;
+    }
+
+    .yk-tool-card__emoji {
+        font-size: 1.15rem;
     }
 
     .yk-tool-card__mark svg {

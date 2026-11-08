@@ -236,6 +236,18 @@ a.yk-insight__cta:focus-visible {
     height: auto;
 }
 
+.yk-insight__emoji {
+    display: grid;
+    place-items: center;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 6px 18px rgba(11, 32, 72, 0.06);
+    font-size: 2.35rem;
+    line-height: 1;
+}
+
 @media (min-width: 640px) {
     .yk-insight {
         padding-inline: 1.25rem;
