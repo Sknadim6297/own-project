@@ -414,7 +414,29 @@
 
 @media (max-width: 479px) {
     .yk-featured-experts__grid {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.55rem;
+    }
+
+    .yk-expert-card__image-link {
+        height: 132px;
+        flex-basis: 132px;
+    }
+
+    .yk-expert-card__body {
+        min-height: 0;
+        padding: 0.55rem;
+    }
+
+    .yk-expert-card__name {
+        min-height: 0;
+        font-size: 0.78rem;
+    }
+
+    .yk-expert-card__specialization,
+    .yk-expert-card__experience,
+    .yk-expert-card__profile {
+        font-size: 0.68rem;
     }
 }
 

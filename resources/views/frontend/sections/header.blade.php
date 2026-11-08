@@ -74,13 +74,6 @@
             <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" width="168" height="56">
         </a>
 
-        <button class="yk-navbar__bell yk-navbar__bell--bar" type="button" aria-disabled="true" aria-label="Notifications, not available yet">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M6 9.5a6 6 0 0 1 12 0c0 4.2 1.4 5.6 1.4 5.6H4.6S6 13.7 6 9.5Z"></path>
-                <path d="M10 18.2a2 2 0 0 0 4 0"></path>
-            </svg>
-        </button>
-
         <button class="yk-navbar__toggle" type="button" aria-expanded="false" aria-controls="yk-navbar-panel" aria-label="Open navigation menu" data-mobile-nav-toggle>
             <span></span>
             <span></span>
@@ -138,13 +131,6 @@
                     <input id="tazen-header-search" type="search" name="query" placeholder="Search tools, experts, topics..." autocomplete="off" enterkeyhint="search" required>
                     <span class="yk-navbar__search-status" role="status" aria-live="polite" data-search-status></span>
                 </form>
-
-                <button class="yk-navbar__bell yk-navbar__bell--toolbar" type="button" aria-disabled="true" aria-label="Notifications, not available yet">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M6 9.5a6 6 0 0 1 12 0c0 4.2 1.4 5.6 1.4 5.6H4.6S6 13.7 6 9.5Z"></path>
-                        <path d="M10 18.2a2 2 0 0 0 4 0"></path>
-                    </svg>
-                </button>
 
                 <div class="yk-navbar__auth">
                     @if ($user || $professional)

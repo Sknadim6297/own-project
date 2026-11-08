@@ -224,13 +224,12 @@
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.9rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
 }
 
 @media (min-width: 640px) {
     .yk-tools__grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 1rem;
     }
 }
@@ -577,43 +576,68 @@
     }
 
     .yk-tools__grid {
-        gap: 0.7rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.65rem;
     }
 
-    /* Drop forced body height — main source of empty card space on phones. */
+    .yk-tool-card {
+        border-radius: 12px;
+    }
+
+    /* Compact 2-column cards on phones */
     .yk-tool-card__media {
-        aspect-ratio: 2.35 / 1;
-        max-height: 4.5rem;
+        aspect-ratio: 2.2 / 1;
+        max-height: 3.75rem;
     }
 
     .yk-tool-card__mark {
-        width: 2.35rem;
-        height: 2.35rem;
-        border-radius: 10px;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 9px;
     }
 
     .yk-tool-card__mark svg {
-        width: 1.15rem;
-        height: 1.15rem;
+        width: 1rem;
+        height: 1rem;
     }
 
     .yk-tool-card__body {
         min-height: 0;
-        gap: 0.22rem;
-        padding: 0.65rem 0.75rem 0.7rem;
+        gap: 0.18rem;
+        padding: 0.55rem 0.55rem 0.6rem;
+    }
+
+    .yk-tool-card__meta {
+        gap: 0.25rem;
+    }
+
+    .yk-tool-card__access,
+    .yk-tool-card__state {
+        font-size: 0.62rem;
+        padding: 0.1rem 0.35rem;
     }
 
     .yk-tool-card__desc {
         min-height: 0;
-        font-size: 0.78rem;
+        font-size: 0.68rem;
+        -webkit-line-clamp: 2;
     }
 
     .yk-tool-card__name {
-        font-size: 0.92rem;
+        font-size: 0.8rem;
+        line-height: 1.25;
+    }
+
+    .yk-tool-card__cat {
+        font-size: 0.62rem;
     }
 
     .yk-tool-card__cta {
-        margin-top: 0.45rem;
+        margin-top: 0.4rem;
+        min-height: 2rem;
+        padding: 0.3rem 0.4rem;
+        font-size: 0.72rem;
+        border-radius: 8px;
     }
 
     .yk-tools__btn {

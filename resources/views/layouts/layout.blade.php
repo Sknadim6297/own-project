@@ -185,6 +185,7 @@
 		<link href="{{ asset('frontend/assets/css/yuktione-hero.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-hero.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-categories.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-categories.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-tools.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools.css')) }}" rel="stylesheet">
+		<link href="{{ asset('frontend/assets/css/yuktione-featured-experts.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-featured-experts.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-insights.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-insights.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-talk.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-talk.css')) }}" rel="stylesheet">
 		@if (config('yuktione.programmes_enabled'))

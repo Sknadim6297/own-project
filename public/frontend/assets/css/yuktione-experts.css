@@ -253,13 +253,12 @@
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.9rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
 }
 
 @media (min-width: 640px) {
     .yk-experts__grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 1rem;
     }
 }
@@ -560,6 +559,11 @@
 }
 
 @media (max-width: 639px) {
+    .yk-experts__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.65rem;
+    }
+
     .yk-experts__toolbar-actions {
         width: 100%;
     }
@@ -576,8 +580,64 @@
         width: 100%;
     }
 
+    .yk-expert-card {
+        border-radius: 12px;
+    }
+
+    /* Compact 2-up cards — match homepage expert section density */
+    .yk-expert-card__media {
+        aspect-ratio: 1 / 0.92;
+        max-height: 9.5rem;
+    }
+
+    .yk-expert-card__fallback {
+        font-size: 1.2rem;
+    }
+
+    .yk-expert-card__body {
+        gap: 0.14rem;
+        padding: 0.55rem 0.55rem 0.6rem;
+    }
+
+    .yk-expert-card__name {
+        font-size: 0.8rem;
+        gap: 0.25rem;
+    }
+
+    .yk-expert-card__verified {
+        width: 0.85rem;
+        height: 0.85rem;
+    }
+
+    .yk-expert-card__role,
+    .yk-expert-card__exp,
+    .yk-expert-card__qual {
+        font-size: 0.68rem;
+    }
+
+    .yk-expert-card__qual {
+        -webkit-line-clamp: 1;
+    }
+
+    .yk-expert-card__price {
+        font-size: 0.78rem;
+    }
+
+    .yk-expert-card__price small {
+        font-size: 0.62rem;
+    }
+
     .yk-expert-card__actions {
         grid-template-columns: 1fr;
+        gap: 0.3rem;
+        padding-top: 0.45rem;
+    }
+
+    .yk-experts__btn {
+        min-height: 2rem;
+        padding: 0.3rem 0.4rem;
+        font-size: 0.72rem;
+        border-radius: 8px;
     }
 }
 
