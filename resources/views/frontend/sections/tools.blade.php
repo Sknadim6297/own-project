@@ -129,21 +129,23 @@
                                     </span>
                                 </div>
                                 <div class="yk-tool-card__body">
-                                    <div class="yk-tool-card__meta">
-                                        <span class="yk-tool-card__access">{{ $tool['access'] }}</span>
-                                        @if (!empty($tool['availability']))
-                                            <span class="yk-tool-card__state{{ ($tool['availability_state'] ?? '') === 'pending' ? ' is-pending' : '' }}">{{ $tool['availability'] }}</span>
+                                    <div class="yk-tool-card__main">
+                                        <div class="yk-tool-card__meta">
+                                            <span class="yk-tool-card__access">{{ $tool['access'] }}</span>
+                                            @if (!empty($tool['availability']))
+                                                <span class="yk-tool-card__state{{ ($tool['availability_state'] ?? '') === 'pending' ? ' is-pending' : '' }}">{{ $tool['availability'] }}</span>
+                                            @endif
+                                        </div>
+                                        <h2 class="yk-tool-card__name">
+                                            <a href="{{ $tool['url'] }}">{{ $tool['name'] }}</a>
+                                        </h2>
+                                        @if ($tool['description'] !== '')
+                                            <p class="yk-tool-card__desc">{{ $tool['description'] }}</p>
+                                        @endif
+                                        @if (!empty($tool['category_label']))
+                                            <p class="yk-tool-card__cat">{{ $tool['category_label'] }}</p>
                                         @endif
                                     </div>
-                                    <h2 class="yk-tool-card__name">
-                                        <a href="{{ $tool['url'] }}">{{ $tool['name'] }}</a>
-                                    </h2>
-                                    @if ($tool['description'] !== '')
-                                        <p class="yk-tool-card__desc">{{ $tool['description'] }}</p>
-                                    @endif
-                                    @if (!empty($tool['category_label']))
-                                        <p class="yk-tool-card__cat">{{ $tool['category_label'] }}</p>
-                                    @endif
                                     <a class="yk-tools__btn yk-tools__btn--primary yk-tool-card__cta" href="{{ $tool['url'] }}">{{ $tool['cta'] }}</a>
                                 </div>
                             </article>

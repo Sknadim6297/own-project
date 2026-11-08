@@ -114,7 +114,7 @@ class ToolsCatalog
                 ? 'View status'
                 : ($tool->slug === 'daily-mood-check-in' ? 'Start Check-in' : 'Open'),
             'access' => $tool->access_type === 'paid' ? 'Paid' : 'Free',
-            'availability' => $cataloguePending ? 'Food Catalogue Pending' : 'Available',
+            'availability' => $cataloguePending ? 'Pending' : 'Available',
             'availability_state' => $cataloguePending ? 'pending' : 'available',
             'category' => $category,
             'category_label' => $category ? ExploreCatalog::CATEGORIES[$category]['label'] : '',

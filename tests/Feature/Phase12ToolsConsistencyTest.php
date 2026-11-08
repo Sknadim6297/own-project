@@ -82,13 +82,13 @@ class Phase12ToolsConsistencyTest extends TestCase
         $browse = app(ToolsCatalog::class)->browse($request);
         $card = collect($browse['items']->items())->firstWhere('slug', 'calorie-nutrition-tracker');
         $this->assertNotNull($card);
-        $this->assertSame('Food Catalogue Pending', $card['availability']);
+        $this->assertSame('Pending', $card['availability']);
         $this->assertSame('pending', $card['availability_state']);
         $this->assertSame('View status', $card['cta']);
 
         $this->get(route('tools.index'))
             ->assertOk()
-            ->assertSee('Food Catalogue Pending')
+            ->assertSee('Pending')
             ->assertSee('View status');
 
         $category = NutritionFoodCategory::query()->create([
@@ -150,6 +150,7 @@ class Phase12ToolsConsistencyTest extends TestCase
             ->assertOk()
             ->assertSee('Food Catalogue Pending')
             ->assertSee('Back to Tools');
+        // Tool detail page can keep the fuller pending copy; catalogue cards use short "Pending".
     }
 
     public function test_expert_discovery_uses_verified_categories_only(): void
