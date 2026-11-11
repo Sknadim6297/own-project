@@ -36,6 +36,12 @@ class Phase4BMoodRedesignTest extends TestCase
         $this->assertStringContainsString('--yk-gold', $moodCss);
         $this->assertStringContainsString('prefers-reduced-motion', $moodCss);
 
+        $psychCss = file_get_contents(public_path('frontend/assets/css/yuktione-psychology.css'));
+        $this->assertIsString($psychCss);
+        $this->assertStringNotContainsString('--yk-lavender', $psychCss);
+        $this->assertStringNotContainsString('9d81db', $psychCss);
+        $this->assertStringContainsString('--yk-gold', $psychCss);
+
         $page = $this->get(route('tools.psychology.mood'));
         $page->assertOk()
             ->assertSee('data-yk-tools-ds', false)

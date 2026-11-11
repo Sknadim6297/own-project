@@ -38,6 +38,8 @@ class Phase4DBmiBmrRedesignTest extends TestCase
         $css = file_get_contents($cssPath);
         $this->assertStringNotContainsString('--yk-lavender', $css);
         $this->assertStringNotContainsString('157, 129, 219', $css);
+        $this->assertStringNotContainsString('9d81db', $css);
+        $this->assertStringNotContainsString('9D81DB', $css);
         $this->assertStringContainsString('--yk-gold', $css);
         $this->assertStringContainsString('prefers-reduced-motion', $css);
 

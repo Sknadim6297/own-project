@@ -135,7 +135,11 @@ class Phase4FTarotRedesignTest extends TestCase
         $css = file_get_contents($cssPath);
         $this->assertStringNotContainsString('--yk-lavender', $css);
         $this->assertStringNotContainsString('157, 129, 219', $css);
+        $this->assertStringNotContainsString('9d81db', $css);
+        $this->assertStringNotContainsString('is-lavender', $css);
+        $this->assertStringContainsString('is-gold', $css);
         $this->assertStringContainsString('--yk-gold', $css);
+        $this->assertSame('gold', \App\Support\Tarot\TarotCatalog::categories()['life-direction']['tone']);
         $this->assertStringContainsString('prefers-reduced-motion', $css);
         $this->assertStringContainsString('yk-tarot__flip', $css);
 

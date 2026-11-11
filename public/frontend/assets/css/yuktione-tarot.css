@@ -333,7 +333,7 @@
 .yk-tarot__option.is-lilac { background: linear-gradient(180deg, #fff, #f7f1e8); }
 .yk-tarot__option.is-cream { background: linear-gradient(180deg, #fff, var(--yk-cream)); }
 .yk-tarot__option.is-mint { background: linear-gradient(180deg, #fff, #eef8f4); }
-.yk-tarot__option.is-lavender { background: linear-gradient(180deg, #fff, var(--yk-cream-2)); }
+.yk-tarot__option.is-gold { background: linear-gradient(180deg, #fff, var(--yk-gold-soft)); }
 .yk-tarot__option.is-sage { background: linear-gradient(180deg, #fff, #f2f7f4); }
 
 .yk-tarot__options--spread {

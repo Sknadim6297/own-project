@@ -65,7 +65,7 @@ final class TarotCatalog
                     'What priority deserves more of my attention?',
                     'How can I navigate this transition with more steadiness?',
                 ],
-                'tone' => 'lavender',
+                'tone' => 'gold',
             ],
             'general-guidance' => [
                 'label' => 'General Guidance',
