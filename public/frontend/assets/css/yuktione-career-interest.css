@@ -1,30 +1,36 @@
-/* Phase 6 — Career Interest Assessment (aligned with Skills Assessment tokens) */
+/**
+ * Phase 4E — Career Interest Test (scoped). Navy / teal / cream / gold. No lavender.
+ */
 .yk-cit-body,
 .yk-cit {
-    --yk-navy: #142B4D;
+    --yk-navy: #0b2048;
     --yk-teal: #316d61;
     --yk-teal-deep: #24554c;
-    --yk-lavender: #9d81db;
+    --yk-gold: #c4a35a;
+    --yk-gold-soft: rgba(196, 163, 90, 0.18);
+    --yk-cream: #fff6ed;
+    --yk-cream-2: #f7f1e8;
     --yk-mint: #eaf6f2;
-    --yk-lilac: #f4f0ff;
+    --yk-lilac: var(--yk-gold-soft);
     --yk-line: #e6ebf2;
     --yk-muted: #5b6b7c;
     --yk-surface: #f7f9fc;
     --yk-card: #ffffff;
     --yk-danger: #9b1c1c;
-    --yk-radius: 16px;
+    --yk-radius: 18px;
     --yk-radius-sm: 12px;
     --yk-ease: 180ms ease;
     --yk-shadow: 0 10px 28px rgba(11, 32, 72, 0.07);
+    --yk-touch: 44px;
 }
 
 .yk-cit {
     font-family: "DM Sans", system-ui, sans-serif;
     color: var(--yk-navy);
     background:
-        radial-gradient(1100px 400px at 10% -10%, rgba(157, 129, 219, 0.09), transparent 58%),
+        radial-gradient(1100px 400px at 10% -10%, rgba(196, 163, 90, 0.12), transparent 58%),
         radial-gradient(900px 360px at 94% 0%, rgba(49, 109, 97, 0.08), transparent 55%),
-        linear-gradient(180deg, #fbfcfe 0%, var(--yk-surface) 45%, #f5f7fb 100%);
+        linear-gradient(180deg, #fbfcfe 0%, var(--yk-cream-2) 100%);
     min-height: 70vh;
     padding: 0.95rem 0 3rem;
 }
@@ -48,6 +54,7 @@
 
 .yk-cit__card--hero {
     text-align: center;
+    background: linear-gradient(180deg, #fff 0%, var(--yk-cream) 140%);
 }
 
 .yk-cit__hero-icon {
@@ -320,13 +327,13 @@
     display: block;
     height: 100%;
     border-radius: inherit;
-    background: linear-gradient(90deg, var(--yk-teal), #6f9b8f 55%, var(--yk-lavender));
+    background: linear-gradient(90deg, var(--yk-teal), #6f9b8f 55%, var(--yk-gold));
     transition: width 220ms ease;
 }
 
 .yk-cit__kicker {
     margin: 0 0 0.2rem;
-    color: var(--yk-lavender);
+    color: var(--yk-gold);
     font-size: 0.78rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -365,8 +372,8 @@
     min-height: 1.55rem;
     padding: 0.1rem 0.4rem;
     border-radius: 999px;
-    background: var(--yk-lilac);
-    color: #6d56a8;
+    background: var(--yk-gold-soft);
+    color: var(--yk-navy);
     font-size: 0.72rem;
     font-weight: 750;
 }
@@ -383,6 +390,18 @@
     gap: 0.4rem;
 }
 
+.yk-cit__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 .yk-cit__option {
     position: relative;
     display: flex;
@@ -390,8 +409,9 @@
     align-items: center;
     justify-content: center;
     gap: 0.28rem;
-    min-height: 4.6rem;
-    padding: 0.55rem 0.3rem 0.5rem;
+    min-height: 4.85rem;
+    min-width: 0;
+    padding: 0.55rem 0.35rem 0.5rem;
     border-radius: var(--yk-radius-sm);
     border: 1.5px solid var(--yk-line);
     background: #fff;
@@ -410,8 +430,22 @@
     cursor: pointer;
 }
 
+.yk-cit__option-value {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 999px;
+    background: var(--yk-cream);
+    color: var(--yk-navy);
+    font-size: 0.7rem;
+    font-weight: 750;
+    line-height: 1;
+}
+
 .yk-cit__emoji {
-    font-size: 1.45rem;
+    font-size: 1.35rem;
     line-height: 1;
     transition: transform var(--yk-ease);
 }
@@ -419,8 +453,9 @@
 .yk-cit__option-label {
     font-size: 0.68rem;
     font-weight: 650;
-    line-height: 1.2;
+    line-height: 1.25;
     color: var(--yk-muted);
+    overflow-wrap: anywhere;
 }
 
 .yk-cit__option:hover {
@@ -471,7 +506,7 @@
     display: block;
     height: 100%;
     border-radius: inherit;
-    background: linear-gradient(90deg, var(--yk-teal), var(--yk-lavender));
+    background: linear-gradient(90deg, var(--yk-teal), var(--yk-gold));
     transition: width 220ms ease;
 }
 
@@ -652,23 +687,31 @@
 
     .yk-cit__scale {
         grid-template-columns: 1fr;
+        gap: 0.45rem;
     }
 
     .yk-cit__option {
         flex-direction: row;
         justify-content: flex-start;
-        min-height: 3rem;
-        padding: 0.55rem 0.75rem;
+        align-items: center;
+        min-height: var(--yk-touch, 44px);
+        padding: 0.7rem 0.85rem;
         text-align: left;
-        gap: 0.65rem;
+        gap: 0.7rem;
+    }
+
+    .yk-cit__option-value {
+        flex: 0 0 auto;
     }
 
     .yk-cit__emoji {
         font-size: 1.35rem;
+        flex: 0 0 auto;
     }
 
     .yk-cit__option-label {
-        font-size: 0.82rem;
+        font-size: 0.9rem;
+        flex: 1 1 auto;
     }
 
     .yk-cit__actions {

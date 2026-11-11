@@ -5,15 +5,16 @@
 @section('body_class', 'yk-mood-body')
 
 @section('content')
-<main class="yk-mood yk-history">
+<main class="yk-mood yk-history yk-tools-ds" data-yk-tools-ds data-yk-mood>
     <div class="yk-mood__wrap yk-history__wrap">
         @include('frontend.sections.partials.tool-back-to-tools')
         <a class="yk-mood__back" href="{{ route('tools.psychology') }}">Psychology tools</a>
+        <p class="yk-mood__badge">Private to you</p>
         <h1>Mood history</h1>
         <p class="yk-mood__lead">A private record of the moments you checked in.</p>
 
         @if ($items === [])
-            <section class="yk-history__empty">
+            <section class="yk-history__empty yk-mood__panel">
                 <h2>No check-ins yet</h2>
                 <p>When you finish a check-in, it will appear here.</p>
                 <a class="yk-mood__continue" href="{{ route('tools.psychology.mood') }}">Start a check-in</a>
@@ -21,7 +22,7 @@
         @else
             <ol class="yk-history__list">
                 @foreach ($items as $item)
-                    <li class="yk-history__card">
+                    <li class="yk-history__card yk-mood__panel">
                         <time datetime="{{ $item['datetime'] }}">{{ $item['when'] }}</time>
                         <h2>{{ $item['mood'] }}</h2>
                         @if ($item['emotions'] === [])

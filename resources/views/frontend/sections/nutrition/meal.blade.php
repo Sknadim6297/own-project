@@ -9,11 +9,12 @@
     $block = $summary['by_meal'][$meal];
     $fmt = fn ($v) => $v === null ? '—' : rtrim(rtrim(number_format((float) $v, 1, '.', ''), '0'), '.');
 @endphp
-<main class="yk-nut">
+<main class="yk-nut yk-tools-ds" data-yk-tools-ds data-yk-nut>
     <div class="yk-nut__wrap yk-nut__wrap--wide">
-        <section class="yk-nut__card">
+        @include('frontend.sections.partials.tool-back-to-tools')
+        <section class="yk-nut__card" aria-labelledby="nut-meal-heading">
             <p class="yk-nut__badge">{{ $summary['date'] }} · Build meal</p>
-            <h1>{{ $block['label'] }}</h1>
+            <h1 id="nut-meal-heading">{{ $block['label'] }}</h1>
             <p class="yk-nut__lead">Nutrition values are stored as snapshots from the time of logging.</p>
 
             @if (session('status'))
@@ -26,7 +27,8 @@
             <nav class="yk-nut__tabs" aria-label="Meal type">
                 @foreach ($meals as $key => $label)
                     <a href="{{ route('tools.nutrition.meal', ['date' => $summary['date'], 'meal' => $key]) }}"
-                       @class(['is-active' => $key === $meal])>{{ $label }}</a>
+                       @class(['is-active' => $key === $meal])
+                       @if ($key === $meal) aria-current="page" @endif>{{ $label }}</a>
                 @endforeach
             </nav>
 
@@ -82,20 +84,4 @@
         </section>
     </div>
 </main>
-<script>
-(function () {
-    document.querySelectorAll('[data-nut-submit-once]').forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (form.getAttribute('data-submitting') === '1') {
-                event.preventDefault();
-                return;
-            }
-            form.setAttribute('data-submitting', '1');
-            form.querySelectorAll('button[type="submit"]').forEach(function (btn) {
-                btn.disabled = true;
-            });
-        });
-    });
-})();
-</script>
 @endsection

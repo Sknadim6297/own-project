@@ -5,11 +5,12 @@
 @section('body_class', 'yk-water-body')
 
 @section('content')
-<main class="yk-water">
+<main class="yk-water yk-tools-ds" data-yk-tools-ds data-yk-water>
     <div class="yk-water__wrap">
-        <section class="yk-water__card">
+        @include('frontend.sections.partials.tool-back-to-tools')
+        <section class="yk-water__card" aria-labelledby="water-goal-heading">
             <p class="yk-water__badge">Preference</p>
-            <h1>Daily water goal</h1>
+            <h1 id="water-goal-heading">Daily water goal</h1>
             <p class="yk-water__lead">Your personal tracking target—not a medically prescribed amount.</p>
 
             @if ($errors->any())

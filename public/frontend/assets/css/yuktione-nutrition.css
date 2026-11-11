@@ -1,18 +1,32 @@
+/**
+ * Phase 4I — Calorie & Nutrition Tracker (scoped). Navy / teal / cream / gold. No lavender.
+ */
+.yk-nut-body,
 .yk-nut {
-    --yk-navy: #142B4D;
+    --yk-navy: #0b2048;
     --yk-teal: #316d61;
+    --yk-teal-deep: #24554c;
     --yk-mint: #eaf6f2;
-    --yk-lavender: #9d81db;
+    --yk-gold: #c4a35a;
+    --yk-gold-soft: rgba(196, 163, 90, 0.18);
+    --yk-cream: #fff6ed;
+    --yk-cream-2: #f7f1e8;
     --yk-line: #e6ebf2;
-    --yk-muted: #41506d;
+    --yk-muted: #5b6b7c;
+    --yk-touch: 44px;
+    --yk-ease: 180ms ease;
+}
+
+.yk-nut {
     font-family: "DM Sans", sans-serif;
     color: var(--yk-navy);
     background:
-        radial-gradient(circle at 12% 0%, rgba(49, 109, 97, 0.12), transparent 28%),
-        radial-gradient(circle at 90% 8%, rgba(157, 129, 219, 0.1), transparent 26%),
-        #fff;
+        radial-gradient(900px 380px at 8% -12%, rgba(49, 109, 97, 0.14), transparent 55%),
+        radial-gradient(700px 300px at 100% 0%, rgba(196, 163, 90, 0.12), transparent 52%),
+        linear-gradient(180deg, #fbfcfe 0%, var(--yk-cream-2) 100%);
     min-height: 70vh;
-    padding: 1.25rem 0 3rem;
+    padding: max(1.25rem, env(safe-area-inset-top, 0px)) 0 max(3rem, env(safe-area-inset-bottom, 0px));
+    overflow-x: clip;
 }
 
 .yk-nut__wrap {
@@ -25,11 +39,16 @@
 }
 
 .yk-nut__card {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.94);
     border: 1px solid var(--yk-line);
     border-radius: 22px;
     padding: 1.35rem 1.25rem 1.5rem;
     box-shadow: 0 14px 34px rgba(11, 32, 72, 0.06);
+    backdrop-filter: blur(6px);
+}
+
+.yk-nut__card--welcome {
+    background: linear-gradient(180deg, #fff 0%, var(--yk-cream) 140%);
 }
 
 .yk-nut__badge {
@@ -63,6 +82,7 @@
     margin: 0.35rem 0 0.55rem;
     font-size: 0.95rem;
     font-weight: 800;
+    letter-spacing: -0.01em;
 }
 
 .yk-nut__date-row {
@@ -111,7 +131,11 @@
     stroke: var(--yk-teal);
     transition: stroke-dashoffset 0.5s ease;
 }
-.yk-nut__progress.is-over .yk-nut__ring-fill { stroke: var(--yk-lavender); }
+.yk-nut__progress.is-over .yk-nut__ring-fill { stroke: var(--yk-gold); }
+
+.yk-nut.is-ready .yk-nut__ring-fill {
+    animation: yk-nut-ring-in 700ms ease both;
+}
 
 .yk-nut__progress-center,
 .yk-nut__progress-plain {
@@ -153,6 +177,7 @@
     border-radius: 14px;
     padding: 0.75rem 0.45rem;
     text-align: center;
+    border: 1px solid transparent;
 }
 
 .yk-nut__stats strong {
@@ -167,7 +192,7 @@
     font-weight: 700;
 }
 
-.yk-nut__stats--reveal { animation: yk-nut-reveal 0.3s ease both; }
+.yk-nut.is-ready .yk-nut__stats--reveal { animation: yk-nut-reveal 0.3s ease both; }
 
 .yk-nut__meta-row {
     display: flex;
@@ -189,7 +214,7 @@
     border-radius: 999px;
     font-size: 0.72rem;
     font-weight: 700;
-    background: #f4f1fb;
+    background: var(--yk-gold-soft);
     color: var(--yk-navy);
 }
 
@@ -215,7 +240,7 @@
     border-radius: 16px;
     padding: 0.9rem 1rem;
     background: #fff;
-    transition: border-color 0.15s ease, background 0.15s ease;
+    transition: border-color var(--yk-ease), background var(--yk-ease);
 }
 
 .yk-nut__meal:hover {
@@ -244,6 +269,12 @@
 }
 
 .yk-nut__text-link:hover { text-decoration: underline; }
+
+.yk-nut__text-link:focus-visible {
+    outline: 2px solid var(--yk-teal);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
 
 .yk-nut__search-grid {
     display: grid;
@@ -279,7 +310,8 @@
 }
 
 .yk-nut input:focus,
-.yk-nut select:focus {
+.yk-nut select:focus,
+.yk-nut textarea:focus {
     outline: 2px solid transparent;
     border-color: var(--yk-teal);
     box-shadow: 0 0 0 3px rgba(49, 109, 97, 0.18);
@@ -297,6 +329,7 @@
 .yk-nut__check input {
     width: 1.05rem;
     height: 1.05rem;
+    min-height: auto;
     margin-top: 0.15rem;
     accent-color: var(--yk-teal);
 }
@@ -328,10 +361,17 @@
 .yk-nut__btn:hover { background: #28584e; color: #fff; }
 .yk-nut__btn:active,
 .yk-nut__btn-secondary:active { transform: scale(0.98); }
-.yk-nut__btn:disabled {
+.yk-nut__btn:disabled,
+.yk-nut__btn.is-busy {
     opacity: 0.55;
-    cursor: not-allowed;
+    cursor: wait;
     transform: none;
+}
+
+.yk-nut__btn:focus-visible,
+.yk-nut__btn-secondary:focus-visible {
+    outline: 2px solid var(--yk-teal);
+    outline-offset: 2px;
 }
 
 .yk-nut__btn-secondary {
@@ -353,8 +393,8 @@
 }
 
 .yk-nut__tabs a {
-    min-height: 36px;
-    padding: 0 0.85rem;
+    min-height: var(--yk-touch);
+    padding: 0 0.95rem;
     border-radius: 999px;
     border: 1px solid var(--yk-line);
     text-decoration: none;
@@ -363,6 +403,12 @@
     font-size: 0.85rem;
     display: inline-flex;
     align-items: center;
+    transition: border-color var(--yk-ease), background var(--yk-ease), color var(--yk-ease);
+}
+
+.yk-nut__tabs a:focus-visible {
+    outline: 2px solid var(--yk-teal);
+    outline-offset: 2px;
 }
 
 .yk-nut__tabs a.is-active {
@@ -478,12 +524,18 @@
     min-width: 0;
 }
 
+.yk-nut__bar:focus-visible {
+    outline: 2px solid var(--yk-teal);
+    outline-offset: 2px;
+    border-radius: 8px;
+}
+
 .yk-nut__bar-fill {
     width: 100%;
     max-width: 34px;
     margin-inline: auto;
     border-radius: 8px 8px 3px 3px;
-    background: linear-gradient(180deg, var(--yk-lavender), var(--yk-teal));
+    background: linear-gradient(180deg, #6f9b8f, var(--yk-teal));
     min-height: 4px;
     transition: height 0.35s ease;
 }
@@ -511,6 +563,7 @@
     padding: 0.85rem 1rem;
     border: 1px solid var(--yk-line);
     border-radius: 14px;
+    background: #fff;
 }
 
 .yk-nut__history-meta {
@@ -546,9 +599,36 @@
 
 .yk-nut__welcome-points li { margin-bottom: 0.25rem; }
 
+.yk-nut__welcome-preview {
+    margin: 0.25rem 0 1rem;
+    padding: 1rem;
+    border-radius: 16px;
+    border: 1px solid var(--yk-line);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.yk-nut__welcome-preview .yk-nut__stats { margin-bottom: 0; }
+
+.yk-nut .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
 @keyframes yk-nut-reveal {
     from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: none; }
+}
+
+@keyframes yk-nut-ring-in {
+    from { stroke-dashoffset: var(--yk-nut-circ, 339); }
+    to { stroke-dashoffset: var(--yk-nut-offset, 0); }
 }
 
 @media (max-width: 639px) {
@@ -557,17 +637,44 @@
     .yk-nut__btn-secondary { width: 100%; }
 }
 
+@media (max-width: 379px) {
+    .yk-nut__wrap,
+    .yk-nut__wrap--wide {
+        width: min(960px, calc(100% - 1.25rem));
+    }
+
+    .yk-nut__card {
+        padding: 1.1rem 0.95rem 1.25rem;
+    }
+
+    .yk-nut__bars {
+        gap: 0.3rem;
+        min-height: 120px;
+    }
+
+    .yk-nut__bar small { font-size: 0.62rem; }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .yk-nut__ring-fill,
+    .yk-nut.is-ready .yk-nut__ring-fill,
     .yk-nut__btn,
     .yk-nut__btn-secondary,
     .yk-nut__meal,
     .yk-nut__list li,
     .yk-nut__bar-fill,
     .yk-nut__stats--reveal,
+    .yk-nut.is-ready .yk-nut__stats--reveal,
     .yk-nut input,
-    .yk-nut select {
+    .yk-nut select,
+    .yk-nut textarea,
+    .yk-nut__tabs a {
         animation: none !important;
         transition: none !important;
+    }
+
+    .yk-nut__btn:active,
+    .yk-nut__btn-secondary:active {
+        transform: none !important;
     }
 }

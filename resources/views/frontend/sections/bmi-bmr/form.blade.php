@@ -10,8 +10,10 @@
     $weightUnit = old('weight_unit', $old['weight_unit'] ?? 'kg');
     $sex = old('sex', $old['sex'] ?? '');
     $activity = old('activity', $old['activity'] ?? '');
+    $heightIsCm = $heightUnit === 'cm';
+    $weightIsKg = $weightUnit === 'kg';
 @endphp
-<main class="yk-bmi">
+<main class="yk-bmi yk-tools-ds" data-yk-tools-ds data-yk-bmi>
     <div class="yk-bmi__wrap yk-bmi__wrap--wide">
         @include('frontend.sections.partials.tool-back-to-tools')
         <section class="yk-bmi__card" aria-labelledby="bmi-form-heading">
@@ -20,13 +22,19 @@
             <p class="yk-bmi__lead">Educational screening estimates from your measurements—not medical advice.</p>
 
             @if (! $open)
-                <p class="yk-bmi__error">This calculator is unavailable right now.</p>
+                <p class="yk-bmi__error" role="alert">This calculator is unavailable right now.</p>
             @else
                 @if ($errors->any())
                     <p class="yk-bmi__error" role="alert">{{ $errors->first() }}</p>
                 @endif
 
-                <form method="post" action="{{ route('tools.bmi-bmr.calculate') }}" data-bmi-form>
+                <form
+                    method="post"
+                    action="{{ route('tools.bmi-bmr.calculate') }}"
+                    data-bmi-form
+                    data-height-mode="{{ $heightIsCm ? 'cm' : 'ft_in' }}"
+                    data-weight-mode="{{ $weightIsKg ? 'kg' : 'lb' }}"
+                >
                     @csrf
 
                     <div class="yk-bmi__metrics">
@@ -53,29 +61,29 @@
                         <fieldset class="yk-bmi__metric">
                             <legend>Weight</legend>
                             <div class="yk-bmi__unit-toggle" role="radiogroup" aria-label="Weight unit">
-                                <label><input type="radio" name="weight_unit" value="kg" @checked($weightUnit === 'kg') data-bmi-weight-unit> kg</label>
-                                <label><input type="radio" name="weight_unit" value="lb" @checked($weightUnit === 'lb') data-bmi-weight-unit> lb</label>
+                                <label class="yk-bmi__unit-option"><input type="radio" name="weight_unit" value="kg" @checked($weightIsKg) data-bmi-weight-unit> kg</label>
+                                <label class="yk-bmi__unit-option"><input type="radio" name="weight_unit" value="lb" @checked(! $weightIsKg) data-bmi-weight-unit> lb</label>
                             </div>
-                            <div data-bmi-weight-kg @style(['display:none' => $weightUnit !== 'kg'])>
-                                <input type="number" name="weight_kg" min="10" max="400" step="0.1" inputmode="decimal" placeholder="e.g. 70" aria-label="Weight in kilograms" value="{{ old('weight_kg', $old['weight_kg'] ?? '') }}">
+                            <div data-bmi-weight-kg @if (! $weightIsKg) hidden aria-hidden="true" @endif>
+                                <input type="number" name="weight_kg" min="10" max="400" step="0.1" inputmode="decimal" placeholder="e.g. 70" aria-label="Weight in kilograms" value="{{ old('weight_kg', $old['weight_kg'] ?? '') }}" @disabled(! $weightIsKg)>
                             </div>
-                            <div data-bmi-weight-lb @style(['display:none' => $weightUnit !== 'lb'])>
-                                <input type="number" name="weight_lb" min="22" max="880" step="0.1" inputmode="decimal" placeholder="e.g. 154" aria-label="Weight in pounds" value="{{ old('weight_lb', $old['weight_lb'] ?? '') }}">
+                            <div data-bmi-weight-lb @if ($weightIsKg) hidden aria-hidden="true" @endif>
+                                <input type="number" name="weight_lb" min="22" max="880" step="0.1" inputmode="decimal" placeholder="e.g. 154" aria-label="Weight in pounds" value="{{ old('weight_lb', $old['weight_lb'] ?? '') }}" @disabled($weightIsKg)>
                             </div>
                         </fieldset>
 
                         <fieldset class="yk-bmi__metric">
                             <legend>Height</legend>
                             <div class="yk-bmi__unit-toggle" role="radiogroup" aria-label="Height unit">
-                                <label><input type="radio" name="height_unit" value="cm" @checked($heightUnit === 'cm') data-bmi-height-unit> cm</label>
-                                <label><input type="radio" name="height_unit" value="ft_in" @checked($heightUnit === 'ft_in') data-bmi-height-unit> ft/in</label>
+                                <label class="yk-bmi__unit-option"><input type="radio" name="height_unit" value="cm" @checked($heightIsCm) data-bmi-height-unit> cm</label>
+                                <label class="yk-bmi__unit-option"><input type="radio" name="height_unit" value="ft_in" @checked(! $heightIsCm) data-bmi-height-unit> ft/in</label>
                             </div>
-                            <div data-bmi-height-cm @style(['display:none' => $heightUnit !== 'cm'])>
-                                <input type="number" name="height_cm" min="50" max="250" step="0.1" inputmode="decimal" placeholder="e.g. 170" aria-label="Height in centimetres" value="{{ old('height_cm', $old['height_cm'] ?? '') }}">
+                            <div data-bmi-height-cm @if (! $heightIsCm) hidden aria-hidden="true" @endif>
+                                <input type="number" name="height_cm" min="50" max="250" step="0.1" inputmode="decimal" placeholder="e.g. 170" aria-label="Height in centimetres" value="{{ old('height_cm', $old['height_cm'] ?? '') }}" @disabled(! $heightIsCm)>
                             </div>
-                            <div class="yk-bmi__ftin" data-bmi-height-ft @style(['display:none' => $heightUnit !== 'ft_in'])>
-                                <input type="number" name="height_ft" min="1" max="8" step="1" inputmode="numeric" placeholder="ft" aria-label="Height feet" value="{{ old('height_ft', $old['height_ft'] ?? '') }}">
-                                <input type="number" name="height_in" min="0" max="11.99" step="0.01" inputmode="decimal" placeholder="in" aria-label="Height inches" value="{{ old('height_in', $old['height_in'] ?? '') }}">
+                            <div class="yk-bmi__ftin" data-bmi-height-ft @if ($heightIsCm) hidden aria-hidden="true" @endif>
+                                <input type="number" name="height_ft" min="1" max="8" step="1" inputmode="numeric" placeholder="ft" aria-label="Height feet" value="{{ old('height_ft', $old['height_ft'] ?? '') }}" @disabled($heightIsCm)>
+                                <input type="number" name="height_in" min="0" max="11.99" step="0.01" inputmode="decimal" placeholder="in" aria-label="Height inches" value="{{ old('height_in', $old['height_in'] ?? '') }}" @disabled($heightIsCm)>
                             </div>
                         </fieldset>
                     </div>
@@ -114,29 +122,6 @@
     </div>
 </main>
 @if ($open)
-<script>
-(function () {
-    var form = document.querySelector('[data-bmi-form]');
-    if (!form) return;
-    var sync = function () {
-        var hu = form.querySelector('input[name="height_unit"]:checked');
-        var wu = form.querySelector('input[name="weight_unit"]:checked');
-        var cm = form.querySelector('[data-bmi-height-cm]');
-        var ft = form.querySelector('[data-bmi-height-ft]');
-        var kg = form.querySelector('[data-bmi-weight-kg]');
-        var lb = form.querySelector('[data-bmi-weight-lb]');
-        if (cm && ft && hu) {
-            cm.style.display = hu.value === 'cm' ? '' : 'none';
-            ft.style.display = hu.value === 'ft_in' ? '' : 'none';
-        }
-        if (kg && lb && wu) {
-            kg.style.display = wu.value === 'kg' ? '' : 'none';
-            lb.style.display = wu.value === 'lb' ? '' : 'none';
-        }
-    };
-    form.addEventListener('change', sync);
-    sync();
-})();
-</script>
+<script src="{{ asset('frontend/assets/js/yuktione-bmi-bmr.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-bmi-bmr.js')) }}" defer></script>
 @endif
 @endsection

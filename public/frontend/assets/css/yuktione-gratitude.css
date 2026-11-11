@@ -1,25 +1,46 @@
+/**
+ * Phase 4C — Gratitude Journal (scoped). Navy / teal / cream / gold. No lavender.
+ */
 .yk-gratitude {
     --yk-navy: #0b2048;
     --yk-teal: #316d61;
     --yk-mint: #eaf6f2;
-    --yk-lavender: #9d81db;
+    --yk-gold: #c4a35a;
+    --yk-gold-soft: rgba(196, 163, 90, 0.18);
+    --yk-cream: #fff6ed;
+    --yk-cream-2: #f7f1e8;
     --yk-line: #e6ebf2;
     --yk-ink: #1c2b28;
+    --yk-muted: #5b6b7c;
     --yk-eucalyptus: var(--yk-teal);
     --yk-eucalyptus-deep: #24554c;
     --yk-warm: #fbf8f3;
     --yk-sage: var(--yk-mint);
     --yk-yellow: #f6efd4;
     --yk-blush: #f6e7e3;
+    --yk-shadow-sm: 0 6px 18px rgba(11, 32, 72, 0.06);
+    --yk-ease: 180ms ease;
+    --yk-touch: 44px;
     box-sizing: border-box;
     margin: 0;
-    padding: 0.85rem 0 2rem;
+    padding: max(0.85rem, env(safe-area-inset-top, 0px)) 0 max(2rem, env(safe-area-inset-bottom, 0px));
     overflow-x: clip;
     background:
-        radial-gradient(circle at top right, rgba(246, 231, 227, 0.9), transparent 42%),
-        linear-gradient(180deg, #fffdf9 0%, var(--yk-warm) 55%, #f3efe7 100%);
+        radial-gradient(900px 380px at 8% -12%, rgba(49, 109, 97, 0.12), transparent 55%),
+        radial-gradient(700px 300px at 100% 0%, rgba(196, 163, 90, 0.12), transparent 52%),
+        linear-gradient(180deg, #fbfcfe 0%, var(--yk-cream-2) 100%);
     color: var(--yk-ink);
     font-family: "DM Sans", sans-serif;
+}
+
+.yk-gratitude__panel {
+    margin-top: 0.75rem;
+    padding: 1.15rem 1.1rem 1.25rem;
+    border: 1px solid var(--yk-line);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: var(--yk-shadow-sm);
+    backdrop-filter: blur(6px);
 }
 
 .yk-gratitude *,
@@ -35,12 +56,15 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    min-height: 44px;
-    color: var(--yk-eucalyptus);
+    min-height: var(--yk-touch);
+    color: var(--yk-eucalyptus-deep);
     font-size: 0.92rem;
     font-weight: 700;
     text-decoration: none;
+    transition: color var(--yk-ease);
 }
+
+.yk-gratitude__back:hover { color: var(--yk-navy); }
 
 .yk-gratitude__badge {
     margin: 0.35rem 0 0;
@@ -54,7 +78,7 @@
 .yk-gratitude h1,
 .yk-gratitude__closed h1 {
     margin: 0.3rem 0 0;
-    color: var(--yk-ink);
+    color: var(--yk-navy);
     font-size: clamp(1.7rem, 3vw, 2.05rem);
     font-weight: 700;
     letter-spacing: -0.03em;
@@ -64,7 +88,7 @@
 .yk-gratitude__lead,
 .yk-gratitude__closed p {
     margin: 0.35rem 0 0;
-    color: #4e615c;
+    color: var(--yk-muted);
     font-size: 0.98rem;
     line-height: 1.45;
 }
@@ -113,40 +137,57 @@
 
 .yk-gratitude__error[hidden] { display: none !important; }
 
-.yk-gratitude-carousel { margin-top: 1rem; }
+.yk-gratitude-carousel,
+.yk-gratitude-steps { margin-top: 1rem; }
 
 .yk-gratitude-carousel__status {
     margin: 0 0 0.55rem;
-    color: var(--yk-eucalyptus);
+    color: var(--yk-eucalyptus-deep);
     font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
 }
 
-.yk-gratitude-carousel__viewport {
+.yk-gratitude-steps__bar {
+    height: 6px;
+    margin: 0 0 0.85rem;
+    border-radius: 999px;
+    background: rgba(11, 32, 72, 0.08);
     overflow: hidden;
-    border-radius: 18px;
-    touch-action: pan-y;
 }
 
-.yk-gratitude-carousel__track {
-    display: flex;
+.yk-gratitude-steps__bar > span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--yk-teal), var(--yk-gold));
+    transition: width var(--yk-ease);
+}
+
+.yk-gratitude-steps__list {
     margin: 0;
     padding: 0;
     list-style: none;
-    transition: transform 280ms ease;
-    will-change: transform;
 }
 
 .yk-gratitude-card {
-    flex: 0 0 100%;
+    display: none;
     width: 100%;
     padding: 1rem;
     border: 1px solid #d7e4dd;
     border-radius: 18px;
     background:
-        linear-gradient(165deg, #fff 0%, var(--yk-yellow) 58%, rgba(246, 231, 227, 0.55) 100%);
+        linear-gradient(165deg, #fff 0%, var(--yk-cream) 58%, rgba(234, 246, 242, 0.65) 100%);
+    animation: yk-gratitude-rise 280ms ease both;
+}
+
+.yk-gratitude-card.is-active {
+    display: block;
+}
+
+.yk-gratitude-card[hidden] {
+    display: none !important;
 }
 
 .yk-gratitude-card__eyebrow {
@@ -195,9 +236,10 @@
 }
 
 .yk-gratitude-card__input:focus {
-    outline: 2px solid var(--yk-eucalyptus);
+    outline: 2px solid var(--yk-gold);
     outline-offset: 1px;
-    border-color: var(--yk-eucalyptus);
+    border-color: var(--yk-teal);
+    box-shadow: 0 0 0 4px var(--yk-gold-soft);
 }
 
 .yk-gratitude-card__count {
@@ -261,11 +303,11 @@
 
 .yk-gratitude-nav__next {
     border: 0;
-    background: var(--yk-eucalyptus);
+    background: linear-gradient(135deg, var(--yk-teal), var(--yk-eucalyptus-deep));
     color: #fff;
 }
 
-.yk-gratitude-nav__next:hover { background: var(--yk-eucalyptus-deep); }
+.yk-gratitude-nav__next:hover { filter: brightness(1.05); }
 
 .yk-gratitude-nav__prev[hidden],
 .yk-gratitude-nav__next[hidden],
@@ -275,11 +317,44 @@
     width: 100%;
     margin-top: 1rem;
     border: 0;
-    background: var(--yk-eucalyptus);
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--yk-teal), var(--yk-eucalyptus-deep));
     color: #fff;
+    box-shadow: 0 8px 18px rgba(36, 85, 76, 0.2);
+    text-decoration: none;
+    transition: transform var(--yk-ease), box-shadow var(--yk-ease);
 }
 
-.yk-gratitude__save:hover { background: var(--yk-eucalyptus-deep); }
+.yk-gratitude__save:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(36, 85, 76, 0.26);
+}
+
+.yk-gratitude__save:focus-visible,
+.yk-gratitude__back:focus-visible,
+.yk-gratitude-nav__prev:focus-visible,
+.yk-gratitude-nav__next:focus-visible,
+.yk-gratitude-nav__skip:focus-visible,
+.yk-gratitude-dot:focus-visible {
+    outline: 2px solid var(--yk-gold);
+    outline-offset: 3px;
+}
+
+@keyframes yk-gratitude-rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .yk-gratitude *,
+    .yk-gratitude *::before,
+    .yk-gratitude *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
 
 @media (max-width: 520px) {
     .yk-gratitude-card { padding: 0.9rem; }
@@ -288,14 +363,17 @@
 
 .yk-gratitude-complete__wrap { text-align: center; }
 
+.yk-gratitude-complete__hero { text-align: center; }
+
 .yk-gratitude-complete__mark {
     display: grid;
     place-items: center;
     width: 4.25rem;
     height: 4.25rem;
-    margin: 0.55rem auto 0;
+    margin: 0.15rem auto 0;
     border-radius: 999px;
-    background: var(--yk-sage);
+    background: linear-gradient(145deg, var(--yk-mint), #dff3ec);
+    box-shadow: 0 0 0 6px rgba(49, 109, 97, 0.08);
 }
 
 .yk-gratitude-complete__mark svg {

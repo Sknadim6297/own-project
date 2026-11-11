@@ -5,13 +5,14 @@
 @section('body_class', 'yk-journal-body')
 
 @section('content')
-<main class="yk-journal yk-journal-history">
+<main class="yk-journal yk-journal-history yk-tools-ds" data-yk-tools-ds data-yk-journal>
     <div class="yk-journal__wrap yk-journal-history__wrap">
         @include('frontend.sections.partials.tool-back-to-tools')
         <a class="yk-journal__back" href="{{ route('tools.psychology') }}">
             <span aria-hidden="true">←</span> Psychology tools
         </a>
 
+        <div class="yk-journal__panel">
         <p class="yk-journal__badge">Free tool</p>
         <h1>My Journal History</h1>
         <p class="yk-journal__lead">Your private entries, saved only for you.</p>
@@ -115,6 +116,7 @@
                 @endif
             @endif
         @endif
+        </div>
     </div>
 </main>
 @endsection

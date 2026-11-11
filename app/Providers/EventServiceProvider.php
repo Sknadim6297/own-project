@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Listeners\AwardWeeklyLoginYuktiPoints;
 use App\Listeners\ClaimBmiBmrDraft;
 use App\Listeners\ClaimCareerInterestDraft;
 use App\Listeners\ClaimGratitudeDraft;
@@ -34,6 +35,7 @@ class EventServiceProvider extends ServiceProvider
             ClaimCareerInterestDraft::class,
             ClaimSkillsStrengthsDraft::class,
             ClaimBmiBmrDraft::class,
+            AwardWeeklyLoginYuktiPoints::class,
         ],
         MessageSent::class => [
             SaveSentEmailToImap::class,

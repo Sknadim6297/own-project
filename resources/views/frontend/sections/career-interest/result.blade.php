@@ -18,7 +18,7 @@
     $recommendations = $attempt->recommendations['items'] ?? [];
     $when = optional($attempt->completed_at)->timezone($timezone)?->format('d M Y, g:i A');
 @endphp
-<main class="yk-cit">
+<main class="yk-cit yk-tools-ds" data-yk-tools-ds data-yk-cit>
     <div class="yk-cit__wrap">
         <section class="yk-cit__card" aria-labelledby="cit-result-heading">
             <p class="yk-cit__badge">Saved result</p>

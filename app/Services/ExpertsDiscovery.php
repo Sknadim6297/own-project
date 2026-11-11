@@ -63,6 +63,41 @@ class ExpertsDiscovery
     }
 
     /**
+     * Map a Tarot reading category to a real Explore experts filter.
+     * Uses only verified ExploreCatalog keys; falls back to astrology-tarot.
+     *
+     * @return array{url: string, category: ?string, service: ?string, resolved_via: string, label: string}
+     */
+    public function forTarotCategory(?string $tarotCategoryKey): array
+    {
+        $map = [
+            'love-relationships' => ['explore' => 'relationships', 'specialist' => 'Talk to a Relationships Expert', 'browse' => 'Browse Relationships Experts'],
+            'career-work' => ['explore' => 'career-business', 'specialist' => 'Talk to a Career Expert', 'browse' => 'Browse Career Experts'],
+            'money-finances' => ['explore' => 'money-finance', 'specialist' => 'Talk to a Money & Finance Expert', 'browse' => 'Browse Money & Finance Experts'],
+            'personal-growth' => ['explore' => 'mental-health', 'specialist' => 'Talk to a Mental Health Expert', 'browse' => 'Browse Mental Health Experts'],
+            'life-direction' => ['explore' => 'spirituality', 'specialist' => 'Talk to a Spirituality Expert', 'browse' => 'Browse Spirituality Experts'],
+            'general-guidance' => ['explore' => 'astrology-tarot', 'specialist' => 'Talk to an Astrology & Tarot Expert', 'browse' => 'Browse Astrology & Tarot Experts'],
+        ];
+
+        $fallback = [
+            'explore' => 'astrology-tarot',
+            'specialist' => 'Talk to an Astrology & Tarot Expert',
+            'browse' => 'Browse Astrology & Tarot Experts',
+        ];
+
+        $target = $map[$tarotCategoryKey] ?? $fallback;
+        if (! array_key_exists($target['explore'], ExploreCatalog::CATEGORIES)) {
+            $target = $fallback;
+        }
+
+        return $this->resolveCategory(
+            $target['explore'],
+            $target['specialist'],
+            $target['browse']
+        );
+    }
+
+    /**
      * @return array{url: string, category: ?string, service: ?string, resolved_via: string, label: string}
      */
     private function resolveCategory(string $categoryKey, string $specialistLabel, string $categoryLabel): array

@@ -203,6 +203,39 @@ Route::post('tools/career-interest/category/{category}', [\App\Http\Controllers\
 Route::post('tools/career-interest/start', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'start'])->name('tools.career-interest.start');
 Route::get('tools/career-interest', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'welcome'])->name('tools.career-interest');
 
+// Tarot Reflection (Phase 2B) — auth required; unpublished in catalogue until Phase 2C/publish.
+Route::middleware(['auth:user'])->prefix('tools/tarot')->name('tools.tarot.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'intro'])->name('intro');
+    Route::post('/start', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'start'])
+        ->middleware('throttle:30,1')
+        ->name('start');
+    Route::get('/category', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'category'])->name('category');
+    Route::post('/category', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'storeCategory'])
+        ->middleware('throttle:60,1')
+        ->name('category.store');
+    Route::get('/question', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'question'])->name('question');
+    Route::post('/question', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'storeQuestion'])
+        ->middleware('throttle:60,1')
+        ->name('question.store');
+    Route::get('/spread', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'spread'])->name('spread');
+    Route::post('/spread', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'storeSpread'])
+        ->middleware('throttle:60,1')
+        ->name('spread.store');
+    Route::get('/draw', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'draw'])->name('draw');
+    Route::post('/draw', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'pick'])
+        ->middleware('throttle:60,1')
+        ->name('draw.pick');
+    Route::get('/reveal', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'reveal'])->name('reveal');
+    Route::get('/reading', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'reading'])->name('reading');
+    Route::post('/save', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'save'])
+        ->middleware('throttle:30,1')
+        ->name('save');
+    Route::get('/history', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'history'])->name('history');
+    Route::get('/history/{reading}', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'show'])
+        ->whereNumber('reading')
+        ->name('history.show');
+});
+
 Route::get('tools', [HomeController::class, 'tools'])->name('tools.index');
 Route::post('/currency/switch', [CurrencyController::class, 'switch'])->name('currency.switch');
 
@@ -604,6 +637,21 @@ Route::get('blog-post', function () {
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::get('register', [LoginController::class, 'showRegisterForm'])->name('register');
 
+// Phase 3D — referral deep links (capture only; no points granted).
+Route::middleware('throttle:60,1')->group(function () {
+    Route::get('r/{code}', [\App\Http\Controllers\Frontend\ReferralLandingController::class, 'general'])
+        ->where('code', '[A-Za-z0-9]{6,32}')
+        ->name('referral.landing');
+    Route::get('r/{code}/tool/{tool}', [\App\Http\Controllers\Frontend\ReferralLandingController::class, 'tool'])
+        ->where('code', '[A-Za-z0-9]{6,32}')
+        ->where('tool', '[A-Za-z0-9\-]+')
+        ->name('referral.landing.tool');
+    Route::get('r/{code}/expert/{professional}', [\App\Http\Controllers\Frontend\ReferralLandingController::class, 'expert'])
+        ->where('code', '[A-Za-z0-9]{6,32}')
+        ->whereNumber('professional')
+        ->name('referral.landing.expert');
+});
+
 Route::post('login', [LoginController::class, 'login'])->middleware('throttle:5,1')->name('login.submit');
 Route::post('register', [LoginController::class, 'register'])->name('register.submit');
 Route::post('/register/send-otp', [App\Http\Controllers\Frontend\LoginController::class, 'sendOtp'])->name('register.send-otp');
@@ -663,6 +711,20 @@ Route::middleware(['auth:user'])->group(function () {
 
     Route::post('/get-mcq-questions', [CustomerBookingController::class, 'getMCQQuestions'])->name('get.mcq.questions');
     Route::post('/submit-mcq-answers', [CustomerBookingController::class, 'submitMCQAnswers'])->name('user.mcq.submit');
+
+    // Phase 3G/3I — YuktiPoints wallet reads + premium customer UX (no debit / grant / redeem).
+    Route::get('/customer/yukti-points', [\App\Http\Controllers\Frontend\YuktiWalletController::class, 'index'])
+        ->name('user.yukti-points.index');
+    Route::get('/customer/yukti-points/wallet', [\App\Http\Controllers\Frontend\YuktiWalletController::class, 'wallet'])
+        ->name('user.yukti-points.wallet');
+    Route::get('/customer/yukti-points/activity', [\App\Http\Controllers\Frontend\YuktiWalletController::class, 'activity'])
+        ->name('user.yukti-points.activity');
+    Route::get('/customer/yukti-points/history', [\App\Http\Controllers\Frontend\YuktiWalletController::class, 'history'])
+        ->name('user.yukti-points.history');
+    Route::get('/customer/yukti-points/referrals', [\App\Http\Controllers\Frontend\YuktiWalletController::class, 'referrals'])
+        ->name('user.yukti-points.referrals');
+    Route::get('/customer/yukti-points/weekly', [\App\Http\Controllers\Frontend\YuktiWalletController::class, 'weekly'])
+        ->name('user.yukti-points.weekly');
 });
 
 Route::get('/admin/banners', [BannerController::class, 'index'])->name('admin.banner.index');

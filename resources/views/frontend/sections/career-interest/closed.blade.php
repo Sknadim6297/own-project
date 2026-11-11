@@ -5,7 +5,7 @@
 @section('body_class', 'yk-cit-body')
 
 @section('content')
-<main class="yk-cit">
+<main class="yk-cit yk-tools-ds" data-yk-tools-ds data-yk-cit>
     <div class="yk-cit__wrap">
         <section class="yk-cit__card" aria-labelledby="cit-closed-heading">
             <p class="yk-cit__badge">Free tool</p>

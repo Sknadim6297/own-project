@@ -1,19 +1,31 @@
+/**
+ * Phase 4D — BMI & BMR Calculator (scoped). Navy / teal / cream / gold. No lavender.
+ */
 .yk-bmi {
-    --yk-navy: #142B4D;
+    --yk-navy: #0b2048;
+    --yk-navy-soft: #142b4d;
     --yk-teal: #316d61;
+    --yk-teal-deep: #24554c;
     --yk-mint: #eaf6f2;
-    --yk-lavender: #9d81db;
+    --yk-gold: #c4a35a;
+    --yk-gold-soft: rgba(196, 163, 90, 0.18);
+    --yk-cream: #fff6ed;
+    --yk-cream-2: #f7f1e8;
     --yk-line: #e6ebf2;
-    --yk-muted: #41506d;
+    --yk-muted: #5b6b7c;
     --yk-surface: #ffffff;
+    --yk-shadow-sm: 0 6px 18px rgba(11, 32, 72, 0.06);
+    --yk-ease: 180ms ease;
+    --yk-touch: 44px;
     font-family: "DM Sans", sans-serif;
     color: var(--yk-navy);
     background:
-        radial-gradient(circle at 12% 0%, rgba(157, 129, 219, 0.14), transparent 28%),
-        radial-gradient(circle at 90% 8%, rgba(49, 109, 97, 0.12), transparent 26%),
-        #fff;
+        radial-gradient(900px 380px at 8% -12%, rgba(49, 109, 97, 0.12), transparent 55%),
+        radial-gradient(700px 300px at 100% 0%, rgba(196, 163, 90, 0.12), transparent 52%),
+        linear-gradient(180deg, #fbfcfe 0%, var(--yk-cream-2) 100%);
     min-height: 70vh;
-    padding: 1.25rem 0 3rem;
+    padding: max(1.25rem, env(safe-area-inset-top, 0px)) 0 max(3rem, env(safe-area-inset-bottom, 0px));
+    overflow-x: clip;
 }
 
 .yk-bmi__wrap {
@@ -26,11 +38,12 @@
 }
 
 .yk-bmi__card {
-    background: var(--yk-surface);
+    background: rgba(255, 255, 255, 0.94);
     border: 1px solid var(--yk-line);
     border-radius: 22px;
     padding: 1.35rem 1.25rem 1.5rem;
-    box-shadow: 0 14px 34px rgba(11, 32, 72, 0.06);
+    box-shadow: var(--yk-shadow-sm);
+    backdrop-filter: blur(6px);
 }
 
 .yk-bmi__badge {
@@ -148,9 +161,17 @@
 
 .yk-bmi input:focus,
 .yk-bmi select:focus {
-    outline: 2px solid transparent;
+    outline: 2px solid var(--yk-gold);
+    outline-offset: 1px;
     border-color: var(--yk-teal);
-    box-shadow: 0 0 0 3px rgba(49, 109, 97, 0.18);
+    box-shadow: 0 0 0 4px var(--yk-gold-soft);
+}
+
+.yk-bmi [data-bmi-weight-kg][hidden],
+.yk-bmi [data-bmi-weight-lb][hidden],
+.yk-bmi [data-bmi-height-cm][hidden],
+.yk-bmi [data-bmi-height-ft][hidden] {
+    display: none !important;
 }
 
 .yk-bmi input:invalid:not(:placeholder-shown):not(:focus) {
@@ -163,24 +184,28 @@
     margin-bottom: 0.4rem;
 }
 
-.yk-bmi__unit-toggle label {
+.yk-bmi__unit-toggle label,
+.yk-bmi__unit-option {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.28rem;
-    min-height: 34px;
-    padding: 0 0.65rem;
+    min-height: var(--yk-touch);
+    min-width: 3.25rem;
+    padding: 0 0.85rem;
     border: 1px solid var(--yk-line);
     border-radius: 999px;
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     font-weight: 700;
     cursor: pointer;
-    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    transition: background var(--yk-ease), border-color var(--yk-ease), color var(--yk-ease), transform var(--yk-ease);
 }
 
-.yk-bmi__unit-toggle label:has(input:checked) {
+.yk-bmi__unit-toggle label:has(input:checked),
+.yk-bmi__unit-option:has(input:checked) {
     background: var(--yk-mint);
     border-color: var(--yk-teal);
-    color: var(--yk-teal);
+    color: var(--yk-teal-deep);
 }
 
 .yk-bmi__unit-toggle input {
@@ -191,8 +216,9 @@
     pointer-events: none;
 }
 
-.yk-bmi__unit-toggle label:focus-within {
-    outline: 2px solid var(--yk-teal);
+.yk-bmi__unit-toggle label:focus-within,
+.yk-bmi__unit-option:focus-within {
+    outline: 2px solid var(--yk-gold);
     outline-offset: 2px;
 }
 
@@ -333,7 +359,13 @@
     transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
 }
 
-.yk-bmi__btn { background: var(--yk-teal); color: #fff; }
+.yk-bmi__btn {
+    background: linear-gradient(135deg, var(--yk-teal), var(--yk-teal-deep));
+    color: #fff;
+    box-shadow: 0 8px 18px rgba(36, 85, 76, 0.2);
+}
+
+.yk-bmi__btn:hover { transform: translateY(-1px); }
 .yk-bmi__btn:hover { background: #28584e; color: #fff; }
 .yk-bmi__btn:active,
 .yk-bmi__btn-secondary:active {

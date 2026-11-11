@@ -5,12 +5,13 @@
 @section('body_class', 'yk-gratitude-body')
 
 @section('content')
-<main class="yk-gratitude yk-gratitude-entry">
+<main class="yk-gratitude yk-gratitude-entry yk-tools-ds" data-yk-tools-ds data-yk-gratitude>
     <div class="yk-gratitude__wrap">
         <a class="yk-gratitude__back" href="{{ route('tools.psychology.gratitude.history') }}">
             <span aria-hidden="true">←</span> Back to History
         </a>
 
+        <div class="yk-gratitude__panel">
         @if (session('status'))
             <p class="yk-gratitude-history__status" role="status">{{ session('status') }}</p>
         @endif
@@ -47,6 +48,7 @@
                 Delete
             </button>
         </div>
+        </div>
     </div>
 </main>
 
@@ -71,38 +73,5 @@
         </div>
     </div>
 </div>
+<script src="{{ asset('frontend/assets/js/yuktione-gratitude.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-gratitude.js')) }}" defer></script>
 @endsection
-
-@push('scripts')
-<script>
-(() => {
-    const dialog = document.querySelector('[data-gratitude-delete-dialog]');
-    const openBtn = document.querySelector('[data-gratitude-delete-open]');
-    if (!dialog || !openBtn) return;
-
-    const confirmBtn = dialog.querySelector('[data-gratitude-delete-confirm]');
-    let lastFocus = null;
-
-    const open = () => {
-        lastFocus = document.activeElement;
-        dialog.hidden = false;
-        document.body.classList.add('yk-gratitude-dialog-open');
-        confirmBtn?.focus();
-    };
-
-    const close = () => {
-        dialog.hidden = true;
-        document.body.classList.remove('yk-gratitude-dialog-open');
-        lastFocus?.focus?.();
-    };
-
-    openBtn.addEventListener('click', open);
-    dialog.querySelectorAll('[data-gratitude-delete-cancel]').forEach((node) => {
-        node.addEventListener('click', close);
-    });
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && !dialog.hidden) close();
-    });
-})();
-</script>
-@endpush

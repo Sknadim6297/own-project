@@ -8,7 +8,7 @@
 @php
     $blurbs = \App\Support\BmiBmr\BmiBmrCatalog::RESULT_BLURBS;
 @endphp
-<main class="yk-bmi">
+<main class="yk-bmi yk-tools-ds" data-yk-tools-ds data-yk-bmi>
     <div class="yk-bmi__wrap yk-bmi__wrap--wide">
         <section class="yk-bmi__card yk-bmi__card--results" aria-labelledby="bmi-results-heading">
             <p class="yk-bmi__badge">Results</p>

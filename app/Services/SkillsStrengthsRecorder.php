@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\SkillsStrengthsAttempt;
+use App\Services\YuktiRewards\YuktiCustomerRewardHooks;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -29,14 +30,32 @@ class SkillsStrengthsRecorder
         $scored = $this->scorer->score($answers);
 
         try {
-            return $this->persist((int) $userId, $key, $scored);
+            $record = $this->persist((int) $userId, $key, $scored);
         } catch (QueryException $exception) {
             if (str_contains(strtolower($exception->getMessage()), 'unique')) {
-                return $this->existingForUser($key, (int) $userId);
+                $record = $this->existingForUser($key, (int) $userId);
+            } else {
+                throw $exception;
             }
-
-            throw $exception;
         }
+
+        $this->awardIfNew($record);
+
+        return $record;
+    }
+
+    private function awardIfNew(SkillsStrengthsAttempt $record): void
+    {
+        if (! $record->wasRecentlyCreated) {
+            return;
+        }
+
+        app(YuktiCustomerRewardHooks::class)->onEligibleToolCompleted(
+            (int) $record->user_id,
+            'skills-strengths-assessment',
+            (string) $record->completion_key,
+            (int) $record->id,
+        );
     }
 
     private function persist(int $userId, string $key, array $scored): SkillsStrengthsAttempt

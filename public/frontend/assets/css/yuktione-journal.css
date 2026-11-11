@@ -1,23 +1,46 @@
+/**
+ * Phase 4C — Digital Journal (scoped). Navy / teal / cream / gold. No lavender.
+ */
 .yk-journal {
     --yk-navy: #0b2048;
     --yk-teal: #316d61;
     --yk-mint: #eaf6f2;
-    --yk-lavender: #9d81db;
+    --yk-gold: #c4a35a;
+    --yk-gold-soft: rgba(196, 163, 90, 0.18);
+    --yk-cream: #fff6ed;
+    --yk-cream-2: #f7f1e8;
     --yk-line: #e6ebf2;
     --yk-ink: #1c2b28;
+    --yk-muted: #5b6b7c;
     --yk-eucalyptus: var(--yk-teal);
     --yk-eucalyptus-deep: #24554c;
     --yk-warm: #fbf8f3;
     --yk-sage: var(--yk-mint);
     --yk-yellow: #f6efd4;
     --yk-blush: #f6e7e3;
+    --yk-shadow-sm: 0 6px 18px rgba(11, 32, 72, 0.06);
+    --yk-ease: 180ms ease;
+    --yk-touch: 44px;
     box-sizing: border-box;
     margin: 0;
-    padding: 0.85rem 0 2rem;
+    padding: max(0.85rem, env(safe-area-inset-top, 0px)) 0 max(2rem, env(safe-area-inset-bottom, 0px));
     overflow-x: clip;
-    background: var(--yk-warm);
+    background:
+        radial-gradient(900px 380px at 8% -12%, rgba(49, 109, 97, 0.12), transparent 55%),
+        radial-gradient(700px 300px at 100% 0%, rgba(196, 163, 90, 0.12), transparent 52%),
+        linear-gradient(180deg, #fbfcfe 0%, var(--yk-cream-2) 100%);
     color: var(--yk-ink);
     font-family: "DM Sans", sans-serif;
+}
+
+.yk-journal__panel {
+    margin-top: 0.75rem;
+    padding: 1.15rem 1.1rem 1.25rem;
+    border: 1px solid var(--yk-line);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: var(--yk-shadow-sm);
+    backdrop-filter: blur(6px);
 }
 
 .yk-journal *,
@@ -33,12 +56,15 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    min-height: 44px;
-    color: var(--yk-eucalyptus);
+    min-height: var(--yk-touch);
+    color: var(--yk-eucalyptus-deep);
     font-size: 0.92rem;
     font-weight: 700;
     text-decoration: none;
+    transition: color var(--yk-ease);
 }
+
+.yk-journal__back:hover { color: var(--yk-navy); }
 
 .yk-journal__badge {
     margin: 0.35rem 0 0;
@@ -52,7 +78,7 @@
 .yk-journal h1,
 .yk-journal__closed h1 {
     margin: 0.35rem 0 0;
-    color: var(--yk-ink);
+    color: var(--yk-navy);
     font-size: clamp(1.7rem, 3vw, 2.05rem);
     font-weight: 700;
     letter-spacing: -0.03em;
@@ -62,7 +88,7 @@
 .yk-journal__lead,
 .yk-journal__closed p {
     margin: 0.4rem 0 0;
-    color: #4e615c;
+    color: var(--yk-muted);
     font-size: 0.98rem;
     line-height: 1.45;
 }
@@ -82,6 +108,9 @@
 
 .yk-journal__error {
     margin: 0.75rem 0 0;
+    padding: 0.65rem 0.85rem;
+    border-radius: 12px;
+    background: rgba(141, 93, 86, 0.1);
     color: #8d5d56;
     font-size: 0.88rem;
     font-weight: 700;
@@ -110,19 +139,26 @@
 }
 
 .yk-journal__prompt {
+    position: relative;
     display: flex;
     align-items: center;
     min-height: 52px;
     padding: 0.7rem 0.85rem;
     border: 1.5px solid transparent;
     border-radius: 14px;
-    background: var(--yk-yellow);
+    background: linear-gradient(135deg, var(--yk-yellow), var(--yk-cream));
     cursor: pointer;
+    transition: border-color var(--yk-ease), box-shadow var(--yk-ease), transform var(--yk-ease);
+}
+
+.yk-journal__prompt:hover {
+    border-color: rgba(49, 109, 97, 0.35);
+    transform: translateY(-1px);
 }
 
 .yk-journal__prompt.is-selected {
-    border-color: var(--yk-eucalyptus);
-    box-shadow: 0 0 0 1px var(--yk-eucalyptus);
+    border-color: var(--yk-teal);
+    box-shadow: 0 0 0 3px rgba(49, 109, 97, 0.14);
 }
 
 .yk-journal__prompt-input {
@@ -175,17 +211,26 @@
 }
 
 .yk-journal__body {
-    min-height: 180px;
-    padding: 0.85rem;
+    min-height: 200px;
+    padding: 0.95rem 1rem;
     resize: vertical;
-    line-height: 1.5;
+    line-height: 1.6;
+}
+
+.yk-journal__write {
+    margin-top: 1.15rem;
+    padding: 0.85rem;
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 246, 237, 0.45));
+    border: 1px solid rgba(49, 109, 97, 0.1);
 }
 
 .yk-journal__title:focus,
 .yk-journal__body:focus {
-    outline: 2px solid var(--yk-eucalyptus);
+    outline: 2px solid var(--yk-gold);
     outline-offset: 1px;
-    border-color: var(--yk-eucalyptus);
+    border-color: var(--yk-teal);
+    box-shadow: 0 0 0 4px var(--yk-gold-soft);
 }
 
 .yk-journal__meta {
@@ -205,15 +250,39 @@
     min-height: 48px;
     margin-top: 1.15rem;
     border: 0;
-    border-radius: 999px;
-    background: var(--yk-eucalyptus);
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--yk-teal), var(--yk-eucalyptus-deep));
     color: #fff;
     font: inherit;
     font-weight: 700;
     cursor: pointer;
+    box-shadow: 0 8px 18px rgba(36, 85, 76, 0.2);
+    transition: transform var(--yk-ease), box-shadow var(--yk-ease);
+    text-decoration: none;
 }
 
-.yk-journal__save:hover { background: var(--yk-eucalyptus-deep); }
+.yk-journal__save:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(36, 85, 76, 0.26);
+}
+
+.yk-journal__save:focus-visible,
+.yk-journal__back:focus-visible,
+.yk-journal__prompt:focus-within {
+    outline: 2px solid var(--yk-gold);
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .yk-journal *,
+    .yk-journal *::before,
+    .yk-journal *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
 
 @media (max-width: 520px) {
     .yk-journal__prompts ul { grid-template-columns: 1fr; }

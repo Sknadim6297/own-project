@@ -228,15 +228,27 @@
 	@endif
 	@if (request()->routeIs('tools.water-intake*'))
 		<link href="{{ asset('frontend/assets/css/yuktione-water-intake.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-water-intake.css')) }}" rel="stylesheet">
+		<script src="{{ asset('frontend/assets/js/yuktione-water-intake.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-water-intake.js')) }}" defer></script>
 	@endif
 	@if (request()->routeIs('tools.weight-journey*'))
 		<link href="{{ asset('frontend/assets/css/yuktione-weight-journey.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-weight-journey.css')) }}" rel="stylesheet">
+		<script src="{{ asset('frontend/assets/js/yuktione-weight-journey.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-weight-journey.js')) }}" defer></script>
 	@endif
 	@if (request()->routeIs('tools.nutrition*'))
 		<link href="{{ asset('frontend/assets/css/yuktione-nutrition.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-nutrition.css')) }}" rel="stylesheet">
+		<script src="{{ asset('frontend/assets/js/yuktione-nutrition.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-nutrition.js')) }}" defer></script>
+	@endif
+	@if (request()->routeIs('tools.tarot*'))
+		<link href="{{ asset('frontend/assets/css/yuktione-tarot.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tarot.css')) }}" rel="stylesheet">
+		<script src="{{ asset('frontend/assets/js/yuktione-tarot.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-tarot.js')) }}" defer></script>
+	@endif
+	@if (request()->routeIs('user.yukti-points.*'))
+		<link href="{{ asset('frontend/assets/css/yuktione-rewards.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-rewards.css')) }}" rel="stylesheet">
+		<script src="{{ asset('frontend/assets/js/yuktione-rewards.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-rewards.js')) }}" defer></script>
 	@endif
 	<link href="{{ asset('frontend/assets/css/yuktione-navbar.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-navbar.css')) }}" rel="stylesheet">
 	@if (request()->routeIs('tools.*'))
+		<link href="{{ asset('frontend/assets/css/yuktione-tools-ds.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools-ds.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-tool-chrome.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tool-chrome.css')) }}" rel="stylesheet">
 	@endif
 

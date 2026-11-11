@@ -58,6 +58,17 @@
             'links' => $consultationLinks,
         ],
         [
+            'title' => 'Rewards',
+            'links' => [
+                [
+                    'label' => 'Refer & Earn',
+                    'url' => route('user.yukti-points.index'),
+                    'icon' => 'spark',
+                    'active' => request()->routeIs('user.yukti-points.*'),
+                ],
+            ],
+        ],
+        [
             'title' => 'Account',
             'links' => [
                 [

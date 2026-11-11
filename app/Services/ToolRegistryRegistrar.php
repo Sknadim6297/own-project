@@ -14,6 +14,7 @@ class ToolRegistryRegistrar
             $this->registerPsychology();
             $this->registerCareerGuidance();
             $this->registerNutrition();
+            $this->registerAstrologyTarot();
         });
     }
 
@@ -136,6 +137,31 @@ class ToolRegistryRegistrar
                 'description' => 'Log meals from the published food catalogue with optional calorie and macro goals.',
                 'icon' => 'ri-bowl-line',
                 'display_order' => 4,
+            ],
+        ]);
+    }
+
+    private function registerAstrologyTarot(): void
+    {
+        $category = ToolCategory::query()->firstOrCreate(
+            ['slug' => 'astrology-tarot'],
+            [
+                'name' => 'Astrology & Tarot',
+                'description' => 'Reflective insight tools. Readings stay private to each user.',
+                'icon' => 'ri-moon-line',
+                'is_active' => true,
+                'display_order' => 4,
+            ]
+        );
+
+        // Unpublished until Phase 2B screens + draw routes exist (no broken public launch).
+        $this->registerTools($category, 'astrology-tarot', [
+            [
+                'slug' => 'tarot-reflection',
+                'name' => 'Tarot Reflection',
+                'description' => 'Draw your cards. Explore what they may help you reflect on.',
+                'icon' => 'ri-sparkling-2-line',
+                'display_order' => 1,
             ],
         ]);
     }

@@ -6,16 +6,17 @@
 
 @section('content')
 @php $svc = app(\App\Services\WeightJourneyService::class); @endphp
-<main class="yk-wj">
+<main class="yk-wj yk-tools-ds" data-yk-tools-ds data-yk-wj>
     <div class="yk-wj__wrap yk-wj__wrap--wide">
-        <section class="yk-wj__card">
+        @include('frontend.sections.partials.tool-back-to-tools')
+        <section class="yk-wj__card" aria-labelledby="wj-progress-heading">
             <p class="yk-wj__badge">Progress · Asia/Kolkata</p>
-            <h1>Weight progress</h1>
+            <h1 id="wj-progress-heading">Weight progress</h1>
             <p class="yk-wj__lead">Real measurements only. Missing days stay blank. Same-day chart points use the latest reading.</p>
 
             <nav class="yk-wj__tabs" aria-label="Chart period">
                 @foreach ($periods as $key => $days)
-                    <a href="{{ route('tools.weight-journey.progress', ['period' => $key]) }}" @class(['is-active' => $period === $key])>
+                    <a href="{{ route('tools.weight-journey.progress', ['period' => $key]) }}" @class(['is-active' => $period === $key]) @if ($period === $key) aria-current="page" @endif>
                         {{ ucfirst($key) }}
                     </a>
                 @endforeach

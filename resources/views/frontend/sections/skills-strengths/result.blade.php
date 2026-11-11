@@ -11,7 +11,7 @@
     $develop = $attempt->develop ?? [];
     $careerExperts = app(\App\Services\ExpertsDiscovery::class)->career();
 @endphp
-<main class="yk-ssa">
+<main class="yk-ssa yk-tools-ds" data-yk-tools-ds data-yk-ssa>
     <div class="yk-ssa__wrap yk-ssa__wrap--wide">
         @include('frontend.sections.partials.tool-back-to-tools')
         <section class="yk-ssa__card" aria-labelledby="ssa-result-heading">

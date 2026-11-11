@@ -252,6 +252,7 @@
                     <div data-panel-dropdown-panel class="absolute right-0 mt-2 hidden w-52 rounded-panel border border-border bg-surface p-2 shadow-popover">
                         <a href="{{ route('user.profile.index') }}" class="block rounded-control px-3 py-2 text-sm font-medium text-text-secondary hover:bg-surface-muted hover:text-text-primary">Profile</a>
                         <a href="{{ route('user.billing.index') }}" class="block rounded-control px-3 py-2 text-sm font-medium text-text-secondary hover:bg-surface-muted hover:text-text-primary">Billing</a>
+                        <a href="{{ route('user.yukti-points.index') }}" class="block rounded-control px-3 py-2 text-sm font-medium text-text-secondary hover:bg-surface-muted hover:text-text-primary">Refer &amp; Earn</a>
                         <a href="{{ route('user.logout') }}" class="block rounded-control px-3 py-2 text-sm font-medium text-error hover:bg-error-surface">Logout</a>
                     </div>
                 </div>

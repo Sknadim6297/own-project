@@ -1,20 +1,34 @@
+/**
+ * Phase 4G — Water Intake Tracker (scoped). Navy / teal / cream / gold. No lavender.
+ */
+.yk-water-body,
 .yk-water {
-    --yk-navy: #142B4D;
+    --yk-navy: #0b2048;
     --yk-teal: #316d61;
+    --yk-teal-deep: #24554c;
     --yk-mint: #eaf6f2;
-    --yk-lavender: #9d81db;
+    --yk-gold: #c4a35a;
+    --yk-gold-soft: rgba(196, 163, 90, 0.18);
+    --yk-cream: #fff6ed;
+    --yk-cream-2: #f7f1e8;
     --yk-line: #e6ebf2;
-    --yk-muted: #41506d;
+    --yk-muted: #5b6b7c;
     --yk-water-accent: #3d7ea6;
     --yk-water-soft: #e8f3f9;
+    --yk-touch: 44px;
+    --yk-ease: 180ms ease;
+}
+
+.yk-water {
     font-family: "DM Sans", sans-serif;
     color: var(--yk-navy);
     background:
-        radial-gradient(circle at 12% 0%, rgba(49, 109, 97, 0.12), transparent 28%),
-        radial-gradient(circle at 90% 8%, rgba(61, 126, 166, 0.1), transparent 26%),
-        #fff;
+        radial-gradient(900px 380px at 8% -12%, rgba(49, 109, 97, 0.14), transparent 55%),
+        radial-gradient(700px 300px at 100% 0%, rgba(196, 163, 90, 0.12), transparent 52%),
+        linear-gradient(180deg, #fbfcfe 0%, var(--yk-cream-2) 100%);
     min-height: 70vh;
-    padding: 1.25rem 0 3rem;
+    padding: max(1.25rem, env(safe-area-inset-top, 0px)) 0 max(3rem, env(safe-area-inset-bottom, 0px));
+    overflow-x: clip;
 }
 
 .yk-water__wrap {
@@ -27,11 +41,16 @@
 }
 
 .yk-water__card {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.94);
     border: 1px solid var(--yk-line);
     border-radius: 22px;
     padding: 1.35rem 1.25rem 1.5rem;
     box-shadow: 0 14px 34px rgba(11, 32, 72, 0.06);
+    backdrop-filter: blur(6px);
+}
+
+.yk-water__card--welcome {
+    background: linear-gradient(180deg, #fff 0%, var(--yk-cream) 140%);
 }
 
 .yk-water__badge {
@@ -101,8 +120,16 @@
     transition: stroke-dashoffset 0.55s ease;
 }
 
+.yk-water.is-ready .yk-water__ring-fill {
+    animation: yk-water-ring-in 700ms ease both;
+}
+
 .yk-water__progress.is-over .yk-water__ring-fill {
-    stroke: var(--yk-water-accent);
+    stroke: var(--yk-gold);
+}
+
+.yk-water__progress.is-over .yk-water__progress-center strong {
+    color: var(--yk-navy);
 }
 
 .yk-water__progress-center {
@@ -178,22 +205,23 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.15rem;
+    gap: 0.2rem;
     width: 100%;
-    min-height: 104px;
-    padding: 0.75rem 0.5rem;
+    min-height: max(104px, var(--yk-touch));
+    padding: 0.8rem 0.55rem;
     border-radius: 16px;
     border: 1.5px solid var(--yk-line);
     background: #fff;
     color: var(--yk-navy);
     font: inherit;
     cursor: pointer;
-    transition: border-color 0.15s ease, background 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+    transition: border-color var(--yk-ease), background var(--yk-ease), transform 120ms ease, box-shadow var(--yk-ease);
 }
 
 .yk-water__quick-card:hover {
     border-color: rgba(49, 109, 97, 0.45);
-    background: rgba(234, 246, 242, 0.55);
+    background: var(--yk-mint);
+    box-shadow: 0 8px 18px rgba(11, 32, 72, 0.06);
 }
 
 .yk-water__quick-card:focus-visible {
@@ -482,13 +510,14 @@
     width: 100%;
     max-width: 36px;
     border-radius: 10px 10px 4px 4px;
-    background: linear-gradient(180deg, var(--yk-water-accent), var(--yk-teal));
+    background: linear-gradient(180deg, #6f9b8f, var(--yk-teal));
     min-height: 4px;
     transition: height 0.35s ease;
 }
 
 .yk-water__bar.is-today .yk-water__bar-fill {
-    box-shadow: 0 0 0 2px var(--yk-navy);
+    box-shadow: 0 0 0 2px var(--yk-gold);
+    background: linear-gradient(180deg, var(--yk-gold), var(--yk-teal));
 }
 
 .yk-water__bar small {
@@ -610,8 +639,46 @@
     .yk-water__history-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
+@keyframes yk-water-ring-in {
+    from { stroke-dashoffset: var(--yk-water-circ, 339); }
+    to { stroke-dashoffset: var(--yk-water-offset, 0); }
+}
+
+@media (max-width: 379px) {
+    .yk-water__wrap,
+    .yk-water__wrap--wide {
+        width: min(920px, calc(100% - 1.25rem));
+    }
+
+    .yk-water__card {
+        padding: 1.1rem 0.95rem 1.25rem;
+    }
+
+    .yk-water__bars {
+        gap: 0.3rem;
+        min-height: 160px;
+    }
+
+    .yk-water__bar small {
+        font-size: 0.62rem;
+    }
+}
+
+.yk-water .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .yk-water__ring-fill,
+    .yk-water.is-ready .yk-water__ring-fill,
     .yk-water__quick-card,
     .yk-water__btn,
     .yk-water__btn-secondary,
@@ -621,5 +688,11 @@
     .yk-water select {
         transition: none !important;
         animation: none !important;
+    }
+
+    .yk-water__quick-card:active,
+    .yk-water__btn:active,
+    .yk-water__btn-secondary:active {
+        transform: none !important;
     }
 }

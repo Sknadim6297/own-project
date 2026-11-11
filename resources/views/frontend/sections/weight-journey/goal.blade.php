@@ -5,21 +5,22 @@
 @section('body_class', 'yk-wj-body')
 
 @section('content')
-<main class="yk-wj">
+<main class="yk-wj yk-tools-ds" data-yk-tools-ds data-yk-wj>
     <div class="yk-wj__wrap">
-        <section class="yk-wj__card">
+        @include('frontend.sections.partials.tool-back-to-tools')
+        <section class="yk-wj__card" aria-labelledby="wj-goal-heading">
             <p class="yk-wj__badge">Optional goal</p>
-            <h1>Weight goal</h1>
+            <h1 id="wj-goal-heading">Weight goal</h1>
             <p class="yk-wj__lead">Personal tracking preference—not an ideal-body recommendation.</p>
 
             @if (session('status'))
                 <p class="yk-wj__ok" role="status">{{ session('status') }}</p>
             @endif
             @if ($errors->any())
-                <p class="yk-wj__error" role="alert">{{ $errors->first() }}</p>
+                <p class="yk-wj__error" role="alert" id="wj-goal-error">{{ $errors->first() }}</p>
             @endif
 
-            <form method="post" action="{{ route('tools.weight-journey.goal.store') }}" data-wj-submit-once>
+            <form method="post" action="{{ route('tools.weight-journey.goal.store') }}" data-wj-submit-once @if ($errors->any()) aria-describedby="wj-goal-error" @endif>
                 @csrf
                 <fieldset class="yk-wj__field">
                     <legend>Direction</legend>
@@ -44,7 +45,7 @@
                 <div class="yk-wj__log-grid">
                     <div class="yk-wj__field">
                         <label for="start-w">Starting weight</label>
-                        <input id="start-w" type="number" name="starting_weight" step="0.001" min="0" inputmode="decimal" value="{{ old('starting_weight', $goal->starting_weight_kg ?? '') }}" required>
+                        <input id="start-w" type="number" name="starting_weight" step="0.001" min="0" inputmode="decimal" value="{{ old('starting_weight', $goal->starting_weight_kg ?? '') }}" required @if ($errors->has('starting_weight')) aria-invalid="true" @endif>
                     </div>
                     <div class="yk-wj__field">
                         <label for="target-w">Target weight</label>
@@ -90,20 +91,4 @@
         </section>
     </div>
 </main>
-<script>
-(function () {
-    document.querySelectorAll('[data-wj-submit-once]').forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (form.getAttribute('data-submitting') === '1') {
-                event.preventDefault();
-                return;
-            }
-            form.setAttribute('data-submitting', '1');
-            form.querySelectorAll('button[type="submit"]').forEach(function (btn) {
-                btn.disabled = true;
-            });
-        });
-    });
-})();
-</script>
 @endsection

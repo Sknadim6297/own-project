@@ -5,12 +5,30 @@
 @section('body_class', 'yk-wj-body')
 
 @section('content')
-<main class="yk-wj">
+<main class="yk-wj yk-tools-ds" data-yk-tools-ds data-yk-wj>
     <div class="yk-wj__wrap">
-        <section class="yk-wj__card yk-wj__card--welcome">
+        @include('frontend.sections.partials.tool-back-to-tools')
+        <section class="yk-wj__card yk-wj__card--welcome" aria-labelledby="wj-welcome-heading">
             <p class="yk-wj__badge">Nutrition tool</p>
-            <h1>Weight Journey</h1>
+            <h1 id="wj-welcome-heading">Weight Journey</h1>
             <p class="yk-wj__lead">Log measurements, optionally set a personal goal, and review progress over time—without judgmental labels.</p>
+
+            <div class="yk-wj__welcome-preview" aria-hidden="true">
+                <div class="yk-wj__welcome-preview-stats">
+                    <div>
+                        <strong>—</strong>
+                        <span>Starting</span>
+                    </div>
+                    <div>
+                        <strong>—</strong>
+                        <span>Current</span>
+                    </div>
+                    <div>
+                        <strong>—</strong>
+                        <span>Target</span>
+                    </div>
+                </div>
+            </div>
 
             <ul class="yk-wj__welcome-points">
                 <li>Starting, current and target at a glance</li>

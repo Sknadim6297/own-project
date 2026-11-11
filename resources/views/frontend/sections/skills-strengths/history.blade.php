@@ -5,7 +5,7 @@
 @section('body_class', 'yk-ssa-body')
 
 @section('content')
-<main class="yk-ssa">
+<main class="yk-ssa yk-tools-ds" data-yk-tools-ds data-yk-ssa>
     <div class="yk-ssa__wrap">
         @include('frontend.sections.partials.tool-back-to-tools')
         <section class="yk-ssa__card" aria-labelledby="ssa-history-heading">

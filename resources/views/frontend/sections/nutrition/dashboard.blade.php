@@ -17,7 +17,7 @@
     $catalogueReady = ($catalogueCount ?? 0) > 0;
     $mealsLogged = collect($summary['by_meal'])->sum(fn ($m) => $m['entries']->count());
 @endphp
-<main class="yk-nut">
+<main class="yk-nut yk-tools-ds" data-yk-tools-ds data-yk-nut>
     <div class="yk-nut__wrap yk-nut__wrap--wide">
         @include('frontend.sections.partials.tool-back-to-tools')
         <section class="yk-nut__card" aria-labelledby="nut-dash-heading">
@@ -62,7 +62,8 @@
                             <circle class="yk-nut__ring-fill" cx="70" cy="70" r="{{ $radius }}" fill="none" stroke-width="12" stroke-linecap="round"
                                 stroke-dasharray="{{ number_format($circ, 4, '.', '') }}"
                                 stroke-dashoffset="{{ number_format($offset, 4, '.', '') }}"
-                                transform="rotate(-90 70 70)"></circle>
+                                transform="rotate(-90 70 70)"
+                                style="--yk-nut-circ: {{ number_format($circ, 4, '.', '') }}; --yk-nut-offset: {{ number_format($offset, 4, '.', '') }};"></circle>
                         </svg>
                         <div class="yk-nut__progress-center">
                             <strong>{{ $pct }}%</strong>

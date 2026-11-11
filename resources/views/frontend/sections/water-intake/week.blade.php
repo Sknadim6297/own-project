@@ -5,11 +5,12 @@
 @section('body_class', 'yk-water-body')
 
 @section('content')
-<main class="yk-water">
+<main class="yk-water yk-tools-ds" data-yk-tools-ds data-yk-water>
     <div class="yk-water__wrap yk-water__wrap--wide">
-        <section class="yk-water__card">
+        @include('frontend.sections.partials.tool-back-to-tools')
+        <section class="yk-water__card" aria-labelledby="water-week-heading">
             <p class="yk-water__badge">7-day history · Asia/Kolkata</p>
-            <h1>Weekly hydration</h1>
+            <h1 id="water-week-heading">Weekly hydration</h1>
             <p class="yk-water__lead">
                 @if ($avg_label)
                     Average on days with logs: {{ $avg_label }}.
@@ -27,10 +28,15 @@
                         if (! $day['has_entries']) $classes .= ' is-empty';
                         $pct = $day['goal_ml'] > 0 ? (int) round(($day['total_ml'] / $day['goal_ml']) * 100) : 0;
                     @endphp
-                    <a class="{{ $classes }}" href="{{ route('tools.water-intake.today', ['date' => $day['date']]) }}" title="{{ $day['date'] }}">
-                        <div class="yk-water__bar-fill" style="height: {{ $day['has_entries'] ? $height : 8 }}px"></div>
-                        <small>{{ $day['label'] }}</small>
-                        <small>{{ $day['has_entries'] ? number_format($day['total_ml']) : '—' }}</small>
+                    <a
+                        class="{{ $classes }}"
+                        href="{{ route('tools.water-intake.today', ['date' => $day['date']]) }}"
+                        title="{{ $day['date'] }}"
+                        aria-label="{{ $day['date'] }}: {{ $day['has_entries'] ? number_format($day['total_ml']).' ml, '.$pct.' percent of goal' : 'no entries' }}"
+                    >
+                        <div class="yk-water__bar-fill" style="height: {{ $day['has_entries'] ? $height : 8 }}px" aria-hidden="true"></div>
+                        <small aria-hidden="true">{{ $day['label'] }}</small>
+                        <small aria-hidden="true">{{ $day['has_entries'] ? number_format($day['total_ml']) : '—' }}</small>
                     </a>
                 @endforeach
             </div>

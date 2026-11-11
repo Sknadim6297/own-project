@@ -5,7 +5,7 @@
 @section('body_class', 'yk-cit-body')
 
 @section('content')
-<main class="yk-cit">
+<main class="yk-cit yk-tools-ds" data-yk-tools-ds data-yk-cit>
     <div class="yk-cit__wrap">
         <form class="yk-cit__card" method="post" action="{{ route('tools.career-interest.about.store') }}">
             @csrf

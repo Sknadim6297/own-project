@@ -114,8 +114,8 @@ class AdminToolRegistryTest extends TestCase
         $registrar->register();
         $registrar->register();
 
-        $this->assertSame(3, ToolCategory::query()->count());
-        $this->assertSame(9, Tool::query()->count());
+        $this->assertSame(4, ToolCategory::query()->count());
+        $this->assertSame(10, Tool::query()->count());
         $unpublishedSlugs = [
             'career-interest-test',
             'skills-strengths-assessment',
@@ -123,6 +123,7 @@ class AdminToolRegistryTest extends TestCase
             'water-intake-tracker',
             'weight-journey',
             'calorie-nutrition-tracker',
+            'tarot-reflection',
         ];
         $this->assertSame(
             count($unpublishedSlugs),
@@ -215,7 +216,7 @@ class AdminToolRegistryTest extends TestCase
             ->assertRedirect(route('admin.tool-settings.edit'));
 
         $this->assertSame(count($unpublishedSlugs), Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->count());
-        $this->assertSame(9, Tool::query()->where('access_type', 'paid')->count());
+        $this->assertSame(10, Tool::query()->where('access_type', 'paid')->count());
         $published = Tool::query()->where('slug', 'daily-mood-check-in')->firstOrFail();
         $this->assertSame('tools.psychology.mood', $published->route_name);
         $this->assertSame('active', $published->status);

@@ -25,11 +25,12 @@
     }
     $hasAny = collect($days)->contains(fn ($d) => $d['has_entries']);
 @endphp
-<main class="yk-nut">
+<main class="yk-nut yk-tools-ds" data-yk-tools-ds data-yk-nut>
     <div class="yk-nut__wrap yk-nut__wrap--wide">
-        <section class="yk-nut__card">
+        @include('frontend.sections.partials.tool-back-to-tools')
+        <section class="yk-nut__card" aria-labelledby="nut-insights-heading">
             <p class="yk-nut__badge">History · ending {{ $end }}</p>
-            <h1>Nutrition insights</h1>
+            <h1 id="nut-insights-heading">Nutrition insights</h1>
             <p class="yk-nut__lead">Saved meal entries only. Tracking data—not medical advice.</p>
 
             <div class="yk-nut__stats">
@@ -59,11 +60,12 @@
                     @endphp
                     <a class="yk-nut__bar {{ $day['has_entries'] ? '' : 'is-empty' }}"
                        href="{{ route('tools.nutrition', ['date' => $day['date']]) }}"
-                       title="{{ $day['date'] }}">
-                        <div class="yk-nut__bar-fill" style="height:{{ $h }}px;"></div>
-                        <small>{{ $day['label'] }}</small>
-                        <small>{{ $day['has_entries'] ? $fmt($day['calories']) : '—' }}</small>
-                        @if ($day['incomplete'])<small>partial</small>@endif
+                       title="{{ $day['date'] }}"
+                       aria-label="{{ $day['date'] }}: {{ $day['has_entries'] ? $fmt($day['calories']).' kcal' : 'no entries' }}{{ !empty($day['incomplete']) ? ', incomplete nutrients' : '' }}">
+                        <div class="yk-nut__bar-fill" style="height:{{ $h }}px;" aria-hidden="true"></div>
+                        <small aria-hidden="true">{{ $day['label'] }}</small>
+                        <small aria-hidden="true">{{ $day['has_entries'] ? $fmt($day['calories']) : '—' }}</small>
+                        @if ($day['incomplete'])<small aria-hidden="true">partial</small>@endif
                     </a>
                 @endforeach
             </div>

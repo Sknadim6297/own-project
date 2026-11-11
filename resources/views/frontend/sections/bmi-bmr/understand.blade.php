@@ -10,7 +10,7 @@
     // Map roughly 15–40 BMI onto the track for marker placement when adult.
     $marker = max(0, min(100, (($bmi - 15) / 25) * 100));
 @endphp
-<main class="yk-bmi">
+<main class="yk-bmi yk-tools-ds" data-yk-tools-ds data-yk-bmi>
     <div class="yk-bmi__wrap">
         <section class="yk-bmi__card" aria-labelledby="bmi-understand-heading">
             <p class="yk-bmi__badge">Education</p>

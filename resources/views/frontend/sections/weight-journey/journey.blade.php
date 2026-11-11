@@ -10,9 +10,11 @@
     $directionLabel = $goal
         ? (\App\Support\WeightJourney\WeightJourneyCatalog::DIRECTIONS[$goal->direction] ?? $goal->direction)
         : null;
+    $svc = app(\App\Services\WeightJourneyService::class);
 @endphp
-<main class="yk-wj">
+<main class="yk-wj yk-tools-ds" data-yk-tools-ds data-yk-wj>
     <div class="yk-wj__wrap yk-wj__wrap--wide">
+        @include('frontend.sections.partials.tool-back-to-tools')
         <section class="yk-wj__card" aria-labelledby="wj-journey-heading">
             <p class="yk-wj__badge">Your journey · Asia/Kolkata</p>
             <h1 id="wj-journey-heading">Weight Journey</h1>
@@ -22,7 +24,7 @@
                 <p class="yk-wj__ok" role="status">{{ $status }}</p>
             @endif
 
-            <div class="yk-wj__stats yk-wj__stats--4">
+            <div class="yk-wj__stats yk-wj__stats--4" aria-label="Journey summary">
                 <div>
                     <strong>{{ $summary['goal_starting_label'] ?? $summary['starting_label'] ?? '—' }}</strong>
                     <span>Starting</span>
@@ -84,7 +86,7 @@
                         @php
                             $prev = $recent->get($index + 1);
                             $delta = $prev
-                                ? app(\App\Services\WeightJourneyService::class)->formatNetChange(
+                                ? $svc->formatNetChange(
                                     bcsub((string) $row->weight_kg, (string) $prev->weight_kg, 3),
                                     $summary['unit']
                                 )
@@ -92,7 +94,7 @@
                         @endphp
                         <li>
                             <div>
-                                <strong>{{ app(\App\Services\WeightJourneyService::class)->formatWeight((string) $row->weight_kg, $summary['unit']) }}</strong>
+                                <strong>{{ $svc->formatWeight((string) $row->weight_kg, $summary['unit']) }}</strong>
                                 @if ($delta)
                                     <span class="yk-wj__delta">{{ $delta }}</span>
                                 @endif

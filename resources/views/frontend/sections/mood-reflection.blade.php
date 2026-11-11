@@ -5,7 +5,7 @@
 @section('body_class', 'yk-mood-body')
 
 @section('content')
-<main class="yk-mood">
+<main class="yk-mood yk-tools-ds" data-yk-tools-ds data-yk-mood>
     <div class="yk-mood__wrap">
         <a class="yk-mood__back" href="{{ route('tools.psychology.mood.emotions') }}">
             <span aria-hidden="true">←</span> Back
@@ -18,7 +18,9 @@
                 <p>This check-in is unavailable right now.</p>
             </section>
         @else
-            <form class="yk-mood__form" method="post" action="{{ route('tools.psychology.mood.reflection.store') }}" data-reflection-form data-reflection-limit="{{ $limit }}">
+            @include('frontend.sections.partials.mood-progress', ['current' => 'reflection'])
+
+            <form class="yk-mood__form yk-mood__panel yk-mood__panel--write" method="post" action="{{ route('tools.psychology.mood.reflection.store') }}" data-reflection-form data-reflection-limit="{{ $limit }}">
                 @csrf
                 <p class="yk-mood__badge">Free tool</p>
                 <h1>Would you like to share more?</h1>
@@ -29,7 +31,7 @@
                 @endif
 
                 @if ($errors->any())
-                    <p class="yk-mood__error">{{ $errors->first() }}</p>
+                    <p class="yk-mood__error" role="alert">{{ $errors->first() }}</p>
                 @endif
 
                 <label class="yk-reflect__label" for="mood-reflection">What made you feel this way today?</label>
@@ -40,7 +42,7 @@
                     <span id="reflection-count" data-reflection-count>{{ mb_strlen($reflection) }} / 1,000</span>
                 </div>
 
-                <h2>Need a little inspiration?</h2>
+                <h2 class="yk-reflect__prompts-title">Need a little inspiration?</h2>
                 <div class="yk-reflect__prompts">
                     @foreach ($prompts as $prompt)
                         <button class="yk-reflect__prompt" type="button" data-reflection-prompt="{{ $prompt }}">{{ $prompt }}</button>
@@ -54,76 +56,15 @@
                     </div>
                 </div>
 
-                <button class="yk-mood__continue" type="submit" name="action" value="save">Save Check-in</button>
-                <button class="yk-reflect__skip" type="submit" name="action" value="skip">Skip</button>
+                <div class="yk-mood__actions">
+                    <button class="yk-mood__continue" type="submit" name="action" value="save">Save Check-in</button>
+                    <button class="yk-reflect__skip" type="submit" name="action" value="skip">Skip</button>
+                </div>
             </form>
         @endif
     </div>
 </main>
 @if ($open)
-<script>
-(function () {
-    var form = document.querySelector('[data-reflection-form]');
-    if (!form) return;
-    var input = form.querySelector('[data-reflection-input]');
-    var count = form.querySelector('[data-reflection-count]');
-    var confirmBox = form.querySelector('[data-prompt-confirm]');
-    var limit = parseInt(form.getAttribute('data-reflection-limit'), 10) || 1000;
-    var pending = '';
-
-    var lengthOf = function (value) {
-        return Array.from(value).length;
-    };
-
-    var sync = function () {
-        if (lengthOf(input.value) > limit) {
-            input.value = Array.from(input.value).slice(0, limit).join('');
-        }
-        if (count) count.textContent = lengthOf(input.value) + ' / 1,000';
-        input.style.height = 'auto';
-        input.style.height = Math.min(Math.max(input.scrollHeight, 140), 240) + 'px';
-    };
-
-    var insert = function (prompt) {
-        var current = input.value;
-        var next = current.trim() === '' ? prompt : current.replace(/\s*$/, '') + '\n' + prompt;
-        input.value = Array.from(next).slice(0, limit).join('');
-        sync();
-        input.focus();
-    };
-
-    form.querySelectorAll('[data-reflection-prompt]').forEach(function (button) {
-        button.addEventListener('click', function () {
-            var prompt = button.getAttribute('data-reflection-prompt') || '';
-            if (input.value.trim() === '') {
-                insert(prompt);
-                return;
-            }
-            pending = prompt;
-            if (confirmBox) confirmBox.hidden = false;
-        });
-    });
-
-    var add = form.querySelector('[data-prompt-add]');
-    var cancel = form.querySelector('[data-prompt-cancel]');
-    if (add) {
-        add.addEventListener('click', function () {
-            if (pending) insert(pending);
-            pending = '';
-            if (confirmBox) confirmBox.hidden = true;
-        });
-    }
-    if (cancel) {
-        cancel.addEventListener('click', function () {
-            pending = '';
-            if (confirmBox) confirmBox.hidden = true;
-            input.focus();
-        });
-    }
-
-    input.addEventListener('input', sync);
-    sync();
-})();
-</script>
+<script src="{{ asset('frontend/assets/js/yuktione-mood.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-mood.js')) }}" defer></script>
 @endif
 @endsection

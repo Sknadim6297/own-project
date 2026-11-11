@@ -5,13 +5,14 @@
 @section('body_class', 'yk-gratitude-body')
 
 @section('content')
-<main class="yk-gratitude yk-gratitude-history">
+<main class="yk-gratitude yk-gratitude-history yk-tools-ds" data-yk-tools-ds data-yk-gratitude>
     <div class="yk-gratitude__wrap yk-gratitude-history__wrap">
         @include('frontend.sections.partials.tool-back-to-tools')
         <a class="yk-gratitude__back" href="{{ route('tools.psychology.gratitude') }}">
             <span aria-hidden="true">←</span> Gratitude home
         </a>
 
+        <div class="yk-gratitude__panel">
         <p class="yk-gratitude__badge">Private journal</p>
         <h1>My Gratitude History</h1>
         <p class="yk-gratitude__lead">Your little moments of gratitude</p>
@@ -103,6 +104,7 @@
                 @endif
             </section>
         @endif
+        </div>
     </div>
 </main>
 @endsection

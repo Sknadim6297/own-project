@@ -5,8 +5,9 @@
 @section('body_class', 'yk-gratitude-body')
 
 @section('content')
-<main class="yk-gratitude yk-gratitude-complete">
+<main class="yk-gratitude yk-gratitude-complete yk-tools-ds" data-yk-tools-ds data-yk-gratitude>
     <div class="yk-gratitude__wrap yk-gratitude-complete__wrap">
+        <div class="yk-gratitude__panel yk-gratitude-complete__hero">
         <div class="yk-gratitude-complete__mark" aria-hidden="true">
             <svg viewBox="0 0 48 48" focusable="false">
                 <circle cx="24" cy="24" r="20"></circle>
@@ -16,8 +17,9 @@
 
         <h1>Beautifully done!</h1>
         <p class="yk-gratitude__lead">You took a moment to appreciate the good in your day.</p>
+        </div>
 
-        <section class="yk-gratitude-complete__summary" aria-labelledby="todays-gratitude-heading">
+        <section class="yk-gratitude-complete__summary yk-gratitude__panel" aria-labelledby="todays-gratitude-heading">
             <h2 id="todays-gratitude-heading">Today's Gratitude</h2>
             <p class="yk-gratitude-complete__date">
                 <time datetime="{{ $datetime }}">{{ $when }}</time>

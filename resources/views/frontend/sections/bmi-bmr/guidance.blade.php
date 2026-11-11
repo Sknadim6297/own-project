@@ -6,7 +6,7 @@
 
 @section('content')
 @php $nutritionExperts = app(\App\Services\ExpertsDiscovery::class)->nutrition(); @endphp
-<main class="yk-bmi">
+<main class="yk-bmi yk-tools-ds" data-yk-tools-ds data-yk-bmi>
     <div class="yk-bmi__wrap">
         <section class="yk-bmi__card" aria-labelledby="bmi-guidance-heading">
             <p class="yk-bmi__badge">Guidance</p>

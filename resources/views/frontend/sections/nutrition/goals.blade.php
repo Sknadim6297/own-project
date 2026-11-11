@@ -5,11 +5,12 @@
 @section('body_class', 'yk-nut-body')
 
 @section('content')
-<main class="yk-nut">
+<main class="yk-nut yk-tools-ds" data-yk-tools-ds data-yk-nut>
     <div class="yk-nut__wrap">
-        <section class="yk-nut__card">
+        @include('frontend.sections.partials.tool-back-to-tools')
+        <section class="yk-nut__card" aria-labelledby="nut-goals-heading">
             <p class="yk-nut__badge">Optional goals</p>
-            <h1>Nutrition goals</h1>
+            <h1 id="nut-goals-heading">Nutrition goals</h1>
             <p class="yk-nut__lead">Personal tracking preferences—not diet prescriptions.</p>
 
             @if ($errors->any())
@@ -54,20 +55,4 @@
         </section>
     </div>
 </main>
-<script>
-(function () {
-    document.querySelectorAll('[data-nut-submit-once]').forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (form.getAttribute('data-submitting') === '1') {
-                event.preventDefault();
-                return;
-            }
-            form.setAttribute('data-submitting', '1');
-            form.querySelectorAll('button[type="submit"]').forEach(function (btn) {
-                btn.disabled = true;
-            });
-        });
-    });
-})();
-</script>
 @endsection

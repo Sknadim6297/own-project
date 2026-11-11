@@ -1,0 +1,1278 @@
+/**
+ * Phase 4F — Tarot Reflection (scoped). Midnight navy / teal / cream / antique gold.
+ * Visual polish only — draw/randomization/interpretations stay server-side.
+ */
+
+.yk-tarot-body,
+.yk-tarot {
+    --yk-navy: #07162f;
+    --yk-navy-soft: #0b2048;
+    --yk-teal: #316d61;
+    --yk-teal-deep: #245248;
+    --yk-mint: #eaf6f2;
+    --yk-cream: #fff6ed;
+    --yk-cream-2: #f7f1e8;
+    --yk-gold: #c4a35a;
+    --yk-gold-soft: rgba(196, 163, 90, 0.18);
+    --yk-cyan: #7eb8b0;
+    --yk-line: #e1e8ef;
+    --yk-ink: #142b28;
+    --yk-muted: #4e615c;
+    --yk-card: #ffffff;
+    --yk-radius: 18px;
+    --yk-shadow: 0 14px 36px rgba(7, 22, 47, 0.12);
+    --yk-touch: 44px;
+}
+
+.yk-tarot {
+    box-sizing: border-box;
+    margin: 0;
+    padding: max(0.85rem, env(safe-area-inset-top, 0px)) 0 max(2.75rem, env(safe-area-inset-bottom, 0px));
+    overflow-x: clip;
+    color: var(--yk-ink);
+    font-family: "DM Sans", "Segoe UI", system-ui, sans-serif;
+    background:
+        radial-gradient(120% 70% at 100% -10%, rgba(49, 109, 97, 0.16), transparent 52%),
+        radial-gradient(90% 55% at 0% 8%, rgba(7, 22, 47, 0.14), transparent 48%),
+        radial-gradient(circle at 50% 120%, rgba(196, 163, 90, 0.12), transparent 42%),
+        linear-gradient(180deg, #f4f8f6 0%, var(--yk-cream-2) 55%, var(--yk-cream) 100%);
+    position: relative;
+}
+
+.yk-tarot *,
+.yk-tarot *::before,
+.yk-tarot *::after { box-sizing: border-box; }
+
+.yk-tarot::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image:
+        radial-gradient(1.5px 1.5px at 12% 18%, rgba(11, 32, 72, 0.28), transparent),
+        radial-gradient(1.5px 1.5px at 78% 22%, rgba(49, 109, 97, 0.35), transparent),
+        radial-gradient(1px 1px at 42% 64%, rgba(184, 148, 61, 0.4), transparent),
+        radial-gradient(1px 1px at 88% 70%, rgba(11, 32, 72, 0.22), transparent),
+        radial-gradient(1.5px 1.5px at 28% 86%, rgba(49, 109, 97, 0.28), transparent);
+}
+
+.yk-tarot__wrap,
+.yk-tarot__wrap--wide {
+    position: relative;
+    z-index: 1;
+    width: min(640px, calc(100% - 1.25rem));
+    margin-inline: auto;
+}
+
+.yk-tarot__wrap--wide {
+    width: min(860px, calc(100% - 1.25rem));
+}
+
+.yk-tarot__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    margin-bottom: 0.2rem;
+}
+
+.yk-tarot__back,
+.yk-tarot__history-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 44px;
+    color: var(--yk-teal);
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.yk-tarot__back:hover,
+.yk-tarot__back:focus-visible,
+.yk-tarot__history-link:hover,
+.yk-tarot__history-link:focus-visible {
+    color: var(--yk-navy);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+}
+
+.yk-tarot__badge,
+.yk-tarot__step {
+    margin: 0.35rem 0 0;
+    color: var(--yk-teal);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.yk-tarot h1 {
+    margin: 0.35rem 0 0;
+    color: var(--yk-navy);
+    font-size: clamp(1.7rem, 4vw, 2.15rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+}
+
+.yk-tarot__lead {
+    margin: 0.5rem 0 0;
+    color: var(--yk-muted);
+    font-size: 0.98rem;
+    line-height: 1.55;
+}
+
+.yk-tarot__emoji {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    font-style: normal;
+}
+
+.yk-tarot__error {
+    margin: 0.85rem 0 0;
+    padding: 0.7rem 0.85rem;
+    border-radius: 12px;
+    background: #f8ecea;
+    color: #8d5d56;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.yk-tarot__success {
+    margin: 0.85rem 0 0;
+    padding: 0.7rem 0.85rem;
+    border-radius: 12px;
+    background: #e7f5ef;
+    color: #22634f;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.yk-tarot__disclaimer {
+    margin-top: 1rem;
+    padding: 0.95rem 1rem;
+    border: 1px solid rgba(225, 232, 239, 0.95);
+    border-radius: var(--yk-radius);
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(8px);
+}
+
+.yk-tarot__disclaimer p {
+    margin: 0;
+    color: var(--yk-muted);
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.yk-tarot__actions {
+    margin-top: 1.25rem;
+}
+
+.yk-tarot__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-height: 48px;
+    width: 100%;
+    padding: 0.75rem 1.15rem;
+    border: 0;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #3a7d6f 0%, var(--yk-teal) 100%);
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    box-shadow: 0 10px 22px rgba(49, 109, 97, 0.22);
+    transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+.yk-tarot__btn:hover:not(:disabled) {
+    background: linear-gradient(180deg, #316d61 0%, var(--yk-teal-deep) 100%);
+    transform: translateY(-1px);
+}
+
+.yk-tarot__btn:active:not(:disabled) {
+    transform: translateY(1px) scale(0.99);
+}
+
+.yk-tarot__btn:focus-visible {
+    outline: 2px solid var(--yk-navy);
+    outline-offset: 3px;
+}
+
+.yk-tarot__btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.yk-tarot__btn--secondary {
+    background: #fff;
+    color: var(--yk-navy);
+    border: 1.5px solid rgba(11, 32, 72, 0.14);
+    box-shadow: none;
+}
+
+.yk-tarot__btn--secondary:hover:not(:disabled) {
+    background: var(--yk-mint);
+    border-color: rgba(49, 109, 97, 0.35);
+}
+
+.yk-tarot__btn--compact {
+    width: auto;
+    min-width: 9.5rem;
+    min-height: 44px;
+    padding-inline: 1rem;
+    font-size: 0.92rem;
+}
+
+.yk-tarot__form { margin-top: 1rem; }
+.yk-tarot__form--flush { margin-top: 0; }
+
+.yk-tarot__options {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.yk-tarot__options--categories {
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+    .yk-tarot__options--categories {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.yk-tarot__option {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: center;
+    min-height: 72px;
+    padding: 0.95rem 1rem;
+    border: 1.5px solid var(--yk-line);
+    border-radius: var(--yk-radius);
+    background: var(--yk-card);
+    cursor: pointer;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.yk-tarot__option:hover,
+.yk-tarot__option:focus-within {
+    border-color: rgba(49, 109, 97, 0.45);
+    box-shadow: var(--yk-shadow);
+    transform: translateY(-2px);
+}
+
+.yk-tarot__option.is-selected {
+    border-color: var(--yk-teal);
+    box-shadow: 0 0 0 1px var(--yk-teal), var(--yk-shadow);
+}
+
+.yk-tarot__option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.yk-tarot__option-emoji {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.7);
+    font-size: 1.25rem;
+    box-shadow: inset 0 0 0 1px rgba(11, 32, 72, 0.06);
+}
+
+.yk-tarot__option-label {
+    color: var(--yk-navy);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.yk-tarot__option-copy {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.yk-tarot__option-meta {
+    color: var(--yk-muted);
+    font-size: 0.86rem;
+    line-height: 1.4;
+}
+
+.yk-tarot__option-mark {
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 2px solid #c5d2ce;
+    border-radius: 999px;
+}
+
+.yk-tarot__option.is-selected .yk-tarot__option-mark {
+    border-color: var(--yk-teal);
+    background: radial-gradient(circle at center, var(--yk-teal) 0 45%, transparent 48%);
+}
+
+.yk-tarot__option.is-blush { background: linear-gradient(180deg, #fff, #fff6ed); }
+.yk-tarot__option.is-lilac { background: linear-gradient(180deg, #fff, #f7f1e8); }
+.yk-tarot__option.is-cream { background: linear-gradient(180deg, #fff, var(--yk-cream)); }
+.yk-tarot__option.is-mint { background: linear-gradient(180deg, #fff, #eef8f4); }
+.yk-tarot__option.is-lavender { background: linear-gradient(180deg, #fff, var(--yk-cream-2)); }
+.yk-tarot__option.is-sage { background: linear-gradient(180deg, #fff, #f2f7f4); }
+
+.yk-tarot__options--spread {
+    gap: 0.9rem;
+}
+
+.yk-tarot__option--tall {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    min-height: 0;
+    padding: 1.05rem 1.05rem 1.1rem;
+}
+
+.yk-tarot__spread-preview {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.45rem;
+    margin: 0.85rem 0 0.35rem;
+    min-height: 5.5rem;
+}
+
+.yk-tarot__mini-card {
+    width: 3.1rem;
+    aspect-ratio: 2 / 3;
+    border-radius: 10px;
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.14), transparent 42%),
+        linear-gradient(160deg, #16325f, #0b2048 55%, #316d61);
+    box-shadow: 0 10px 18px rgba(11, 32, 72, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.yk-tarot__mini-card--stack {
+    margin-left: -0.85rem;
+}
+
+.yk-tarot__mini-card--stack:first-child {
+    margin-left: 0;
+}
+
+.yk-tarot__label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--yk-navy);
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.yk-tarot__textarea {
+    width: 100%;
+    min-height: 132px;
+    padding: 0.95rem 1rem;
+    border: 1.5px solid var(--yk-line);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--yk-ink);
+    font: inherit;
+    line-height: 1.5;
+    resize: vertical;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.yk-tarot__textarea:focus {
+    outline: none;
+    border-color: var(--yk-teal);
+    box-shadow: 0 0 0 4px rgba(49, 109, 97, 0.14);
+}
+
+.yk-tarot__hint {
+    margin: 0.45rem 0 0;
+    color: var(--yk-muted);
+    font-size: 0.84rem;
+}
+
+.yk-tarot__examples {
+    margin: 1rem 0 0;
+    padding: 0.9rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(225, 232, 239, 0.9);
+}
+
+.yk-tarot__examples-label {
+    margin: 0 0 0.5rem;
+    color: var(--yk-navy);
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.yk-tarot__examples ul {
+    display: grid;
+    gap: 0.45rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.yk-tarot__example {
+    width: 100%;
+    text-align: left;
+    min-height: 44px;
+    padding: 0.65rem 0.8rem;
+    border: 1px dashed rgba(49, 109, 97, 0.35);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--yk-muted);
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.yk-tarot__example:hover,
+.yk-tarot__example:focus-visible {
+    border-style: solid;
+    border-color: var(--yk-teal);
+    color: var(--yk-navy);
+    transform: translateY(-1px);
+}
+
+.yk-tarot__toggle { margin: 1rem 0; }
+
+.yk-tarot__switch {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.8rem 0.9rem;
+    border: 1px solid var(--yk-line);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+}
+
+.yk-tarot__switch input {
+    position: absolute;
+    opacity: 0;
+}
+
+.yk-tarot__switch-ui {
+    width: 2.6rem;
+    height: 1.45rem;
+    border-radius: 999px;
+    background: #d5e0dc;
+    position: relative;
+    transition: background 160ms ease;
+}
+
+.yk-tarot__switch-ui::after {
+    content: "";
+    position: absolute;
+    top: 0.15rem;
+    left: 0.15rem;
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 160ms ease;
+}
+
+.yk-tarot__switch input:checked + .yk-tarot__switch-ui { background: var(--yk-teal); }
+.yk-tarot__switch input:checked + .yk-tarot__switch-ui::after { transform: translateX(1.15rem); }
+.yk-tarot__switch input:focus-visible + .yk-tarot__switch-ui {
+    outline: 2px solid var(--yk-navy);
+    outline-offset: 3px;
+}
+
+.yk-tarot__switch-copy {
+    display: grid;
+    gap: 0.15rem;
+}
+
+.yk-tarot__switch-copy strong {
+    color: var(--yk-navy);
+    font-size: 0.95rem;
+}
+
+.yk-tarot__switch-copy span {
+    color: var(--yk-muted);
+    font-size: 0.82rem;
+}
+
+.yk-tarot__question-chip {
+    margin: 1rem 0 0;
+    padding: 0.95rem 1rem;
+    border-left: 3px solid var(--yk-teal);
+    border-radius: 0 14px 14px 0;
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: 0 8px 20px rgba(11, 32, 72, 0.04);
+}
+
+.yk-tarot__question-chip span {
+    display: block;
+    color: var(--yk-teal);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.yk-tarot__question-chip p {
+    margin: 0.35rem 0 0;
+    color: var(--yk-navy);
+    font-size: 1rem;
+    line-height: 1.45;
+}
+
+.yk-tarot__progress {
+    margin-top: 1.1rem;
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(225, 232, 239, 0.95);
+}
+
+.yk-tarot__progress p {
+    margin: 0;
+    color: var(--yk-muted);
+    font-size: 0.92rem;
+}
+
+.yk-tarot__progress-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.yk-tarot__progress-list li {
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    background: #e7efec;
+    color: var(--yk-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.yk-tarot__progress-list li.is-current {
+    background: var(--yk-teal);
+    color: #fff;
+    box-shadow: 0 6px 14px rgba(49, 109, 97, 0.25);
+}
+
+.yk-tarot__progress-list li.is-done {
+    background: #d7ebe4;
+    color: var(--yk-teal);
+}
+
+.yk-tarot__fan {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin: 1.1rem 0 0;
+    padding: 0.35rem;
+    list-style: none;
+    border-radius: 20px;
+    background:
+        radial-gradient(80% 60% at 50% 0%, rgba(196, 163, 90, 0.1), transparent 55%),
+        rgba(7, 22, 47, 0.04);
+    border: 1px solid rgba(225, 232, 239, 0.9);
+}
+
+.yk-tarot__fan form {
+    margin: 0;
+    height: 100%;
+}
+
+.yk-tarot__facedown {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: var(--yk-touch);
+    aspect-ratio: 2 / 3;
+    border: 0;
+    border-radius: 14px;
+    background:
+        radial-gradient(circle at 50% 28%, rgba(196, 163, 90, 0.28), transparent 42%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.12), transparent 40%),
+        linear-gradient(160deg, #16325f, #07162f 52%, #316d61);
+    color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 24px rgba(7, 22, 47, 0.2);
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+.yk-tarot__facedown::before {
+    content: "";
+    position: absolute;
+    inset: 7px;
+    border-radius: 10px;
+    border: 1px solid rgba(196, 163, 90, 0.35);
+    background:
+        radial-gradient(circle at 50% 50%, transparent 38%, rgba(255, 255, 255, 0.06) 39% 55%, transparent 56%),
+        radial-gradient(circle at 50% 18%, rgba(196, 163, 90, 0.18), transparent 40%);
+    pointer-events: none;
+}
+
+.yk-tarot__facedown::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.08) 50%, transparent 60%);
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.yk-tarot__facedown:hover,
+.yk-tarot__facedown:focus-visible {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 18px 30px rgba(7, 22, 47, 0.3), 0 0 0 2px rgba(196, 163, 90, 0.45);
+}
+
+.yk-tarot__facedown:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+}
+
+.yk-tarot__facedown.is-picking {
+    transform: translateY(-8px) scale(1.04);
+    filter: brightness(1.08);
+}
+
+.yk-tarot__facedown-mark {
+    width: 1.55rem;
+    height: 1.55rem;
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.08), 0 0 0 1px rgba(196, 163, 90, 0.35);
+    z-index: 1;
+}
+
+.yk-tarot__facedown.is-picked {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 2 / 3;
+    border-radius: 14px;
+    background: linear-gradient(160deg, #d7ebe4, #eaf6f2);
+    color: var(--yk-teal);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow: inset 0 0 0 2px rgba(49, 109, 97, 0.28);
+}
+
+.yk-tarot__reveal-list {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.15rem;
+}
+
+.yk-tarot__reveal-list--three {
+    gap: 1.15rem;
+}
+
+.yk-tarot__reveal-card {
+    display: grid;
+    gap: 1rem;
+    padding: 1.05rem;
+    border-radius: 20px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 246, 237, 0.55));
+    border: 1px solid rgba(225, 232, 239, 0.95);
+    box-shadow: var(--yk-shadow);
+}
+
+.yk-tarot__reveal-card.is-animate-in {
+    animation: yk-tarot-reveal-in 520ms ease both;
+    animation-delay: var(--yk-reveal-delay, 0ms);
+}
+
+/* Card flip (reveal only) — presentation; identities already server-revealed */
+.yk-tarot__flip {
+    width: 100%;
+    max-width: 180px;
+    margin-inline: auto;
+    perspective: 900px;
+}
+
+.yk-tarot__flip--lg { max-width: 210px; }
+
+.yk-tarot__flip-inner {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    transform-style: preserve-3d;
+    transition: transform 620ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.yk-tarot__flip.is-flipped .yk-tarot__flip-inner,
+.yk-tarot__flip.is-static .yk-tarot__flip-inner {
+    transform: rotateY(180deg);
+}
+
+.yk-tarot__flip-back,
+.yk-tarot__flip-front {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 16px;
+}
+
+.yk-tarot__flip-back {
+    background:
+        radial-gradient(circle at 50% 28%, rgba(196, 163, 90, 0.28), transparent 42%),
+        linear-gradient(160deg, #16325f, #07162f 52%, #316d61);
+    box-shadow: 0 14px 28px rgba(7, 22, 47, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.yk-tarot__flip-back::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(196, 163, 90, 0.4);
+}
+
+.yk-tarot__flip-front {
+    transform: rotateY(180deg);
+    display: grid;
+}
+
+.yk-tarot__flip-front .yk-tarot__face {
+    max-width: none;
+    width: 100%;
+    height: 100%;
+}
+
+.yk-tarot__sr-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.yk-tarot__reveal-copy {
+    display: grid;
+    gap: 0.35rem;
+    min-width: 0;
+}
+
+.yk-tarot__position {
+    margin: 0;
+    color: var(--yk-teal);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.yk-tarot__reveal-copy h2 {
+    margin: 0;
+    color: var(--yk-navy);
+    font-size: 1.2rem;
+    line-height: 1.25;
+}
+
+.yk-tarot__meaning {
+    margin: 0;
+    color: var(--yk-teal);
+    font-size: 0.95rem;
+    font-style: italic;
+    line-height: 1.45;
+}
+
+.yk-tarot__insight {
+    margin: 0.25rem 0 0;
+    color: var(--yk-muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.yk-tarot__face {
+    position: relative;
+    margin: 0;
+    width: 100%;
+    max-width: 180px;
+    aspect-ratio: 2 / 3;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 14px 28px rgba(11, 32, 72, 0.16);
+    transform-style: preserve-3d;
+}
+
+.yk-tarot__face--lg { max-width: 210px; }
+.yk-tarot__face--sm { max-width: 120px; }
+
+.yk-tarot__face.is-reversed .yk-tarot__face-fallback,
+.yk-tarot__face.is-reversed .yk-tarot__face-img {
+    transform: rotate(180deg);
+}
+
+.yk-tarot__face-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.yk-tarot__face-fallback {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    align-items: center;
+    justify-items: center;
+    gap: 0.35rem;
+    width: 100%;
+    height: 100%;
+    padding: 0.85rem 0.7rem;
+    text-align: center;
+    color: #f4f8f6;
+    background:
+        radial-gradient(circle at 50% 18%, rgba(184, 148, 61, 0.28), transparent 36%),
+        linear-gradient(165deg, #1a3768 0%, #0b2048 48%, #245248 100%);
+    position: relative;
+}
+
+.yk-tarot__face.is-wands .yk-tarot__face-fallback {
+    background:
+        radial-gradient(circle at 50% 18%, rgba(184, 148, 61, 0.3), transparent 36%),
+        linear-gradient(165deg, #3a2a14 0%, #1c140b 45%, #6b4a1f 100%);
+}
+
+.yk-tarot__face.is-cups .yk-tarot__face-fallback {
+    background:
+        radial-gradient(circle at 50% 18%, rgba(126, 184, 176, 0.35), transparent 36%),
+        linear-gradient(165deg, #163c5a 0%, #0b2048 48%, #2d6a7a 100%);
+}
+
+.yk-tarot__face.is-swords .yk-tarot__face-fallback {
+    background:
+        radial-gradient(circle at 50% 18%, rgba(225, 232, 239, 0.22), transparent 36%),
+        linear-gradient(165deg, #1d2a44 0%, #0b2048 50%, #3d4f6d 100%);
+}
+
+.yk-tarot__face.is-pentacles .yk-tarot__face-fallback {
+    background:
+        radial-gradient(circle at 50% 18%, rgba(184, 148, 61, 0.32), transparent 36%),
+        linear-gradient(165deg, #1f3d2f 0%, #10261c 48%, #316d61 100%);
+}
+
+.yk-tarot__face-ornament {
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+    pointer-events: none;
+}
+
+.yk-tarot__face-glyph {
+    font-size: 1.55rem;
+    line-height: 1;
+    color: rgba(247, 244, 236, 0.95);
+    text-shadow: 0 0 18px rgba(184, 148, 61, 0.45);
+}
+
+.yk-tarot__face-arcana {
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(247, 244, 236, 0.72);
+}
+
+.yk-tarot__face-name {
+    align-self: end;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #fff;
+}
+
+.yk-tarot__face-orient {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(247, 244, 236, 0.75);
+}
+
+.yk-tarot__overall,
+.yk-tarot__prompt {
+    margin: 1.1rem 0 0;
+    padding: 1rem 1.05rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(225, 232, 239, 0.95);
+}
+
+.yk-tarot__overall h2 {
+    margin: 0 0 0.45rem;
+    color: var(--yk-navy);
+    font-size: 1.1rem;
+}
+
+.yk-tarot__overall p,
+.yk-tarot__prompt {
+    margin: 0;
+    color: var(--yk-muted);
+    line-height: 1.55;
+}
+
+.yk-tarot__final-ctas {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 1.25rem;
+}
+
+.yk-tarot__final-ctas form { margin: 0; }
+
+.yk-tarot__history {
+    display: grid;
+    gap: 0.85rem;
+    margin: 1.1rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.yk-tarot__history-card {
+    display: grid;
+    gap: 0.85rem;
+    padding: 1rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(225, 232, 239, 0.95);
+    box-shadow: 0 10px 24px rgba(11, 32, 72, 0.06);
+}
+
+.yk-tarot__history-date {
+    margin: 0;
+    color: var(--yk-muted);
+    font-size: 0.8rem;
+}
+
+.yk-tarot__history-card h2 {
+    margin: 0.25rem 0 0;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--yk-navy);
+    font-size: 1.05rem;
+}
+
+.yk-tarot__history-q {
+    margin: 0.4rem 0 0;
+    color: var(--yk-muted);
+    font-style: italic;
+    line-height: 1.45;
+}
+
+.yk-tarot__history-meta {
+    margin: 0.45rem 0 0;
+    color: var(--yk-teal);
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.yk-tarot__empty {
+    margin-top: 1.2rem;
+    padding: 1.4rem 1.1rem;
+    border-radius: 18px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px dashed rgba(49, 109, 97, 0.28);
+}
+
+.yk-tarot__empty p {
+    margin: 0 0 1rem;
+    color: var(--yk-muted);
+}
+
+.yk-tarot__pager {
+    margin-top: 1rem;
+}
+
+/* Intro hero */
+.yk-tarot__hero {
+    margin-top: 0.85rem;
+    padding: 1.25rem 1.15rem 1.35rem;
+    border-radius: 22px;
+    background:
+        radial-gradient(120% 80% at 100% 0%, rgba(49, 109, 97, 0.18), transparent 50%),
+        radial-gradient(70% 50% at 0% 100%, rgba(196, 163, 90, 0.12), transparent 55%),
+        linear-gradient(165deg, rgba(255, 255, 255, 0.94), rgba(255, 246, 237, 0.88));
+    border: 1px solid rgba(225, 232, 239, 0.95);
+    box-shadow: var(--yk-shadow);
+    overflow: hidden;
+    position: relative;
+}
+
+.yk-tarot__spread-note {
+    margin: 0.85rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+}
+
+.yk-tarot__spread-note span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    background: var(--yk-mint);
+    color: var(--yk-teal);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.yk-tarot__hero-copy { position: relative; z-index: 1; }
+
+.yk-tarot__steps {
+    display: grid;
+    gap: 0.55rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.yk-tarot__steps li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.65rem;
+    align-items: start;
+    padding: 0.65rem 0.75rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.yk-tarot__steps strong {
+    display: block;
+    color: var(--yk-navy);
+    font-size: 0.92rem;
+}
+
+.yk-tarot__steps span {
+    color: var(--yk-muted);
+    font-size: 0.84rem;
+    line-height: 1.4;
+}
+
+.yk-tarot__step-ico {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 10px;
+    background: var(--yk-mint);
+    font-size: 1rem;
+}
+
+.yk-tarot__stack {
+    position: relative;
+    width: 7.5rem;
+    height: 9.5rem;
+    margin: 1.1rem auto 0.25rem;
+}
+
+.yk-tarot__stack-card {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background:
+        radial-gradient(circle at 50% 30%, rgba(184, 148, 61, 0.22), transparent 42%),
+        linear-gradient(160deg, #16325f, #0b2048 55%, #316d61);
+    box-shadow: 0 12px 24px rgba(11, 32, 72, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.yk-tarot__stack-card:nth-child(1) {
+    transform: rotate(-8deg) translate(-10px, 6px);
+    animation: yk-tarot-float 4.8s ease-in-out infinite;
+}
+
+.yk-tarot__stack-card:nth-child(2) {
+    transform: rotate(4deg) translate(8px, 2px);
+    animation: yk-tarot-float 5.4s ease-in-out infinite 0.35s;
+}
+
+.yk-tarot__stack-card:nth-child(3) {
+    transform: rotate(-1deg);
+    animation: yk-tarot-float 4.2s ease-in-out infinite 0.7s;
+}
+
+.yk-tarot__panel {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(225, 232, 239, 0.95);
+    box-shadow: 0 10px 24px rgba(11, 32, 72, 0.05);
+}
+
+@keyframes yk-tarot-float {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -7px; }
+}
+
+@keyframes yk-tarot-reveal-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px) rotateX(8deg);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0);
+    }
+}
+
+@keyframes yk-tarot-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.yk-tarot.is-ready .yk-tarot__hero,
+.yk-tarot.is-ready .yk-tarot__panel,
+.yk-tarot.is-ready .yk-tarot__option,
+.yk-tarot.is-ready .yk-tarot__reveal-card,
+.yk-tarot.is-ready .yk-tarot__history-card {
+    animation: yk-tarot-fade-up 420ms ease both;
+}
+
+.yk-tarot.is-ready .yk-tarot__options > li:nth-child(2) .yk-tarot__option { animation-delay: 40ms; }
+.yk-tarot.is-ready .yk-tarot__options > li:nth-child(3) .yk-tarot__option { animation-delay: 80ms; }
+.yk-tarot.is-ready .yk-tarot__options > li:nth-child(4) .yk-tarot__option { animation-delay: 120ms; }
+.yk-tarot.is-ready .yk-tarot__options > li:nth-child(5) .yk-tarot__option { animation-delay: 160ms; }
+.yk-tarot.is-ready .yk-tarot__options > li:nth-child(6) .yk-tarot__option { animation-delay: 200ms; }
+
+@media (min-width: 720px) {
+    .yk-tarot__fan {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        gap: 0.65rem;
+    }
+
+    .yk-tarot__reveal-card {
+        grid-template-columns: 180px minmax(0, 1fr);
+        align-items: start;
+    }
+
+    .yk-tarot__btn {
+        width: auto;
+        min-width: 220px;
+    }
+
+    .yk-tarot__final-ctas {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .yk-tarot__history-card {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+    }
+
+    .yk-tarot__hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 1rem;
+        align-items: center;
+        padding: 1.4rem 1.35rem;
+    }
+
+    .yk-tarot__stack {
+        margin: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .yk-tarot__fan {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.4rem;
+    }
+
+    .yk-tarot__facedown,
+    .yk-tarot__facedown.is-picked {
+        border-radius: 12px;
+    }
+
+    .yk-tarot__face {
+        max-width: 148px;
+        margin-inline: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .yk-tarot__stack-card,
+    .yk-tarot.is-ready .yk-tarot__hero,
+    .yk-tarot.is-ready .yk-tarot__panel,
+    .yk-tarot.is-ready .yk-tarot__option,
+    .yk-tarot.is-ready .yk-tarot__reveal-card,
+    .yk-tarot.is-ready .yk-tarot__history-card,
+    .yk-tarot__reveal-card.is-animate-in,
+    .yk-tarot__facedown,
+    .yk-tarot__btn,
+    .yk-tarot__option,
+    .yk-tarot__example,
+    .yk-tarot__flip-inner {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .yk-tarot__facedown:hover,
+    .yk-tarot__facedown:focus-visible,
+    .yk-tarot__facedown.is-picking,
+    .yk-tarot__option:hover,
+    .yk-tarot__btn:hover:not(:disabled) {
+        transform: none !important;
+    }
+
+    .yk-tarot__flip .yk-tarot__flip-inner,
+    .yk-tarot__flip.is-flipped .yk-tarot__flip-inner,
+    .yk-tarot__flip.is-static .yk-tarot__flip-inner {
+        transform: rotateY(180deg) !important;
+    }
+}
+
+.visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

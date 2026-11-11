@@ -5,12 +5,16 @@
 @section('body_class', 'yk-nut-body')
 
 @section('content')
-@php $catalogueReady = ($catalogueCount ?? 0) > 0; @endphp
-<main class="yk-nut">
+@php
+    $catalogueReady = ($catalogueCount ?? 0) > 0;
+    $mealLabel = \App\Support\Nutrition\NutritionCatalog::MEAL_TYPES[$meal] ?? ($meal ?: 'Meal');
+@endphp
+<main class="yk-nut yk-tools-ds" data-yk-tools-ds data-yk-nut>
     <div class="yk-nut__wrap yk-nut__wrap--wide">
-        <section class="yk-nut__card">
-            <p class="yk-nut__badge">Food search · {{ $meals[$meal] ?? $meal ?? 'Meal' }}</p>
-            <h1>Search food</h1>
+        @include('frontend.sections.partials.tool-back-to-tools')
+        <section class="yk-nut__card" aria-labelledby="nut-search-heading">
+            <p class="yk-nut__badge">Food search · {{ $mealLabel }}</p>
+            <h1 id="nut-search-heading">Search food</h1>
             <p class="yk-nut__lead">Published catalogue only. Unverified foods show a clear badge.</p>
 
             @include('frontend.sections.nutrition.partials.catalogue-gate', [
@@ -55,7 +59,7 @@
                     @if (! $catalogueReady)
                         No matching foods in the catalogue. The catalogue may still be empty pending import review.
                     @elseif ($q !== '' || $category || $state)
-                        No foods match these filters.
+                        No matching foods for these filters.
                     @else
                         No published foods available.
                     @endif

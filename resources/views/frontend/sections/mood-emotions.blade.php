@@ -12,7 +12,7 @@
         'difficult' => 'Difficult',
     ];
 @endphp
-<main class="yk-mood">
+<main class="yk-mood yk-tools-ds" data-yk-tools-ds data-yk-mood>
     <div class="yk-mood__wrap">
         <a class="yk-mood__back" href="{{ route('tools.psychology.mood') }}">
             <span aria-hidden="true">←</span> Back
@@ -25,14 +25,17 @@
                 <p>This check-in is unavailable right now.</p>
             </section>
         @else
-            <form class="yk-mood__form" method="post" action="{{ route('tools.psychology.mood.emotions.store') }}" data-emotion-form data-emotion-limit="{{ $limit }}">
+            @include('frontend.sections.partials.mood-progress', ['current' => 'emotions'])
+
+            <form class="yk-mood__form yk-mood__panel" method="post" action="{{ route('tools.psychology.mood.emotions.store') }}" data-emotion-form data-emotion-limit="{{ $limit }}">
                 @csrf
                 <p class="yk-mood__badge">Free tool</p>
                 <h1>What emotions are you feeling?</h1>
                 <p class="yk-mood__lead">Choose up to 6 emotions that describe how you feel right now.</p>
+                <p class="yk-mood__hint">Optional — pick what fits. You can continue with none selected.</p>
 
                 @if ($errors->any())
-                    <p class="yk-mood__error">{{ $errors->first() }}</p>
+                    <p class="yk-mood__error" role="alert">{{ $errors->first() }}</p>
                 @endif
 
                 @foreach ($groupLabels as $bucket => $groupLabel)
@@ -56,39 +59,6 @@
     </div>
 </main>
 @if ($open)
-<script>
-(function () {
-    var form = document.querySelector('[data-emotion-form]');
-    if (!form) return;
-    var limit = parseInt(form.getAttribute('data-emotion-limit'), 10) || 6;
-    var count = form.querySelector('[data-emotion-count]');
-    var sync = function () {
-        var boxes = Array.prototype.slice.call(form.querySelectorAll('input[name="emotions[]"]'));
-        var chosen = boxes.filter(function (box) { return box.checked; });
-        if (count) count.textContent = chosen.length + ' of ' + limit + ' selected';
-        boxes.forEach(function (box) {
-            var chip = box.closest('[data-emotion-chip]');
-            if (!chip) return;
-            var on = box.checked;
-            chip.classList.toggle('is-selected', on);
-            if (on) chip.setAttribute('data-selected', 'true');
-            else chip.removeAttribute('data-selected');
-            var locked = !on && chosen.length >= limit;
-            box.disabled = locked;
-            chip.classList.toggle('is-locked', locked);
-        });
-    };
-    form.addEventListener('change', function (event) {
-        var box = event.target;
-        if (!box || box.name !== 'emotions[]') return;
-        var chosen = form.querySelectorAll('input[name="emotions[]"]:checked').length;
-        if (box.checked && chosen > limit) {
-            box.checked = false;
-        }
-        sync();
-    });
-    sync();
-})();
-</script>
+<script src="{{ asset('frontend/assets/js/yuktione-mood.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-mood.js')) }}" defer></script>
 @endif
 @endsection

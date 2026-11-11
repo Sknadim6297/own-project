@@ -5,11 +5,12 @@
 @section('body_class', 'yk-water-body')
 
 @section('content')
-<main class="yk-water">
+<main class="yk-water yk-tools-ds" data-yk-tools-ds data-yk-water>
     <div class="yk-water__wrap yk-water__wrap--wide">
-        <section class="yk-water__card">
+        @include('frontend.sections.partials.tool-back-to-tools')
+        <section class="yk-water__card" aria-labelledby="water-today-heading">
             <p class="yk-water__badge">{{ $dash['date'] }} · Asia/Kolkata</p>
-            <h1>Day’s intake</h1>
+            <h1 id="water-today-heading">Day’s intake</h1>
             <p class="yk-water__lead">{{ $dash['total_label'] }} of {{ $dash['goal_label'] }} · {{ $dash['percent'] }}%</p>
 
             @if (session('status'))
@@ -71,20 +72,4 @@
         </section>
     </div>
 </main>
-<script>
-(function () {
-    document.querySelectorAll('[data-water-submit-once]').forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (form.getAttribute('data-submitting') === '1') {
-                event.preventDefault();
-                return;
-            }
-            form.setAttribute('data-submitting', '1');
-            form.querySelectorAll('button[type="submit"]').forEach(function (btn) {
-                btn.disabled = true;
-            });
-        });
-    });
-})();
-</script>
 @endsection

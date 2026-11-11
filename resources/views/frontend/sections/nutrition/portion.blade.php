@@ -11,11 +11,12 @@
     $qty = old('quantity', request('quantity', $food->reference_basis === 'per_100g' ? '100' : optional($food->servings->first())->quantity));
     $unit = old('unit', request('unit', $defaultUnit));
 @endphp
-<main class="yk-nut">
+<main class="yk-nut yk-tools-ds" data-yk-tools-ds data-yk-nut>
     <div class="yk-nut__wrap yk-nut__wrap--wide">
-        <section class="yk-nut__card">
+        @include('frontend.sections.partials.tool-back-to-tools')
+        <section class="yk-nut__card" aria-labelledby="nut-portion-heading">
             <p class="yk-nut__badge">Set portion</p>
-            <h1>{{ $food->name }}</h1>
+            <h1 id="nut-portion-heading">{{ $food->name }}</h1>
             @if ($food->brand)
                 <p class="yk-nut__lead">{{ $food->brand }}@if ($food->variant) · {{ $food->variant }} @endif</p>
             @endif
@@ -110,26 +111,10 @@
             @else
                 <p class="yk-nut__note">Sign in to add this food to a meal diary.</p>
                 <div class="yk-nut__actions">
-                    <a class="yk-nut__btn" href="{{ route('login') }}">Log in</a>
+                    <a class="yk-nut__btn" href="{{ route('login') }}">Sign in to add</a>
                 </div>
             @endif
         </section>
     </div>
 </main>
-<script>
-(function () {
-    document.querySelectorAll('[data-nut-submit-once]').forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (form.getAttribute('data-submitting') === '1') {
-                event.preventDefault();
-                return;
-            }
-            form.setAttribute('data-submitting', '1');
-            form.querySelectorAll('button[type="submit"]').forEach(function (btn) {
-                btn.disabled = true;
-            });
-        });
-    });
-})();
-</script>
 @endsection

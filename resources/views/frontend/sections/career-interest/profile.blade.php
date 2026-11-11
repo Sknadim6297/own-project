@@ -10,7 +10,7 @@
     $primary = array_values(array_filter($ranked, fn ($row) => in_array($row['key'], $scored['top'], true)));
     $others = array_values(array_filter($ranked, fn ($row) => ! in_array($row['key'], $scored['top'], true)));
 @endphp
-<main class="yk-cit">
+<main class="yk-cit yk-tools-ds" data-yk-tools-ds data-yk-cit>
     <div class="yk-cit__wrap">
         <section class="yk-cit__card" aria-labelledby="cit-profile-heading">
             <p class="yk-cit__badge">Results</p>

@@ -5,7 +5,7 @@
 @section('body_class', 'yk-cit-body')
 
 @section('content')
-<main class="yk-cit">
+<main class="yk-cit yk-tools-ds" data-yk-tools-ds data-yk-cit>
     <div class="yk-cit__wrap">
         @include('frontend.sections.partials.tool-back-to-tools')
         <section class="yk-cit__card yk-cit__card--hero" aria-labelledby="cit-welcome-heading">

@@ -5,7 +5,7 @@
 @section('body_class', 'yk-bmi-body')
 
 @section('content')
-<main class="yk-bmi">
+<main class="yk-bmi yk-tools-ds" data-yk-tools-ds data-yk-bmi>
     <div class="yk-bmi__wrap">
         <section class="yk-bmi__card">
             <p class="yk-bmi__badge">Nutrition tool</p>

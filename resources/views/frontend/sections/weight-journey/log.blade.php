@@ -6,21 +6,22 @@
 
 @section('content')
 @php $svc = app(\App\Services\WeightJourneyService::class); @endphp
-<main class="yk-wj">
+<main class="yk-wj yk-tools-ds" data-yk-tools-ds data-yk-wj>
     <div class="yk-wj__wrap yk-wj__wrap--wide">
-        <section class="yk-wj__card">
+        @include('frontend.sections.partials.tool-back-to-tools')
+        <section class="yk-wj__card" aria-labelledby="wj-log-heading">
             <p class="yk-wj__badge">Log · Asia/Kolkata</p>
-            <h1>Log weight</h1>
+            <h1 id="wj-log-heading">Log weight</h1>
             <p class="yk-wj__lead">Multiple same-day readings are allowed. Stored precisely in kilograms.</p>
 
             @if (session('status'))
                 <p class="yk-wj__ok" role="status">{{ session('status') }}</p>
             @endif
             @if ($errors->any())
-                <p class="yk-wj__error" role="alert">{{ $errors->first() }}</p>
+                <p class="yk-wj__error" role="alert" id="wj-log-error">{{ $errors->first() }}</p>
             @endif
 
-            <form method="post" action="{{ route('tools.weight-journey.measurements.store') }}" class="yk-wj__log-form" data-wj-submit-once>
+            <form method="post" action="{{ route('tools.weight-journey.measurements.store') }}" class="yk-wj__log-form" data-wj-submit-once @if ($errors->any()) aria-describedby="wj-log-error" @endif>
                 @csrf
                 <div class="yk-wj__log-grid">
                     <fieldset class="yk-wj__field">
@@ -32,7 +33,7 @@
                     </fieldset>
                     <div class="yk-wj__field">
                         <label for="weight">Weight</label>
-                        <input id="weight" type="number" name="weight" step="0.001" min="0" inputmode="decimal" value="{{ old('weight') }}" required placeholder="e.g. 70.5">
+                        <input id="weight" type="number" name="weight" step="0.001" min="0" inputmode="decimal" value="{{ old('weight') }}" required placeholder="e.g. 70.5" @if ($errors->has('weight')) aria-invalid="true" @endif>
                     </div>
                     <div class="yk-wj__field">
                         <label for="recorded">Date/time (optional)</label>
@@ -85,7 +86,7 @@
                                         @method('PUT')
                                         <input type="hidden" name="unit" value="{{ $unit }}">
                                         <label class="visually-hidden" for="edit-w-{{ $row->id }}">Weight</label>
-                                        <input id="edit-w-{{ $row->id }}" type="number" name="weight" step="0.001" value="{{ $unit === 'lb' ? $svc->kgToLb((string)$row->weight_kg) : $row->weight_kg }}" required>
+                                        <input id="edit-w-{{ $row->id }}" type="number" name="weight" step="0.001" inputmode="decimal" value="{{ $unit === 'lb' ? $svc->kgToLb((string)$row->weight_kg) : $row->weight_kg }}" required>
                                         <label class="visually-hidden" for="edit-t-{{ $row->id }}">Time</label>
                                         <input id="edit-t-{{ $row->id }}" type="datetime-local" name="recorded_at" value="{{ $local->format('Y-m-d\TH:i') }}">
                                         <label class="visually-hidden" for="edit-n-{{ $row->id }}">Note</label>
@@ -106,20 +107,4 @@
         </section>
     </div>
 </main>
-<script>
-(function () {
-    document.querySelectorAll('[data-wj-submit-once]').forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (form.getAttribute('data-submitting') === '1') {
-                event.preventDefault();
-                return;
-            }
-            form.setAttribute('data-submitting', '1');
-            form.querySelectorAll('button[type="submit"]').forEach(function (btn) {
-                btn.disabled = true;
-            });
-        });
-    });
-})();
-</script>
 @endsection

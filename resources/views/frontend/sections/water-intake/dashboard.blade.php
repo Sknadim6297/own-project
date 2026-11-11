@@ -13,8 +13,9 @@
     $overGoal = $dash['percent'] > 100;
     $overMl = max(0, (int) $dash['total_ml'] - (int) $dash['goal_ml']);
 @endphp
-<main class="yk-water">
+<main class="yk-water yk-tools-ds" data-yk-tools-ds data-yk-water>
     <div class="yk-water__wrap yk-water__wrap--wide">
+        @include('frontend.sections.partials.tool-back-to-tools')
         <section class="yk-water__card" aria-labelledby="water-dash-heading">
             <p class="yk-water__badge">{{ $isToday ? 'Today' : $dash['date'] }} · Asia/Kolkata</p>
             <h1 id="water-dash-heading">Water Intake Tracker</h1>
@@ -138,21 +139,4 @@
         </section>
     </div>
 </main>
-<script>
-(function () {
-    document.querySelectorAll('[data-water-submit-once]').forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (form.getAttribute('data-submitting') === '1') {
-                event.preventDefault();
-                return;
-            }
-            form.setAttribute('data-submitting', '1');
-            form.querySelectorAll('button[type="submit"]').forEach(function (btn) {
-                btn.disabled = true;
-                btn.classList.add('is-busy');
-            });
-        });
-    });
-})();
-</script>
 @endsection

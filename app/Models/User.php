@@ -93,6 +93,36 @@ class User extends Authenticatable
         return $this->hasMany(AdditionalService::class);
     }
 
+    public function tarotReadings()
+    {
+        return $this->hasMany(TarotReading::class);
+    }
+
+    public function referralCode()
+    {
+        return $this->hasOne(ReferralCode::class);
+    }
+
+    public function yuktiWallet()
+    {
+        return $this->hasOne(YuktiWallet::class);
+    }
+
+    public function referralAttributionsAsReferrer()
+    {
+        return $this->hasMany(ReferralAttribution::class, 'referrer_user_id');
+    }
+
+    public function referralAttributionAsReferee()
+    {
+        return $this->hasOne(ReferralAttribution::class, 'referee_user_id');
+    }
+
+    public function yuktiRewardLedgerEntries()
+    {
+        return $this->hasMany(YuktiRewardLedgerEntry::class);
+    }
+
     // Add a method to check if user has already reviewed a professional
     public function hasReviewedProfessional($professionalId)
     {

@@ -5,21 +5,21 @@
 @section('body_class', 'yk-journal-body')
 
 @section('content')
-<main class="yk-journal">
+<main class="yk-journal yk-tools-ds" data-yk-tools-ds data-yk-journal>
     <div class="yk-journal__wrap">
         <a class="yk-journal__back" href="{{ $backUrl }}">
             <span aria-hidden="true">←</span> Back
         </a>
 
         @if (!$open)
-            <section class="yk-journal__closed" aria-labelledby="journal-closed-heading">
+            <section class="yk-journal__closed yk-journal__panel" aria-labelledby="journal-closed-heading">
                 <p class="yk-journal__badge">{{ $editing ? 'Private entry' : 'Free tool' }}</p>
                 <h1 id="journal-closed-heading">{{ $heading }}</h1>
                 <p>{{ $editing ? 'Editing is unavailable right now.' : 'This journal is unavailable right now.' }}</p>
             </section>
         @else
             <form
-                class="yk-journal__form"
+                class="yk-journal__form yk-journal__panel"
                 method="post"
                 action="{{ $formAction }}"
                 data-journal-form
@@ -37,7 +37,7 @@
                 <p class="yk-journal__private" role="status">Private · Only you can see this entry</p>
 
                 @if ($errors->any())
-                    <p class="yk-journal__error">{{ $errors->first() }}</p>
+                    <p class="yk-journal__error" role="alert">{{ $errors->first() }}</p>
                 @endif
 
                 <fieldset class="yk-journal__prompts">
@@ -72,7 +72,7 @@
                     >
                 </div>
 
-                <div class="yk-journal__field">
+                <div class="yk-journal__field yk-journal__write">
                     <label class="yk-journal__label" for="journal-body">
                         Your thoughts
                         <span class="yk-journal__required">Required</span>
@@ -99,41 +99,7 @@
         @endif
     </div>
 </main>
+@if ($open)
+<script src="{{ asset('frontend/assets/js/yuktione-journal.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-journal.js')) }}" defer></script>
+@endif
 @endsection
-
-@push('scripts')
-<script>
-(() => {
-    const form = document.querySelector('[data-journal-form]');
-    if (!form) return;
-
-    const title = form.querySelector('[data-journal-title]');
-    const body = form.querySelector('[data-journal-body]');
-    const count = form.querySelector('[data-journal-count]');
-    const bodyMax = Number(form.dataset.bodyMax || 5000);
-    let titleTouched = form.dataset.preserveTitle === '1'
-        || Boolean(title && title.value.trim() !== '' && !form.querySelector('[data-journal-prompt].is-selected'));
-
-    const syncCount = () => {
-        if (!body || !count) return;
-        count.textContent = `${body.value.length} / ${bodyMax.toLocaleString()}`;
-    };
-
-    body?.addEventListener('input', syncCount);
-    title?.addEventListener('input', () => { titleTouched = true; });
-
-    form.querySelectorAll('[data-journal-prompt]').forEach((label) => {
-        const input = label.querySelector('input');
-        input?.addEventListener('change', () => {
-            form.querySelectorAll('[data-journal-prompt]').forEach((node) => node.classList.remove('is-selected'));
-            label.classList.add('is-selected');
-            if (title && !titleTouched) {
-                title.value = label.dataset.promptLabel || '';
-            }
-        });
-    });
-
-    syncCount();
-})();
-</script>
-@endpush

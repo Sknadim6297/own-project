@@ -197,10 +197,27 @@ class BookingController extends Controller
                                 ->where('service_id', $booking->service_id)
                                 ->whereNull('booking_id')
                                 ->get();
-            
+
             foreach ($mcqAnswers as $answer) {
                 $answer->booking_id = $booking->id;
                 $answer->save();
+            }
+
+            // Phase 3F: expert referral activates only when paid + all sessions completed.
+            // Never blocks session status updates; engine may be disabled.
+            try {
+                $booking->load('timedates');
+                $allCompleted = $booking->timedates->isNotEmpty()
+                    && $booking->timedates->every(fn ($td) => (string) $td->status === 'completed');
+                if ($allCompleted && (string) $booking->payment_status === 'paid') {
+                    app(\App\Services\YuktiRewards\YuktiCustomerRewardHooks::class)
+                        ->onExpertBookingFullyCompleted((int) $booking->id);
+                }
+            } catch (\Throwable $e) {
+                Log::error('Expert referral hook failed after session completion.', [
+                    'booking_id' => $booking->id,
+                    'exception' => $e->getMessage(),
+                ]);
             }
         }
 

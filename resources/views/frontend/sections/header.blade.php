@@ -158,6 +158,7 @@
                                 @endif
                                 @if ($user)
                                     <a href="{{ route('user.dashboard') }}" role="menuitem">Customer Dashboard</a>
+                                    <a href="{{ route('user.yukti-points.index') }}" role="menuitem">Refer &amp; Earn</a>
                                     <a href="{{ route('user.profile.index') }}" role="menuitem">My Profile</a>
                                     <a href="{{ route('user.all-appointment.index') }}" role="menuitem">My Bookings</a>
                                     <form action="{{ route('user.logout') }}" method="POST">

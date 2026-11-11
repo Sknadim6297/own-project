@@ -57,8 +57,8 @@ class Phase1ToolRegistryFoundationTest extends TestCase
         $registrar->register();
         $registrar->register();
 
-        $this->assertSame(3, ToolCategory::query()->count());
-        $this->assertSame(9, Tool::query()->count());
+        $this->assertSame(4, ToolCategory::query()->count());
+        $this->assertSame(10, Tool::query()->count());
         $this->assertSame(1, Tool::query()->where('slug', 'daily-mood-check-in')->count());
         $this->assertSame(count(self::PHASE1_SLUGS), Tool::query()->whereIn('slug', self::PHASE1_SLUGS)->count());
 
@@ -71,6 +71,12 @@ class Phase1ToolRegistryFoundationTest extends TestCase
             $this->assertFalse($tool->publiclyAvailable()->whereKey($tool->id)->exists(), $slug);
         }
 
+        $tarot = Tool::query()->where('slug', 'tarot-reflection')->firstOrFail();
+        $this->assertSame('coming_soon', $tarot->status);
+        $this->assertFalse($tarot->is_implemented);
+        $this->assertNull($tarot->route_name);
+        $this->assertFalse($tarot->canLaunch());
+
         $mood = Tool::query()->where('slug', 'daily-mood-check-in')->firstOrFail();
         $this->assertSame('active', $mood->status);
         $this->assertTrue($mood->is_implemented);
@@ -79,6 +85,7 @@ class Phase1ToolRegistryFoundationTest extends TestCase
         $this->assertTrue(ToolCategory::query()->where('slug', 'career-guidance')->exists());
         $this->assertTrue(ToolCategory::query()->where('slug', 'nutrition')->exists());
         $this->assertTrue(ToolCategory::query()->where('slug', 'psychology')->exists());
+        $this->assertTrue(ToolCategory::query()->where('slug', 'astrology-tarot')->exists());
 
         $page = $this->get(route('tools.index'));
         $page->assertOk()
@@ -89,7 +96,8 @@ class Phase1ToolRegistryFoundationTest extends TestCase
             ->assertDontSee('BMI & BMR Calculator')
             ->assertDontSee('Water Intake Tracker')
             ->assertDontSee('Weight Journey')
-            ->assertDontSee('Calorie & Nutrition Tracker');
+            ->assertDontSee('Calorie & Nutrition Tracker')
+            ->assertDontSee('Tarot Reflection');
 
         $this->get(route('tools.psychology.mood'))
             ->assertOk()

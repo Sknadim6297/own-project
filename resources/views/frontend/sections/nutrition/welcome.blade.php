@@ -6,12 +6,22 @@
 
 @section('content')
 @php $catalogueReady = ($catalogueCount ?? 0) > 0; @endphp
-<main class="yk-nut">
+<main class="yk-nut yk-tools-ds" data-yk-tools-ds data-yk-nut>
     <div class="yk-nut__wrap">
-        <section class="yk-nut__card yk-nut__card--welcome">
+        @include('frontend.sections.partials.tool-back-to-tools')
+        <section class="yk-nut__card yk-nut__card--welcome" aria-labelledby="nut-welcome-heading">
             <p class="yk-nut__badge">{{ $catalogueReady ? 'Nutrition tool' : 'Food Catalogue Pending' }}</p>
-            <h1>Calorie &amp; Nutrition Tracker</h1>
+            <h1 id="nut-welcome-heading">Calorie &amp; Nutrition Tracker</h1>
             <p class="yk-nut__lead">Search published foods, set portions from source-backed servings, and log breakfast, lunch, dinner, or snacks.</p>
+
+            <div class="yk-nut__welcome-preview" aria-hidden="true">
+                <div class="yk-nut__stats">
+                    <div><strong>—</strong><span>Calories</span></div>
+                    <div><strong>—</strong><span>Protein</span></div>
+                    <div><strong>—</strong><span>Carbs</span></div>
+                    <div><strong>—</strong><span>Fat</span></div>
+                </div>
+            </div>
 
             <ul class="yk-nut__welcome-points">
                 <li>Daily calories and macros from real entries</li>

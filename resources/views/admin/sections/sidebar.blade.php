@@ -454,6 +454,37 @@
     </ul>
 </li>
 @endif
+                    @if($isMenuAccessible('yukti_points'))
+                    <li class="slide has-sub">
+                        <a href="javascript:void(0);" class="side-menu__item">
+                            <i class="ri-coin-line side-menu__icon"></i>
+                            <span class="side-menu__label">YuktiPoints</span>
+                            <i class="ri-arrow-down-s-line side-menu__angle"></i>
+                        </a>
+                        <ul class="slide-menu child1">
+                            <li class="slide side-menu__label1"><a href="javascript:void(0)">YuktiPoints</a></li>
+                            @if($isMenuAccessible('yukti.dashboard'))
+                            <li class="slide"><a href="{{ route('admin.yukti-points.dashboard') }}" class="side-menu__item">Rewards Dashboard</a></li>
+                            @endif
+                            @if($isMenuAccessible('yukti.config'))
+                            <li class="slide"><a href="{{ route('admin.yukti-points.configuration') }}" class="side-menu__item">Configuration</a></li>
+                            @endif
+                            @if($isMenuAccessible('yukti.wallets'))
+                            <li class="slide"><a href="{{ route('admin.yukti-points.wallets') }}" class="side-menu__item">Customer Wallets</a></li>
+                            @endif
+                            @if($isMenuAccessible('yukti.ledger'))
+                            <li class="slide"><a href="{{ route('admin.yukti-points.ledger') }}" class="side-menu__item">Reward Ledger</a></li>
+                            @endif
+                            @if($isMenuAccessible('yukti.referrals'))
+                            <li class="slide"><a href="{{ route('admin.yukti-points.referrals') }}" class="side-menu__item">Referrals</a></li>
+                            @endif
+                            @if($isMenuAccessible('yukti.fraud'))
+                            <li class="slide"><a href="{{ route('admin.yukti-points.fraud') }}" class="side-menu__item">Fraud Flags</a></li>
+                            @endif
+                        </ul>
+                    </li>
+                    @endif
+
                     @if($isMenuAccessible('tools_management'))
                     <li class="slide has-sub">
                         <a href="javascript:void(0);" class="side-menu__item">

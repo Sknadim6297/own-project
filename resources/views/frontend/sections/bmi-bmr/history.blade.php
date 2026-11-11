@@ -9,7 +9,7 @@
     $activityLabels = collect(\App\Support\BmiBmr\BmiBmrCatalog::ACTIVITIES)->mapWithKeys(fn ($a) => [$a['key'] => $a['label']]);
     $activityEmojis = collect(\App\Support\BmiBmr\BmiBmrCatalog::ACTIVITIES)->mapWithKeys(fn ($a) => [$a['key'] => $a['emoji'] ?? '']);
 @endphp
-<main class="yk-bmi">
+<main class="yk-bmi yk-tools-ds" data-yk-tools-ds data-yk-bmi>
     <div class="yk-bmi__wrap yk-bmi__wrap--wide">
         @include('frontend.sections.partials.tool-back-to-tools')
         <section class="yk-bmi__card" aria-labelledby="bmi-history-heading">

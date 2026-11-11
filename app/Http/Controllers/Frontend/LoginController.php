@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\ActiveSession;
 use App\Models\OtpVerification;
 use App\Services\OtpService;
+use App\Services\YuktiRewards\ReferralAttributionService;
 use App\Support\Auth\IntendedUrl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,10 +21,13 @@ use Throwable;
 class LoginController extends Controller
 {
     protected $otpService;
+
+    protected ReferralAttributionService $referralAttributions;
     
-    public function __construct(OtpService $otpService)
+    public function __construct(OtpService $otpService, ReferralAttributionService $referralAttributions)
     {
         $this->otpService = $otpService;
+        $this->referralAttributions = $referralAttributions;
     }
     
     // Show login form
@@ -429,9 +433,13 @@ class LoginController extends Controller
                 'password'               => $request->password, // Will be hashed by the mutator
                 'email_verified'         => true,
                 'registration_completed' => true,
+                'registration_status'    => 'completed',
                 'password_set_at'        => now(),
                 'email_verified_at'      => now(),
             ]);
+
+            // Bind first-touch referral capture after completed signup (no points granted).
+            $this->referralAttributions->bindCompletedRegistration($user);
 
             // Return success response with redirect to login
             return response()->json([
@@ -556,6 +564,13 @@ class LoginController extends Controller
 
         try {
             $user = User::findOrFail($request->user_id);
+
+            if ($user->registration_completed) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'This account is already registered. Please login.',
+                ], 422);
+            }
             
             // Update user with password
             $user->update([
@@ -564,6 +579,11 @@ class LoginController extends Controller
                 'registration_completed' => true,
                 'password_set_at'        => now(),
             ]);
+
+            $user->refresh();
+
+            // Bind first-touch referral capture only after verified completed signup (no points).
+            $this->referralAttributions->bindCompletedRegistration($user);
 
             return response()->json([
                 'status'  => 'success',

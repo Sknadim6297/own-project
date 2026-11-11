@@ -487,6 +487,16 @@ Route::middleware(['auth:admin', 'admin.menu'])->group(function () {
         Route::delete('tool-categories/{toolCategory}', [\App\Http\Controllers\Admin\ToolCategoryController::class, 'destroy'])->name('tool-categories.destroy');
         Route::get('tool-settings', [\App\Http\Controllers\Admin\ToolSettingController::class, 'edit'])->name('tool-settings.edit');
         Route::put('tool-settings', [\App\Http\Controllers\Admin\ToolSettingController::class, 'update'])->name('tool-settings.update');
+
+        // Phase 3H — YuktiPoints admin monitoring (GET-only; no grant/debit/redeem).
+        Route::prefix('yukti-points')->name('yukti-points.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\YuktiRewardsAdminController::class, 'dashboard'])->name('dashboard');
+            Route::get('/configuration', [\App\Http\Controllers\Admin\YuktiRewardsAdminController::class, 'configuration'])->name('configuration');
+            Route::get('/wallets', [\App\Http\Controllers\Admin\YuktiRewardsAdminController::class, 'wallets'])->name('wallets');
+            Route::get('/ledger', [\App\Http\Controllers\Admin\YuktiRewardsAdminController::class, 'ledger'])->name('ledger');
+            Route::get('/referrals', [\App\Http\Controllers\Admin\YuktiRewardsAdminController::class, 'referrals'])->name('referrals');
+            Route::get('/fraud', [\App\Http\Controllers\Admin\YuktiRewardsAdminController::class, 'fraud'])->name('fraud');
+        });
     });
 
     // Chat Management - Admin to Customer Communication

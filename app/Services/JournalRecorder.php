@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\PsychologyJournalEntry;
+use App\Services\YuktiRewards\YuktiCustomerRewardHooks;
 use App\Support\Psychology\PsychologyCatalog;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -44,16 +45,34 @@ class JournalRecorder
         }
 
         try {
-            return $this->persist((int) $userId, $key, $promptKey, $title, $body);
+            $record = $this->persist((int) $userId, $key, $promptKey, $title, $body);
         } catch (UniqueConstraintViolationException) {
-            return $this->existingForUser($key, (int) $userId);
+            $record = $this->existingForUser($key, (int) $userId);
         } catch (QueryException $exception) {
             if (str_contains(strtolower($exception->getMessage()), 'unique')) {
-                return $this->existingForUser($key, (int) $userId);
+                $record = $this->existingForUser($key, (int) $userId);
+            } else {
+                throw $exception;
             }
-
-            throw $exception;
         }
+
+        $this->awardIfNew($record);
+
+        return $record;
+    }
+
+    private function awardIfNew(PsychologyJournalEntry $record): void
+    {
+        if (! $record->wasRecentlyCreated) {
+            return;
+        }
+
+        app(YuktiCustomerRewardHooks::class)->onEligibleToolCompleted(
+            (int) $record->user_id,
+            'digital-journal',
+            (string) $record->completion_key,
+            (int) $record->id,
+        );
     }
 
     public function update(PsychologyJournalEntry $entry, string $promptKey, ?string $title, string $body): PsychologyJournalEntry
