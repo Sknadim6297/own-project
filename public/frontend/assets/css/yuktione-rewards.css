@@ -60,7 +60,7 @@
 .yk-rewards__hero-main {
     padding: 1.35rem 1.4rem 1.5rem;
     background:
-        linear-gradient(145deg, rgba(20, 43, 77, 0.96), rgba(49, 109, 97, 0.92)),
+        linear-gradient(145deg, #0b2048 0%, #142b4d 48%, #3d2f66 100%),
         var(--yk-navy);
     color: #fff;
     border: none;
@@ -92,6 +92,7 @@
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.15;
+    color: #fff;
 }
 
 .yk-rewards__balance {
@@ -188,9 +189,9 @@
 }
 
 .yk-rewards__btn--primary {
-    background: linear-gradient(135deg, var(--yk-teal), var(--yk-teal-deep));
+    background: linear-gradient(135deg, #142b4d, #0b2048);
     color: #fff;
-    box-shadow: 0 8px 18px rgba(36, 85, 76, 0.22);
+    box-shadow: 0 8px 18px rgba(11, 32, 72, 0.22);
 }
 
 .yk-rewards__btn--primary:hover { transform: translateY(-1px); }
@@ -201,12 +202,17 @@
     border: 1px solid var(--yk-line);
 }
 
-.yk-rewards__btn--ghost:hover { background: var(--yk-mint); }
+.yk-rewards__btn--ghost:hover { background: #f3eef9; }
 
 .yk-rewards__btn--gold {
-    background: var(--yk-gold-soft);
-    color: #7a5d1d;
-    border: 1px solid rgba(196, 163, 90, 0.35);
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.yk-rewards__hero-main .yk-rewards__btn--gold:hover {
+    background: rgba(255, 255, 255, 0.22);
+    color: #fff;
 }
 
 .yk-rewards__btn[disabled],

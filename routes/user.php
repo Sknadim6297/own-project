@@ -50,7 +50,7 @@ Route::middleware(['auth:user'])->group(function () {
 
     Route::get('/booking/success', [HomeController::class, 'success'])->name('booking.success');
 
-    Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+    Route::match(['get', 'post'], 'logout', [LoginController::class, 'logout'])->name('logout');
 
     // My Bookings with Chat
     Route::get('my-bookings', [App\Http\Controllers\Customer\MyBookingController::class, 'index'])->name('my-bookings');

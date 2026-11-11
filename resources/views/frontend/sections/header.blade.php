@@ -134,11 +134,33 @@
 
                 <div class="yk-navbar__auth">
                     @if ($user || $professional)
-                        @if ($user)
-                            <a class="yk-navbar__dashboard" href="{{ route('user.dashboard') }}">Go to Customer Dashboard</a>
+                        @php
+                            $onCustomerHome = $user && request()->routeIs('user.dashboard');
+                            $onProfessionalHome = $professional && request()->routeIs('professional.dashboard');
+                            // Public chrome: hide the big CTA when already in logged-in customer/pro surfaces.
+                            $hideDashboardCta = ($user && request()->routeIs(
+                                'user.dashboard',
+                                'user.yukti-points.*',
+                                'user.profile.*',
+                                'user.all-appointment.*',
+                                'user.upcoming-appointment.*',
+                                'user.billing.*',
+                                'user.admin-chat.*',
+                                'user.additional-services.*',
+                                'user.bookings.*'
+                            )) || ($professional && request()->routeIs(
+                                'professional.dashboard',
+                                'professional.profile.*',
+                                'professional.booking.*',
+                                'professional.admin-chat.*',
+                                'professional.plans.*'
+                            ));
+                        @endphp
+                        @if ($user && ! $hideDashboardCta)
+                            <a class="yk-navbar__dashboard" href="{{ route('user.dashboard') }}">Go to Dashboard</a>
                         @endif
-                        @if ($professional)
-                            <a class="yk-navbar__dashboard" href="{{ route('professional.dashboard') }}">Go to Professional Dashboard</a>
+                        @if ($professional && ! $hideDashboardCta)
+                            <a class="yk-navbar__dashboard" href="{{ route('professional.dashboard') }}">Go to Dashboard</a>
                         @endif
                         <div class="yk-navbar__account" data-account-menu>
                             <button class="yk-navbar__account-toggle" type="button" aria-expanded="false" aria-haspopup="menu" aria-controls="tazen-account-menu" data-account-toggle>
@@ -157,22 +179,20 @@
                                     <a href="{{ $messagesUrl }}" role="menuitem">Messages</a>
                                 @endif
                                 @if ($user)
-                                    <a href="{{ route('user.dashboard') }}" role="menuitem">Customer Dashboard</a>
+                                    @unless ($onCustomerHome)
+                                        <a href="{{ route('user.dashboard') }}" role="menuitem">Dashboard</a>
+                                    @endunless
                                     <a href="{{ route('user.yukti-points.index') }}" role="menuitem">Refer &amp; Earn</a>
                                     <a href="{{ route('user.profile.index') }}" role="menuitem">My Profile</a>
                                     <a href="{{ route('user.all-appointment.index') }}" role="menuitem">My Bookings</a>
-                                    <form action="{{ route('user.logout') }}" method="POST">
-                                        @csrf
-                                        <button type="submit" role="menuitem">Logout</button>
-                                    </form>
+                                    <a href="{{ route('user.logout') }}" role="menuitem">Logout</a>
                                 @elseif ($professional)
-                                    <a href="{{ route('professional.dashboard') }}" role="menuitem">Professional Dashboard</a>
+                                    @unless ($onProfessionalHome)
+                                        <a href="{{ route('professional.dashboard') }}" role="menuitem">Dashboard</a>
+                                    @endunless
                                     <a href="{{ route('professional.profile.index') }}" role="menuitem">My Profile</a>
                                     <a href="{{ route('professional.booking.index') }}" role="menuitem">My Bookings</a>
-                                    <form action="{{ route('professional.logout') }}" method="POST">
-                                        @csrf
-                                        <button type="submit" role="menuitem">Logout</button>
-                                    </form>
+                                    <a href="{{ route('professional.logout') }}" role="menuitem">Logout</a>
                                 @endif
                             </div>
                         </div>

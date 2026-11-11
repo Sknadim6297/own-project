@@ -48,7 +48,7 @@
                 </div>
                 <div class="yk-rewards__actions">
                     <a class="yk-rewards__btn yk-rewards__btn--gold" href="#yk-share">Share &amp; invite</a>
-                    <a class="yk-rewards__btn yk-rewards__btn--ghost" href="{{ route('user.yukti-points.wallet') }}" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.2)">View wallet</a>
+                    <a class="yk-rewards__btn yk-rewards__btn--ghost" href="{{ route('user.yukti-points.wallet') }}" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.28)">View wallet</a>
                 </div>
             </div>
 

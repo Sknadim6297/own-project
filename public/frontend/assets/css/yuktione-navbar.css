@@ -1,14 +1,18 @@
 .yk-navbar {
     --yk-nav-text: #0b2048;
-    --yk-nav-green: #316d61;
-    --yk-nav-green-hover: #27574e;
-    --yk-nav-lavender: #9d81db;
+    --yk-nav-navy: #142b4d;
+    --yk-nav-navy-hover: #0b2048;
+    --yk-nav-lavender: #7b5ea7;
+    --yk-nav-lavender-soft: #f3eef9;
     --yk-nav-bg: #ffffff;
     --yk-nav-border: #e0e4ea;
     --yk-nav-line: #e6eaf0;
     --yk-nav-placeholder: #7c88a3;
-    --yk-nav-soft: #f4f7f8;
+    --yk-nav-soft: #f5f7fb;
     --yk-nav-font: "DM Sans", sans-serif;
+    /* legacy aliases kept for older rules */
+    --yk-nav-green: var(--yk-nav-navy);
+    --yk-nav-green-hover: var(--yk-nav-navy-hover);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -375,45 +379,46 @@
 }
 
 .yk-navbar__login {
-    border: 1px solid var(--yk-nav-green);
+    border: 1px solid rgb(20 43 77 / 22%);
     background: var(--yk-nav-bg);
-    color: var(--yk-nav-green);
+    color: var(--yk-nav-navy);
 }
 
 .yk-navbar__login:hover,
 .yk-navbar__login:focus-visible {
-    background: #f3f7f6;
-    color: var(--yk-nav-green-hover);
+    background: var(--yk-nav-soft);
+    border-color: var(--yk-nav-navy);
+    color: var(--yk-nav-navy-hover);
 }
 
 .yk-navbar__signup {
-    border: 1px solid var(--yk-nav-green);
-    background: var(--yk-nav-green);
+    border: 1px solid var(--yk-nav-navy);
+    background: var(--yk-nav-navy);
     color: #fff;
 }
 
 .yk-navbar__signup:hover,
 .yk-navbar__signup:focus-visible {
-    border-color: var(--yk-nav-green-hover);
-    background: var(--yk-nav-green-hover);
+    border-color: var(--yk-nav-navy-hover);
+    background: var(--yk-nav-navy-hover);
     color: #fff;
 }
 
 .yk-navbar__dashboard {
-    border: 1px solid rgb(49 109 97 / 28%);
-    background: #f3f7f6;
-    color: var(--yk-nav-green);
+    border: 1px solid rgb(20 43 77 / 18%);
+    background: var(--yk-nav-lavender-soft);
+    color: var(--yk-nav-navy);
 }
 
 .yk-navbar__dashboard:hover,
 .yk-navbar__dashboard:focus-visible {
-    border-color: var(--yk-nav-green);
-    background: #eaf3f1;
-    color: var(--yk-nav-green-hover);
+    border-color: var(--yk-nav-lavender);
+    background: #ebe4f6;
+    color: var(--yk-nav-navy-hover);
 }
 
 .yk-navbar__dashboard:focus-visible {
-    box-shadow: 0 0 0 3px rgb(49 109 97 / 16%);
+    box-shadow: 0 0 0 3px rgb(123 94 167 / 18%);
 }
 
 .yk-navbar__account {
