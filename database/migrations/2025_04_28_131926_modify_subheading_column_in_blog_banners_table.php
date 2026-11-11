@@ -1,25 +1,29 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Historical tweak: make blog_banners.subheading nullable.
+     *
+     * Fresh installs already create `subheading` as nullable in
+     * 2025_04_24_082907_create_blog_banners_table.php, so this change is a
+     * no-op. Avoid ->change() here (requires doctrine/dbal and breaks SQLite
+     * RefreshDatabase tests).
      */
-    public function up()
-{
-    Schema::table('blog_banners', function (Blueprint $table) {
-        $table->string('subheading')->nullable()->change();
-    });
-}
+    public function up(): void
+    {
+        if (! Schema::hasTable('blog_banners')) {
+            return;
+        }
 
-public function down()
-{
-    Schema::table('blog_banners', function (Blueprint $table) {
-        $table->string('subheading')->nullable(false)->change();
-    });
-}
+        // Intentionally empty: create migration already defines nullable subheading.
+    }
+
+    public function down(): void
+    {
+        // No-op: original create migration remains the source of truth for fresh installs.
+    }
 };

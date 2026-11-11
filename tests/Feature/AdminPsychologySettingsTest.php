@@ -185,6 +185,7 @@ class AdminPsychologySettingsTest extends TestCase
             ->assertDontSee('name="journal_body"', false)
             ->assertDontSee('name="gratitude_response"', false);
 
+        // ToolRegistryRegistrar firstOrCreate defaults: career (2) + nutrition (4) + tarot (1).
         $unpublishedSlugs = [
             'career-interest-test',
             'skills-strengths-assessment',
@@ -192,6 +193,7 @@ class AdminPsychologySettingsTest extends TestCase
             'water-intake-tracker',
             'weight-journey',
             'calorie-nutrition-tracker',
+            'tarot-reflection',
         ];
         $this->assertSame(
             count($unpublishedSlugs),
@@ -259,6 +261,7 @@ class AdminPsychologySettingsTest extends TestCase
             'water-intake-tracker',
             'weight-journey',
             'calorie-nutrition-tracker',
+            'tarot-reflection',
         ];
         $this->assertSame(
             count($unpublishedSlugs),

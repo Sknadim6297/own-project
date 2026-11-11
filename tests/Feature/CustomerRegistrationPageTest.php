@@ -12,7 +12,7 @@ class CustomerRegistrationPageTest extends TestCase
 
         $response->assertOk()
             ->assertSee('Create your account')
-            ->assertSee('Join Yuktione to connect with trusted professionals.')
+            ->assertSee('Join YuktiOne to connect with trusted professionals.')
             ->assertSee('frontend/assets/Yuktione_logo.png')
             ->assertSee('family=DM+Sans', false)
             ->assertSee('name="first_name"', false)
