@@ -140,7 +140,7 @@
     </table>
     
     <div class="footer">
-        © {{ date('Y') }} Tazen - Customer Billing Report
+        © {{ date('Y') }} YuktiOne - Customer Billing Report
     </div>
     
     <script type="text/php">

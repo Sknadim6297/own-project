@@ -219,7 +219,7 @@
     @endif
 
     <div class="footer">
-        <p>User Management Report - Tazen.in Admin Panel - Page <span class="pagenum"></span></p>
+        <p>User Management Report - yuktione.in Admin Panel - Page <span class="pagenum"></span></p>
     </div>
 </body>
 </html>

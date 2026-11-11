@@ -30,8 +30,8 @@ class UpdateExistingServicesSlugSeeder extends Seeder
             
             $service->update([
                 'slug' => $slug,
-                'meta_title' => $service->name . ' - Professional Services | Tazen.in',
-                'meta_description' => 'Find professional ' . strtolower($service->name) . ' services. Connect with verified experts and book appointments easily with Tazen.in.'
+                'meta_title' => $service->name . ' - Professional Services | yuktione.in',
+                'meta_description' => 'Find professional ' . strtolower($service->name) . ' services. Connect with verified experts and book appointments easily with yuktione.in.'
             ]);
         }
         

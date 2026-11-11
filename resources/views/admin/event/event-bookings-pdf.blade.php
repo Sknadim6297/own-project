@@ -136,7 +136,7 @@
     </table>
     
     <div class="footer">
-        © {{ date('Y') }} Tazen - Event Bookings Report
+        © {{ date('Y') }} YuktiOne - Event Bookings Report
     </div>
     
     <script type="text/php">

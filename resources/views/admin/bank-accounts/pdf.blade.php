@@ -233,7 +233,7 @@
     @endif
     
     <div class="footer">
-        Tazen Admin Panel - Professional Bank Accounts Report
+        YuktiOne Admin Panel - Professional Bank Accounts Report
     </div>
     
     <div class="page-number">

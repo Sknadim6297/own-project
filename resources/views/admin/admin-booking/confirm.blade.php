@@ -793,7 +793,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     key: data.key,
                     amount: data.amount,
                     currency: "INR",
-                    name: "Tazen Admin",
+                    name: "YuktiOne Admin",
                     description: "Admin Booking Payment",
                     order_id: data.order_id,
                     modal: {

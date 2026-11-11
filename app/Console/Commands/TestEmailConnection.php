@@ -18,7 +18,7 @@ class TestEmailConnection extends Command
         try {
             // Test 1: Basic email sending
             $this->info('Test 1: Testing basic email sending...');
-            Mail::raw('This is a test email from Tazen.', function ($message) {
+            Mail::raw('This is a test email from YuktiOne.', function ($message) {
                 $message->to('sknadim6297@gmail.com')
                         ->subject('Test Email Connection');
             });

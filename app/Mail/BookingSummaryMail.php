@@ -43,9 +43,9 @@ class BookingSummaryMail extends Mailable
     public function envelope(): Envelope
     {
         $subject = match($this->emailType) {
-            'professional' => 'New Booking Received - Tazen',
-            'admin' => 'New Booking Alert - Tazen Admin',
-            default => 'Your Booking Confirmation - Tazen'
+            'professional' => 'New Booking Received - YuktiOne',
+            'admin' => 'New Booking Alert - YuktiOne Admin',
+            default => 'Your Booking Confirmation - YuktiOne'
         };
 
         return new Envelope(

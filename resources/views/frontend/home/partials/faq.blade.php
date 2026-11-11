@@ -10,7 +10,7 @@
         @if ($faqs->isNotEmpty())
             @php
                 $brand = config('yuktione.name', 'YuktiOne');
-                $brandizeFaq = static fn (?string $text): string => str_ireplace(['Tazen', 'Yuktione'], $brand, (string) $text);
+                $brandizeFaq = static fn (?string $text): string => str_ireplace(['Tazen', 'Yuktione', 'YuktiOne'], $brand, (string) $text);
             @endphp
             <div class="yk-home-faq__list">
                 @foreach ($faqs as $faq)

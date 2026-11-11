@@ -191,7 +191,7 @@
             <div class="row justify-content-md-center how_2">
                 <div class="col-lg-5">
                     <h1>Need help finding an Astrologer/Priest ?</h1>
-                    <p>You can find the best Astrologer/Priest on Tazen. Start your search and get free quotes now!  </p>
+                    <p>You can find the best Astrologer/Priest on YuktiOne. Start your search and get free quotes now!  </p>
                     <p>First time looking for a Tax Resolution Expert and not sure where to start? Tell us about your project and we’ll send you a list of Tax Resolution Experts to review. There’s no pressure to hire, so you can compare profiles, read previous reviews and ask for more information before you make your decision. </p>
 
                     <p>Best of all - it’s completely free!</p>

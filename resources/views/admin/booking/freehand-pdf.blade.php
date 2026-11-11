@@ -154,7 +154,7 @@
     </table>
     
     <div class="footer">
-        © {{ date('Y') }} Tazen - Free Hand Bookings Report
+        © {{ date('Y') }} YuktiOne - Free Hand Bookings Report
     </div>
     
     <script type="text/php">

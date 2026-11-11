@@ -901,7 +901,7 @@
                             <li>Personalized greeting: "Dear [Professional Name],"</li>
                             <li>Admin introduction: "Admin wants to inform you that..."</li>
                             <li>Your message content in a styled format</li>
-                            <li>Professional signature with Tazen branding</li>
+                            <li>Professional signature with YuktiOne branding</li>
                         </ul>
                     </div>
                 </div>

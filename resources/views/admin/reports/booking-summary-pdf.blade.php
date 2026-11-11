@@ -250,7 +250,7 @@
         
         <div class="footer">
             <p>This report contains {{ count($bookings) }} booking records with detailed billing information.</p>
-            <p>Generated on {{ $generatedDate }} | Tazen Admin Panel</p>
+            <p>Generated on {{ $generatedDate }} | YuktiOne Admin Panel</p>
         </div>
     @else
         <div class="no-data">

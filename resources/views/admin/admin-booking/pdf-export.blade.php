@@ -171,7 +171,7 @@
 
     <div class="footer">
         <p>This report was generated automatically by the Admin Booking Management System</p>
-        <p>© {{ date('Y') }} Tazen. All rights reserved.</p>
+        <p>© {{ date('Y') }} YuktiOne. All rights reserved.</p>
     </div>
 </body>
 </html>

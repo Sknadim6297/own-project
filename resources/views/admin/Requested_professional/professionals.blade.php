@@ -145,7 +145,7 @@
     </table>
     
     <div class="footer">
-        <p>© {{ date('Y') }} Tazen Multi. All rights reserved.</p>
+        <p>© {{ date('Y') }} YuktiOne Multi. All rights reserved.</p>
         <p>This is a system-generated report.</p>
     </div>
 </body>

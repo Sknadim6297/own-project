@@ -120,7 +120,7 @@
                 <p>Please contact support for assistance.</p>
             </div>
             <div class="yt-modal-footer">
-                <a href="mailto:support@tazen.com"><i class="fas fa-envelope me-2"></i>Contact Support</a>
+                <a href="mailto:info@yuktione.in"><i class="fas fa-envelope me-2"></i>Contact Support</a>
                 <button type="button" data-modal-close>Close</button>
             </div>
         </div>

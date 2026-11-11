@@ -1,7 +1,7 @@
 @if(isset($whychooses) && $whychooses->isNotEmpty())
     @php
         $brand = config('yuktione.name', 'YuktiOne');
-        $brandize = static fn (?string $text): string => str_ireplace(['Tazen', 'Yuktione'], $brand, (string) $text);
+        $brandize = static fn (?string $text): string => str_ireplace(['Tazen', 'Yuktione', 'YuktiOne'], $brand, (string) $text);
         $whychoose = $whychooses->first();
         $whyChooseItems = [
             ['heading' => $brandize($whychoose->card1_heading), 'description' => $brandize($whychoose->card1_description)],

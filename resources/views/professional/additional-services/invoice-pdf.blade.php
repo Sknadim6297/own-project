@@ -368,7 +368,7 @@
                         <div class="section-header">Sold By</div>
                         <div class="company-details">
                             {{-- Merchant / tax identity preserved from existing platform invoices --}}
-                            <div class="company-name">TAZEN TECHNOLOGIES PRIVATE LIMITED</div>
+                            <div class="company-name">YuktiOne</div>
                             <div class="detail-line">110, Acharya Sisir Kumar Ghosh Street</div>
                             <div class="detail-line">Entally, Kolkata - 700014</div>
                             <div class="detail-line">WEST BENGAL, INDIA</div>
@@ -504,7 +504,7 @@
         @endif
 
         <div class="footer-section">
-            <div class="font-bold">For TAZEN TECHNOLOGIES PRIVATE LIMITED:</div>
+            <div class="font-bold">For YuktiOne:</div>
             <div class="signature-line"></div>
             <div>Authorized Signatory</div>
         </div>

@@ -17,7 +17,7 @@
                 <a class="is-instagram" href="https://www.instagram.com/tazen.in?igsh=eml2bnhsMTdvaTlj" target="_blank" rel="noopener noreferrer" aria-label="YuktiOne on Instagram" title="Instagram">
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.4" cy="6.6" r="1"></circle></svg>
                 </a>
-                <a class="is-linkedin" href="https://www.linkedin.com/company/tazen/" target="_blank" rel="noopener noreferrer" aria-label="YuktiOne on LinkedIn" title="LinkedIn">
+                <a class="is-linkedin" href="https://www.linkedin.com/company/YuktiOne/" target="_blank" rel="noopener noreferrer" aria-label="YuktiOne on LinkedIn" title="LinkedIn">
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5.2 8.5a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6ZM3.7 10h3v10h-3zM9 10h2.9v1.4h.1a3.2 3.2 0 0 1 2.9-1.6c3.1 0 3.7 2 3.7 4.6V20h-3v-5c0-1.2 0-2.7-1.7-2.7s-2 1.3-2 2.6V20H9z"></path></svg>
                 </a>
                 <a class="is-youtube" href="https://www.youtube.com/@Tazenofficial1" target="_blank" rel="noopener noreferrer" aria-label="YuktiOne on YouTube" title="YouTube">

@@ -20,7 +20,7 @@
                 <span>Kolkata</span>
             </div>
             <div class="yk-career__contact">
-                <a href="mailto:career@tazen.in">career@tazen.in</a>
+                <a href="mailto:info@yuktione.in">info@yuktione.in</a>
                 <p class="yk-doc__lead">Connect with us on the social links in the site footer.</p>
             </div>
         </section>
@@ -30,7 +30,7 @@
             @if ($careers->isEmpty())
                 <div class="yk-doc__empty">
                     <h3>No openings right now</h3>
-                    <p>Check back soon, or email <a href="mailto:career@tazen.in">career@tazen.in</a> with your interest.</p>
+                    <p>Check back soon, or email <a href="mailto:info@yuktione.in">info@yuktione.in</a> with your interest.</p>
                 </div>
             @else
                 <ul class="yk-career__list">

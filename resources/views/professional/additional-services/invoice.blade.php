@@ -119,7 +119,7 @@
                 <h2 class="rounded-control bg-brand-950 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-white">Sold by</h2>
                 <div class="mt-2 rounded-control border border-border bg-surface-muted p-3 text-sm text-text-secondary">
                     {{-- Merchant / tax identity preserved; not inventable from config --}}
-                    <p class="font-semibold text-brand-950">TAZEN TECHNOLOGIES PRIVATE LIMITED</p>
+                    <p class="font-semibold text-brand-950">YuktiOne</p>
                     <p class="mt-1">110, Acharya Sisir Kumar Ghosh Street</p>
                     <p>Entally, Kolkata - 700014</p>
                     <p>WEST BENGAL, INDIA</p>
@@ -283,7 +283,7 @@
             <p class="mt-1">Generated on {{ now()->format('d M, Y H:i') }}</p>
             <p class="mt-2">For queries, contact <a class="font-semibold text-brand-primary hover:text-brand-800" href="mailto:{{ $supportEmail }}">{{ $supportEmail }}</a></p>
             <p class="mt-1 font-medium text-text-secondary">Thank you for choosing {{ $brandName }}.</p>
-            <p class="mt-3 text-[11px] text-text-muted">For TAZEN TECHNOLOGIES PRIVATE LIMITED · Authorized Signatory</p>
+            <p class="mt-3 text-[11px] text-text-muted">For YuktiOne · Authorized Signatory</p>
         </footer>
     </article>
 </div>

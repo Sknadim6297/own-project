@@ -145,7 +145,7 @@
     </table>
     
     <div class="footer">
-        © {{ date('Y') }} Tazen - Customer Reviews Report
+        © {{ date('Y') }} YuktiOne - Customer Reviews Report
     </div>
     
     <script type="text/php">

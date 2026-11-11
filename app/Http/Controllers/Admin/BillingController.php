@@ -739,7 +739,7 @@ class BillingController extends Controller
             $callback = function() use ($booking, $invoice_no, $invoice_date, $baseAmount, $cgstAmount, $sgstAmount, $totalTax) {
                 $file = fopen('php://output', 'w');
                 fputs($file, "\xEF\xBB\xBF");
-                fputcsv($file, ['TAZEN TECHNOLOGIES PRIVATE LIMITED']);
+                fputcsv($file, ['YuktiOne']);
                 fputcsv($file, ['TAX INVOICE']);
                 fputcsv($file, ['']);
                 fputcsv($file, ['Invoice Number', $invoice_no]);
@@ -830,7 +830,7 @@ class BillingController extends Controller
                 fputcsv($file, ['Whether tax is payable under reverse charge: NO']);
                 fputcsv($file, ['']);
                 fputcsv($file, ['This is a computer generated invoice and does not require physical signature.']);
-                fputcsv($file, ['For any queries regarding this invoice, please contact us at support@tazen.com']);
+                fputcsv($file, ['For any queries regarding this invoice, please contact us at info@yuktione.in']);
                 fputcsv($file, ['Thank you for choosing our services!']);
                 
                 fclose($file);
@@ -872,7 +872,7 @@ class BillingController extends Controller
             $callback = function() use ($booking, $professional, $invoice_no, $invoice_date, $platformFee, $marginPercentage, $baseCommission, $cgstAmount, $sgstAmount) {
                 $file = fopen('php://output', 'w');
                 fputs($file, "\xEF\xBB\xBF");
-                fputcsv($file, ['TAZEN TECHNOLOGIES PRIVATE LIMITED']);
+                fputcsv($file, ['YuktiOne']);
                 fputcsv($file, ['TAX INVOICE - PLATFORM COMMISSION']);
                 fputcsv($file, ['']);
                 fputcsv($file, ['Invoice Number', $invoice_no]);
@@ -882,7 +882,7 @@ class BillingController extends Controller
                 fputcsv($file, ['Service Date', \Carbon\Carbon::parse($booking->service_datetime)->format('d/m/Y H:i')]);
                 fputcsv($file, ['']);
                 fputcsv($file, ['SOLD BY']);
-                fputcsv($file, ['Company', 'TAZEN TECHNOLOGIES PRIVATE LIMITED']);
+                fputcsv($file, ['Company', 'YuktiOne']);
                 fputcsv($file, ['Address', '110, Acharya Sisir Kumar Ghosh Street']);
                 fputcsv($file, ['City', 'Entally, Kolkata - 700014']);
                 fputcsv($file, ['State', 'WEST BENGAL, INDIA']);
@@ -958,7 +958,7 @@ class BillingController extends Controller
                 fputcsv($file, ['Whether tax is payable under reverse charge: NO']);
                 fputcsv($file, ['']);
                 fputcsv($file, ['This is a computer generated invoice and does not require physical signature.']);
-                fputcsv($file, ['For any queries regarding this invoice, please contact us at support@tazen.com']);
+                fputcsv($file, ['For any queries regarding this invoice, please contact us at info@yuktione.in']);
                 fputcsv($file, ['Thank you for choosing our services!']);
                 
                 fclose($file);

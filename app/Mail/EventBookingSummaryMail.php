@@ -39,8 +39,8 @@ class EventBookingSummaryMail extends Mailable
     public function envelope(): Envelope
     {
         $subject = match($this->emailType) {
-            'admin' => 'New Event Booking Alert - Tazen Admin',
-            default => 'Event Booking Confirmation - Tazen'
+            'admin' => 'New Event Booking Alert - YuktiOne Admin',
+            default => 'Event Booking Confirmation - YuktiOne'
         };
 
         return new Envelope(

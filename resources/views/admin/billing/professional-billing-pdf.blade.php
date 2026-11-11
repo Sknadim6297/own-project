@@ -137,7 +137,7 @@
     </table>
     
     <div class="footer">
-        © {{ date('Y') }} Tazen - All Rights Reserved
+        © {{ date('Y') }} YuktiOne - All Rights Reserved
     </div>
 </body>
 </html>
