@@ -831,6 +831,9 @@ class ManageProfessionalController extends Controller
             $professionalService->subServices()->attach($request->subServices);
         }
 
+        // Keep profile specialization aligned when it is empty or still matches the old blank state.
+        $this->syncProfileSpecializationFromService($professional, $service->name, null);
+
         return back()->with('success', 'Service added successfully!');
     }
 
@@ -853,6 +856,8 @@ class ManageProfessionalController extends Controller
                                                    ->where('id', $serviceId)
                                                    ->firstOrFail();
 
+        $previousServiceName = $professionalService->service_name;
+
         // Get updated service details
         $service = Service::findOrFail($request->service_id);
 
@@ -873,6 +878,10 @@ class ManageProfessionalController extends Controller
         } else {
             $professionalService->subServices()->sync([]);
         }
+
+        // If specialization still mirrored the previous service name (or was empty), keep it in sync.
+        $professional = Professional::with('profile')->findOrFail($professionalId);
+        $this->syncProfileSpecializationFromService($professional, $service->name, $previousServiceName);
 
         return back()->with('success', 'Service updated successfully!');
     }
@@ -1444,5 +1453,61 @@ class ManageProfessionalController extends Controller
         ];
 
         return view('emails.admin-notification', $sampleData);
+    }
+
+    /**
+     * Align profile.specialization with the assigned catalogue service when safe.
+     *
+     * Safe means specialization is empty, equals the previous service name, or is a
+     * known singular/plural variant of that service name. Custom multi-topic
+     * specializations are left untouched for admin review.
+     */
+    private function syncProfileSpecializationFromService(Professional $professional, string $serviceName, ?string $previousServiceName): void
+    {
+        $profile = $professional->profile;
+        if (! $profile) {
+            return;
+        }
+
+        $current = trim((string) ($profile->specialization ?? ''));
+        $serviceName = trim($serviceName);
+        $previousServiceName = trim((string) $previousServiceName);
+
+        $shouldSync = $current === ''
+            || ($previousServiceName !== '' && strcasecmp($current, $previousServiceName) === 0)
+            || $this->specializationMatchesServiceLabel($current, $previousServiceName !== '' ? $previousServiceName : $serviceName);
+
+        if (! $shouldSync || $serviceName === '') {
+            return;
+        }
+
+        if (strcasecmp($current, $serviceName) === 0) {
+            return;
+        }
+
+        $profile->specialization = $serviceName;
+        $profile->save();
+    }
+
+    private function specializationMatchesServiceLabel(string $specialization, string $serviceLabel): bool
+    {
+        if ($specialization === '' || $serviceLabel === '') {
+            return false;
+        }
+
+        $normalizedSpec = strtolower(trim($this->normalizeSpecialization($specialization)));
+        $normalizedService = strtolower(trim($this->normalizeSpecialization($serviceLabel)));
+
+        if ($normalizedSpec === $normalizedService) {
+            return true;
+        }
+
+        foreach ($this->getSpecializationVariants($serviceLabel) as $variant) {
+            if ($normalizedSpec === strtolower($variant)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

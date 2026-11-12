@@ -161,7 +161,7 @@
                             <article class="yk-expert-card">
                                 <a class="yk-expert-card__media" href="{{ $card['url'] }}" tabindex="-1" aria-hidden="true">
                                     @if ($card['image'])
-                                        <img src="{{ $card['image'] }}" alt="" width="320" height="320" loading="lazy" decoding="async" onerror="this.hidden=true; this.nextElementSibling.hidden=false;">
+                                        <img src="{{ $card['image'] }}" alt="" width="320" height="320" loading="lazy" decoding="async" data-initials-fallback="1" onerror="this.hidden=true; if (this.nextElementSibling) this.nextElementSibling.hidden=false;">
                                     @endif
                                     <span class="yk-expert-card__fallback" @if ($card['image']) hidden @endif>{{ $card['initials'] }}</span>
                                 </a>

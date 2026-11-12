@@ -14,10 +14,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ExploreCatalog
 {
+    /** @var array<string, list<int>>|null */
+    private ?array $serviceCategoryMapCache = null;
+
     public const PER_PAGE = 8;
 
     /** Explore category that represents Psychology / Psychologist discovery. */
@@ -38,18 +42,31 @@ class ExploreCatalog
         '10+' => '10+ years',
     ];
 
+    /**
+     * Explore UI categories and keyword needles.
+     *
+     * Expert filtering uses linked Service rows as the source of truth (see
+     * whereExpertCategory). Needles must stay non-overlapping across categories
+     * so categoryKeyForText() can classify a service/specialization uniquely.
+     *
+     * Do not use bare "counsel" for mental-health: it false-positives Career /
+     * Business Counsellor services into Mental Health.
+     */
     public const CATEGORIES = [
-        'mental-health' => ['label' => 'Mental Health', 'tone' => 'mint', 'icon' => 'lotus', 'needles' => ['mental', 'psycholog', 'mindset', 'therap', 'counsel']],
+        'mental-health' => ['label' => 'Mental Health', 'tone' => 'mint', 'icon' => 'lotus', 'needles' => ['mental', 'psycholog', 'psychiatr', 'mindset', 'therap']],
         'astrology-tarot' => ['label' => 'Astrology & Tarot', 'tone' => 'lavender', 'icon' => 'moon', 'needles' => ['astro', 'tarot', 'vastu', 'horoscope']],
         'relationships' => ['label' => 'Relationships', 'tone' => 'blush', 'icon' => 'heart', 'needles' => ['relation', 'couple', 'marriage', 'family']],
         'career-business' => ['label' => 'Career & Business', 'tone' => 'lilac', 'icon' => 'chart', 'needles' => ['career', 'business', 'job', 'coach']],
-        'money-finance' => ['label' => 'Money & Finance', 'tone' => 'cream', 'icon' => 'coins', 'needles' => ['finance', 'money', 'tax', 'account', 'invest']],
+        // "estate" maps Estate and Will Planners via name/slug without the ambiguous bare "will".
+        'money-finance' => ['label' => 'Money & Finance', 'tone' => 'cream', 'icon' => 'coins', 'needles' => ['finance', 'money', 'tax', 'account', 'invest', 'estate']],
         'health-wellness' => ['label' => 'Health & Wellness', 'tone' => 'mint', 'icon' => 'leaf', 'needles' => ['health', 'wellness', 'yoga', 'healing']],
         'parenting' => ['label' => 'Parenting', 'tone' => 'blush', 'icon' => 'family', 'needles' => ['parent', 'child', 'teen']],
-        'lifestyle' => ['label' => 'Lifestyle', 'tone' => 'sage', 'icon' => 'cup', 'needles' => ['lifestyle', 'style', 'image', 'fashion']],
+        // "influencer" maps Influencers; keep "image" for Image Consultant.
+        'lifestyle' => ['label' => 'Lifestyle', 'tone' => 'sage', 'icon' => 'cup', 'needles' => ['lifestyle', 'style', 'image', 'fashion', 'influencer']],
         'spirituality' => ['label' => 'Spirituality', 'tone' => 'lavender', 'icon' => 'spark', 'needles' => ['spirit', 'meditat', 'energy']],
         'creativity' => ['label' => 'Creativity', 'tone' => 'blue', 'icon' => 'bulb', 'needles' => ['creativ', 'art', 'design', 'writer']],
-        'nutrition-fitness' => ['label' => 'Nutrition & Fitness', 'tone' => 'mint', 'icon' => 'fitness', 'needles' => ['nutrition', 'diet', 'fitness', 'workout']],
+        // "trainer" maps Physical Trainers without colliding with career coaching.
+        'nutrition-fitness' => ['label' => 'Nutrition & Fitness', 'tone' => 'mint', 'icon' => 'fitness', 'needles' => ['nutrition', 'diet', 'fitness', 'workout', 'trainer']],
     ];
 
     public function browse(Request $request): array
@@ -351,7 +368,7 @@ class ExploreCatalog
         }
 
         if ($filters['category'] !== '') {
-            $this->whereTextMatches($query, self::CATEGORIES[$filters['category']]['needles'], 'expert');
+            $this->whereExpertCategory($query, $filters['category']);
         }
 
         if ($filters['service'] !== '') {
@@ -477,21 +494,114 @@ class ExploreCatalog
         return $query;
     }
 
+    /**
+     * Restrict experts to a single Explore category.
+     *
+     * Source of truth is the linked Service catalogue: a professional matches when
+     * they offer a service whose name/slug classifies to this category. Experts
+     * without any classifiable service fall back to specialization needles, but
+     * only when they do not already have a service mapped to a different category.
+     */
+    private function whereExpertCategory(Builder $query, string $categoryKey): void
+    {
+        if (! array_key_exists($categoryKey, self::CATEGORIES)) {
+            $query->whereRaw('1 = 0');
+
+            return;
+        }
+
+        $serviceIds = $this->serviceIdsMappedToCategory($categoryKey);
+        $otherMappedServiceIds = $this->serviceIdsMappedToOtherCategories($categoryKey);
+        $needles = self::CATEGORIES[$categoryKey]['needles'];
+
+        $query->where(function (Builder $outer) use ($serviceIds, $otherMappedServiceIds, $needles) {
+            if ($serviceIds !== []) {
+                $outer->whereHas(
+                    'professionalServices',
+                    fn (Builder $service) => $service->whereIn('service_id', $serviceIds)
+                );
+            }
+
+            $outer->orWhere(function (Builder $fallback) use ($otherMappedServiceIds, $needles) {
+                if ($otherMappedServiceIds !== []) {
+                    $fallback->whereDoesntHave(
+                        'professionalServices',
+                        fn (Builder $service) => $service->whereIn('service_id', $otherMappedServiceIds)
+                    );
+                }
+
+                $fallback->where(function (Builder $text) use ($needles) {
+                    foreach ($needles as $needle) {
+                        $like = $this->like($needle);
+                        $text->orWhereHas(
+                            'profile',
+                            fn (Builder $profile) => $profile->where('specialization', 'like', $like)
+                        )->orWhereHas('professionalServices', function (Builder $service) use ($like) {
+                            $service->where('service_name', 'like', $like)
+                                ->orWhere('tags', 'like', $like);
+                        });
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function serviceIdsMappedToCategory(string $categoryKey): array
+    {
+        return $this->serviceCategoryMap()[$categoryKey] ?? [];
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function serviceIdsMappedToOtherCategories(string $categoryKey): array
+    {
+        $ids = [];
+        foreach ($this->serviceCategoryMap() as $mappedCategory => $serviceIds) {
+            if ($mappedCategory === $categoryKey) {
+                continue;
+            }
+            foreach ($serviceIds as $serviceId) {
+                $ids[] = $serviceId;
+            }
+        }
+
+        return array_values(array_unique($ids));
+    }
+
+    /**
+     * Map each live Service id to at most one Explore category key.
+     *
+     * @return array<string, list<int>>
+     */
+    private function serviceCategoryMap(): array
+    {
+        if ($this->serviceCategoryMapCache !== null) {
+            return $this->serviceCategoryMapCache;
+        }
+
+        $map = array_fill_keys(array_keys(self::CATEGORIES), []);
+
+        foreach (Service::query()->get(['id', 'name', 'slug']) as $service) {
+            $key = $this->categoryKeyForText(trim(($service->name ?? '').' '.($service->slug ?? '')));
+            if ($key === null) {
+                continue;
+            }
+            $map[$key][] = (int) $service->id;
+        }
+
+        return $this->serviceCategoryMapCache = $map;
+    }
+
     private function whereTextMatches(Builder $query, array $needles, string $kind): void
     {
         $query->where(function (Builder $inner) use ($needles, $kind) {
             foreach ($needles as $needle) {
                 $like = $this->like($needle);
-                if ($kind === 'expert') {
-                    $inner->orWhereHas('profile', fn (Builder $profile) => $profile->where('specialization', 'like', $like))
-                        ->orWhereHas('professionalServices', function (Builder $service) use ($like) {
-                            $service->where('service_name', 'like', $like)
-                                ->orWhere('tags', 'like', $like)
-                                ->orWhereHas('service', function (Builder $parent) use ($like) {
-                                    $parent->where('name', 'like', $like)->orWhere('slug', 'like', $like);
-                                });
-                        });
-                } elseif ($kind === 'programme') {
+                if ($kind === 'programme') {
                     $inner->orWhere('heading', 'like', $like)
                         ->orWhere('mini_heading', 'like', $like)
                         ->orWhere('short_description', 'like', $like);
@@ -597,6 +707,7 @@ class ExploreCatalog
                 ->get([
                     'professionals.id',
                     'profiles.specialization',
+                    'professional_services.service_id',
                     'professional_services.service_name',
                     'professional_services.tags',
                     'services.name as service_label',
@@ -604,16 +715,14 @@ class ExploreCatalog
                 ]);
             $grouped = [];
             foreach ($rows as $row) {
-                $grouped[$row->id][] = strtolower(implode(' ', array_filter([
-                    $row->specialization,
-                    $row->service_name,
-                    $row->tags,
-                    $row->service_label,
-                    $row->slug,
-                ])));
+                $grouped[$row->id][] = $row;
             }
-            foreach ($grouped as $parts) {
-                $this->incrementCategories($counts, implode(' ', $parts));
+            foreach ($grouped as $expertRows) {
+                // Prefer the linked service mapping used by whereExpertCategory.
+                $key = $this->primaryCategoryForExpertRows($expertRows);
+                if ($key !== null) {
+                    $counts[$key]++;
+                }
             }
         }
 
@@ -727,7 +836,10 @@ class ExploreCatalog
         }
     }
 
-    private function categoryKeyForText(string $text): ?string
+    /**
+     * Classify free text into at most one Explore category key.
+     */
+    public function categoryKeyForText(string $text): ?string
     {
         $haystack = strtolower($text);
         foreach (self::CATEGORIES as $key => $category) {
@@ -753,6 +865,27 @@ class ExploreCatalog
     }
 
     /**
+     * Resolve a live Service for an Explore category using the shared service map.
+     * Prefer preferred psychologist slug for mental-health when present.
+     */
+    public function resolveServiceForExploreCategory(string $categoryKey): ?Service
+    {
+        if ($categoryKey === self::PSYCHOLOGY_CATEGORY) {
+            $preferred = $this->resolvePsychologistService();
+            if ($preferred) {
+                return $preferred;
+            }
+        }
+
+        $ids = $this->serviceIdsMappedToCategory($categoryKey);
+        if ($ids === []) {
+            return null;
+        }
+
+        return Service::query()->whereIn('id', $ids)->orderBy('id')->first();
+    }
+
+    /**
      * Find a psychologist-related Service from the live catalogue (no hardcoded IDs).
      */
     public function resolvePsychologistService(): ?Service
@@ -765,7 +898,7 @@ class ExploreCatalog
             return $preferred;
         }
 
-        $needles = self::CATEGORIES[self::PSYCHOLOGY_CATEGORY]['needles'] ?? ['psycholog', 'therap', 'counsel', 'mental'];
+        $needles = self::CATEGORIES[self::PSYCHOLOGY_CATEGORY]['needles'] ?? ['psycholog', 'therap', 'mental', 'psychiatr'];
 
         return Service::query()
             ->where(function (Builder $query) use ($needles) {
@@ -777,6 +910,36 @@ class ExploreCatalog
             })
             ->orderBy('id')
             ->first();
+    }
+
+    /**
+     * @param  iterable<int, object>  $rows
+     */
+    private function primaryCategoryForExpertRows(iterable $rows): ?string
+    {
+        $map = $this->serviceCategoryMap();
+        $specialization = null;
+        $fallbackHaystack = [];
+
+        foreach ($rows as $row) {
+            $serviceId = isset($row->service_id) ? (int) $row->service_id : 0;
+            if ($serviceId > 0) {
+                foreach ($map as $key => $ids) {
+                    if (in_array($serviceId, $ids, true)) {
+                        return $key;
+                    }
+                }
+            }
+
+            $specialization = $specialization ?: ($row->specialization ?? null);
+            $fallbackHaystack[] = $row->specialization ?? null;
+            $fallbackHaystack[] = $row->service_name ?? null;
+            $fallbackHaystack[] = $row->tags ?? null;
+            $fallbackHaystack[] = $row->service_label ?? null;
+            $fallbackHaystack[] = $row->slug ?? null;
+        }
+
+        return $this->categoryKeyForText(implode(' ', array_filter($fallbackHaystack)));
     }
 
     private function selectedKinds(array $filters): array
@@ -890,7 +1053,12 @@ class ExploreCatalog
             return $path;
         }
         if (Str::startsWith($path, 'storage/')) {
-            return asset($path);
+            $path = substr($path, strlen('storage/'));
+        }
+
+        // Avoid emitting broken /storage URLs when the upload is missing locally.
+        if (!Storage::disk('public')->exists($path)) {
+            return null;
         }
 
         return asset('storage/'.$path);

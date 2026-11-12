@@ -577,6 +577,8 @@ $(document).ready(function () {
 			function onImgError(e) {
 				const el = e.target;
 				if (!el || el.tagName !== 'IMG') return;
+				// Expert/profile cards handle their own initials fallback.
+				if (el.dataset.initialsFallback === '1') return;
 				// Prevent infinite loop
 				if (el.dataset.fallbackApplied === '1') return;
 				el.dataset.fallbackApplied = '1';
