@@ -1,58 +1,71 @@
 @php
+    // Keep homepage cards aligned with ExploreCatalog category keys / Experts filters.
     $categoryCards = [
         [
             'label' => 'Astrology & Tarot',
             'tone' => 'lavender',
             'icon' => 'sun-moon',
-            'url' => route('gridlisting', ['service' => 'top-online-astrologers-india']),
+            'url' => route('professionals', ['category' => 'astrology-tarot']),
         ],
         [
             'label' => 'Mental Health & Mindset',
             'tone' => 'mint',
             'icon' => 'lotus',
-            'url' => route('gridlisting', ['service' => 'best-online-psychologists-india']),
+            'url' => route('professionals', ['category' => 'mental-health']),
         ],
         [
             'label' => 'Relationships',
             'tone' => 'blush',
             'icon' => 'heart',
+            'url' => route('professionals', ['category' => 'relationships']),
         ],
         [
             'label' => 'Career & Business',
             'tone' => 'lavender',
             'icon' => 'chart',
-            'url' => route('gridlisting', ['service' => 'best-career-counsellor-online-india']),
+            'url' => route('professionals', ['category' => 'career-business']),
         ],
         [
             'label' => 'Money & Finance',
             'tone' => 'cream',
             'icon' => 'coins',
-            'url' => route('gridlisting', ['service' => 'top-accounting-tax-filing-consultant-online-services-india']),
+            'url' => route('professionals', ['category' => 'money-finance']),
         ],
         [
             'label' => 'Health & Wellness',
             'tone' => 'mint',
             'icon' => 'leaf',
+            'url' => route('professionals', ['category' => 'health-wellness']),
         ],
         [
             'label' => 'Parenting',
             'tone' => 'blush',
             'icon' => 'family',
+            'url' => route('professionals', ['category' => 'parenting']),
         ],
         [
             'label' => 'Lifestyle',
             'tone' => 'mint',
             'icon' => 'coffee',
+            'url' => route('professionals', ['category' => 'lifestyle']),
         ],
         [
             'label' => 'Spirituality',
             'tone' => 'lavender',
             'icon' => 'lotus',
+            'url' => route('professionals', ['category' => 'spirituality']),
         ],
         [
             'label' => 'Creativity',
             'tone' => 'blue',
             'icon' => 'bulb',
+            'url' => route('professionals', ['category' => 'creativity']),
+        ],
+        [
+            'label' => 'Nutrition & Fitness',
+            'tone' => 'mint',
+            'icon' => 'leaf',
+            'url' => route('professionals', ['category' => 'nutrition-fitness']),
         ],
     ];
 @endphp

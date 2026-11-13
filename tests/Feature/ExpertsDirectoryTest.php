@@ -120,6 +120,8 @@ class ExpertsDirectoryTest extends TestCase
             ['id' => 2, 'name' => 'Psych Therapist Bo', 'email' => 'bo@example.com', 'status' => 'accepted', 'active' => 1, 'created_at' => now(), 'updated_at' => now()],
             ['id' => 3, 'name' => 'Pending Expert', 'email' => 'pending@example.com', 'status' => 'pending', 'active' => 1, 'created_at' => now(), 'updated_at' => now()],
             ['id' => 4, 'name' => 'Inactive Expert', 'email' => 'inactive@example.com', 'status' => 'accepted', 'active' => 0, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 5, 'name' => 'Archana Career Counsellor', 'email' => 'archana@example.com', 'status' => 'accepted', 'active' => 1, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 6, 'name' => 'Mental Health Only Sam', 'email' => 'sam@example.com', 'status' => 'accepted', 'active' => 1, 'created_at' => now(), 'updated_at' => now()],
         ]);
 
         DB::table('profiles')->insert([
@@ -159,24 +161,78 @@ class ExpertsDirectoryTest extends TestCase
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'professional_id' => 5,
+                'specialization' => 'Career Counsellor',
+                'experience' => '4-6',
+                'education' => 'Psychological Counselling',
+                'starting_price' => 1500,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'professional_id' => 6,
+                'specialization' => 'Mental Health Counselling (Mental and Emotional Health)',
+                'experience' => '2-4',
+                'education' => 'MA Psychology',
+                'starting_price' => 1000,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
 
         DB::table('services')->insert([
-            'id' => 1,
-            'name' => 'Career Guidance',
-            'slug' => 'qa-career-guidance',
-            'status' => 'active',
-            'created_at' => now(),
-            'updated_at' => now(),
+            [
+                'id' => 1,
+                'name' => 'Career Guidance',
+                'slug' => 'qa-career-guidance',
+                'status' => 'active',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 2,
+                'name' => 'Career Counsellor',
+                'slug' => 'best-career-counsellor-online-india',
+                'status' => 'active',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 3,
+                'name' => 'Psychologists',
+                'slug' => 'best-online-psychologists-india',
+                'status' => 'active',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
 
         DB::table('professional_services')->insert([
-            'professional_id' => 1,
-            'service_id' => 1,
-            'service_name' => 'Career Guidance',
-            'tags' => 'career,job',
-            'created_at' => now(),
-            'updated_at' => now(),
+            [
+                'professional_id' => 1,
+                'service_id' => 1,
+                'service_name' => 'Career Guidance',
+                'tags' => 'career,job',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'professional_id' => 2,
+                'service_id' => 3,
+                'service_name' => 'Psychologists',
+                'tags' => 'psychology,therapy',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'professional_id' => 5,
+                'service_id' => 2,
+                'service_name' => 'Career Counsellor',
+                'tags' => 'career,counsellor',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 
@@ -203,11 +259,17 @@ class ExpertsDirectoryTest extends TestCase
 
     public function test_category_mental_health_filter_and_empty_state(): void
     {
-        $response = $this->get(route('professionals', ['category' => 'mental-health']));
+        $response = $this->get(route('professionals', [
+            'type' => 'experts',
+            'types' => ['experts'],
+            'category' => 'mental-health',
+        ]));
 
         $response->assertOk()
             ->assertSee('Psych Therapist Bo', false)
+            ->assertSee('Mental Health Only Sam', false)
             ->assertDontSee('Career Coach Ava', false)
+            ->assertDontSee('Archana Career Counsellor', false)
             ->assertSee('aria-selected="true"', false)
             ->assertSee('Mental Health', false);
 
@@ -220,7 +282,49 @@ class ExpertsDirectoryTest extends TestCase
             ->assertSee('No matching experts', false)
             ->assertSee('View all experts', false)
             ->assertDontSee('Career Coach Ava', false)
+            ->assertDontSee('Psych Therapist Bo', false)
+            ->assertDontSee('Archana Career Counsellor', false);
+    }
+
+    public function test_mental_health_excludes_career_counsellor_service_even_with_counselling_education(): void
+    {
+        $response = $this->get(route('professionals', [
+            'type' => 'experts',
+            'types' => ['experts'],
+            'category' => 'mental-health',
+        ]));
+
+        $response->assertOk()
+            ->assertDontSee('Archana Career Counsellor', false);
+
+        $career = $this->get(route('professionals', [
+            'type' => 'experts',
+            'category' => 'career-business',
+        ]));
+
+        $career->assertOk()
+            ->assertSee('Archana Career Counsellor', false)
+            ->assertSee('Career Coach Ava', false)
+            ->assertDontSee('Psych Therapist Bo', false)
+            ->assertDontSee('Mental Health Only Sam', false);
+    }
+
+    public function test_switching_categories_replaces_result_set(): void
+    {
+        $mental = $this->get(route('professionals', ['category' => 'mental-health']));
+        $mental->assertOk()
+            ->assertSee('Psych Therapist Bo', false)
+            ->assertDontSee('Career Coach Ava', false);
+
+        $career = $this->get(route('professionals', ['category' => 'career-business']));
+        $career->assertOk()
+            ->assertSee('Career Coach Ava', false)
             ->assertDontSee('Psych Therapist Bo', false);
+
+        $cleared = $this->get(route('professionals'));
+        $cleared->assertOk()
+            ->assertSee('Career Coach Ava', false)
+            ->assertSee('Psych Therapist Bo', false);
     }
 
     public function test_experience_filter_uses_exact_profile_buckets(): void

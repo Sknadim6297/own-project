@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Service;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Schema;
 
@@ -137,21 +136,7 @@ class ExpertsDiscovery
                 return null;
             }
 
-            $needles = ExploreCatalog::CATEGORIES[$categoryKey]['needles'] ?? [];
-            if ($needles === []) {
-                return null;
-            }
-
-            return Service::query()
-                ->where(function (Builder $query) use ($needles) {
-                    foreach ($needles as $needle) {
-                        $like = '%'.$needle.'%';
-                        $query->orWhere('slug', 'like', $like)
-                            ->orWhere('name', 'like', $like);
-                    }
-                })
-                ->orderBy('id')
-                ->first();
+            return app(ExploreCatalog::class)->resolveServiceForExploreCategory($categoryKey);
         } catch (QueryException) {
             return null;
         }
