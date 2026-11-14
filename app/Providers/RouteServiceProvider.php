@@ -42,8 +42,8 @@ class RouteServiceProvider extends ServiceProvider
             ->name('admin.')
             ->group(base_path('routes/admin.php'));
 
-        // User routes with the correct guard
-        Route::middleware(['web', 'auth:user'])
+        // User routes with the correct guard + Terms acceptance gate
+        Route::middleware(['web', 'auth:user', 'terms.accepted'])
             ->prefix('user')
             ->name('user.')
             ->group(base_path('routes/user.php'));

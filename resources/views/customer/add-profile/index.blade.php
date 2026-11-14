@@ -53,10 +53,6 @@
                     <p class="mt-1 break-all text-sm text-text-secondary">{{ $displayEmail }}</p>
                     <span class="mt-3 inline-flex rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-secondary">Customer</span>
                 </div>
-                <a href="{{ route('user.profile.edit', ['profile' => $profile->id]) }}" class="inline-flex min-h-10 items-center justify-center gap-2 self-start rounded-control border border-border bg-surface px-3 text-sm font-semibold text-text-primary transition-colors hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring sm:self-center">
-                    <x-tazen-v2.panel.icon name="user" class="size-4 text-brand-primary" />
-                    Edit details
-                </a>
             </div>
         </section>
 

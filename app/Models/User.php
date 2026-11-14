@@ -30,6 +30,8 @@ class User extends Authenticatable
         'customer_onboarding_completed_at',
         'professional_onboarding_completed_at',
         'onboarding_data',
+        'terms_accepted_at',
+        'terms_version',
     ];
 
     /**
@@ -55,10 +57,20 @@ class User extends Authenticatable
         'customer_onboarding_completed_at' => 'datetime',
         'professional_onboarding_completed_at' => 'datetime',
         'onboarding_data' => 'array',
+        'terms_accepted_at' => 'datetime',
     ];
+
     public function customerProfile()
     {
         return $this->hasOne(CustomerProfile::class);
+    }
+
+    /**
+     * Whether this customer has accepted the currently required Terms version.
+     */
+    public function hasAcceptedCurrentTerms(): bool
+    {
+        return app(\App\Services\Terms\TermsAcceptanceService::class)->hasAcceptedCurrent($this);
     }
     
     /**

@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	@php
 		$brandName = config('yuktione.name', 'YuktiOne');
-		$isAuthenticationRoute = request()->routeIs('login', 'professional.login');
+		$isAuthenticationRoute = request()->routeIs('login', 'professional.login', 'terms.accept.show');
 		$isCustomerPanelFlow = request()->routeIs(
 			'user.booking',
 			'user.booking.summary',

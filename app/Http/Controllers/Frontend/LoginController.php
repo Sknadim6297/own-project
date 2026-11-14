@@ -8,6 +8,7 @@ use App\Models\ActiveSession;
 use App\Models\OtpVerification;
 use App\Services\OtpService;
 use App\Services\YuktiRewards\ReferralAttributionService;
+use App\Services\Terms\TermsAcceptanceService;
 use App\Support\Auth\IntendedUrl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,17 +24,31 @@ class LoginController extends Controller
     protected $otpService;
 
     protected ReferralAttributionService $referralAttributions;
+
+    protected TermsAcceptanceService $termsAcceptance;
     
-    public function __construct(OtpService $otpService, ReferralAttributionService $referralAttributions)
-    {
+    public function __construct(
+        OtpService $otpService,
+        ReferralAttributionService $referralAttributions,
+        TermsAcceptanceService $termsAcceptance
+    ) {
         $this->otpService = $otpService;
         $this->referralAttributions = $referralAttributions;
+        $this->termsAcceptance = $termsAcceptance;
     }
     
     // Show login form
     public function showLoginForm()
     {
         if (Auth::guard('user')->check()) {
+            $user = Auth::guard('user')->user();
+
+            if ($this->termsAcceptance->shouldEnforceAfterLogin()
+                && ! $this->termsAcceptance->hasAcceptedCurrent($user)
+            ) {
+                return redirect()->route('terms.accept.show');
+            }
+
             return redirect(IntendedUrl::resolve('user'));
         }
 
@@ -111,7 +126,20 @@ class LoginController extends Controller
 
                 $this->registerUserSession($user->id, $request);
 
+                // Persist login-page Terms checkbox acceptance when provided.
+                if ($request->boolean('terms_accepted') && $this->termsAcceptance->isTrackingAvailable()) {
+                    $this->termsAcceptance->accept($user);
+                }
+
                 $redirectUrl = $this->resolvePostLoginRedirect($request);
+
+                if ($this->termsAcceptance->shouldEnforceAfterLogin()
+                    && ! $this->termsAcceptance->hasAcceptedCurrent($user->fresh())
+                ) {
+                    // Preserve the intended protected destination for after acceptance.
+                    session([IntendedUrl::USER_KEY => $redirectUrl]);
+                    $redirectUrl = route('terms.accept.show');
+                }
 
                 session()->flash('success', 'Login successful — Welcome back to Yuktione!');
 
@@ -143,7 +171,7 @@ class LoginController extends Controller
     
     /**
      * Resolve where a customer should land after a successful login.
-     * Prefer a guard-safe intended destination, then booking resume, else Customer Dashboard.
+     * Prefer a guard-safe intended destination, then booking resume, else home (`/`).
      * Query/body `redirect` values are ignored (open-redirect risk).
      */
     private function resolvePostLoginRedirect(Request $request): string

@@ -23,6 +23,7 @@ use App\Http\Controllers\Frontend\AuthController;
 // Frontend Controllers
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\LoginController;
+use App\Http\Controllers\Frontend\TermsAcceptanceController;
 use App\Http\Controllers\Frontend\EventController;
 use App\Http\Controllers\Frontend\ServiceController;
 use App\Http\Controllers\Frontend\SearchController;
@@ -204,7 +205,7 @@ Route::post('tools/career-interest/start', [\App\Http\Controllers\Frontend\Caree
 Route::get('tools/career-interest', [\App\Http\Controllers\Frontend\CareerInterestController::class, 'welcome'])->name('tools.career-interest');
 
 // Tarot Reflection (Phase 2B) — auth required; unpublished in catalogue until Phase 2C/publish.
-Route::middleware(['auth:user'])->prefix('tools/tarot')->name('tools.tarot.')->group(function () {
+Route::middleware(['auth:user', 'terms.accepted'])->prefix('tools/tarot')->name('tools.tarot.')->group(function () {
     Route::get('/', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'intro'])->name('intro');
     Route::post('/start', [\App\Http\Controllers\Frontend\TarotReflectionController::class, 'start'])
         ->middleware('throttle:30,1')
@@ -637,6 +638,17 @@ Route::get('blog-post', function () {
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::get('register', [LoginController::class, 'showRegisterForm'])->name('register');
 
+// Post-login Terms & Conditions acceptance (authenticated customers only).
+Route::middleware(['auth:user'])->group(function () {
+    Route::get('terms/accept', [TermsAcceptanceController::class, 'show'])->name('terms.accept.show');
+    Route::post('terms/accept', [TermsAcceptanceController::class, 'accept'])
+        ->middleware('throttle:10,1')
+        ->name('terms.accept');
+    Route::post('terms/decline', [TermsAcceptanceController::class, 'decline'])
+        ->middleware('throttle:10,1')
+        ->name('terms.decline');
+});
+
 // Phase 3D — referral deep links (capture only; no points granted).
 Route::middleware('throttle:60,1')->group(function () {
     Route::get('r/{code}', [\App\Http\Controllers\Frontend\ReferralLandingController::class, 'general'])
@@ -689,7 +701,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/onboarding/reset-professional', [OnboardingController::class, 'resetProfessionalOnboarding'])->name('onboarding.reset.professional');
 });
 
-Route::middleware(['auth:user'])->group(function () {
+Route::middleware(['auth:user', 'terms.accepted'])->group(function () {
     // Upcoming appointments routes
     Route::get('/upcoming-appointments', [UpcomingAppointmentController::class, 'index'])->name('user.upcoming-appointment.index');
     Route::post('/customer/upload-document', [UpcomingAppointmentController::class, 'uploadDocument'])->name('user.upload-document');
@@ -838,7 +850,7 @@ Route::prefix('professional')->middleware(['auth:professional'])->name('professi
         ->name('reviews.index');
 });
 Route::get('/search-services', [HomeController::class, 'searchServices'])->name('search.services');
-Route::middleware(['auth:user'])->group(function () {
+Route::middleware(['auth:user', 'terms.accepted'])->group(function () {
     // Legacy compatibility URI; mirrors user.event.booking.success ownership checks.
     Route::get('event-booking/success', [\App\Http\Controllers\Customer\EventController::class, 'bookingSuccess'])
         ->name('event.booking.success');
@@ -859,7 +871,7 @@ Route::get('/check-auth-status', function () {
 
 Route::post('/force-login', [App\Http\Controllers\Frontend\LoginController::class, 'forceLogin'])->middleware('throttle:5,1')->name('force.login');
 
-Route::middleware(['auth:user', 'check.active.session'])->group(function () {
+Route::middleware(['auth:user', 'terms.accepted', 'check.active.session'])->group(function () {
     Route::get('/user/dashboard', function () {
         return view('user.dashboard');
     })->name('user.dashboard');
