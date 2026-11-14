@@ -1,0 +1,161 @@
+﻿===SHEET: Overview===
+R1|Calculator | Primary Result | Inputs | Calculation Logic | Validation / UX | Developer Notes
+R2|Monthly Money Planner | Free cash + savings rate | Income; essential expenses; lifestyle; EMIs; other recurring; investments | Total expenses=sum expense categories; total outflow=expenses+investments; free cash=income-total outflow; savings rate=(investments+max(free cash,0))/income | Income > 0; all monetary inputs >= 0; configurable health thresholds | Use Indian ₹ formatting; show income/outflow/free cash prominently
+R3|Net Worth Calculator | Net worth | Cash; bank; FD; MF; stocks; gold; property; EPF/NPS; loans; credit cards; other debt | Total assets=sum assets; total liabilities=sum liabilities; net worth=assets-liabilities; debt/asset=liabilities/assets | Assets/liabilities >= 0; if assets=0 do not divide | Allow estimated values; show asset/liability composition
+R4|Emergency Fund Calculator | Recommended fund + shortfall | Essential monthly expenses; target months; current emergency savings; monthly saving capacity | Target=essential expenses×target months; coverage=current savings/essential expenses; shortfall=max(target-current,0); months to target=shortfall/monthly capacity | Essential expenses > 0; target months configurable; capacity can be 0 | Default target can be 6 months; distinguish liquid emergency savings from investments
+R5|Financial Goal Calculator | Monthly investment required | Goal type; current cost; years; inflation; current earmarked savings; expected return | Future goal cost=current cost×(1+inflation)^years; FV current savings=current savings×(1+return)^years; required corpus=max(future cost-FV savings,0); monthly investment via PMT | Years > 0; inflation/return >= 0; show assumptions | Returns are illustrative, not guaranteed; save goal for future tracking
+R6|Debt & EMI Calculator | EMI + interest saved | Loan amount; annual interest; tenure; current EMI; extra payment | Monthly rate=annual rate/12/100; EMI=P×r×(1+r)^n/((1+r)^n-1); if r=0 then P/n; accelerated payoff via amortisation | Principal > 0; rate >= 0; tenure > 0; validate extra payment | Compare standard vs accelerated payoff; lender rules may differ
+R7|Retirement Calculator | Corpus required + monthly investment | Current age; retirement age; expenses; current retirement assets; inflation; pre-retirement return; post-retirement return; life expectancy | Future expenses=current expenses×(1+inflation)^years; retirement corpus from explicit retirement cash flows; current assets grow at pre-retirement return; monthly investment bridges gap | Retirement age > current age; life expectancy > retirement age | Show assumptions prominently; scenario testing recommended
+R8|Inflation Calculator | Future cost | Current amount; inflation; years | Future cost=current amount×(1+inflation)^years; purchasing power=current amount/(1+inflation)^years | Amount >= 0; inflation >= 0; years >= 0 | Keep simple; cross-link to Financial Goal
+R9|Savings & Investment Calculator | Estimated future corpus | Initial investment; monthly investment; years; annual return | n=years×12; r=annual return/12; FV initial=initial×(1+r)^n; FV contributions=monthly×(((1+r)^n-1)/r); if r=0 use monthly×n; total FV=sum | Contributions >= 0; years > 0; return >= 0 | Show total invested vs estimated gains; no guarantee language
+
+===SHEET: 01_Money_Planner===
+R1|Field | Type | Required | Validation | Formula / Logic | UI
+R2|Monthly income | Currency | Yes | >0 | Base monthly take-home income | ₹ input
+R3|Essential expenses | Currency | Yes | >=0 | Sum essential categories | Category cards
+R4|Lifestyle/other expenses | Currency | Yes | >=0 | Sum lifestyle + other | Category cards
+R5|EMIs | Currency | No | >=0 | Included in total expenses | Optional
+R6|Monthly investments | Currency | Yes | >=0 | Savings/investment contribution | Separate card
+R7|Free cash | Output | — | — | Income - total outflow | Primary result
+R8|Savings rate | Output | — | — | (Investments + max(Free cash,0))/Income | % output
+R9|Health status | Output | — | — | Configurable thresholds | Green/amber/red
+
+===SHEET: 02_Net_Worth===
+R1|Field | Type | Required | Validation | Formula / Logic | UI
+R2|Assets | Currency | Yes | >=0 | Sum all assets | Progressive entry
+R3|Liabilities | Currency | Yes | >=0 | Sum all liabilities | Progressive entry
+R4|Net worth | Output | — | — | Assets - Liabilities | Primary result
+R5|Debt/asset ratio | Output | — | Assets > 0 | Liabilities / Assets | % output
+
+===SHEET: 03_Emergency_Fund===
+R1|Field | Type | Required | Validation | Formula / Logic | UI
+R2|Essential monthly expenses | Currency | Yes | >0 | Monthly essential cost | ₹ input
+R3|Target months | Number | Yes | >0 | Configurable target; e.g. 3/6/9/12 | Segmented control
+R4|Current emergency savings | Currency | Yes | >=0 | Liquid emergency savings | ₹ input
+R5|Monthly saving capacity | Currency | No | >=0 | Amount available for fund building | ₹ input
+R6|Target fund | Output | — | — | Essential expenses × target months | Primary result
+R7|Current coverage | Output | — | — | Current savings / essential expenses | Months
+R8|Shortfall | Output | — | — | max(Target fund - current savings,0) | Action metric
+R9|Months to target | Output | — | — | Shortfall / monthly saving capacity | If capacity > 0
+
+===SHEET: 04_Financial_Goal===
+R1|Field | Type | Required | Validation | Formula / Logic | UI
+R2|Goal type | Enum | Yes | Must be valid option | Home/Education/Car/Marriage/Vacation/Child/Custom | Cards
+R3|Current goal cost | Currency | Yes | >0 | Today's estimated cost | ₹ input
+R4|Years | Number | Yes | >0 | Goal horizon | Duration selector
+R5|Inflation | Percent | Yes | >=0 | Assumption | Editable
+R6|Current earmarked savings | Currency | Yes | >=0 | Starting corpus | ₹ input
+R7|Expected return | Percent | Yes | >=0 | Illustrative assumption | Editable
+R8|Future goal cost | Output | — | — | Current cost × (1+inflation)^years | Primary planning figure
+R9|FV current savings | Output | — | — | Current savings × (1+return)^years | Supporting
+R10|Required corpus | Output | — | — | max(Future goal cost - FV current savings,0) | Supporting
+R11|Monthly investment | Output | — | — | PMT using monthly return; if r=0, corpus/months | Primary action
+
+===SHEET: 05_Debt_EMI===
+R1|Field | Type | Required | Validation | Formula / Logic | UI
+R2|Principal | Currency | Yes | >0 | Loan amount | ₹ input
+R3|Annual interest rate | Percent | Yes | >=0 | Annual rate | % input
+R4|Tenure | Number | Yes | >0 | Years × 12 | Duration
+R5|Current EMI | Currency | No | >=0 | Existing EMI if analysing current loan | Optional
+R6|Extra payment | Currency | No | >=0 | Monthly extra payment | Optional
+R7|Monthly rate | Calculated | — | — | Annual rate / 12 / 100 | Internal
+R8|EMI | Output | — | — | P×r×(1+r)^n / ((1+r)^n - 1); if r=0 P/n | Primary result
+R9|Standard interest | Output | — | — | EMI×n - principal | Supporting
+R10|Accelerated payoff | Output | — | — | Amortisation iteration with extra payment | Comparison
+R11|Interest saved | Output | — | — | Standard interest - accelerated interest | Action metric
+R12|Months saved | Output | — | — | Standard months - accelerated months | Action metric
+
+===SHEET: 06_Retirement===
+R1|Field | Type | Required | Validation | Formula / Logic | UI
+R2|Current age | Number | Yes | >0 | User age | Whole number
+R3|Retirement age | Number | Yes | >current age | Years to retirement | Whole number
+R4|Current monthly expenses | Currency | Yes | >0 | Lifestyle baseline | ₹ input
+R5|Current retirement assets | Currency | Yes | >=0 | Existing retirement corpus | ₹ input
+R6|Inflation | Percent | Yes | >=0 | Assumption | Editable
+R7|Pre-retirement return | Percent | Yes | >=0 | Assumption | Scenario
+R8|Post-retirement return | Percent | Yes | >=0 | Assumption | Scenario
+R9|Life expectancy | Number | Yes | >retirement age | Retirement duration | Whole number
+R10|Future monthly expenses | Output | — | — | Current expenses×(1+inflation)^years | Result
+R11|Retirement corpus | Output | — | — | PV of retirement-year cash flows using post-retirement return | Primary result
+R12|Monthly investment | Output | — | — | Bridge remaining corpus using pre-retirement return | Primary action
+
+===SHEET: 07_Inflation===
+R1|Field | Type | Required | Validation | Formula / Logic | UI
+R2|Current amount | Currency | Yes | >=0 | Starting amount | ₹ input
+R3|Inflation | Percent | Yes | >=0 | Annual inflation assumption | % input
+R4|Years | Number | Yes | >=0 | Time period | Duration
+R5|Future cost | Output | — | — | Amount×(1+inflation)^years | Primary result
+R6|Purchasing power | Output | — | — | Amount/(1+inflation)^years | Optional
+
+===SHEET: 08_Savings_Investment===
+R1|Field | Type | Required | Validation | Formula / Logic | UI
+R2|Initial investment | Currency | Yes | >=0 | Starting amount | ₹ input
+R3|Monthly investment | Currency | Yes | >=0 | Recurring contribution | ₹ input
+R4|Years | Number | Yes | >0 | Months=years×12 | Duration
+R5|Annual return | Percent | Yes | >=0 | Illustrative assumption | % input
+R6|Monthly rate | Calculated | — | — | Annual return / 12 | Internal
+R7|FV initial | Output | — | — | Initial×(1+r)^n | Supporting
+R8|FV contributions | Output | — | — | Monthly×(((1+r)^n-1)/r); if r=0 monthly×n | Supporting
+R9|Future corpus | Output | — | — | FV initial + FV contributions | Primary result
+R10|Estimated gains | Output | — | — | Future corpus - total invested | Supporting
+
+===SHEET: Screen_Map===
+R1|Calculator | Screen ID | Screen | Purpose | Primary CTA | State/notes
+R2|Common | PFM_HOME | Money & Finance Home | Discover PFM calculators | Open tool | Empty/loading not needed
+R3|Monthly Planner | MP01 | Intro | Explain planner | Start | Default
+R4|Monthly Planner | MP02 | Income | Capture income | Continue | Validation
+R5|Monthly Planner | MP03 | Expenses | Capture spending | Continue | Validation
+R6|Monthly Planner | MP04 | Investments | Capture investments | Calculate | Validation
+R7|Monthly Planner | MP05 | Result | Show money picture | See insights | Success
+R8|Monthly Planner | MP06 | Insights | Explain result | Save plan | Success
+R9|Net Worth | NW01 | Intro | Explain net worth | Calculate | Default
+R10|Net Worth | NW02 | Assets | Capture assets | Continue | Validation
+R11|Net Worth | NW03 | Liabilities | Capture debt | Calculate | Validation
+R12|Net Worth | NW04 | Result | Show net worth | See breakdown | Success
+R13|Emergency Fund | EF01 | Intro | Explain emergency fund | Calculate | Default
+R14|Emergency Fund | EF02 | Expenses | Capture essentials | Continue | Validation
+R15|Emergency Fund | EF03 | Savings | Capture current savings | Calculate | Validation
+R16|Emergency Fund | EF04 | Result | Show target and gap | See plan | Success
+R17|Emergency Fund | EF05 | Plan | Show saving path | Save plan | Success
+R18|Financial Goal | FG01 | Goal Type | Select goal | Choose goal | Default
+R19|Financial Goal | FG02 | Goal Inputs | Cost + timeline | Continue | Validation
+R20|Financial Goal | FG03 | Assumptions | Inflation + return | Calculate | Validation
+R21|Financial Goal | FG04 | Result | Show required monthly investment | See scenarios | Success
+R22|Financial Goal | FG05 | Scenarios | Compare assumptions | Save goal | Success
+R23|Debt & EMI | DE01 | Intro | Explain loan analysis | Start | Default
+R24|Debt & EMI | DE02 | Loan Inputs | Principal/rate/tenure | Review | Validation
+R25|Debt & EMI | DE03 | Review | Confirm inputs | Calculate | Review
+R26|Debt & EMI | DE04 | EMI Result | Show EMI/interest | Compare payoff | Success
+R27|Debt & EMI | DE05 | Payoff Comparison | Show extra-payment impact | See chart | Success
+R28|Debt & EMI | DE06 | Chart | Repayment visual | Save result | Success
+R29|Retirement | RT01 | Intro | Explain retirement estimate | Start | Default
+R30|Retirement | RT02 | Profile | Age + expenses + assets | Continue | Validation
+R31|Retirement | RT03 | Assumptions | Inflation + returns | Calculate | Validation
+R32|Retirement | RT04 | Result | Corpus + monthly investment | See scenarios | Success
+R33|Retirement | RT05 | Readiness | Score + actions | Save plan | Success
+R34|Inflation | IN01 | Inputs | Amount/rate/years | Calculate | Validation
+R35|Inflation | IN02 | Result | Future cost | Use for a goal | Success
+R36|Inflation | IN03 | Takeaway | Explain impact | Open Goal Calculator | Success
+R37|Savings & Investment | SI01 | Intro | Explain growth estimate | Start | Default
+R38|Savings & Investment | SI02 | Inputs | Initial/monthly/time/return | Calculate | Validation
+R39|Savings & Investment | SI03 | Result | Future corpus | See growth | Success
+R40|Savings & Investment | SI04 | Growth | Show chart | Compare scenarios | Success
+R41|Savings & Investment | SI05 | Scenarios | Compare return assumptions | Save result | Success
+
+===SHEET: QA_Test_Cases===
+R1|ID | Calculator | Test | Expected result
+R2|MP-01 | Monthly Planner | Income 80000; expenses 50000; investments 15000 | Free cash 15000; savings rate 37.5%
+R3|MP-02 | Monthly Planner | Income = 0 | Block calculation and show validation
+R4|NW-01 | Net Worth | Assets 10L; liabilities 4L | Net worth 6L
+R5|NW-02 | Net Worth | Assets = 0 | Do not divide by zero for debt/asset ratio
+R6|EF-01 | Emergency Fund | Expenses 45000; target 6 months | Target fund 270000
+R7|EF-02 | Emergency Fund | Current savings 150000; target 270000 | Shortfall 120000
+R8|FG-01 | Financial Goal | Inflation 0% | Future cost remains current cost
+R9|FG-02 | Financial Goal | Return 0% | Monthly investment = required corpus / months
+R10|DE-01 | Debt & EMI | Rate 0% | EMI = principal / number of payments
+R11|DE-02 | Debt & EMI | Extra payment entered | Show accelerated payoff and interest saved
+R12|RT-01 | Retirement | Retirement age <= current age | Validation error
+R13|IN-01 | Inflation | Inflation 0%; years 10 | Future cost equals current amount
+R14|SI-01 | Savings | Return 0% | Future corpus = initial + monthly×months
+R15|SI-02 | Savings | Monthly contribution 0 | Future corpus reflects initial investment growth only
+

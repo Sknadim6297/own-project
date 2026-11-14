@@ -12,7 +12,11 @@ class AccountRecovery
 
     public const UNREGISTERED_MESSAGE = 'This mobile number is not registered on our portal. Please register and complete your onboarding to continue.';
 
-    public const SENT_MESSAGE = 'Password reset instructions have been sent to the email address on this account.';
+    /**
+     * Generic confirmation shown for every customer email recovery attempt
+     * (known or unknown) to avoid account enumeration.
+     */
+    public const SENT_MESSAGE = 'If an account exists for that email address, we have sent password reset instructions.';
 
     public const SEND_FAILED = "We couldn't send the reset email right now. Please try again in a moment.";
 
@@ -32,6 +36,28 @@ class AccountRecovery
         return $this->matchingCustomers($phone)->first(function (User $user) {
             return $this->customerRegistrationIsComplete($user);
         });
+    }
+
+    /**
+     * Find a completed customer account by email for password recovery.
+     */
+    public function registeredCustomerByEmail(string $email): ?User
+    {
+        $normalized = strtolower(trim($email));
+
+        if ($normalized === '' || ! filter_var($normalized, FILTER_VALIDATE_EMAIL)) {
+            return null;
+        }
+
+        $user = User::query()
+            ->whereRaw('LOWER(email) = ?', [$normalized])
+            ->first();
+
+        if (! $user || ! $this->customerRegistrationIsComplete($user)) {
+            return null;
+        }
+
+        return $user;
     }
 
     public function registeredProfessional(string $phone): ?Professional

@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Tool;
 use App\Models\ToolCategory;
+use App\Support\ParentingSpirituality\PsCatalog;
+use App\Support\Pfm\PfmCatalog;
 use Illuminate\Support\Facades\DB;
 
 class ToolRegistryRegistrar
@@ -15,6 +17,8 @@ class ToolRegistryRegistrar
             $this->registerCareerGuidance();
             $this->registerNutrition();
             $this->registerAstrologyTarot();
+            $this->registerMoneyFinance();
+            $this->registerParentingSpirituality();
         });
     }
 
@@ -164,6 +168,76 @@ class ToolRegistryRegistrar
                 'display_order' => 1,
             ],
         ]);
+    }
+
+    private function registerMoneyFinance(): void
+    {
+        $category = ToolCategory::query()->firstOrCreate(
+            ['slug' => 'money-finance'],
+            [
+                'name' => 'Money & Finance',
+                'description' => 'Personal finance calculators. Saved results stay private to each user.',
+                'icon' => 'ri-wallet-3-line',
+                'is_active' => true,
+                'display_order' => 5,
+            ]
+        );
+
+        $tools = [];
+        foreach (PfmCatalog::TOOLS as $tool) {
+            $tools[] = [
+                'slug' => $tool['slug'],
+                'name' => $tool['name'],
+                'description' => $tool['description'],
+                'icon' => $tool['icon'],
+                'display_order' => $tool['display_order'],
+                'status' => 'active',
+                'route_name' => $tool['route'],
+                'is_implemented' => true,
+            ];
+        }
+
+        $this->registerTools($category, PfmCatalog::MODULE_KEY, $tools);
+    }
+
+    private function registerParentingSpirituality(): void
+    {
+        $categories = [
+            'parenting' => [
+                'name' => 'Parenting',
+                'description' => 'Practical parenting reflection and planning tools. Saved results stay private.',
+                'icon' => 'ri-parent-line',
+                'display_order' => 6,
+            ],
+            'spirituality' => [
+                'name' => 'Spirituality',
+                'description' => 'Secular mindfulness and values tools for calm reflection. Saved results stay private.',
+                'icon' => 'ri-leaf-line',
+                'display_order' => 7,
+            ],
+        ];
+
+        foreach ($categories as $slug => $meta) {
+            $category = ToolCategory::query()->firstOrCreate(
+                ['slug' => $slug],
+                array_merge($meta, ['is_active' => true])
+            );
+
+            $tools = [];
+            foreach (PsCatalog::toolsForCategory($slug) as $tool) {
+                $tools[] = [
+                    'slug' => $tool['slug'],
+                    'name' => $tool['name'],
+                    'description' => $tool['description'],
+                    'icon' => $tool['icon'],
+                    'display_order' => $tool['display_order'],
+                    'status' => 'active',
+                    'route_name' => $tool['route'],
+                    'is_implemented' => true,
+                ];
+            }
+            $this->registerTools($category, $slug, $tools);
+        }
     }
 
     /**

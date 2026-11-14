@@ -8,19 +8,19 @@
         : ($professional
             ? \App\Models\Profile::where('professional_id', $professional->id)->first()
             : null);
+    $defaultAvatar = \App\Helpers\ImageHelper::publicUrl('frontend/assets/img/avatar.jpg');
     $profilePhoto = $user
-        ? ($profile?->profile_image
-            ? asset($profile->profile_image)
-            : ($user->profile_photo_path
-                ? asset('uploads/user_images/' . $user->profile_photo_path)
-                : asset('frontend/assets/img/avatar.jpg')))
+        ? \App\Helpers\ImageHelper::customerAvatarUrl($user, $profile, 'frontend/assets/img/avatar.jpg')
         : ($professional
-            ? ($profile?->photo
-                ? asset('storage/' . $profile->photo)
-                : ($professional->photo
-                    ? asset('storage/' . $professional->photo)
-                    : asset('frontend/assets/img/avatar.jpg')))
+            ? \App\Helpers\ImageHelper::getProfileImageUrl($profile, 'frontend/assets/img/avatar.jpg')
             : null);
+    $accountInitials = $account
+        ? strtoupper(collect(preg_split('/\s+/', trim((string) $account->name)) ?: [])
+            ->filter()
+            ->take(2)
+            ->map(fn ($part) => mb_substr($part, 0, 1))
+            ->implode(''))
+        : '';
     $messagesUrl = $user
         ? route('user.admin-chat.index')
         : ($professional ? route('professional.admin-chat.index') : null);
@@ -164,7 +164,19 @@
                         @endif
                         <div class="yk-navbar__account" data-account-menu>
                             <button class="yk-navbar__account-toggle" type="button" aria-expanded="false" aria-haspopup="menu" aria-controls="tazen-account-menu" data-account-toggle>
-                                <img src="{{ $profilePhoto }}" alt="" width="36" height="36">
+                                @if ($profilePhoto)
+                                    <img
+                                        src="{{ $profilePhoto }}"
+                                        alt=""
+                                        width="36"
+                                        height="36"
+                                        data-fallback-avatar="{{ $defaultAvatar }}"
+                                        onerror="this.onerror=null;this.src=this.dataset.fallbackAvatar||'';if(!this.getAttribute('src')){this.style.display='none';var s=this.nextElementSibling;if(s&&s.classList.contains('yk-navbar__avatar-fallback')){s.hidden=false;}}"
+                                    >
+                                    <span class="yk-navbar__avatar-fallback" aria-hidden="true" hidden>{{ $accountInitials !== '' ? $accountInitials : 'YO' }}</span>
+                                @else
+                                    <span class="yk-navbar__avatar-fallback" aria-hidden="true">{{ $accountInitials !== '' ? $accountInitials : 'YO' }}</span>
+                                @endif
                                 <span class="yk-navbar__account-copy">
                                     <span class="yk-navbar__account-name">{{ $account->name }}</span>
                                     <span class="yk-navbar__account-role">{{ $accountRole }}</span>

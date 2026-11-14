@@ -18,7 +18,6 @@ use App\Http\Controllers\CurrencyController;
 
 // Auth Controllers
 use App\Http\Controllers\Auth\AdminLoginController;
-use App\Http\Controllers\Frontend\AuthController;
 
 // Frontend Controllers
 use App\Http\Controllers\Frontend\HomeController;
@@ -162,6 +161,55 @@ Route::post('tools/water-intake/entries', [\App\Http\Controllers\Frontend\WaterI
 Route::put('tools/water-intake/entries/{entry}', [\App\Http\Controllers\Frontend\WaterIntakeController::class, 'update'])->name('tools.water-intake.entries.update');
 Route::delete('tools/water-intake/entries/{entry}', [\App\Http\Controllers\Frontend\WaterIntakeController::class, 'destroy'])->name('tools.water-intake.entries.destroy');
 Route::get('tools/water-intake', [\App\Http\Controllers\Frontend\WaterIntakeController::class, 'dashboard'])->name('tools.water-intake');
+
+Route::get('tools/pfm', [\App\Http\Controllers\Frontend\PfmToolController::class, 'hub'])->name('tools.pfm');
+
+foreach ([
+    'monthly-money-planner' => 'money-planner',
+    'net-worth-calculator' => 'net-worth',
+    'emergency-fund-calculator' => 'emergency-fund',
+    'financial-goal-calculator' => 'financial-goal',
+    'debt-emi-calculator' => 'debt-emi',
+    'retirement-calculator' => 'retirement',
+    'inflation-calculator' => 'inflation',
+    'savings-investment-calculator' => 'savings-investment',
+] as $pfmToolKey => $pfmRouteKey) {
+    $pfmPrefix = 'tools/pfm/'.$pfmRouteKey;
+    $pfmName = 'tools.pfm.'.$pfmRouteKey;
+    Route::get($pfmPrefix.'/history', [\App\Http\Controllers\Frontend\PfmToolController::class, 'history'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.history');
+    Route::get($pfmPrefix.'/history/{calculation}', [\App\Http\Controllers\Frontend\PfmToolController::class, 'show'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.history.show');
+    Route::delete($pfmPrefix.'/history/{calculation}', [\App\Http\Controllers\Frontend\PfmToolController::class, 'destroy'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.history.destroy');
+    Route::get($pfmPrefix.'/continue/{calculation}', [\App\Http\Controllers\Frontend\PfmToolController::class, 'continueSaved'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.continue');
+    Route::get($pfmPrefix.'/finish', [\App\Http\Controllers\Frontend\PfmToolController::class, 'finish'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.finish');
+    Route::post($pfmPrefix.'/save', [\App\Http\Controllers\Frontend\PfmToolController::class, 'save'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.save');
+    Route::post($pfmPrefix.'/recalculate', [\App\Http\Controllers\Frontend\PfmToolController::class, 'recalculate'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.recalculate');
+    Route::get($pfmPrefix.'/results', [\App\Http\Controllers\Frontend\PfmToolController::class, 'results'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.results');
+    Route::post($pfmPrefix.'/calculate', [\App\Http\Controllers\Frontend\PfmToolController::class, 'calculate'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.calculate');
+    Route::get($pfmPrefix, [\App\Http\Controllers\Frontend\PfmToolController::class, 'create'])->defaults('toolKey', $pfmToolKey)->name($pfmName);
+}
+
+Route::get('tools/ps', [\App\Http\Controllers\Frontend\PsToolController::class, 'hub'])->name('tools.ps');
+
+foreach ([
+    'parenting-stress-check' => 'stress-check',
+    'child-routine-planner' => 'routine-planner',
+    'parent-child-conversation-guide' => 'conversation-guide',
+    'daily-mindfulness-calm' => 'mindfulness',
+    'purpose-values-finder' => 'values-finder',
+] as $psToolKey => $psRouteKey) {
+    $psPrefix = 'tools/ps/'.$psRouteKey;
+    $psName = 'tools.ps.'.$psRouteKey;
+    Route::get($psPrefix.'/history', [\App\Http\Controllers\Frontend\PsToolController::class, 'history'])->defaults('toolKey', $psToolKey)->name($psName.'.history');
+    Route::get($psPrefix.'/history/{result}', [\App\Http\Controllers\Frontend\PsToolController::class, 'show'])->defaults('toolKey', $psToolKey)->name($psName.'.history.show');
+    Route::delete($psPrefix.'/history/{result}', [\App\Http\Controllers\Frontend\PsToolController::class, 'destroy'])->defaults('toolKey', $psToolKey)->name($psName.'.history.destroy');
+    Route::get($psPrefix.'/continue/{result}', [\App\Http\Controllers\Frontend\PsToolController::class, 'continueSaved'])->defaults('toolKey', $psToolKey)->name($psName.'.continue');
+    Route::get($psPrefix.'/finish', [\App\Http\Controllers\Frontend\PsToolController::class, 'finish'])->defaults('toolKey', $psToolKey)->name($psName.'.finish');
+    Route::post($psPrefix.'/save', [\App\Http\Controllers\Frontend\PsToolController::class, 'save'])->defaults('toolKey', $psToolKey)->name($psName.'.save');
+    Route::post($psPrefix.'/recalculate', [\App\Http\Controllers\Frontend\PsToolController::class, 'recalculate'])->defaults('toolKey', $psToolKey)->name($psName.'.recalculate');
+    Route::get($psPrefix.'/results', [\App\Http\Controllers\Frontend\PsToolController::class, 'results'])->defaults('toolKey', $psToolKey)->name($psName.'.results');
+    Route::post($psPrefix.'/calculate', [\App\Http\Controllers\Frontend\PsToolController::class, 'calculate'])->defaults('toolKey', $psToolKey)->name($psName.'.calculate');
+    Route::get($psPrefix, [\App\Http\Controllers\Frontend\PsToolController::class, 'create'])->defaults('toolKey', $psToolKey)->name($psName);
+}
 
 Route::get('tools/bmi-bmr/history', [\App\Http\Controllers\Frontend\BmiBmrController::class, 'history'])->name('tools.bmi-bmr.history');
 Route::get('tools/bmi-bmr/history/{calculation}', [\App\Http\Controllers\Frontend\BmiBmrController::class, 'show'])->name('tools.bmi-bmr.history.show');
@@ -769,17 +817,7 @@ Route::post('professional/verify-otp', [ProfessionalController::class, 'verifyOT
 // Route::get('/get-mcqs/{service_id}', [ServiceController::class, 'getMcqs']);
 Route::post('/submit-mcq', [MCQController::class, 'store'])->name('submit.mcq');
 Route::get('/get-mcq-questions/{serviceId}', [HomeController::class, 'getServiceQuestions']);
-// Forgot Password
-Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('forgot.form');
-Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])
-    ->middleware(['throttle:5,1,recovery', 'throttle:20,60,recovery-hour'])
-    ->name('forgot.send');
-
-// Reset Password
-Route::get('/reset-password', [AuthController::class, 'showResetForm'])->name('password.reset.form');
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
-
-// Add these routes for user password reset
+// Customer password recovery (email-based). Single canonical route set.
 Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showForgotForm'])
         ->name('forgot.form');
@@ -873,7 +911,7 @@ Route::post('/force-login', [App\Http\Controllers\Frontend\LoginController::clas
 
 Route::middleware(['auth:user', 'terms.accepted', 'check.active.session'])->group(function () {
     Route::get('/user/dashboard', function () {
-        return view('user.dashboard');
+        return view('customer.index');
     })->name('user.dashboard');
 });
 

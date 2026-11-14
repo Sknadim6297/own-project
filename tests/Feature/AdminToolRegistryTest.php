@@ -114,8 +114,10 @@ class AdminToolRegistryTest extends TestCase
         $registrar->register();
         $registrar->register();
 
-        $this->assertSame(4, ToolCategory::query()->count());
-        $this->assertSame(10, Tool::query()->count());
+        // psychology, career-guidance, nutrition, astrology-tarot, money-finance, parenting, spirituality
+        $this->assertSame(7, ToolCategory::query()->count());
+        // 3 psychology + 2 career + 4 nutrition + 1 tarot + 8 PFM + 5 parenting/spirituality
+        $this->assertSame(23, Tool::query()->count());
         $unpublishedSlugs = [
             'career-interest-test',
             'skills-strengths-assessment',
@@ -127,7 +129,7 @@ class AdminToolRegistryTest extends TestCase
         ];
         $this->assertSame(
             count($unpublishedSlugs),
-            Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->whereNull('route_name')->count()
+            Tool::query()->whereIn('slug', $unpublishedSlugs)->where('status', 'coming_soon')->where('is_implemented', false)->whereNull('route_name')->count()
         );
         foreach ([
             'daily-mood-check-in' => 'tools.psychology.mood',
@@ -153,11 +155,13 @@ class AdminToolRegistryTest extends TestCase
             ->assertOk()
             ->assertSee('Daily Mood Check-in')
             ->assertSee('Digital Journal')
-            ->assertSee('Gratitude Journal')
             ->assertSee('Career Interest Test')
-            ->assertSee('BMI & BMR Calculator')
             ->assertSee('Coming Soon')
             ->assertDontSee('>Enable<', false);
+
+        $this->assertTrue(Tool::query()->where('slug', 'gratitude-journal')->where('status', 'active')->exists());
+        $this->assertTrue(Tool::query()->where('slug', 'parenting-stress-check')->where('status', 'active')->exists());
+        $this->assertTrue(Tool::query()->where('slug', 'bmi-bmr-calculator')->where('status', 'coming_soon')->exists());
 
         $tool = Tool::query()->where('slug', 'calorie-nutrition-tracker')->firstOrFail();
 
@@ -215,8 +219,9 @@ class AdminToolRegistryTest extends TestCase
             ])
             ->assertRedirect(route('admin.tool-settings.edit'));
 
+        // Unimplemented stubs keep coming_soon status; access_type can still update across the catalogue.
         $this->assertSame(count($unpublishedSlugs), Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->count());
-        $this->assertSame(10, Tool::query()->where('access_type', 'paid')->count());
+        $this->assertSame(23, Tool::query()->where('access_type', 'paid')->count());
         $published = Tool::query()->where('slug', 'daily-mood-check-in')->firstOrFail();
         $this->assertSame('tools.psychology.mood', $published->route_name);
         $this->assertSame('active', $published->status);

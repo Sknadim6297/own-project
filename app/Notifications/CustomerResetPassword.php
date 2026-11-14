@@ -25,15 +25,25 @@ class CustomerResetPassword extends ResetPassword
         $fromName = config('mail.from.name') ?: $brand;
 
         $message = (new MailMessage)
-            ->subject($brand.' Password Reset')
+            ->subject('Reset Your Password')
             ->view('emails.password-reset', [
                 'brand' => $brand,
                 'logoUrl' => asset('frontend/assets/Yuktione_logo.png'),
-                'intro' => 'You are receiving this email because we received a password reset request for your '.$brand.' customer account.',
+                'messageIntroLines' => [
+                    'Hello,',
+                    'We received a request to reset your account password.',
+                    'Click the button below to create a new password.',
+                ],
+                'intro' => 'We received a request to reset your account password. Click the button below to create a new password.',
                 'actionText' => 'Reset Password',
                 'actionUrl' => $url,
-                'expireText' => 'This password reset link will expire in '.config('auth.passwords.users.expire').' minutes.',
-                'outro' => 'If you did not request a password reset, no further action is required.',
+                'expireText' => 'For security reasons, this password reset link will expire in '.config('auth.passwords.users.expire').' minutes.',
+                'messageOutroLines' => [
+                    'If you did not request a password reset, you can safely ignore this email.',
+                    'Regards,',
+                    'Support Team',
+                ],
+                'outro' => 'If you did not request a password reset, you can safely ignore this email.',
             ]);
 
         if (filled($fromAddress)) {
