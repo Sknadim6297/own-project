@@ -105,11 +105,12 @@
                     </a>
                 </div>
 
-                <div class="flex items-start gap-2.5 rounded-card border border-border bg-surface-muted px-3 py-2.5">
-                    <input type="checkbox" name="terms_accepted" id="terms_accepted" aria-describedby="terms-help terms-error" disabled class="mt-0.5 size-4 shrink-0 rounded border-border accent-brand-primary disabled:cursor-not-allowed">
+                <div id="termsAcceptBox" class="flex cursor-pointer items-start gap-2.5 rounded-card border border-border bg-surface-muted px-3 py-2.5">
+                    <input type="checkbox" name="terms_accepted" id="terms_accepted" aria-describedby="terms-help terms-error" class="mt-0.5 size-4 shrink-0 cursor-pointer rounded border-border accent-brand-primary">
                     <div class="min-w-0 text-xs leading-5 text-text-secondary">
                         <label for="terms_accepted" class="cursor-pointer">I have read and accept the</label>
                         <button type="button" id="openTerms" class="ml-0.5 font-semibold text-brand-primary underline underline-offset-2 hover:text-brand-800">Terms and Conditions</button>
+                        <p id="terms-help" class="mt-1 text-xs text-text-muted">Click the checkbox to open and review the terms.</p>
                         <p id="terms-error" class="mt-1 hidden text-xs font-medium text-error" role="alert">Please read and accept the terms to continue.</p>
                     </div>
                 </div>
@@ -244,7 +245,7 @@
         document.getElementById('customerTerms').hidden = role !== 'customer';
         document.getElementById('professionalTerms').hidden = role !== 'professional';
         termsAccepted.checked = false;
-        termsAccepted.disabled = true;
+        delete termsAccepted.dataset.unlocked;
         termsError.classList.add('hidden');
         agreeTerms.disabled = true;
         roleTabs.forEach((tab) => {
@@ -279,7 +280,7 @@
         togglePassword.setAttribute('aria-label', visible ? 'Hide password' : 'Show password');
     });
 
-    document.getElementById('openTerms').addEventListener('click', () => {
+    const openTermsDialog = () => {
         agreeTerms.disabled = true;
         termsContent.scrollTop = 0;
         document.getElementById('termsScrollStatus').textContent = 'Scroll to the end of the terms to enable acceptance.';
@@ -290,7 +291,37 @@
                 document.getElementById('termsScrollStatus').textContent = 'You have reached the end of the terms.';
             }
         });
+    };
+
+    const isTermsUnlocked = () => termsAccepted.dataset.unlocked === '1';
+
+    document.getElementById('openTerms').addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        openTermsDialog();
     });
+
+    // Clicking the checkbox / label / box opens Terms automatically so users are not stuck.
+    termsAccepted.addEventListener('click', (event) => {
+        if (isTermsUnlocked()) {
+            return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        openTermsDialog();
+    });
+
+    document.getElementById('termsAcceptBox')?.addEventListener('click', (event) => {
+        if (event.target.closest('#openTerms')) {
+            return;
+        }
+        if (isTermsUnlocked()) {
+            return;
+        }
+        event.preventDefault();
+        openTermsDialog();
+    });
+
     termsContent.addEventListener('scroll', () => {
         if (termsContent.scrollTop + termsContent.clientHeight >= termsContent.scrollHeight - 10) {
             agreeTerms.disabled = false;
@@ -299,12 +330,19 @@
     });
     ['closeTerms', 'cancelTerms'].forEach((id) => document.getElementById(id).addEventListener('click', closeTerms));
     agreeTerms.addEventListener('click', () => {
-        termsAccepted.disabled = false;
+        termsAccepted.dataset.unlocked = '1';
         termsAccepted.checked = true;
         termsError.classList.add('hidden');
         closeTerms();
     });
-    termsAccepted.addEventListener('change', () => termsError.classList.add('hidden'));
+    termsAccepted.addEventListener('change', () => {
+        if (!isTermsUnlocked()) {
+            termsAccepted.checked = false;
+            openTermsDialog();
+            return;
+        }
+        termsError.classList.add('hidden');
+    });
     email.addEventListener('input', () => setFieldError(email, ''));
     password.addEventListener('input', () => setFieldError(password, ''));
 

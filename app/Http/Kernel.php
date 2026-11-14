@@ -73,6 +73,7 @@ class Kernel extends HttpKernel
         'professional.status' => \App\Http\Middleware\ProfessionalStatusMiddleware::class,
         'auth:professional' => \App\Http\Middleware\Authenticate::class,
         'admin.menu' => \App\Http\Middleware\AdminMenuAccess::class,
+        'terms.accepted' => \App\Http\Middleware\EnsureCustomerTermsAccepted::class,
     ];
 
     /**

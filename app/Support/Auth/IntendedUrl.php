@@ -86,7 +86,8 @@ class IntendedUrl
     {
         return match ($guard) {
             'professional' => route('professional.dashboard'),
-            'user' => route('user.dashboard'),
+            // Customer login lands on the public home page, not the panel dashboard.
+            'user' => route('home'),
             default => route('home'),
         };
     }
@@ -160,6 +161,8 @@ class IntendedUrl
             '/force-login',
             '/forgot-password',
             '/reset-password',
+            '/terms/accept',
+            '/terms/decline',
             '/admin/login',
             '/professional/login',
             '/professional/register',

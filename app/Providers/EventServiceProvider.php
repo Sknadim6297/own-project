@@ -8,6 +8,8 @@ use App\Listeners\ClaimCareerInterestDraft;
 use App\Listeners\ClaimGratitudeDraft;
 use App\Listeners\ClaimJournalDraft;
 use App\Listeners\ClaimMoodCheckinDraft;
+use App\Listeners\ClaimPfmDraft;
+use App\Listeners\ClaimPsDraft;
 use App\Listeners\ClaimSkillsStrengthsDraft;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
@@ -35,6 +37,8 @@ class EventServiceProvider extends ServiceProvider
             ClaimCareerInterestDraft::class,
             ClaimSkillsStrengthsDraft::class,
             ClaimBmiBmrDraft::class,
+            ClaimPfmDraft::class,
+            ClaimPsDraft::class,
             AwardWeeklyLoginYuktiPoints::class,
         ],
         MessageSent::class => [

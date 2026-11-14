@@ -7,10 +7,13 @@ use App\Models\User;
 use App\Notifications\CustomerResetPassword;
 use App\Notifications\ProfessionalResetPassword;
 use App\Services\AccountRecovery;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Tests\TestCase;
@@ -25,29 +28,49 @@ class AccountRecoveryTest extends TestCase
         $this->storage();
     }
 
-    public function test_unknown_mobile_shows_the_registration_alert_and_does_not_send_a_reset(): void
+    public function test_forgot_password_page_uses_email_field(): void
+    {
+        $this->get('/forgot-password')
+            ->assertOk()
+            ->assertSee('Forgot password?', false)
+            ->assertSee('Email Address', false)
+            ->assertSee('Enter your registered email address', false)
+            ->assertSee('Send Password Reset Link', false)
+            ->assertSee('Back to Login', false)
+            ->assertDontSee('Mobile number', false)
+            ->assertDontSee('name="phone"', false);
+    }
+
+    public function test_empty_email_shows_validation_error(): void
+    {
+        $this->from('/forgot-password')
+            ->post('/forgot-password', [])
+            ->assertRedirect('/forgot-password')
+            ->assertSessionHasErrors('email');
+    }
+
+    public function test_invalid_email_shows_validation_error(): void
+    {
+        $this->from('/forgot-password')
+            ->post('/forgot-password', ['email' => 'not-an-email'])
+            ->assertRedirect('/forgot-password')
+            ->assertSessionHasErrors('email');
+    }
+
+    public function test_unknown_email_gets_generic_confirmation_and_does_not_send(): void
     {
         Notification::fake();
 
         $this->from('/forgot-password')
-            ->post('/forgot-password', ['phone' => '9000000001'])
+            ->post('/forgot-password', ['email' => 'unknown@example.test'])
             ->assertRedirect('/forgot-password')
-            ->assertSessionHas('recovery_unregistered', true)
-            ->assertSessionMissing('status');
+            ->assertSessionHas('status', AccountRecovery::SENT_MESSAGE)
+            ->assertSessionMissing('recovery_unregistered');
 
         Notification::assertNothingSent();
-
-        session()->flash('recovery_unregistered', true);
-        $html = view('frontend.login.forget-password')->render();
-
-        $this->assertStringContainsString(AccountRecovery::UNREGISTERED_TITLE, $html);
-        $this->assertStringContainsString(AccountRecovery::UNREGISTERED_MESSAGE, $html);
-        $this->assertStringContainsString(route('register'), $html);
-        $this->assertStringContainsString('Register Now', $html);
-        $this->assertStringNotContainsString("If an account matches your details", $html);
     }
 
-    public function test_incomplete_customer_registration_is_not_treated_as_registered(): void
+    public function test_incomplete_customer_registration_gets_generic_confirmation_without_email(): void
     {
         Notification::fake();
 
@@ -60,14 +83,14 @@ class AccountRecoveryTest extends TestCase
         ]);
 
         $this->from('/forgot-password')
-            ->post('/forgot-password', ['phone' => '9876543210'])
+            ->post('/forgot-password', ['email' => 'incomplete-customer@example.test'])
             ->assertRedirect('/forgot-password')
-            ->assertSessionHas('recovery_unregistered', true);
+            ->assertSessionHas('status', AccountRecovery::SENT_MESSAGE);
 
         Notification::assertNothingSent();
     }
 
-    public function test_registered_customer_receives_the_existing_reset_without_exposing_the_email(): void
+    public function test_registered_customer_receives_reset_without_exposing_enumeration_details(): void
     {
         Notification::fake();
 
@@ -80,7 +103,7 @@ class AccountRecoveryTest extends TestCase
         ]);
 
         $response = $this->from('/forgot-password')
-            ->post('/forgot-password', ['phone' => '9876543210']);
+            ->post('/forgot-password', ['email' => 'registered-customer@example.test']);
 
         $response->assertRedirect('/forgot-password')
             ->assertSessionHas('status', AccountRecovery::SENT_MESSAGE)
@@ -88,13 +111,66 @@ class AccountRecoveryTest extends TestCase
 
         $this->assertStringNotContainsString($user->email, (string) session('status'));
         Notification::assertSentTo($user, CustomerResetPassword::class);
+    }
 
-        session()->flash('status', AccountRecovery::SENT_MESSAGE);
-        $html = view('frontend.login.forget-password')->render();
-        $this->assertStringContainsString(AccountRecovery::SENT_MESSAGE, $html);
-        $this->assertStringNotContainsString($user->email, $html);
-        $this->assertStringNotContainsString('role="alert"', $html);
-        $this->assertStringNotContainsString('Register Now', $html);
+    public function test_password_can_be_reset_with_valid_token_and_old_password_fails(): void
+    {
+        Notification::fake();
+        Event::fake([PasswordReset::class]);
+
+        $user = User::query()->create([
+            'name' => 'Reset Customer',
+            'email' => 'reset-customer@example.test',
+            'phone' => '9876500111',
+            'password' => 'old-password-123',
+            'registration_completed' => true,
+        ]);
+
+        $this->post('/forgot-password', ['email' => $user->email])
+            ->assertSessionHas('status', AccountRecovery::SENT_MESSAGE);
+
+        $token = null;
+        Notification::assertSentTo($user, CustomerResetPassword::class, function ($notification) use (&$token) {
+            $token = $notification->token;
+
+            return true;
+        });
+
+        $this->assertNotEmpty($token);
+
+        $this->post('/reset-password', [
+            'token' => $token,
+            'email' => $user->email,
+            'password' => 'new-password-123',
+            'password_confirmation' => 'new-password-123',
+        ])->assertRedirect(route('login'));
+
+        $user->refresh();
+        $this->assertTrue(Hash::check('new-password-123', $user->password));
+        $this->assertFalse(Hash::check('old-password-123', $user->password));
+        Event::assertDispatched(PasswordReset::class);
+
+        // Token reuse must fail.
+        $this->from('/reset-password')
+            ->post('/reset-password', [
+                'token' => $token,
+                'email' => $user->email,
+                'password' => 'another-password-123',
+                'password_confirmation' => 'another-password-123',
+            ])
+            ->assertSessionHasErrors('email');
+    }
+
+    public function test_password_mismatch_is_rejected(): void
+    {
+        $this->from('/reset-password')
+            ->post('/reset-password', [
+                'token' => 'any-token',
+                'email' => 'someone@example.test',
+                'password' => 'password-one',
+                'password_confirmation' => 'password-two',
+            ])
+            ->assertSessionHasErrors('password');
     }
 
     public function test_registered_professional_continues_to_the_professional_reset(): void
@@ -142,7 +218,7 @@ class AccountRecoveryTest extends TestCase
         Notification::assertNothingSent();
     }
 
-    public function test_password_reset_endpoint_does_not_reveal_the_mobile_registration_result(): void
+    public function test_password_reset_endpoint_does_not_reveal_registration_result(): void
     {
         $this->post('/reset-password', [
             'token' => 'not-a-real-token',
@@ -162,10 +238,10 @@ class AccountRecoveryTest extends TestCase
         }
 
         for ($attempt = 1; $attempt <= 5; $attempt++) {
-            $this->post('/forgot-password', ['phone' => '9000000099'])->assertRedirect();
+            $this->post('/forgot-password', ['email' => 'rate-limit@example.test'])->assertRedirect();
         }
 
-        $this->post('/forgot-password', ['phone' => '9000000099'])->assertStatus(429);
+        $this->post('/forgot-password', ['email' => 'rate-limit@example.test'])->assertStatus(429);
     }
 
     private function storage(): void

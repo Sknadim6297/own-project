@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Terms\TermsAcceptanceService;
 use App\Support\Auth\IntendedUrl;
 use Closure;
 use Illuminate\Support\Facades\Auth;
@@ -30,12 +31,12 @@ class RedirectIfAuthenticated
             return match ($guard) {
                 'admin' => redirect('/admin/dashboard'),
                 'professional' => redirect(IntendedUrl::resolve('professional')),
-                'user' => redirect(IntendedUrl::resolve('user')),
+                'user' => redirect($this->customerDestination()),
                 'web' => Auth::guard('user')->check()
-                    ? redirect(IntendedUrl::resolve('user'))
+                    ? redirect($this->customerDestination())
                     : redirect()->route('home'),
                 default => Auth::guard('user')->check()
-                    ? redirect(IntendedUrl::resolve('user'))
+                    ? redirect($this->customerDestination())
                     : (Auth::guard('professional')->check()
                         ? redirect(IntendedUrl::resolve('professional'))
                         : redirect()->route('home')),
@@ -43,5 +44,20 @@ class RedirectIfAuthenticated
         }
 
         return $next($request);
+    }
+
+    private function customerDestination(): string
+    {
+        $terms = app(TermsAcceptanceService::class);
+        $user = Auth::guard('user')->user();
+
+        if ($user
+            && $terms->shouldEnforceAfterLogin()
+            && ! $terms->hasAcceptedCurrent($user)
+        ) {
+            return route('terms.accept.show');
+        }
+
+        return IntendedUrl::resolve('user');
     }
 }

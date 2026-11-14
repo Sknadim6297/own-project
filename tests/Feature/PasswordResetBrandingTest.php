@@ -77,11 +77,12 @@ class PasswordResetBrandingTest extends TestCase
             $mail = $notification->toMail($user);
             $rendered = $mail->render();
 
-            $this->assertSame('YuktiOne Password Reset', $mail->subject);
+            $this->assertSame('Reset Your Password', $mail->subject);
             $this->assertSame(['hello@example.com', 'YuktiOne'], $mail->from);
             $this->assertStringContainsString('YuktiOne', $rendered);
             $this->assertStringContainsString('Yuktione_logo.png', $rendered);
-            $this->assertStringContainsString('customer account', $rendered);
+            $this->assertStringContainsString('We received a request to reset your account password', $rendered);
+            $this->assertStringContainsString('Reset Password', $rendered);
             $this->assertStringContainsString('customer-reset-token', $rendered);
             $this->assertStringNotContainsString('Tazen', $rendered);
             $this->assertStringNotContainsString('support@tazen.in', $rendered);

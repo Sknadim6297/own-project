@@ -1,0 +1,435 @@
+===== FILE: YuktiOne_Parenting_Spirituality_5_Tools_Logic_v2.xlsx =====
+===SHEET: Overview===
+R1|Category | Tool | Primary purpose | Primary output | Flow
+R2|Parenting | Parenting Stress Check | Identify overwhelm, exhaustion, guilt and support gaps | Stress level + key pressure areas + actions | Intro → Questions → Result → Actions → Save/Expert
+R3|Parenting | Child Routine Planner | Create a practical daily routine around fixed commitments | Daily timeline + balance check + adjustment tips | Profile → Fixed schedule → Preferences → Generate → Edit/Save
+R4|Parenting | Parent–Child Conversation Guide | Help parents handle difficult conversations | What to say / avoid / follow-up / expert option | Situation → Age → Context → Goal → Guide → Save/Expert
+R5|Spirituality | Daily Mindfulness & Calm | Short secular grounding/mindfulness practice | 3/5/10-minute practice + completion | State → Duration → Practice → Timer → Completion
+R6|Spirituality | Purpose & Values Finder | Identify core personal values and translate them into action | Top values + themes + action plan | Questions → Ranking → Result → Actions → Save
+
+===SHEET: AutoSave_History===
+R1|Feature | Developer logic | UI behavior | Data stored | User control
+R2|Auto-save | Create/update draft automatically after meaningful input changes; debounce 1–2 seconds. | Small 'Saved' / 'Saving…' status near page header. No intrusive pop-up. | Current answers, selected options, generated result, timestamps, tool version. | Auto-save ON by default; user can delete saved data.
+R3|Draft recovery | On reopening an unfinished tool, detect latest draft. | Modal/card: 'Continue where you left off?' → Continue / Start over. | Draft state + last_updated_at. | Start over deletes current draft only after confirmation.
+R4|History | Every completed result creates a history item; edits update the same result unless user chooses 'Save as new'. | Tools → History; filter by category/tool; newest first. | Tool ID, result summary, inputs needed for replay, created_at, updated_at. | Delete one / delete all; clear confirmation.
+R5|Result detail | Tap history item to reopen result. | Result page shows 'Saved on [date]' + Edit / Recalculate / Delete. | Result payload + assumption/version metadata. | User can recalculate with current assumptions.
+R6|Privacy | Sensitive personal reflections should not be public/community-shared by default. | Private history label; explicit share CTA only. | User-owned records only. | Delete/export controls as product policy permits.
+R7|Offline/failure | If network save fails, retain local draft and retry. | 'Saved on device' / 'Syncing…' / 'Couldn't sync' state. | Local cache + server record when available. | Never lose entered answers silently.
+R8|Versioning | Store tool_version and content_version with result. | If logic/content changes, show 'Recalculate with latest version' when relevant. | Tool version, content version, assumptions. | Old result remains viewable; recalculation creates updated result.
+
+===SHEET: Parenting_Stress_Check===
+R1|TOOL PURPOSE
+R2|Short self-check for parental overwhelm. Educational, not a clinical diagnosis.
+R4|INPUTS
+R5|P1–P8 | 8 questions scored 1–5: overwhelm, exhaustion, guilt, patience, support, recovery time, work/home load, feeling alone.
+R7|OUTPUTS
+R8|Score | 0–100 normalized score
+R9|Level | Low / Moderate / High
+R10|Pressure Areas | Top 2–3 areas
+R11|Actions | 2–4 practical suggestions
+R13|CALCULATION / LOGIC
+R14|Reverse scoring | For positive support/recovery items: adjusted score = 6 − answer.
+R15|Total | Sum adjusted scores.
+R16|Normalize | ((total−minimum)/(maximum−minimum))*100.
+R17|Level | Default: 0–33 Low, 34–66 Moderate, 67–100 High; thresholds configurable.
+R18|Pressure areas | Group questions into overload, exhaustion, guilt/patience, support/recovery and rank by average.
+R20|VALIDATION / UX
+R21|Required | All questions required before result.
+R22|Safety | If severe distress is indicated, show supportive professional-help option; never diagnose.
+R23|Tone | No guilt/shame language.
+R24|Privacy | Saved result must be private and deletable.
+R26|SCREEN FLOW
+R27|PS-01 | Intro + disclaimer
+R28|PS-02 | Question cards + progress
+R29|PS-03 | Calculating
+R30|PS-04 | Result: score + level + areas
+R31|PS-05 | Action cards + expert CTA
+R32|PS-06 | Save / retake
+R34|ANALYTICS EVENTS
+R35|parenting_stress_start | Tool opened
+R36|parenting_stress_answer | Question answered
+R37|parenting_stress_complete | Result generated
+R38|parenting_stress_action | Action selected
+R39|parenting_stress_expert | Expert CTA selected
+
+===SHEET: Child_Routine_Planner===
+R1|TOOL PURPOSE
+R2|Flexible child routine planner based on age, fixed commitments and family preferences.
+R4|INPUTS
+R5|C1 | Child age
+R6|C2 | School/daycare timing
+R7|C3 | Wake/bedtime preference
+R8|C4 | Study/homework
+R9|C5 | Play/outdoor time
+R10|C6 | Screen-time preference
+R11|C7 | Meal/snack windows
+R12|C8 | Other fixed activities/commute
+R14|OUTPUTS
+R15|Routine | Time-blocked day
+R16|Balance | Sleep/study/play/screen/meals/family
+R17|Tips | 2–4 adjustment suggestions
+R19|CALCULATION / LOGIC
+R20|Fixed blocks | Place school, commute and other fixed commitments first.
+R21|Flexible blocks | Fit study, play, meals and screen time around fixed blocks.
+R22|Conflict | If requested blocks exceed available time, show conflict and suggest what to move/reduce.
+R23|Sleep | Use configurable age-based guidance content; present as general guidance, not medical advice.
+R25|VALIDATION / UX
+R26|Time validation | No overlapping blocks.
+R27|Overload | Show 'Too many activities' state.
+R28|Editing | Every block editable; optional drag/reorder.
+R29|Age | Validate plausible age range.
+R31|SCREEN FLOW
+R32|CR-01 | Child profile
+R33|CR-02 | Fixed commitments
+R34|CR-03 | Daily preferences
+R35|CR-04 | Generate state
+R36|CR-05 | Routine timeline
+R37|CR-06 | Edit
+R38|CR-07 | Save/share-for-family
+R40|ANALYTICS EVENTS
+R41|routine_start | Planner opened
+R42|routine_generate | Routine generated
+R43|routine_edit | Block edited
+R44|routine_save | Routine saved
+
+===SHEET: Conversation_Guide===
+R1|TOOL PURPOSE
+R2|Scenario-based support for difficult parent–child conversations.
+R4|INPUTS
+R5|G1 | Situation: screen time, studies, anger, friends, confidence, discipline, etc.
+R6|G2 | Child age group
+R7|G3 | Short context: what happened
+R8|G4 | Goal: understand / boundary / reassure / repair
+R10|OUTPUTS
+R11|Opening | Non-judgmental opening line
+R12|Say | 3–5 age-appropriate conversation starters
+R13|Avoid | 2–4 escalation-prone approaches
+R14|If child shuts down | Follow-up approach
+R15|After | One next action
+R17|CALCULATION / LOGIC
+R18|Scenario mapping | Situation + age band map to curated content template.
+R19|Tone | Calm, validating, boundary-aware.
+R20|Context | Use user text only to tailor phrasing; do not infer diagnosis.
+R21|Escalation | Persistent/severe concerns get professional-support option.
+R23|VALIDATION / UX
+R24|Context limit | 500–1000 characters.
+R25|Safety | Immediate danger/abuse/self-harm risk routes to appropriate urgent-support content.
+R26|No diagnosis | Never label parent/child with a disorder.
+R28|SCREEN FLOW
+R29|CG-01 | Choose situation
+R30|CG-02 | Child age
+R31|CG-03 | Context
+R32|CG-04 | Goal
+R33|CG-05 | Guide: Say / Avoid / If shut down / Next
+R34|CG-06 | Save / Expert
+R36|ANALYTICS EVENTS
+R37|conversation_start | Guide opened
+R38|conversation_situation | Situation selected
+R39|conversation_result | Guide generated
+R40|conversation_save | Guide saved
+R41|conversation_expert | Expert selected
+
+===SHEET: Mindfulness_Calm===
+R1|TOOL PURPOSE
+R2|Short secular mindfulness/grounding practice for the present moment.
+R4|INPUTS
+R5|M1 | Current state: stressed, restless, angry, distracted, overwhelmed, etc.
+R6|M2 | Duration: 3/5/10 minutes
+R7|M3 | Practice: breathing / body scan / grounding / quiet focus
+R9|OUTPUTS
+R10|Practice | Guided session
+R11|Completion | Minutes completed + optional prompt
+R12|Next | Repeat / save routine / explore support
+R14|CALCULATION / LOGIC
+R15|Selection | State + duration + preference map to predefined practice.
+R16|Timer | Pause/resume; completion at 90%+ or explicit finish.
+R17|Content | No claims of treatment/cure.
+R18|Progress | Track sessions completed, not a mental-health score.
+R20|VALIDATION / UX
+R21|Duration | Only configured options.
+R22|Alternative | Text instructions available if audio is later added.
+R23|Safety | Not a substitute for professional care.
+R25|SCREEN FLOW
+R26|MC-01 | Choose current state
+R27|MC-02 | Choose duration
+R28|MC-03 | Choose practice
+R29|MC-04 | Timer
+R30|MC-05 | Completion
+R31|MC-06 | Repeat / Save / Support
+R33|ANALYTICS EVENTS
+R34|mindfulness_start | Session started
+R35|mindfulness_complete | Session completed
+R36|mindfulness_pause | Paused
+R37|mindfulness_save | Saved
+
+===SHEET: Purpose_Values_Finder===
+R1|TOOL PURPOSE
+R2|Guided exercise to identify personal values and convert them into practical priorities.
+R4|INPUTS
+R5|V1 | 12–20 paired value choices
+R6|V2 | Optional ranking of top values
+R7|V3 | Life areas: work, family, relationships, health, learning, contribution, freedom, security, creativity
+R8|V4 | Optional: what do you want more of right now?
+R10|OUTPUTS
+R11|Top Values | Top 5
+R12|Themes | 2–3 broader themes
+R13|Actions | 1–3 value-aligned actions
+R14|Reflection | One follow-up question
+R16|CALCULATION / LOGIC
+R17|Scoring | Each selected value receives points from comparisons.
+R18|Ranking | Sort by score; explicit ranking breaks ties.
+R19|Themes | Map values to configurable themes.
+R20|Actions | Use curated value→action mappings; do not claim to objectively determine life purpose.
+R22|VALIDATION / UX
+R23|Completion | Enough questions required for meaningful result.
+R24|Editing | Allow values to be changed before final save.
+R25|Tone | Reflective, not prescriptive.
+R26|Privacy | Clear save/delete controls.
+R28|SCREEN FLOW
+R29|PV-01 | Intro
+R30|PV-02 | Value choices
+R31|PV-03 | Optional ranking
+R32|PV-04 | Results
+R33|PV-05 | Action plan
+R34|PV-06 | Save / revisit / retake
+R36|ANALYTICS EVENTS
+R37|values_start | Finder opened
+R38|values_answer | Question answered
+R39|values_result | Result generated
+R40|values_action | Action selected
+R41|values_save | Saved
+
+===SHEET: QA_Test_Cases===
+R1|Tool | ID | Test | Expected
+R2|Parenting Stress | PS-T01 | Missing answer | Inline validation; no submission
+R3|Parenting Stress | PS-T02 | High score | Supportive result + actions; no diagnosis
+R4|Routine Planner | CR-T01 | Overlapping blocks | Prevent overlap or flag conflict
+R5|Routine Planner | CR-T02 | Too many activities | Conflict state + edit suggestions
+R6|Conversation Guide | CG-T01 | Screen time + age 8–12 | Age-appropriate guide
+R7|Conversation Guide | CG-T02 | Safety-related context | Urgent/professional support path
+R8|Mindfulness | MC-T01 | 3-minute session | Timer + completion event
+R9|Mindfulness | MC-T02 | Pause/resume | Resume without reset
+R10|Values Finder | PV-T01 | Complete questionnaire | Top values + themes + actions
+R11|Values Finder | PV-T02 | Score tie | User ranking resolves tie
+
+===SHEET: Screen_Map_v2===
+R1|Tool | Screen ID | Screen | Purpose | Key elements | Autosave/History
+R2|All tools | T-00 | Money/Wellbeing Tools Home | Entry point | Category cards + Recent Activity + History | Recent Activity shows latest saved results
+R3|All tools | T-01 | Tool Intro | Explain value | What it does + time + disclaimer + Start | No save yet
+R4|All tools | T-02 | Input | Collect information | Progress + fields + Back/Next | Autosave after meaningful changes
+R5|All tools | T-03 | Review | Confirm inputs | Summary + Edit + Generate | Autosave draft
+R6|All tools | T-04 | Result | Show output | Primary result + explanation + actions | Auto-save completed result
+R7|All tools | T-05 | History | View past results | Search/filter + cards + dates | Tap to reopen
+R8|All tools | T-06 | History Detail | View prior result | Result + assumptions + date + Edit/Recalculate/Delete | Persistent saved state
+R9|Parenting Stress | PS-01 | Intro | Start check | Purpose + 8 questions + disclaimer | —
+R10|Parenting Stress | PS-02 | Questions | Collect responses | 1–5 scale + progress | Auto-save each answered question
+R11|Parenting Stress | PS-03 | Result | Show score | Level + pressure areas | Completed result auto-saved
+R12|Parenting Stress | PS-04 | Actions | Turn result into action | Recovery/support/action cards + expert CTA | Saved result visible in History
+R13|Routine Planner | CR-01 | Profile | Child context | Age + fixed schedule | Auto-save
+R14|Routine Planner | CR-02 | Preferences | Daily needs | Study/play/screen/meals | Auto-save
+R15|Routine Planner | CR-03 | Generated Routine | Show timeline | Editable blocks + balance | Auto-save edits
+R16|Routine Planner | CR-04 | Saved Routine | Return later | Routine + last updated | History + Recent Activity
+R17|Conversation Guide | CG-01 | Situation | Choose issue | Scenario cards | Auto-save selection
+R18|Conversation Guide | CG-02 | Context | Add details | Age + context + goal | Auto-save draft
+R19|Conversation Guide | CG-03 | Guide | Show advice | Say / Avoid / If child shuts down / Next step | Auto-save completed guide
+R20|Conversation Guide | CG-04 | History Detail | Reopen guide | Date + scenario + guide | Edit/Recalculate/Delete
+R21|Mindfulness | MC-01 | State | Choose state | State + duration | Auto-save preference
+R22|Mindfulness | MC-02 | Practice | Run session | Timer + pause | Session state retained on pause
+R23|Mindfulness | MC-03 | Completion | Show completion | Duration + repeat/save | Completion logged
+R24|Mindfulness | MC-04 | History | Practice history | Dates + duration + streak/summary | History only; no mental-health score
+R25|Values Finder | PV-01 | Questions | Collect choices | Value comparisons + progress | Auto-save
+R26|Values Finder | PV-02 | Result | Show top values | Top 5 + themes | Completed result auto-saved
+R27|Values Finder | PV-03 | Action Plan | Translate values | 1–3 actions + reflection | Save + History
+R28|Values Finder | PV-04 | History Detail | Reopen result | Values + date + actions | Edit/Recalculate/Delete
+
+===SHEET: Data_Model===
+R1|Entity | Field | Type | Required | Purpose
+R2|ToolResult | result_id | UUID | Yes | Unique saved result
+R3|ToolResult | user_id | UUID | Yes | Owner
+R4|ToolResult | tool_id | String | Yes | Parenting stress / routine / conversation / mindfulness / values
+R5|ToolResult | tool_version | String | Yes | Logic/content version used
+R6|ToolResult | status | Enum | Yes | draft / completed / archived
+R7|ToolResult | input_payload | JSON | Yes | Inputs required to reproduce result
+R8|ToolResult | output_payload | JSON | Yes | Generated result
+R9|ToolResult | created_at | Datetime | Yes | First save
+R10|ToolResult | updated_at | Datetime | Yes | Latest autosave/update
+R11|ToolResult | title | String | Yes | Human-readable history card title
+R12|ToolResult | summary | String | No | Short result summary for history card
+R13|ToolResult | deleted_at | Datetime | No | Soft delete if supported
+R14|PracticeSession | session_id | UUID | Yes | Mindfulness session record
+R15|PracticeSession | duration_seconds | Integer | Yes | Actual completed duration
+R16|PracticeSession | practice_type | String | Yes | Breathing/grounding/body scan/etc.
+R17|PracticeSession | completed_at | Datetime | Yes | Completion time
+
+===SHEET: QA_Autosave_History===
+R1|ID | Scenario | Expected
+R2|AS-01 | Enter answer then leave screen | Draft is saved and recoverable
+R3|AS-02 | Close app mid-tool | Reopen shows Continue Draft
+R4|AS-03 | Network unavailable | Local draft retained; sync retries later
+R5|AS-04 | Complete tool | Completed result automatically appears in History
+R6|AS-05 | Open History item | Exact prior result and saved date displayed
+R7|AS-06 | Edit old result | Updated result replaces current version or creates new version per product rule
+R8|AS-07 | Delete history item | Item disappears after confirmation
+R9|AS-08 | Start over | Current draft cleared only after confirmation
+R10|AS-09 | Logic version changes | Old result remains viewable; Recalculate option available
+R11|AS-10 | Multiple tools | History filter correctly separates Parenting and Spirituality
+
+===== FILE: YuktiOne_Parenting_Spirituality_5_Tools_CONTENT_v3.xlsx =====
+===SHEET: 00_Overview===
+R1|Category | Tool | Content included | Primary output
+R2|Parenting | Parenting Stress Check | 8-question self-check | Score + pressure areas + practical actions
+R3|Parenting | Child Routine Planner | Family schedule builder | Editable daily routine + balance check + tips
+R4|Parenting | Parent–Child Conversation Guide | Scenario-based guide | Opening + Say + Avoid + If child shuts down + Next step
+R5|Spirituality | Daily Mindfulness & Calm | 3/5/10-minute secular practice | Guided script + timer + completion
+R6|Spirituality | Purpose & Values Finder | 16 paired value choices | Top 5 values + themes + actions
+
+===SHEET: 01_Parenting_Stress===
+R1|Q# | Question | Area | Scale low | Scale high | Scoring note
+R2|1 | I feel overwhelmed by the number of things I have to manage as a parent. | Overload | 1 = Never | 5 = Almost always | Higher = more pressure
+R3|2 | I feel physically or mentally exhausted by my parenting responsibilities. | Exhaustion | 1 = Never | 5 = Almost always | Higher = more pressure
+R4|3 | I often feel guilty that I am not doing enough for my child. | Guilt | 1 = Never | 5 = Almost always | Higher = more pressure
+R5|4 | I find it difficult to stay patient when my child is upset or not cooperating. | Patience | 1 = Never | 5 = Almost always | Higher = more pressure
+R6|5 | I have someone I can genuinely ask for help when parenting feels difficult. | Support | 1 = Never | 5 = Almost always | Reverse-score
+R7|6 | I get enough time to rest, recover or do something that helps me recharge. | Recovery | 1 = Never | 5 = Almost always | Reverse-score
+R8|7 | Work, household responsibilities and parenting often compete for my attention. | Work/Home Load | 1 = Never | 5 = Almost always | Higher = more pressure
+R9|8 | I often feel that I am handling parenting challenges mostly on my own. | Aloneness | 1 = Never | 5 = Almost always | Higher = more pressure
+
+===SHEET: 01B_Stress_Actions===
+R1|Area | Card title | Action content
+R2|Overload | Reduce the load, not your standards. | Choose one task this week that can be postponed, simplified or delegated.
+R3|Exhaustion | Protect a small recovery window. | Block 15–20 minutes for uninterrupted rest or a restorative activity.
+R4|Guilt | Replace 'perfect parent' with 'good-enough parent'. | Write down one thing you did well for your child today.
+R5|Patience | Create a pause before responding. | When tension rises, pause for 10 seconds, lower your voice and respond to the issue—not the emotion.
+R6|Support | Make support specific. | Ask one person for one concrete task instead of asking generally for help.
+R7|Recovery | Treat recovery as part of parenting. | Schedule one small activity that restores you and protect it like an appointment.
+R8|Work/Home Load | Separate urgent from important. | Pick the three non-negotiables for today; let lower-priority tasks wait.
+R9|Aloneness | Build one reliable support point. | Identify one trusted person or professional you could contact when things feel too heavy.
+
+===SHEET: 02_Routine_Inputs===
+R1|ID | Input | Type | Required | Logic
+R2|C1 | Child age | Numeric / age band | Required | Used for age-appropriate routine guidance
+R3|C2 | School/daycare | Start + end time | Required | Fixed block
+R4|C3 | Wake time | Time | Required | Anchor
+R5|C4 | Bedtime | Time | Required | Anchor
+R6|C5 | Study/homework | Minutes | Optional | Flexible block
+R7|C6 | Play/outdoor | Minutes | Optional | Flexible block
+R8|C7 | Screen time | Minutes | Optional | Flexible block
+R9|C8 | Meal/snack windows | Times | Required | Fixed/flexible blocks
+R10|C9 | Tuition/activities | Time + duration | Optional | Fixed block
+R11|C10 | Commute | Minutes | Optional | Fixed block
+R12|C11 | Family time | Minutes | Optional | Flexible block
+R13|C12 | Child preferences | Free text | Optional | Used for gentle personalization
+
+===SHEET: 02B_Routine_Rules===
+R1|Rule | Logic | Developer content
+R2|1 | Place fixed commitments first | School, daycare, commute, tuition and other non-negotiables are placed first.
+R3|2 | Protect anchors | Keep wake, meals and bedtime stable unless the parent intentionally changes them.
+R4|3 | Add flexible blocks | Fit study, play, family time and screen time around fixed commitments.
+R5|4 | Add buffer | Keep at least one flexible buffer period where practical; do not fill every minute.
+R6|5 | Conflict handling | If requested activities exceed available time, flag the conflict and suggest what can be shortened/moved.
+R7|6 | Editing | Every generated block can be edited; moving one block recalculates adjacent flexible blocks.
+R8|7 | Balance check | Show simple indicators for sleep opportunity, study, play/outdoor, screen, meals and family time.
+
+===SHEET: 03_Conversation_Content===
+R1|Situation | Age band | Goal | Opening | Say / Conversation starters | Avoid | If child shuts down | Next step
+R2|Screen time | 8–12 | Set a boundary without escalating | I know you want more time on the device. Let's talk about what feels fair and what we need to finish first. | First ask what they were doing and why stopping feels difficult. Then explain the boundary briefly. Offer a clear next chance to use the device. | You're addicted. / Because I said so. / Threatening to take everything away. | If the child shuts down, pause the argument and say: 'We don't have to solve it this second. We can come back to it when we're calmer.' | Agree on one specific rule and one review time.
+R3|Studies | 8–12 | Understand resistance and create a workable plan | I can see starting this feels difficult. Let's figure out which part is getting in the way. | Ask whether the problem is understanding, boredom, fatigue, workload or fear of getting it wrong. Break the task into one small start. | Comparing them with other children. / Calling them lazy. / Turning every conversation into marks. | Offer a short reset and return with one smaller task rather than repeating the whole lecture. | Choose one 20–30 minute study block and review how it went.
+R4|Anger | 8–12 | Set a boundary while validating emotion | It's okay to be angry. It's not okay to hurt people or break things. Let's work out what happened. | Name the emotion without approving harmful behavior. Give space. Discuss the trigger after calm returns. | Shaming the child for being angry. / Arguing during peak anger. / Threatening consequences immediately. | Give time to settle, then revisit the situation using short questions. | Agree on one safe way to signal 'I need a break.'
+R5|Friends | 13–17 | Stay connected while discussing a concern | I want to understand what happened from your side before I give my opinion. | Ask open questions. Listen before advising. Separate the child's friend from the specific behavior you are concerned about. | Insulting the friend. / Interrogating. / Assuming the worst. | If they stop talking, reassure them that the door is open and avoid forcing an immediate disclosure. | Ask one low-pressure follow-up question later.
+R6|Confidence | 8–17 | Support confidence without empty praise | I noticed how you handled that. What part felt difficult, and what helped you keep going? | Praise effort, strategy and persistence. Ask what they want help with rather than immediately fixing it. | Comparing siblings. / 'You're the best' when the child is struggling. / Taking over every problem. | If they reject praise, keep it specific and factual rather than arguing with them. | Identify one skill they want to practise this week.
+R7|Discipline | 5–12 | Set a clear boundary without humiliation | We need to talk about what happened and what the rule is. I want us to work out what happens next. | State the behavior, the boundary and the consequence calmly. Keep the consequence proportionate and predictable. | Name-calling. / Public shaming. / Changing consequences in anger. | If the child refuses to talk, give a short pause and return to the same boundary later. | Restate the rule and agree on the next opportunity to repair.
+
+===SHEET: 04_Mindfulness_Content===
+R1|State | Duration | Practice | Purpose | Guided script
+R2|Stressed | 3 | Breathing | Settle the body | Sit comfortably. Let your shoulders drop. Notice your breathing without changing it. Slowly breathe in. Slowly breathe out. Repeat for three minutes. When your mind wanders, gently return to the next breath.
+R3|Restless | 5 | Grounding | Come back to the present | Notice 5 things you can see. Notice 4 things you can physically feel. Notice 3 sounds. Notice 2 smells or sensations. Notice 1 thing you are grateful to have in this moment. Finish with three slow breaths.
+R4|Angry | 5 | Breathing | Create a pause before reacting | Do not try to force the anger away. Notice where it feels strongest in the body. Breathe in gently and make the exhale a little longer. Repeat. At the end, name one thing you can control in the next ten minutes.
+R5|Distracted | 3 | Quiet focus | Return attention to one anchor | Choose one sound or the feeling of your feet on the floor. Stay with it for one breath at a time. When thoughts pull you away, notice that and return without judging yourself.
+R6|Overwhelmed | 10 | Body scan | Slow down and notice | Start at your feet and move attention upward: feet, legs, abdomen, chest, shoulders, face. At each area, notice tension without needing to fix it. Breathe slowly and allow each area to soften if it naturally does.
+R7|General calm | 5 | Quiet focus | Create a calm reset | Sit or lie comfortably. Notice the contact between your body and the surface supporting you. Follow five natural breaths. Notice sounds around you. Return to your breath. Finish by choosing one small, manageable next step.
+
+===SHEET: 05_Values_Questions===
+R1|Q# | Option A | Option B | Question
+R2|1 | Freedom | Security | Which matters more to you right now?
+R3|2 | Connection | Independence | Which would you protect if you could choose only one?
+R4|3 | Creativity | Stability | Which gives you more energy?
+R5|4 | Growth | Comfort | Which would you rather move toward?
+R6|5 | Contribution | Achievement | Which feels more meaningful?
+R7|6 | Adventure | Predictability | Which would you choose for the next chapter?
+R8|7 | Learning | Recognition | Which would you still want without external praise?
+R9|8 | Family | Ambition | Which needs more attention from you right now?
+R10|9 | Honesty | Harmony | Which would you prioritise in a difficult conversation?
+R11|10 | Health | Productivity | Which should influence your schedule more?
+R12|11 | Purpose | Pleasure | Which feels more important when making a major decision?
+R13|12 | Belonging | Self-expression | Which feels more missing right now?
+R14|13 | Compassion | Fairness | Which principle matters more in conflict?
+R15|14 | Curiosity | Certainty | Which helps you make better decisions?
+R16|15 | Discipline | Spontaneity | Which quality would improve your life more?
+R17|16 | Peace | Progress | Which would you choose if you could strengthen only one this year?
+
+===SHEET: 05B_Values_Mapping===
+R1|Value | Theme | Suggested action
+R2|Freedom | Autonomy / Choice | Create one area of the week with fewer unnecessary constraints.
+R3|Security | Stability / Safety | Review one financial, work or home uncertainty and define a practical next step.
+R4|Connection | Relationships / Belonging | Schedule one meaningful conversation or shared activity.
+R5|Independence | Autonomy / Confidence | Take ownership of one decision you have been postponing.
+R6|Creativity | Expression / Exploration | Make 30 minutes for creating, designing or experimenting.
+R7|Stability | Security / Structure | Create one repeatable routine that reduces daily friction.
+R8|Growth | Learning / Development | Choose one skill or area to improve over the next month.
+R9|Comfort | Wellbeing / Ease | Remove one avoidable source of friction from your week.
+R10|Contribution | Service / Impact | Identify one person, team or cause you can help meaningfully.
+R11|Achievement | Progress / Mastery | Define one measurable milestone and the smallest next action.
+R12|Adventure | Exploration / Novelty | Try one new place, activity or learning experience.
+R13|Predictability | Structure / Stability | Clarify one uncertain commitment or decision.
+R14|Learning | Curiosity / Mastery | Set one learning goal and a weekly practice slot.
+R15|Recognition | Achievement / Visibility | Identify work that deserves clearer evidence or communication of impact.
+R16|Family | Relationships / Care | Protect one recurring family connection point.
+R17|Ambition | Progress / Achievement | Choose one stretch goal and define the next measurable step.
+R18|Honesty | Integrity / Authenticity | Have one conversation where you state your position clearly and respectfully.
+R19|Harmony | Peace / Relationships | Identify one conflict where a calmer boundary could reduce friction.
+R20|Health | Wellbeing / Vitality | Choose one sustainable routine that supports your physical wellbeing.
+R21|Productivity | Progress / Effectiveness | Remove or automate one low-value task.
+R22|Purpose | Meaning / Contribution | Connect one current task to the bigger reason it matters.
+R23|Pleasure | Joy / Wellbeing | Add one healthy, enjoyable activity without turning it into a productivity task.
+R24|Belonging | Connection / Community | Join or reconnect with one group, person or community.
+R25|Self-expression | Creativity / Authenticity | Make one decision that reflects your genuine preference rather than expectation.
+R26|Compassion | Care / Empathy | Practise one response that is firm without being harsh.
+R27|Fairness | Integrity / Justice | Clarify what fair treatment looks like for everyone involved.
+R28|Curiosity | Learning / Exploration | Replace one assumption with a question.
+R29|Certainty | Security / Clarity | List what is known, unknown and controllable in one decision.
+R30|Discipline | Structure / Mastery | Create a small repeatable habit rather than relying on motivation.
+R31|Spontaneity | Freedom / Novelty | Leave one small part of your week intentionally unplanned.
+R32|Peace | Calm / Balance | Protect one quiet period and reduce one avoidable source of noise.
+R33|Progress | Growth / Achievement | Define what 'better' looks like and the next visible step.
+
+===SHEET: 06_Shared_UI_Copy===
+R1|Area | UI label | Copy
+R2|Intro | What this tool does | A short, practical YuktiOne exercise designed to help you reflect and make a useful next step.
+R3|Autosave | Saving… | Your answers are being saved automatically.
+R4|Autosave | Saved | All changes saved.
+R5|Draft recovery | Continue where you left off? | Your unfinished tool is saved. Continue your draft or start over.
+R6|History | Saved result | Your completed result is saved privately in History.
+R7|Delete | Delete this result? | This removes the saved result from your History. This action cannot be undone.
+R8|Disclaimer | Educational guidance | This tool is for self-reflection and general guidance. It is not a diagnosis or a substitute for professional care.
+
+===SHEET: 07_Content_Checklist===
+R1|Tool | Content type | Scope | Status
+R2|Parenting Stress Check | Questions | 8 scored questions | Included
+R3|Parenting Stress Check | Scoring | Reverse-score support/recovery; normalize 0–100 | Included
+R4|Parenting Stress Check | Actions | 8 pressure-area action cards | Included
+R5|Child Routine Planner | Inputs | 12 fields / preferences | Included
+R6|Child Routine Planner | Rules | Fixed blocks, flexible blocks, conflicts, buffers | Included
+R7|Parent–Child Conversation Guide | Scenarios | 6 starter scenarios with full response content | Included
+R8|Daily Mindfulness & Calm | Practices | 6 guided scripts across states/durations | Included
+R9|Purpose & Values Finder | Questions | 16 paired-value questions | Included
+R10|Purpose & Values Finder | Mappings | 32 value-to-theme/action mappings | Included
+R11|All tools | Persistence | Auto-save, draft recovery, History, edit, recalculate, delete | Included in v2 logic
+
+===SHEET: README===
+R1|Item | Detail
+R2|Purpose | This workbook adds the actual user-facing questions, prompts, scripts, scenario content and action copy missing from the earlier logic-only workbook.
+R3|Developer use | Use the IDs and content as CMS/seed content. Do not hard-code if the product is expected to support future content updates.
+R4|Tone | Calm, non-judgmental, practical, premium and human.
+R5|Safety | Parenting and mindfulness content is educational/self-guidance content. Do not diagnose, promise treatment, or infer a disorder.
+R6|Version | Content pack v3 — 12 Nov 2026
+

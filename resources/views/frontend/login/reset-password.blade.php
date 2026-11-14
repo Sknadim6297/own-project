@@ -42,8 +42,8 @@
                     @enderror
                 </div>
                 <div>
-                    <label for="password" class="mb-2 block text-sm font-medium text-text-primary">{{ __('Password') }}</label>
-                    <input id="password" type="password" name="password" required autocomplete="new-password"
+                    <label for="password" class="mb-2 block text-sm font-medium text-text-primary">New Password</label>
+                    <input id="password" type="password" name="password" required minlength="8" autocomplete="new-password" placeholder="Enter a new password"
                         class="w-full rounded-control border border-border bg-white px-4 py-3 text-sm text-text-primary placeholder:text-text-muted shadow-sm outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-100 @error('password') border-red-500 @enderror">
                     <div class="password-strength" aria-hidden="true"><div class="password-strength-meter"></div></div>
                     @error('password')
@@ -51,8 +51,8 @@
                     @enderror
                 </div>
                 <div>
-                    <label for="password-confirm" class="mb-2 block text-sm font-medium text-text-primary">{{ __('Confirm Password') }}</label>
-                    <input id="password-confirm" type="password" name="password_confirmation" required autocomplete="new-password"
+                    <label for="password-confirm" class="mb-2 block text-sm font-medium text-text-primary">Confirm New Password</label>
+                    <input id="password-confirm" type="password" name="password_confirmation" required minlength="8" autocomplete="new-password" placeholder="Confirm your new password"
                         class="w-full rounded-control border border-border bg-white px-4 py-3 text-sm text-text-primary placeholder:text-text-muted shadow-sm outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-100">
                 </div>
                 <button type="submit" class="w-full rounded-control bg-brand-primary px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800 focus:outline-none focus:ring-4 focus:ring-brand-200">

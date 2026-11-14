@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Services\AccountRecovery;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Illuminate\Auth\Events\PasswordReset;
 
 class ForgotPasswordController extends Controller
 {
     /**
-     * Show the forgot password form
+     * Show the forgot password form.
      */
     public function showForgotForm()
     {
@@ -20,64 +20,61 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * Send password reset link
+     * Send a password reset link to the given email address.
+     *
+     * Always returns a generic confirmation to avoid user enumeration.
      */
     public function sendResetLink(Request $request, AccountRecovery $recovery)
     {
         $request->validate([
-            'phone' => ['required', 'string', 'min:10', 'max:20', 'regex:/^[0-9+\-\s()]+$/'],
+            'email' => ['required', 'email', 'max:255'],
+        ], [
+            'email.required' => 'Please enter your registered email address.',
+            'email.email' => 'Please enter a valid email address.',
         ]);
 
-        if ($recovery->nationalNumber($request->phone) === '') {
-            return back()
-                ->withInput($request->only('phone'))
-                ->withErrors(['phone' => 'Enter a valid mobile number.']);
-        }
-
-        $user = $recovery->registeredCustomer($request->phone);
-
-        if (! $user) {
-            return back()
-                ->withInput($request->only('phone'))
-                ->with('recovery_unregistered', true);
-        }
+        $email = Str::lower(trim((string) $request->input('email')));
 
         try {
-            $sent = $recovery->sendCustomerReset($user);
+            $user = $recovery->registeredCustomerByEmail($email);
+
+            if ($user) {
+                $recovery->sendCustomerReset($user);
+            }
         } catch (\Throwable $exception) {
             report($exception);
-            $sent = false;
-        }
 
-        if (! $sent) {
             return back()
-                ->withInput($request->only('phone'))
-                ->withErrors(['phone' => AccountRecovery::SEND_FAILED]);
+                ->withInput($request->only('email'))
+                ->withErrors(['email' => AccountRecovery::SEND_FAILED]);
         }
 
         return back()->with('status', AccountRecovery::SENT_MESSAGE);
     }
 
     /**
-     * Show password reset form
+     * Show the password reset form.
      */
     public function showResetForm(Request $request)
     {
         return view('frontend.login.reset-password', [
-            'token' => $request->token,
-            'email' => $request->email,
+            'token' => $request->query('token', $request->input('token')),
+            'email' => $request->query('email', $request->input('email')),
         ]);
     }
 
     /**
-     * Reset the password
+     * Reset the user's password.
      */
     public function resetPassword(Request $request)
     {
         $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
+            'token' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'password.confirmed' => 'The password confirmation does not match.',
+            'password.min' => 'The password must be at least 8 characters.',
         ]);
 
         $status = Password::broker('users')->reset(
@@ -93,7 +90,9 @@ class ForgotPasswordController extends Controller
         );
 
         return $status === Password::PASSWORD_RESET
-            ? redirect()->route('login')->with('status', __($status))
-            : back()->withErrors(['email' => [__($status)]]);
+            ? redirect()->route('login')->with('status', 'Your password has been reset successfully. Please sign in with your new password.')
+            : back()
+                ->withInput($request->only('email'))
+                ->withErrors(['email' => [__($status)]]);
     }
 }

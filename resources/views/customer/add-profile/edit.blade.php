@@ -35,8 +35,20 @@
                             <label for="profile_image">Upload a new photo</label>
                             <input type="file" id="profile_image" name="profile_image" accept="image/*">
                             @if($profile->customerProfile && $profile->customerProfile->profile_image)
+                                @php
+                                    $profileImagePath = $profile->customerProfile->profile_image;
+                                    // Files are stored under public/uploads/profiles (see ProfileController).
+                                    // Support legacy values that already include a storage/ prefix.
+                                    $profileImageUrl = str_starts_with($profileImagePath, 'http://') || str_starts_with($profileImagePath, 'https://')
+                                        ? $profileImagePath
+                                        : asset(ltrim(preg_replace('#^storage/#', '', $profileImagePath), '/'));
+                                @endphp
                                 <div class="avatar-preview">
-                                    <img src="{{ asset('storage/'.$profile->customerProfile->profile_image) }}" alt="Current Photo">
+                                    <img
+                                        src="{{ $profileImageUrl }}"
+                                        alt="Current photo"
+                                        onerror="this.onerror=null;this.src='{{ asset('frontend/assets/img/avatar.jpg') }}';"
+                                    >
                                     <span class="text-muted">Current photo</span>
                                 </div>
                             @endif

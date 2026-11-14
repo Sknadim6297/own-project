@@ -206,7 +206,12 @@ class AdminPsychologySettingsTest extends TestCase
         );
         $this->assertSame(
             count($unpublishedSlugs),
-            Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->whereNull('route_name')->count()
+            Tool::query()
+                ->whereIn('slug', $unpublishedSlugs)
+                ->where('status', 'coming_soon')
+                ->where('is_implemented', false)
+                ->whereNull('route_name')
+                ->count()
         );
         foreach (['daily-mood-check-in', 'digital-journal', 'gratitude-journal'] as $slug) {
             $this->assertTrue(Tool::query()->where('slug', $slug)->firstOrFail()->canLaunch(), $slug);
@@ -265,7 +270,7 @@ class AdminPsychologySettingsTest extends TestCase
         ];
         $this->assertSame(
             count($unpublishedSlugs),
-            Tool::query()->where('status', 'coming_soon')->where('is_implemented', false)->count()
+            Tool::query()->whereIn('slug', $unpublishedSlugs)->where('status', 'coming_soon')->where('is_implemented', false)->count()
         );
         $this->assertTrue(Tool::query()->where('slug', 'daily-mood-check-in')->firstOrFail()->canLaunch());
         $this->assertTrue(Tool::query()->where('slug', 'digital-journal')->firstOrFail()->canLaunch());

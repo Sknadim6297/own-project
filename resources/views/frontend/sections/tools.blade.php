@@ -113,6 +113,7 @@
                         'water' => '💧',
                         'weight' => '🏃',
                         'nutrition' => '🥗',
+                        'coins' => '💰',
                         'leaf' => '🌿',
                     ];
                 @endphp

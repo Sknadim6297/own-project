@@ -46,7 +46,7 @@ class CustomerLoginHomeRedirectTest extends TestCase
         });
     }
 
-    public function test_successful_customer_login_redirects_to_dashboard_by_default(): void
+    public function test_successful_customer_login_redirects_to_home_by_default(): void
     {
         $this->member('home-login@example.test');
 
@@ -58,7 +58,7 @@ class CustomerLoginHomeRedirectTest extends TestCase
 
         $response->assertOk()
             ->assertJsonPath('status', 'success')
-            ->assertJsonPath('redirect_url', route('user.dashboard'));
+            ->assertJsonPath('redirect_url', route('home'));
     }
 
     public function test_customer_login_preserves_safe_intended_destination(): void
@@ -109,7 +109,7 @@ class CustomerLoginHomeRedirectTest extends TestCase
 
         $response->assertOk()
             ->assertJsonPath('status', 'success')
-            ->assertJsonPath('redirect_url', route('user.dashboard'));
+            ->assertJsonPath('redirect_url', route('home'));
     }
 
     public function test_customer_login_rejects_external_redirect_targets(): void
@@ -125,16 +125,16 @@ class CustomerLoginHomeRedirectTest extends TestCase
 
         $response->assertOk()
             ->assertJsonPath('status', 'success')
-            ->assertJsonPath('redirect_url', route('user.dashboard'));
+            ->assertJsonPath('redirect_url', route('home'));
     }
 
-    public function test_authenticated_customer_visiting_login_is_sent_to_dashboard(): void
+    public function test_authenticated_customer_visiting_login_is_sent_to_home(): void
     {
         $member = $this->member('already-in@example.test');
 
         $this->actingAs($member, 'user')
             ->get(route('login'))
-            ->assertRedirect(route('user.dashboard'));
+            ->assertRedirect(route('home'));
     }
 
     public function test_public_header_exposes_customer_dashboard_cta(): void
@@ -145,13 +145,13 @@ class CustomerLoginHomeRedirectTest extends TestCase
 
         $html = view('frontend.sections.header')->render();
 
-        $this->assertStringContainsString('Go to Customer Dashboard', $html);
+        $this->assertStringContainsString('Go to Dashboard', $html);
         $this->assertStringContainsString('yk-navbar__dashboard', $html);
         $this->assertStringContainsString(route('user.dashboard'), $html);
         $this->assertStringContainsString('My Profile', $html);
     }
 
-    public function test_guest_middleware_sends_authenticated_customers_to_dashboard(): void
+    public function test_guest_middleware_sends_authenticated_customers_to_home(): void
     {
         $member = $this->member('guest-mw@example.test');
 
@@ -159,7 +159,7 @@ class CustomerLoginHomeRedirectTest extends TestCase
         // twice in web.php and the first match is not behind `guest`.
         $this->actingAs($member, 'user')
             ->get(route('login'))
-            ->assertRedirect(route('user.dashboard'));
+            ->assertRedirect(route('home'));
     }
 
     private function member(string $email): User
