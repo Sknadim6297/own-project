@@ -27,6 +27,81 @@ if (searchInput && searchResults && searchButton) {
         searchResults.style.display = 'block';
     };
 
+    const resultUrl = (item) => {
+        if (typeof item?.url === 'string' && item.url) {
+            return item.url;
+        }
+
+        if (item?.type === 'service' && typeof item?.slug === 'string') {
+            const serviceBase = (searchInput.dataset.serviceBase || '/service').replace(/\/$/, '');
+            return `${serviceBase}/${encodeURIComponent(item.slug)}`;
+        }
+
+        return null;
+    };
+
+    const renderResults = (items) => {
+        const list = document.createElement('div');
+        list.className = 'list-group';
+
+        items.forEach((item) => {
+            const url = resultUrl(item);
+            if (!url) {
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.className = 'list-group-item list-group-item-action yk-hero__result';
+            link.href = url;
+            link.setAttribute('role', 'option');
+
+            const copy = document.createElement('span');
+            copy.className = 'yk-hero__result-copy';
+
+            const title = document.createElement('span');
+            title.className = 'yk-hero__result-title';
+            title.textContent = item.name;
+            copy.append(title);
+
+            if (item.meta) {
+                const meta = document.createElement('span');
+                meta.className = 'yk-hero__result-meta';
+                meta.textContent = item.meta;
+                copy.append(meta);
+            }
+
+            const badge = document.createElement('span');
+            badge.className = `yk-hero__result-badge is-${item.type || 'service'}`;
+            badge.textContent = item.type_label || 'Result';
+
+            link.append(copy, badge);
+            list.append(link);
+        });
+
+        searchResults.replaceChildren(list);
+        searchResults.classList.remove('d-none');
+        searchResults.style.display = 'block';
+    };
+
+    const normalizeResults = (data) => {
+        if (Array.isArray(data.results) && data.results.length) {
+            return data.results.filter((item) => typeof item?.name === 'string' && resultUrl(item));
+        }
+
+        // Legacy payload: services only
+        const serviceBase = (searchInput.dataset.serviceBase || '/service').replace(/\/$/, '');
+        return (Array.isArray(data.services) ? data.services : [])
+            .filter((service) => typeof service?.slug === 'string' && typeof service?.name === 'string')
+            .map((service) => ({
+                type: 'service',
+                type_label: 'Service',
+                name: service.name,
+                slug: service.slug,
+                url: `${serviceBase}/${encodeURIComponent(service.slug)}`,
+                meta: null,
+            }));
+    };
+
     const findServices = async (query) => {
         const requestId = ++requestNumber;
 
@@ -46,42 +121,25 @@ if (searchInput && searchResults && searchButton) {
             }
 
             const data = await response.json();
-            const services = Array.isArray(data.services)
-                ? data.services.filter((service) => typeof service?.slug === 'string' && typeof service?.name === 'string')
-                : [];
+            const items = normalizeResults(data);
 
             if (requestId !== requestNumber) {
                 return [];
             }
 
-            currentResults = services;
-            if (!services.length) {
+            currentResults = items;
+            if (!items.length) {
                 showMessage('No results found. Try a different search.');
-                return services;
+                return items;
             }
 
-            const list = document.createElement('div');
-            list.className = 'list-group';
-
-            services.forEach((service) => {
-                const link = document.createElement('a');
-                link.className = 'list-group-item list-group-item-action';
-                const serviceBase = (searchInput.dataset.serviceBase || '/service').replace(/\/$/, '');
-                link.href = `${serviceBase}/${encodeURIComponent(service.slug)}`;
-                link.textContent = service.name;
-                link.setAttribute('role', 'option');
-                list.append(link);
-            });
-
-            searchResults.replaceChildren(list);
-            searchResults.classList.remove('d-none');
-            searchResults.style.display = 'block';
-            return services;
+            renderResults(items);
+            return items;
         } catch (error) {
             if (requestId === requestNumber) {
                 currentResults = [];
                 showMessage('Search is temporarily unavailable. Please try again.');
-                console.error('Unable to search homepage services:', error);
+                console.error('Unable to search homepage catalog:', error);
             }
 
             return [];
@@ -95,13 +153,13 @@ if (searchInput && searchResults && searchButton) {
             return;
         }
 
-        const services = currentResults.length ? currentResults : await findServices(query);
-        const exactMatch = services.find((service) => service.name.toLowerCase() === query.toLowerCase());
-        const service = exactMatch || services[0];
+        const items = currentResults.length ? currentResults : await findServices(query);
+        const exactMatch = items.find((item) => item.name.toLowerCase() === query.toLowerCase());
+        const item = exactMatch || items[0];
+        const url = item ? resultUrl(item) : null;
 
-        if (service) {
-            const serviceBase = (searchInput.dataset.serviceBase || '/service').replace(/\/$/, '');
-            window.location.assign(`${serviceBase}/${encodeURIComponent(service.slug)}`);
+        if (url) {
+            window.location.assign(url);
         }
     };
 
@@ -300,3 +358,38 @@ if (revealTargets.length && !window.matchMedia('(prefers-reduced-motion: reduce)
 
     revealTargets.forEach((target) => revealObserver.observe(target));
 }
+
+const bindHomeCarousel = (rootSelector, trackAttr, prevAttr, nextAttr) => {
+    document.querySelectorAll(rootSelector).forEach((carousel) => {
+        const track = carousel.querySelector(`[${trackAttr}]`);
+        const previous = carousel.querySelector(`[${prevAttr}]`);
+        const next = carousel.querySelector(`[${nextAttr}]`);
+
+        if (!(track instanceof HTMLElement) || !(previous instanceof HTMLButtonElement) || !(next instanceof HTMLButtonElement)) {
+            return;
+        }
+
+        const updateControls = () => {
+            const maxScrollLeft = Math.max(0, track.scrollWidth - track.clientWidth);
+            previous.disabled = track.scrollLeft <= 2;
+            next.disabled = track.scrollLeft >= maxScrollLeft - 2;
+        };
+
+        const scrollByPage = (direction) => {
+            const amount = Math.max(track.clientWidth * 0.75, 180);
+            track.scrollBy({
+                left: direction * amount,
+                behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+            });
+        };
+
+        previous.addEventListener('click', () => scrollByPage(-1));
+        next.addEventListener('click', () => scrollByPage(1));
+        track.addEventListener('scroll', updateControls, { passive: true });
+        window.addEventListener('resize', updateControls);
+        updateControls();
+    });
+};
+
+bindHomeCarousel('[data-categories-carousel]', 'data-categories-track', 'data-categories-prev', 'data-categories-next');
+bindHomeCarousel('[data-services-carousel]', 'data-services-track', 'data-services-prev', 'data-services-next');

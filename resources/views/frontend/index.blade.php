@@ -794,56 +794,17 @@
 		@include('frontend.home.partials.insights')
 
 		@include('frontend.home.partials.talk-experts')
-		
-		{{-- Popular Services temporarily hidden — uncomment to restore.
-		<section class="popular-services-main-section py-5" style="background-color: white;">
-			<div class="container">
-				<div class="row">
-					<div class="col-12">
-						<h2 class="popular-services-title">Popular services</h2>
-						<div class="popular-services-scroll-container">
-							<div class="popular-services-wrapper" id="popularServicesScroll">
-								@foreach($services as $service)
-								<!-- Service Card: {{ $service->name }} -->
-								<a href="{{ route('service.show', $service->slug) }}" class="popular-service-card">
-									<div class="service-content">
-										<h3 class="service-title">{{ $service->name }}</h3>
-									</div>
-									<div class="service-graphic">
-										<div class="service-mini-card">
-											<img src="{{ $service->image ? asset('storage/' . $service->image) : asset('frontend/assets/img/new-icons/header-menu-icon/designer.png') }}" alt="{{ $service->name }}" class="service-image">
-										</div>
-									</div>
-								</a>
-								@endforeach
-							</div>
-							
-							<button class="scroll-arrow-right" onclick="scrollPopularServices('right')">
-								<i class="fas fa-chevron-right"></i>
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		--}}
-		
-        
-		@include('frontend.home.partials.platform-experience')
-		@include('frontend.home.partials.benefits')
 
+		@include('frontend.home.partials.platform-experience')
 
 		<!-- /bg_gray -->
 
 		@if (config('yuktione.programmes_enabled'))
 			@include('frontend.home.partials.events')
 		@endif
-		@include('frontend.home.partials.support-cta')
 		@include('frontend.home.partials.how-it-works')
 
 		@include('frontend.home.partials.testimonials')
-		@include('frontend.home.partials.blogs')
-		@include('frontend.home.partials.faq')
 		@include('frontend.home.partials.professional-cta')
 
 	</main>

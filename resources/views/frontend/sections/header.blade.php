@@ -27,9 +27,9 @@
 
     $navLinks = [
         [
-            'label' => 'Explore',
-            'href' => route('gridlisting'),
-            'active' => request()->routeIs('gridlisting'),
+            'label' => 'All Categories',
+            'href' => route('categories.index'),
+            'active' => request()->routeIs('categories.*'),
             'placeholder' => false,
         ],
         [

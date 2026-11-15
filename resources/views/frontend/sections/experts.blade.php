@@ -155,47 +155,9 @@
                     @endif
                 </div>
             @else
-                <ul class="yk-experts__grid">
+                <ul class="yk-rows yk-rows--experts">
                     @foreach ($items as $card)
-                        <li>
-                            <article class="yk-expert-card">
-                                <a class="yk-expert-card__media" href="{{ $card['url'] }}" tabindex="-1" aria-hidden="true">
-                                    @if ($card['image'])
-                                        <img src="{{ $card['image'] }}" alt="" width="320" height="320" loading="lazy" decoding="async" data-initials-fallback="1" onerror="this.hidden=true; if (this.nextElementSibling) this.nextElementSibling.hidden=false;">
-                                    @endif
-                                    <span class="yk-expert-card__fallback" @if ($card['image']) hidden @endif>{{ $card['initials'] }}</span>
-                                </a>
-                                <div class="yk-expert-card__body">
-                                    <h2 class="yk-expert-card__name">
-                                        <a href="{{ $card['url'] }}">{{ $card['title'] }}</a>
-                                        @if (!empty($card['verified']))
-                                            <span class="yk-expert-card__verified" title="Verified professional">
-                                                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8 3 3 6-6"/></svg>
-                                                <span class="visually-hidden">Verified</span>
-                                            </span>
-                                        @endif
-                                    </h2>
-                                    @if (!empty($card['subtitle']))
-                                        <p class="yk-expert-card__role">{{ $card['subtitle'] }}</p>
-                                    @endif
-                                    @if (!empty($card['experience']))
-                                        <p class="yk-expert-card__exp">{{ $card['experience'] }} experience</p>
-                                    @endif
-                                    @if (!empty($card['qualification']))
-                                        <p class="yk-expert-card__qual">{{ \Illuminate\Support\Str::limit($card['qualification'], 72) }}</p>
-                                    @endif
-                                    @if (!empty($card['price_label']))
-                                        <p class="yk-expert-card__price">
-                                            {{ $card['price_label'] }}@if (!empty($card['price_suffix']))<small>{{ $card['price_suffix'] }}</small>@endif
-                                        </p>
-                                    @endif
-                                    <div class="yk-expert-card__actions">
-                                        <a class="yk-experts__btn yk-experts__btn--ghost" href="{{ $card['url'] }}">{{ $card['cta'] ?? 'View Profile' }}</a>
-                                        <a class="yk-experts__btn yk-experts__btn--primary" href="{{ $card['url'] }}">{{ $card['book_cta'] ?? 'Book Consultation' }}</a>
-                                    </div>
-                                </div>
-                            </article>
-                        </li>
+                        <li>@include('frontend.sections.partials.catalog-expert-row', ['expert' => $card])</li>
                     @endforeach
                 </ul>
 

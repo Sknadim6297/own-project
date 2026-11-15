@@ -136,13 +136,23 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
             }
 
             const data = await response.json();
+            const results = Array.isArray(data.results) ? data.results : [];
             const services = Array.isArray(data.services) ? data.services : [];
+            const catalogMatch = results.find((item) =>
+                item.name?.toLowerCase() === query.toLowerCase()
+            ) || results[0];
+
+            if (catalogMatch?.url) {
+                window.location.assign(catalogMatch.url);
+                return;
+            }
+
             const result = services.find((service) =>
                 service.name?.toLowerCase() === query.toLowerCase()
             ) || services[0];
 
             if (!result?.slug) {
-                status.textContent = 'No matching services found. Try another search.';
+                status.textContent = 'No matching results found. Try another search.';
                 return;
             }
 

@@ -16,6 +16,7 @@ use App\Models\SubService;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use App\Models\Service;
+use App\Models\Tool;
 use App\Models\Banner;
 use App\Models\AboutUs;
 use App\Models\Whychoose;
@@ -47,7 +48,11 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $services = Service::latest()->get();
+        $services = Service::query()
+            ->whereNotNull('slug')
+            ->where('slug', '!=', '')
+            ->latest()
+            ->get();
         $banners = Banner::latest()->get();
         $about_us = AboutUs::latest()->get();
         $whychooses = Whychoose::latest()->get();
@@ -1003,28 +1008,71 @@ class HomeController extends Controller
     public function searchservice() {}
 
     /**
-     * Search for services based on name
-     * 
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * Homepage / header autocomplete: launchable tools only.
      */
     public function searchServices(Request $request)
     {
-        $query = $request->input('query');
+        $query = trim((string) $request->input('query', ''));
 
-        if (!$query || strlen($query) < 1) {
+        if ($query === '') {
             return response()->json([
-                'services' => []
+                'results' => [],
+                'services' => [],
             ]);
         }
 
-        $services = Service::where('name', 'LIKE', "%{$query}%")
-            ->select('id', 'name', 'slug')
-            ->limit(10)
+        $like = '%' . str_replace(['%', '_'], ['\\%', '\\_'], $query) . '%';
+
+        $tools = Tool::query()
+            ->publiclyAvailable()
+            ->where(function ($builder) use ($like) {
+                $builder->where('name', 'LIKE', $like)
+                    ->orWhere('slug', 'LIKE', $like)
+                    ->orWhere('description', 'LIKE', $like);
+            })
+            ->orderBy('display_order')
+            ->orderBy('name')
+            ->limit(20)
             ->get();
 
+        $results = $tools
+            ->filter(fn (Tool $tool) => $tool->canLaunch())
+            ->map(function (Tool $tool) {
+                try {
+                    $url = route($tool->route_name);
+                } catch (\Throwable) {
+                    return null;
+                }
+
+                return [
+                    'type' => 'tool',
+                    'type_label' => 'Tool',
+                    'id' => $tool->id,
+                    'name' => $tool->name,
+                    'slug' => $tool->slug,
+                    'url' => $url,
+                    'meta' => null,
+                ];
+            })
+            ->filter()
+            ->sortBy(function (array $item) use ($query) {
+                $name = Str::lower($item['name']);
+                $needle = Str::lower($query);
+
+                $rank = match (true) {
+                    $name === $needle => 0,
+                    Str::startsWith($name, $needle) => 1,
+                    default => 2,
+                };
+
+                return sprintf('%d-%s', $rank, $name);
+            })
+            ->values()
+            ->take(12);
+
         return response()->json([
-            'services' => $services
+            'results' => $results,
+            'services' => [],
         ]);
     }
 }

@@ -51,17 +51,7 @@
                             ->map(fn ($part) => \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($part, 0, 1)))
                             ->implode('');
 
-                        $photoPath = $expert->profile?->photo;
-                        $photoNeedsReview = $photoPath === 'professional_documents/McPqTOLmpLHhukE6ka0DJmmNWTU3qG6segI57ccy.jpg'
-                            || $photoPath === 'uploads/professionals/photo/media_68b52ad01436a.jpg';
-                        $photoUrl = null;
-                        if (filled($photoPath) && !$photoNeedsReview) {
-                            $photoUrl = preg_match('/^https?:\/\//i', $photoPath)
-                                ? $photoPath
-                                : asset(str_starts_with($photoPath, 'storage/')
-                                    ? $photoPath
-                                    : 'storage/' . ltrim($photoPath, '/'));
-                        }
+                        $photoUrl = \App\Helpers\ImageHelper::professionalPhotoUrl($expert->profile?->photo);
 
                         $profileUrl = route('professionals.details', [
                             'id' => $expert->id,

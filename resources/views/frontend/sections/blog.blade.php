@@ -1,18 +1,18 @@
 @extends('layouts.layout')
 
-@section('title', 'Blog | YuktiOne')
+@section('title', 'Articles | YuktiOne')
 @section('meta_description', 'Expert articles on career, health, finance, and lifestyle from accepted professionals.')
 
 @section('schema')
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Blog",
+  "@type": "CollectionPage",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "{{ url('/blog') }}"
   },
-  "name": "{{ config('yuktione.name') }} Blog",
+  "name": "{{ config('yuktione.name') }} Articles",
   "description": "Explore expert articles on career, health, finance, and lifestyle.",
   "url": "{{ url('/blog') }}",
   "publisher": {
@@ -32,21 +32,21 @@
     class="yk-blog"
     title="{{ $heroHeading ?: 'Insights & guidance' }}"
     lead="{{ $heroLead ?: 'Articles from accepted professionals across career, wellness, lifestyle, and more.' }}"
-    crumb="Blog"
+    crumb="Articles"
 >
     <form class="yk-doc__search" action="{{ route('blog.index') }}" method="get" role="search">
         @if ($category)
             <input type="hidden" name="category" value="{{ $category }}">
         @endif
-        <label class="visually-hidden" for="blog-search">Search blogs or categories</label>
-        <input id="blog-search" type="search" name="search" value="{{ $search }}" placeholder="Search blogs or categories..." maxlength="100" autocomplete="off">
+        <label class="visually-hidden" for="blog-search">Search articles or categories</label>
+        <input id="blog-search" type="search" name="search" value="{{ $search }}" placeholder="Search articles or categories..." maxlength="100" autocomplete="off">
         <button class="yk-doc__button" type="submit">Search</button>
                     </form>
 
     <div class="yk-blog__layout">
-        <aside class="yk-blog__aside" aria-label="Blog filters">
+        <aside class="yk-blog__aside" aria-label="Article filters">
             <div class="yk-blog__panel">
-                <h2>Latest posts</h2>
+                <h2>Latest articles</h2>
                 <ul class="yk-blog__latest">
                     @forelse ($latestBlogs as $latestBlog)
                         @php $latestSlug = \Illuminate\Support\Str::slug($latestBlog->blog->title ?? ''); @endphp
@@ -100,11 +100,11 @@
             @endif
         </aside>
 
-        <section class="yk-blog__main" aria-label="Blog posts">
+        <section class="yk-blog__main" aria-label="Articles">
             @if ($blogPosts->isEmpty())
                 <div class="yk-doc__empty">
-                    <h2>No posts found</h2>
-                    <p>Try another search, or <a href="{{ route('blog.index') }}">browse all posts</a>.</p>
+                    <h2>No articles found</h2>
+                    <p>Try another search, or <a href="{{ route('blog.index') }}">browse all articles</a>.</p>
                 </div>
             @else
                 <ul class="yk-blog__grid">
@@ -133,7 +133,7 @@
                 </ul>
 
                 @if ($blogPosts->hasPages())
-                    <nav class="yk-blog__pages" aria-label="Blog pages">
+                    <nav class="yk-blog__pages" aria-label="Article pages">
                         @if ($blogPosts->onFirstPage())
                             <span aria-disabled="true">Previous</span>
                         @else

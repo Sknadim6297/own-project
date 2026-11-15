@@ -6,7 +6,7 @@
 @if ($trendingHeader)
     <li class="tazen-header__menu-item tazen-header__menu-item--category" data-category-item>
         <div class="tazen-header__category-heading">
-            <a class="tazen-header__link" href="{{ route('gridlisting') }}">{{ $trendingHeader->tagline }}</a>
+            <a class="tazen-header__link" href="{{ route('categories.index') }}">{{ $trendingHeader->tagline }}</a>
             <button class="tazen-header__category-toggle" type="button" aria-expanded="false" aria-controls="{{ $navigationPrefix }}-trending-menu" aria-label="Show {{ $trendingHeader->tagline }} services" data-category-toggle>
                 <i class="fas fa-chevron-down" aria-hidden="true"></i>
             </button>

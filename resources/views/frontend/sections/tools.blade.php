@@ -102,55 +102,9 @@
                     @endif
                 </div>
             @else
-                @php
-                    $toolEmojis = [
-                        'mood' => '😊',
-                        'journal' => '📓',
-                        'gratitude' => '🙏',
-                        'career' => '🎯',
-                        'skills' => '💪',
-                        'bmi' => '⚖️',
-                        'water' => '💧',
-                        'weight' => '🏃',
-                        'nutrition' => '🥗',
-                        'coins' => '💰',
-                        'leaf' => '🌿',
-                    ];
-                @endphp
-                <ul class="yk-tools__grid">
+                <ul class="yk-rows yk-rows--tools">
                     @foreach ($items as $tool)
-                        @php
-                            $toolEmoji = $toolEmojis[$tool['icon'] ?? ''] ?? '✨';
-                        @endphp
-                        <li>
-                            <article class="yk-tool-card">
-                                <div class="yk-tool-card__media yk-tool-card__media--{{ $tool['icon'] }}" aria-hidden="true">
-                                    <span class="yk-tool-card__mark yk-tool-card__mark--{{ $tool['icon'] }}">
-                                        <span class="yk-tool-card__emoji">{{ $toolEmoji }}</span>
-                                    </span>
-                                </div>
-                                <div class="yk-tool-card__body">
-                                    <div class="yk-tool-card__main">
-                                        <div class="yk-tool-card__meta">
-                                            <span class="yk-tool-card__access">{{ $tool['access'] }}</span>
-                                            @if (!empty($tool['availability']))
-                                                <span class="yk-tool-card__state{{ ($tool['availability_state'] ?? '') === 'pending' ? ' is-pending' : '' }}">{{ $tool['availability'] }}</span>
-                                            @endif
-                                        </div>
-                                        <h2 class="yk-tool-card__name">
-                                            <a href="{{ $tool['url'] }}">{{ $tool['name'] }}</a>
-                                        </h2>
-                                        @if ($tool['description'] !== '')
-                                            <p class="yk-tool-card__desc">{{ $tool['description'] }}</p>
-                                        @endif
-                                        @if (!empty($tool['category_label']))
-                                            <p class="yk-tool-card__cat">{{ $tool['category_label'] }}</p>
-                                        @endif
-                                    </div>
-                                    <a class="yk-tools__btn yk-tools__btn--primary yk-tool-card__cta" href="{{ $tool['url'] }}">{{ $tool['cta'] }}</a>
-                                </div>
-                            </article>
-                        </li>
+                        <li>@include('frontend.sections.partials.catalog-tool-row', ['tool' => $tool])</li>
                     @endforeach
                 </ul>
 

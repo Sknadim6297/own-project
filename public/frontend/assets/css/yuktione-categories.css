@@ -1,199 +1,238 @@
-.yk-categories {
+.yk-home-cats {
     box-sizing: border-box;
     margin: 0;
-    padding: 0.15rem 1rem 1.5rem;
+    padding: 0.2rem 0 1.35rem;
     background: #fffefc;
-    color: #0b2048;
     font-family: "DM Sans", sans-serif;
 }
 
-.yk-categories *,
-.yk-categories *::before,
-.yk-categories *::after {
+.yk-home-cats *,
+.yk-home-cats *::before,
+.yk-home-cats *::after {
     box-sizing: border-box;
 }
 
-.yk-categories__grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.65rem;
-    width: 100%;
-    max-width: min(100%, 1360px);
+.yk-home-cats__shell {
+    width: min(100% - 2rem, 1180px);
     margin: 0 auto;
-    padding: 0;
-    list-style: none;
 }
 
-.yk-categories__grid > li {
+.yk-home-cats__head {
     display: flex;
-    min-width: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.7rem;
 }
 
-.yk-categories__card {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
+.yk-home-cats__head h2 {
+    margin: 0;
+    color: #0b2048;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.yk-home-cats__controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex: 0 0 auto;
+}
+
+.yk-home-cats__nav {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 11px;
-    width: 100%;
-    min-height: 110px;
+    width: 34px;
+    height: 34px;
     margin: 0;
-    padding: 0.6rem 0.4rem;
-    border: 0;
-    border-radius: 12px;
-    color: #0b2048;
-    font: inherit;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    line-height: 1.2;
-    text-align: center;
-    text-decoration: none;
-    cursor: default;
-    transition: background-color 0.15s ease, transform 0.15s ease;
-}
-
-a.yk-categories__card {
+    padding: 0;
+    border: 1px solid #e0e4ea;
+    border-radius: 999px;
+    background: #fff;
+    color: #142b4d;
     cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.yk-categories__card span {
-    display: block;
-    max-width: 100%;
-    text-wrap: balance;
-}
-
-.yk-categories__icon {
-    width: 40px;
-    height: 40px;
-    flex: 0 0 auto;
+.yk-home-cats__nav svg {
+    width: 16px;
+    height: 16px;
     fill: none;
     stroke: currentColor;
-    stroke-width: 1.45;
+    stroke-width: 1.8;
     stroke-linecap: round;
     stroke-linejoin: round;
 }
 
-.yk-categories__card--lavender {
-    background: #f2eeff;
-    color: #6f5cb8;
+.yk-home-cats__nav:hover:not(:disabled),
+.yk-home-cats__nav:focus-visible {
+    border-color: #142b4d;
+    background: #f5f7fb;
+    outline: none;
 }
 
-.yk-categories__card--lavender span {
-    color: #0b2048;
+.yk-home-cats__nav:disabled {
+    opacity: 0.35;
+    cursor: default;
 }
 
-.yk-categories__card--mint {
-    background: #eaf5f0;
-    color: #316d61;
+.yk-home-cats__more {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 0.8rem;
+    border-radius: 999px;
+    background: #142b4d;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
 }
 
-.yk-categories__card--mint span {
-    color: #0b2048;
+.yk-home-cats__more:hover,
+.yk-home-cats__more:focus-visible {
+    background: #0b2048;
+    color: #fff;
 }
 
-.yk-categories__card--blush {
-    background: #fff0f1;
-    color: #d56b86;
+.yk-home-cats__viewport {
+    overflow: hidden;
 }
 
-.yk-categories__card--blush span {
-    color: #0b2048;
+.yk-home-cats__track {
+    display: flex;
+    gap: 0.7rem;
+    margin: 0;
+    padding: 0.1rem 0.05rem 0.25rem;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
 }
 
-.yk-categories__card--cream {
-    background: #fff5e9;
-    color: #d9892d;
+.yk-home-cats__track::-webkit-scrollbar {
+    display: none;
 }
 
-.yk-categories__card--cream span {
-    color: #0b2048;
+.yk-home-cats__track > li {
+    flex: 0 0 auto;
+    width: min(42vw, 128px);
+    scroll-snap-align: start;
 }
 
-.yk-categories__card--blue {
-    background: #edf5ff;
-    color: #3d78d8;
+.yk-home-cats__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    width: 100%;
+    min-height: 112px;
+    padding: 0.75rem 0.55rem;
+    overflow: hidden;
+    border: 1px solid rgba(20, 43, 77, 0.06);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(11, 32, 72, 0.05);
+    text-decoration: none;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
 }
 
-.yk-categories__card--blue span {
-    color: #0b2048;
+.yk-home-cats__card:hover,
+.yk-home-cats__card:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(11, 32, 72, 0.09);
+    outline: none;
 }
 
-a.yk-categories__card--lavender:hover {
-    background: #e7e0fb;
+.yk-home-cats__glow {
+    position: absolute;
+    inset: auto 50% 12% auto;
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    transform: translateX(50%);
+    filter: blur(14px);
+    opacity: 0.5;
+    pointer-events: none;
 }
 
-a.yk-categories__card--mint:hover {
-    background: #dceee6;
+.yk-home-cats__icon {
+    position: relative;
+    z-index: 1;
+    width: 34px;
+    height: 34px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
-a.yk-categories__card--cream:hover {
-    background: #fdebd4;
+.yk-home-cats__label {
+    position: relative;
+    z-index: 1;
+    max-width: 12ch;
+    color: inherit;
+    font-size: 0.8rem;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    text-align: center;
+    text-wrap: balance;
 }
 
-.yk-categories__card:focus-visible {
-    outline: 2px solid #316d61;
-    outline-offset: 3px;
-}
+.yk-home-cats__card--violet { color: #5b4db8; }
+.yk-home-cats__card--violet .yk-home-cats__glow { background: #cfc4ff; }
 
-@media (min-width: 640px) {
-    .yk-categories {
-        padding-inline: 1.25rem;
-    }
-}
+.yk-home-cats__card--blue { color: #2f63b8; }
+.yk-home-cats__card--blue .yk-home-cats__glow { background: #bfd4ff; }
+
+.yk-home-cats__card--green { color: #2f7a4d; }
+.yk-home-cats__card--green .yk-home-cats__glow { background: #bfe8cb; }
+
+.yk-home-cats__card--magenta { color: #8a3f9d; }
+.yk-home-cats__card--magenta .yk-home-cats__glow { background: #ecc0f5; }
+
+.yk-home-cats__card--amber { color: #c46a1b; }
+.yk-home-cats__card--amber .yk-home-cats__glow { background: #ffd39a; }
 
 @media (min-width: 768px) {
-    .yk-categories {
-        padding-inline: 1.5rem;
-        padding-bottom: 1.75rem;
+    .yk-home-cats__shell {
+        width: min(100% - 3rem, 1180px);
     }
 
-    .yk-categories__grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 0.75rem;
+    .yk-home-cats__track > li {
+        width: 128px;
+    }
+
+    .yk-home-cats__card {
+        min-height: 118px;
     }
 }
 
 @media (min-width: 1024px) {
-    .yk-categories {
-        padding-inline: 2rem;
-    }
-
-    .yk-categories__grid {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
-
-    .yk-categories__card {
-        min-height: 112px;
-        padding: 0.55rem 0.35rem;
+    .yk-home-cats__shell {
+        width: min(100% - 4rem, 1180px);
     }
 }
 
 @media (min-width: 1280px) {
-    .yk-categories {
-        padding-inline: 2.75rem;
-    }
-
-    .yk-categories__grid {
-        grid-template-columns: repeat(10, minmax(0, 1fr));
-        gap: 0.7rem;
-    }
-
-    .yk-categories__card {
-        min-height: 108px;
-        gap: 11px;
-        padding: 0.45rem 0.3rem;
-        font-size: 0.8125rem;
-    }
-
-    .yk-categories__icon {
-        width: 40px;
-        height: 40px;
+    .yk-home-cats__shell {
+        width: min(100% - 5.5rem, 1180px);
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .yk-categories__card {
+    .yk-home-cats__card,
+    .yk-home-cats__track {
         transition: none;
+        scroll-behavior: auto;
     }
 }

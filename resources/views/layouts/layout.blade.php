@@ -185,6 +185,7 @@
 		<link href="{{ asset('frontend/assets/css/yuktione-hero.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-hero.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-categories.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-categories.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-tools.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools.css')) }}" rel="stylesheet">
+		<link href="{{ asset('frontend/assets/css/yuktione-services.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-services.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-featured-experts.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-featured-experts.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-insights.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-insights.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-talk.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-talk.css')) }}" rel="stylesheet">
@@ -198,6 +199,12 @@
 	@endif
 	@if (request()->routeIs('gridlisting'))
 		<link href="{{ asset('frontend/assets/css/yuktione-explore.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-explore.css')) }}" rel="stylesheet">
+	@endif
+	@if (request()->routeIs('categories.*') || request()->routeIs('tools.index') || request()->routeIs('professionals'))
+		<link href="{{ asset('frontend/assets/css/yuktione-catalog-rows.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-catalog-rows.css')) }}" rel="stylesheet">
+	@endif
+	@if (request()->routeIs('categories.*'))
+		<link href="{{ asset('frontend/assets/css/yuktione-categories-hub.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-categories-hub.css')) }}" rel="stylesheet">
 	@endif
 	@if (request()->routeIs('professionals'))
 		<link href="{{ asset('frontend/assets/css/yuktione-experts.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-experts.css')) }}" rel="stylesheet">

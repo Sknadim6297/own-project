@@ -74,6 +74,7 @@ class Kernel extends HttpKernel
         'auth:professional' => \App\Http\Middleware\Authenticate::class,
         'admin.menu' => \App\Http\Middleware\AdminMenuAccess::class,
         'terms.accepted' => \App\Http\Middleware\EnsureCustomerTermsAccepted::class,
+        'api.active.session' => \App\Http\Middleware\EnsureApiActiveSession::class,
     ];
 
     /**

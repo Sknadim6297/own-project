@@ -32,13 +32,13 @@
             'url' => route('professionals'),
         ],
         [
-            'badge' => 'Journal',
+            'badge' => 'Articles',
             'title' => 'Fresh perspectives',
             'text' => 'Ideas and practical guidance from the '.$brand.' community.',
             'tone' => 'cream',
             'accent' => 'orange',
             'emoji' => '✨',
-            'cta' => 'Read the Blog',
+            'cta' => 'Read Articles',
             'url' => route('blog.index'),
         ],
     ];

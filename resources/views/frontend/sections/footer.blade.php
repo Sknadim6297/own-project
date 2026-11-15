@@ -46,9 +46,9 @@
         <nav class="tazen-footer__column" aria-label="Services and resources">
             <h2>Services &amp; Resources</h2>
             <ul>
-                <li><a href="{{ route('gridlisting') }}">Explore Services</a></li>
+                <li><a href="{{ route('categories.index') }}">All Categories</a></li>
                 <li><a href="{{ url('/help') }}">Help</a></li>
-                <li><a href="{{ route('blog.index') }}">Blog</a></li>
+                <li><a href="{{ route('blog.index') }}">Articles</a></li>
                 @if (config('yuktione.programmes_enabled'))
                     <li><a href="{{ route('programmes.index') }}">Programmes</a></li>
                 @endif

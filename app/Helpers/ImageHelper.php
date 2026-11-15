@@ -53,6 +53,45 @@ class ImageHelper
     }
 
     /**
+     * Resolve a professional profile photo URL, or null when missing.
+     * Prefer host-relative paths so images work under artisan serve and reverse proxies.
+     */
+    public static function professionalPhotoUrl(?string $photoPath): ?string
+    {
+        $blocked = [
+            'professional_documents/McPqTOLmpLHhukE6ka0DJmmNWTU3qG6segI57ccy.jpg',
+            'uploads/professionals/photo/media_68b52ad01436a.jpg',
+        ];
+
+        $path = ltrim(str_replace('\\', '/', (string) $photoPath), '/');
+        if ($path === '' || in_array($path, $blocked, true)) {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, strlen('storage/'));
+        }
+
+        if (is_file(public_path('storage/'.$path))) {
+            return self::publicUrl('storage/'.$path);
+        }
+
+        if (is_file(public_path($path))) {
+            return self::publicUrl($path);
+        }
+
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+            return self::publicUrl('storage/'.$path);
+        }
+
+        return null;
+    }
+
+    /**
      * Resolve a customer/user avatar that never points at a missing file.
      */
     public static function customerAvatarUrl(?object $user, ?object $profile = null, string $fallbackPath = 'frontend/assets/img/avatar.jpg'): string

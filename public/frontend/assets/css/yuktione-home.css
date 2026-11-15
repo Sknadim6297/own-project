@@ -155,7 +155,8 @@
     stroke-linecap: round;
 }
 
-.yuktione-home-hero #searchResults {
+.yuktione-home-hero #searchResults,
+.yk-hero__results {
     position: absolute;
     top: calc(100% + .45rem);
     left: 0;
@@ -169,13 +170,15 @@
     box-shadow: 0 16px 38px rgb(38 50 56 / 14%);
 }
 
-.yuktione-home-hero #searchResults .list-group {
+.yuktione-home-hero #searchResults .list-group,
+.yk-hero__results .list-group {
     margin: 0;
     border: 0;
     border-radius: inherit;
 }
 
-.yuktione-home-hero #searchResults .list-group-item {
+.yuktione-home-hero #searchResults .list-group-item,
+.yk-hero__results .list-group-item {
     padding: .8rem 1rem;
     border: 0;
     border-bottom: 1px solid #edf2f4;
@@ -183,13 +186,79 @@
     text-decoration: none;
 }
 
-.yuktione-home-hero #searchResults .list-group-item:last-child {
+.yuktione-home-hero #searchResults .list-group-item:last-child,
+.yk-hero__results .list-group-item:last-child {
     border-bottom: 0;
 }
 
-.yuktione-home-hero #searchResults .list-group-item:hover {
-    background: #f0faf8;
-    color: #27574e;
+.yuktione-home-hero #searchResults .list-group-item:hover,
+.yk-hero__results .list-group-item:hover {
+    background: #f5f7fb;
+    color: #0b2048;
+}
+
+.yuktione-home-hero #searchResults .yk-hero__result,
+.yk-hero__results .yk-hero__result {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+}
+
+.yuktione-home-hero #searchResults .yk-hero__result-copy,
+.yk-hero__results .yk-hero__result-copy {
+    display: grid;
+    gap: .15rem;
+    min-width: 0;
+}
+
+.yuktione-home-hero #searchResults .yk-hero__result-title,
+.yk-hero__results .yk-hero__result-title {
+    display: block;
+    color: #0b2048;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.yuktione-home-hero #searchResults .yk-hero__result-meta,
+.yk-hero__results .yk-hero__result-meta {
+    display: block;
+    color: #7c88a3;
+    font-size: .8rem;
+    line-height: 1.3;
+}
+
+.yuktione-home-hero #searchResults .yk-hero__result-badge,
+.yk-hero__results .yk-hero__result-badge {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: .28rem .6rem;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.yuktione-home-hero #searchResults .yk-hero__result-badge.is-tool,
+.yk-hero__results .yk-hero__result-badge.is-tool {
+    background: #f3eef9;
+    color: #5b3f8a;
+}
+
+.yuktione-home-hero #searchResults .yk-hero__result-badge.is-service,
+.yk-hero__results .yk-hero__result-badge.is-service {
+    background: #eef3fb;
+    color: #142b4d;
+}
+
+.yuktione-home-hero #searchResults .yk-hero__result-badge.is-sub_service,
+.yk-hero__results .yk-hero__result-badge.is-sub_service {
+    background: #eaf6f2;
+    color: #24554c;
 }
 
 .yuktione-home-hero__media {

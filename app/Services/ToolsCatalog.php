@@ -48,6 +48,28 @@ class ToolsCatalog
         ];
     }
 
+    /**
+     * Launchable tools for one Explore category key (needle-mapped via exploreCategory).
+     */
+    public function forExploreCategory(string $categoryKey): Collection
+    {
+        if (! array_key_exists($categoryKey, ExploreCatalog::CATEGORIES)) {
+            return collect();
+        }
+
+        return $this->published()
+            ->filter(fn (array $card) => ($card['category'] ?? null) === $categoryKey)
+            ->values();
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    public function categoryCounts(): array
+    {
+        return $this->counts($this->published(), ['q' => '', 'category' => '']);
+    }
+
     private function filters(Request $request): array
     {
         $q = trim(strip_tags((string) $request->query('q', '')));

@@ -82,7 +82,12 @@ Route::get('/csrf-token', function () {
 Route::post('/check-login', [BookingController::class, 'checkLogin'])->name('check.login');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('gridlisting', [HomeController::class, 'explore'])->name('gridlisting');
+Route::get('categories', [\App\Http\Controllers\Frontend\CategoryController::class, 'index'])->name('categories.index');
+Route::get('categories/{category}', [\App\Http\Controllers\Frontend\CategoryController::class, 'show'])
+    ->where('category', '[a-z0-9\-]+')
+    ->name('categories.show');
+// Preserve Explore bookmarks: redirect to All Categories / category detail.
+Route::get('gridlisting', [\App\Http\Controllers\Frontend\CategoryController::class, 'legacyExploreRedirect'])->name('gridlisting');
 Route::get('tools/psychology/mood/history', [\App\Http\Controllers\Frontend\MoodCheckinController::class, 'history'])->name('tools.psychology.mood.history');
 Route::get('tools/psychology/mood/finish', [\App\Http\Controllers\Frontend\MoodCheckinController::class, 'finish'])->name('tools.psychology.mood.finish');
 Route::get('tools/psychology/mood/complete/{checkin}', [\App\Http\Controllers\Frontend\MoodCheckinController::class, 'saved'])

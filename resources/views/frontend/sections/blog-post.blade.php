@@ -6,12 +6,12 @@
     $metaTitle = $relatedBlog->meta_title ?? $relatedBlog->title;
     $metaDescription = $relatedBlog->meta_description ?? \Illuminate\Support\Str::limit(strip_tags($blogPost->content ?? ''), 150);
     $pageTitle = $hasCustomMetaTitle
-        ? $metaTitle . ' | ' . config('yuktione.name') . ' Blog'
-        : ($relatedBlog->title ?? 'Blog') . ' | ' . config('yuktione.name') . ' Blog';
+        ? $metaTitle . ' | ' . config('yuktione.name') . ' Articles'
+        : ($relatedBlog->title ?? 'Article') . ' | ' . config('yuktione.name') . ' Articles';
     $blogUrl = route('blog.show', \Illuminate\Support\Str::slug($relatedBlog->title ?? ''));
 @endphp
 <meta name="description" content="{{ $metaDescription }}">
-<meta name="keywords" content="{{ $blogPost->category }}, {{ $relatedBlog->title }}, blog, {{ config('yuktione.name') }}">
+<meta name="keywords" content="{{ $blogPost->category }}, {{ $relatedBlog->title }}, article, {{ config('yuktione.name') }}">
 <meta property="og:title" content="{{ $metaTitle }}">
 <meta property="og:site_name" content="{{ config('yuktione.name') }}">
 <meta property="og:url" content="{{ $blogUrl }}">
@@ -33,12 +33,12 @@
     class="yk-blog yk-blog__post"
     title="{{ $relatedBlog->title }}"
     lead="{{ $blogPost->category }} · {{ $blogPost->author_name }}"
-    crumb="Blog"
+    crumb="Articles"
 >
     <div class="yk-blog__layout">
         <aside class="yk-blog__aside" aria-label="Related reading">
             <div class="yk-blog__panel">
-                <h2>Latest posts</h2>
+                <h2>Latest articles</h2>
                 <ul class="yk-blog__latest">
                     @foreach ($latestBlogs as $latestBlog)
                         @php $latestSlug = \Illuminate\Support\Str::slug($latestBlog->blog->title ?? ''); @endphp

@@ -1,17 +1,6 @@
 @php
     $tones = ['lavender', 'mint', 'blush', 'blue', 'cream', 'mint'];
     $accents = ['purple', 'teal', 'pink', 'purple', 'orange', 'teal'];
-    $toolEmojis = [
-        'daily-mood-check-in' => '😊',
-        'digital-journal' => '📓',
-        'gratitude-journal' => '🙏',
-        'career-interest-test' => '🎯',
-        'skills-strengths-assessment' => '💪',
-        'bmi-bmr-calculator' => '⚖️',
-        'water-intake-tracker' => '💧',
-        'weight-journey' => '🏃',
-        'calorie-nutrition-tracker' => '🥗',
-    ];
     $homeTools = \App\Models\Tool::query()
         ->publiclyAvailable()
         ->orderBy('display_order')
@@ -52,13 +41,9 @@
                         $tone = $tones[$loop->index % count($tones)];
                         $accent = $accents[$loop->index % count($accents)];
                         $href = route($tool->route_name);
-                        $emoji = $toolEmojis[$tool->slug] ?? '✨';
                     @endphp
                     <li>
                         <a class="yk-tools__card yk-tools__card--{{ $tone }} yk-tools__card-link" href="{{ $href }}">
-                            <div class="yk-tools__art" aria-hidden="true">
-                                <span class="yk-tools__emoji">{{ $emoji }}</span>
-                            </div>
                             <h3 class="yk-tools__name">{{ $tool->name }}</h3>
                             <p class="yk-tools__text">{{ \Illuminate\Support\Str::limit($tool->description ?: ('Open this tool on '.config('yuktione.name', 'YuktiOne').'.'), 90) }}</p>
                             <span class="yk-tools__cta yk-tools__cta--{{ $accent }}">

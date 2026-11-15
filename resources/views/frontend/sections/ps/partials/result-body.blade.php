@@ -16,7 +16,7 @@
     @if (! empty($result['show_support_option']))
         <div class="yk-pfm__support" role="note">
             <p>If things feel too heavy, consider speaking with a trusted person or a qualified professional. This tool does not diagnose and is not emergency care.</p>
-            <a class="yk-pfm__btn yk-pfm__btn--ghost" href="{{ route('gridlisting') }}">Explore expert support</a>
+            <a class="yk-pfm__btn yk-pfm__btn--ghost" href="{{ route('categories.index') }}">Browse categories</a>
         </div>
     @endif
 @elseif ($toolKey === 'child-routine-planner')

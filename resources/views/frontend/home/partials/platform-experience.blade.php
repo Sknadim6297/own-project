@@ -9,8 +9,8 @@
             <p class="yk-home-experience__summary">
                 Explore professional guidance, personalised support and practical resources in one connected experience.
             </p>
-            <a class="yk-home-experience__cta" href="{{ route('gridlisting') }}">
-                <span>Explore Experts</span>
+            <a class="yk-home-experience__cta" href="{{ route('categories.index') }}">
+                <span>Browse Categories</span>
                 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                     <path d="M5 12h14m-6-6 6 6-6 6"/>
                 </svg>
