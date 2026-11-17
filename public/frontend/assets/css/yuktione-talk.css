@@ -1,9 +1,10 @@
 .yk-talk {
     box-sizing: border-box;
     margin: 0;
-    padding: 0.35rem 1rem 2.75rem;
-    background: var(--y1-pearl);
-    color: var(--y1-charcoal);
+    padding: 0.35rem 1rem 2.5rem;
+    overflow: hidden;
+    background: #fffefc;
+    color: #0b2048;
     font-family: "DM Sans", sans-serif;
 }
 
@@ -25,8 +26,8 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
-    margin: 0 0 1.35rem;
+    gap: 0.9rem;
+    margin: 0 0 1.05rem;
 }
 
 .yk-talk__copy {
@@ -38,7 +39,7 @@
 
 .yk-talk__eyebrow {
     margin: 0;
-    color: var(--y1-plum);
+    color: #316d61;
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.16em;
@@ -47,7 +48,7 @@
 }
 
 .yk-talk__title {
-    margin: 0.4rem 0 0.55rem;
+    margin: 0.35rem 0 0.45rem;
     font-size: clamp(1.7rem, 2.6vw, 2.45rem);
     font-weight: 700;
     line-height: 1.12;
@@ -55,11 +56,11 @@
 }
 
 .yk-talk__heading-navy {
-    color: var(--y1-charcoal);
+    color: #0b2048;
 }
 
 .yk-talk__heading-lavender {
-    color: var(--y1-lilac);
+    color: #9d81db;
 }
 
 .yk-talk__lead {
@@ -71,18 +72,58 @@
     line-height: 1.55;
 }
 
-.yk-talk__all {
+.yk-talk__actions {
     position: relative;
     z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.yk-talk__controls {
+    display: inline-flex;
+    gap: 0.35rem;
+}
+
+.yk-talk__controls[hidden] {
+    display: none;
+}
+
+.yk-talk__arrow {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    place-items: center;
+    border: 1.5px solid #316d61;
+    border-radius: 50%;
+    background: #fff;
+    color: #316d61;
+    cursor: pointer;
+    font: inherit;
+    line-height: 1;
+    transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.yk-talk__arrow:hover:not(:disabled) {
+    background: #eaf5f0;
+}
+
+.yk-talk__arrow:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.yk-talk__all {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.7rem 1.15rem;
-    border: 1.5px solid var(--y1-plum);
+    padding: 0.65rem 1.05rem;
+    border: 1.5px solid #316d61;
     border-radius: 999px;
     background: transparent;
-    color: var(--y1-plum);
-    font-size: 0.95rem;
+    color: #316d61;
+    font-size: 0.9rem;
     font-weight: 600;
     line-height: 1;
     text-decoration: none;
@@ -94,8 +135,10 @@
 }
 
 .yk-talk__all:focus-visible,
-.yk-talk__book:focus-visible {
-    outline: 2px solid var(--y1-plum);
+.yk-talk__arrow:focus-visible,
+.yk-talk__book:focus-visible,
+.yk-talk__viewport:focus-visible {
+    outline: 2px solid #316d61;
     outline-offset: 3px;
 }
 
@@ -104,8 +147,8 @@
     position: absolute;
     top: -6px;
     right: 0;
-    width: 120px;
-    height: 100px;
+    width: 110px;
+    height: 92px;
     pointer-events: none;
 }
 
@@ -119,202 +162,247 @@
     line-height: 1.5;
 }
 
-.yk-talk__grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.65rem;
+.yk-talk__viewport {
+    margin: 0 -0.15rem;
+    padding: 0.15rem 0.15rem 0.35rem;
+    overflow: hidden;
+}
+
+.yk-talk__track {
+    display: flex;
+    align-items: stretch;
+    gap: 0.7rem;
+    width: max-content;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    will-change: transform;
+}
+
+.yk-talk__slide {
+    flex: 0 0 auto;
+    width: 172px;
+    scroll-snap-align: start;
+}
+
+.yk-talk__card {
+    --yk-talk-accent: #2f7a74;
+    --yk-talk-accent-deep: #24645f;
+    --yk-talk-soft: #e7f4f2;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 232px;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid rgba(47, 122, 116, 0.12);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 6px 16px rgba(11, 32, 72, 0.05);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.yk-talk__card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(11, 32, 72, 0.08);
+}
+
+.yk-talk__card--teal {
+    --yk-talk-accent: #2f7a74;
+    --yk-talk-accent-deep: #24645f;
+    --yk-talk-soft: #e7f4f2;
+}
+
+.yk-talk__card--rose {
+    --yk-talk-accent: #c45b6a;
+    --yk-talk-accent-deep: #a84555;
+    --yk-talk-soft: #fdecef;
+}
+
+.yk-talk__card--sage {
+    --yk-talk-accent: #5f8f63;
+    --yk-talk-accent-deep: #4a744e;
+    --yk-talk-soft: #eaf4eb;
+}
+
+.yk-talk__card--lavender {
+    --yk-talk-accent: #7b6bb0;
+    --yk-talk-accent-deep: #655694;
+    --yk-talk-soft: #f1edfb;
+}
+
+.yk-talk__card--blush {
+    --yk-talk-accent: #c46d84;
+    --yk-talk-accent-deep: #a8566c;
+    --yk-talk-soft: #fceef2;
+}
+
+.yk-talk__card-head {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.28rem;
+    padding: 0.7rem 0.55rem 0.55rem;
+    background: var(--yk-talk-accent);
+    color: #fff;
+    text-align: center;
+}
+
+.yk-talk__badge {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    max-width: 4.8rem;
+    padding: 0.14rem 0.32rem;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.18);
+    color: #fff;
+    font-size: 0.52rem;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.yk-talk__avatar {
+    width: 42px;
+    height: 42px;
+}
+
+.yk-talk__avatar img,
+.yk-talk__initials {
+    display: block;
+    width: 42px;
+    height: 42px;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    border-radius: 50%;
+}
+
+.yk-talk__avatar img {
+    object-fit: cover;
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.yk-talk__initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.16);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.yk-talk__name {
+    margin: 0.1rem 0 0;
+    max-width: 100%;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.yk-talk__credential {
+    margin: 0;
+    max-width: 100%;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.6rem;
+    font-weight: 500;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.yk-talk__card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.55rem 0.55rem 0.6rem;
+    background: #fff;
+}
+
+.yk-talk__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.22rem;
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-.yk-talk__grid > li {
-    display: flex;
-    min-width: 0;
-}
-
-.yk-talk__card {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    width: 100%;
-    margin: 0;
-    padding: 1.15rem 1rem 1rem;
-    border-radius: 20px;
-    box-shadow: 0 8px 22px rgba(11, 32, 72, 0.045);
-    text-align: center;
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.yk-talk__card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 28px rgba(11, 32, 72, 0.08);
-}
-
-.yk-talk__card--lavender { background: #f4f0ff; }
-.yk-talk__card--mint { background: var(--y1-plum-soft); }
-.yk-talk__card--blush { background: #fff0f3; }
-.yk-talk__card--blue { background: #eef3ff; }
-.yk-talk__card--cream { background: #fff6ed; }
-
-.yk-talk__portrait {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 132px;
-    height: 132px;
-    margin: 0 auto 0.75rem;
-}
-
-.yk-talk__botanical {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.yk-talk__photo,
-.yk-talk__initials {
-    position: relative;
-    z-index: 1;
-    width: 96px;
-    height: 96px;
-    border: 3px solid #fff;
-    border-radius: 50%;
-}
-
-.yk-talk__photo {
-    display: block;
-    object-fit: cover;
-    background: #e7eef0;
-}
-
-.yk-talk__initials {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--y1-plum);
-    color: #fff;
-    font-size: 1.35rem;
+.yk-talk__chips li {
+    max-width: 100%;
+    padding: 0.12rem 0.36rem;
+    border: 1px solid var(--yk-talk-accent);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--yk-talk-accent-deep);
+    font-size: 0.55rem;
     font-weight: 600;
-}
-
-.yk-talk__name {
-    margin: 0;
-    color: var(--y1-charcoal);
-    font-size: 1.05rem;
-    font-weight: 700;
     line-height: 1.25;
-    letter-spacing: -0.015em;
-    text-wrap: balance;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.yk-talk__role {
-    margin: 0.3rem 0 0;
-    color: #3e4d68;
-    font-size: 0.84rem;
+.yk-talk__chip-more {
+    background: var(--yk-talk-soft) !important;
+    border-style: dashed !important;
+}
+
+.yk-talk__sessions {
+    margin: 0;
+    color: #0b2048;
+    font-size: 0.62rem;
     font-weight: 500;
-    line-height: 1.35;
+    line-height: 1.3;
 }
 
-.yk-talk__rating {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.28rem;
-    margin: 0.45rem 0 0;
-    color: var(--y1-charcoal);
-    font-size: 0.84rem;
-    font-weight: 600;
-}
-
-.yk-talk__rating svg {
-    width: 14px;
-    height: 14px;
-    flex: 0 0 auto;
-}
-
-.yk-talk__count {
-    color: #5c6b84;
-    font-weight: 500;
+.yk-talk__sessions strong {
+    font-weight: 700;
 }
 
 .yk-talk__book {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.3rem;
     width: 100%;
     margin-top: auto;
-    padding: 0.72rem 0.8rem;
-    border-radius: 10px;
-    background: var(--y1-plum);
+    padding: 0.45rem 0.4rem;
+    border-radius: 8px;
+    background: var(--yk-talk-accent);
     color: #fff;
-    font-size: 0.92rem;
-    font-weight: 600;
+    font-size: 0.68rem;
+    font-weight: 700;
     line-height: 1;
     text-decoration: none;
 }
 
 .yk-talk__book:hover {
-    background: var(--y1-magenta);
+    background: var(--yk-talk-accent-deep);
 }
 
-@media (max-width: 639px) {
-    .yk-talk__grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.65rem;
-    }
-
-    .yk-talk__card {
-        padding: 0.85rem 0.55rem 0.7rem;
-        border-radius: 14px;
-    }
-
-    .yk-talk__portrait {
-        width: 88px;
-        height: 88px;
-        margin-bottom: 0.5rem;
-    }
-
-    .yk-talk__photo,
-    .yk-talk__initials {
-        width: 64px;
-        height: 64px;
-        border-width: 2px;
-    }
-
-    .yk-talk__initials {
-        font-size: 1rem;
-    }
-
-    .yk-talk__name {
-        font-size: 0.82rem;
-    }
-
-    .yk-talk__role {
-        margin-top: 0.2rem;
-        font-size: 0.68rem;
-    }
-
-    .yk-talk__rating {
-        margin-top: 0.3rem;
-        font-size: 0.7rem;
-        gap: 0.2rem;
-    }
-
-    .yk-talk__rating svg {
-        width: 12px;
-        height: 12px;
-    }
-
-    .yk-talk__book {
-        margin-top: 0.55rem;
-        padding: 0.55rem 0.4rem;
-        font-size: 0.72rem;
-        border-radius: 8px;
-    }
+.yk-talk__card-foot {
+    margin: 0;
+    padding: 0.38rem 0.45rem;
+    background: var(--yk-talk-accent-deep);
+    color: #fff;
+    font-size: 0.52rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 @media (min-width: 640px) {
@@ -322,22 +410,30 @@
         padding-inline: 1.25rem;
     }
 
-    .yk-talk__grid {
-        gap: 0.9rem;
+    .yk-talk__slide {
+        width: 180px;
+    }
+
+    .yk-talk__track {
+        gap: 0.75rem;
     }
 }
 
 @media (min-width: 768px) {
     .yk-talk {
         padding-inline: 1.5rem;
-        padding-bottom: 3rem;
+        padding-bottom: 2.85rem;
     }
 
     .yk-talk__head {
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        gap: 1.5rem;
+        gap: 1.25rem;
+    }
+
+    .yk-talk__slide {
+        width: 188px;
     }
 }
 
@@ -350,9 +446,12 @@
         font-size: 0.8125rem;
     }
 
-    .yk-talk__grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
+    .yk-talk__slide {
+        width: 200px;
+    }
+
+    .yk-talk__track {
+        gap: 0.85rem;
     }
 }
 
@@ -361,8 +460,8 @@
         display: block;
     }
 
-    .yk-talk__all {
-        margin-right: 8.75rem;
+    .yk-talk__actions {
+        margin-right: 7.5rem;
     }
 }
 
@@ -372,58 +471,11 @@
     }
 
     .yk-talk__copy {
-        max-width: calc(100% - 17rem);
+        max-width: calc(100% - 18rem);
     }
 
-    .yk-talk__grid {
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-        gap: 0.75rem;
-    }
-
-    .yk-talk__card {
-        padding: 0.95rem 0.65rem 0.8rem;
-    }
-
-    .yk-talk__portrait {
-        width: 108px;
-        height: 108px;
-    }
-
-    .yk-talk__photo,
-    .yk-talk__initials {
-        width: 78px;
-        height: 78px;
-    }
-
-    .yk-talk__name {
-        font-size: 0.92rem;
-    }
-
-    .yk-talk__role,
-    .yk-talk__rating {
-        font-size: 0.75rem;
-    }
-
-    .yk-talk__book {
-        font-size: 0.82rem;
-        padding: 0.62rem 0.4rem;
-    }
-}
-
-@media (min-width: 1440px) {
-    .yk-talk__portrait {
-        width: 118px;
-        height: 118px;
-    }
-
-    .yk-talk__photo,
-    .yk-talk__initials {
-        width: 86px;
-        height: 86px;
-    }
-
-    .yk-talk__name {
-        font-size: 0.98rem;
+    .yk-talk__slide {
+        width: 208px;
     }
 }
 
@@ -434,5 +486,9 @@
 
     .yk-talk__card:hover {
         transform: none;
+    }
+
+    .yk-talk__track {
+        transform: none !important;
     }
 }

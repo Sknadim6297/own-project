@@ -88,6 +88,12 @@ class ImageHelper
             return self::publicUrl('storage/'.$path);
         }
 
+        // Local uploads are gitignored; fall back to a remote media host when configured.
+        $fallback = rtrim((string) env('MEDIA_FALLBACK_URL', ''), '/');
+        if ($fallback !== '') {
+            return $fallback.'/storage/'.$path;
+        }
+
         return null;
     }
 
