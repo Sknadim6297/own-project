@@ -1,16 +1,16 @@
 /* Phase 3 — Premium Experts directory (professionals route only) */
 .yk-experts-page {
-    --yk-navy: #0b2048;
-    --yk-teal: #316d61;
-    --yk-teal-deep: #24554c;
-    --yk-lavender: #9d81db;
-    --yk-mint: #eaf6f2;
+    --yk-navy: var(--y1-charcoal);
+    --yk-teal: var(--y1-plum);
+    --yk-teal-deep: var(--y1-magenta);
+    --yk-lavender: var(--y1-lilac);
+    --yk-mint: var(--y1-plum-soft);
     --yk-lilac: #f4f0ff;
     --yk-blush: #fff0f3;
     --yk-cream: #fff6ed;
-    --yk-line: #e6ebf2;
+    --yk-line: var(--y1-silver);
     --yk-muted: #5b6b7c;
-    --yk-surface: #f7f9fc;
+    --yk-surface: var(--y1-pearl);
     --yk-card: #ffffff;
     --yk-shadow: 0 8px 24px rgba(11, 32, 72, 0.08);
     --yk-shadow-hover: 0 14px 32px rgba(11, 32, 72, 0.12);
@@ -19,7 +19,7 @@
     background:
         radial-gradient(1200px 420px at 12% -10%, rgba(154, 129, 219, 0.08), transparent 60%),
         radial-gradient(900px 380px at 92% 0%, rgba(49, 109, 97, 0.07), transparent 55%),
-        linear-gradient(180deg, #fbfcfe 0%, var(--yk-surface) 42%, #f5f7fb 100%);
+        linear-gradient(180deg, var(--y1-pearl) 0%, var(--yk-surface) 42%, var(--y1-pearl) 100%);
     color: var(--yk-navy);
 }
 

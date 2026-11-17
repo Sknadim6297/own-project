@@ -1,0 +1,137 @@
+/**
+ * YuktiOne Brand Template — global design tokens
+ * Source: docs/client-requirements/YuktiOne_Website_Brand_Template_Developer_Guide.pdf
+ */
+:root {
+    /* Approved brand palette */
+    --y1-plum: #8a0f4d;
+    --y1-magenta: #c3196b;
+    --y1-pearl: #fff8fb;
+    --y1-silver: #d9d9de;
+    --y1-lilac: #d8b4e2;
+    --y1-copper: #b87333;
+    --y1-charcoal: #1f1f1f;
+    --y1-grey: #6b6b7a;
+
+    /* Soft supporting surfaces */
+    --y1-white: #ffffff;
+    --y1-plum-soft: #f8eaf1;
+    --y1-magenta-soft: #fce8f1;
+    --y1-lilac-soft: #f6eef9;
+    --y1-pearl-deep: #fff1f6;
+
+    /* Semantic aliases (migrate legacy --yk-* / chrome tokens) */
+    --yk-primary: var(--y1-plum);
+    --yk-primary-hover: var(--y1-magenta);
+    --yk-primary-dark: #6e0b3c;
+    --yk-bg: var(--y1-pearl);
+    --yk-surface: var(--y1-white);
+    --yk-surface-soft: var(--y1-pearl-deep);
+    --yk-text: var(--y1-charcoal);
+    --yk-heading: var(--y1-charcoal);
+    --yk-muted: var(--y1-grey);
+    --yk-border: var(--y1-silver);
+    --yk-focus: var(--y1-plum);
+    --yk-accent: var(--y1-lilac);
+    --yk-accent-soft: var(--y1-lilac-soft);
+    --yk-navy: var(--y1-charcoal);
+    --yk-navy-deep: var(--y1-charcoal);
+    --yk-teal: var(--y1-plum);
+    --yk-teal-deep: var(--y1-magenta);
+    --yk-lavender: var(--y1-lilac);
+    --yk-mint: var(--y1-plum-soft);
+    --yk-cream: var(--y1-pearl);
+    --yk-blush: var(--y1-magenta-soft);
+    --yk-lilac: var(--y1-lilac-soft);
+    --yk-line: var(--y1-silver);
+    --yk-card: var(--y1-white);
+    --yk-shadow-sm: 0 8px 22px rgba(31, 31, 31, 0.06);
+    --yk-shadow-hover: 0 14px 32px rgba(138, 15, 77, 0.12);
+    --yk-radius: 16px;
+    --yk-ease: 180ms ease;
+
+    /* Chrome / footer aliases */
+    --tazen-chrome-navy: var(--y1-charcoal);
+    --tazen-chrome-teal: var(--y1-plum);
+    --tazen-chrome-white: var(--y1-white);
+    --tazen-chrome-soft: var(--y1-plum-soft);
+    --tazen-chrome-border: var(--y1-silver);
+    --tazen-chrome-muted: var(--y1-grey);
+    --tazen-chrome-shadow: var(--yk-shadow-sm);
+
+    /* Tools DS aliases */
+    --yk-ds-navy: var(--y1-charcoal);
+    --yk-ds-navy-deep: var(--y1-charcoal);
+    --yk-ds-teal: var(--y1-plum);
+    --yk-ds-cream: var(--y1-pearl);
+    --yk-ds-mint: var(--y1-plum-soft);
+    --yk-ds-line: var(--y1-silver);
+    --yk-ds-muted: var(--y1-grey);
+}
+
+/* Shared button primitives */
+.y1-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    padding: 0.7rem 1.25rem;
+    border: 1.5px solid transparent;
+    border-radius: 999px;
+    background: var(--y1-plum);
+    color: var(--y1-white);
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.95rem;
+    font-weight: 650;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--yk-ease), border-color var(--yk-ease), color var(--yk-ease), transform var(--yk-ease), box-shadow var(--yk-ease);
+}
+
+.y1-btn:hover,
+.y1-btn:focus-visible {
+    background: var(--y1-magenta);
+    color: var(--y1-white);
+    outline: none;
+    box-shadow: 0 8px 20px rgba(195, 25, 107, 0.22);
+}
+
+.y1-btn--secondary {
+    background: var(--y1-white);
+    border-color: var(--y1-plum);
+    color: var(--y1-plum);
+    box-shadow: none;
+}
+
+.y1-btn--secondary:hover,
+.y1-btn--secondary:focus-visible {
+    background: var(--y1-plum-soft);
+    border-color: var(--y1-magenta);
+    color: var(--y1-magenta);
+    box-shadow: none;
+}
+
+.y1-card {
+    background: var(--y1-white);
+    border: 1px solid var(--y1-silver);
+    border-radius: var(--yk-radius);
+    box-shadow: var(--yk-shadow-sm);
+}
+
+.y1-card:hover {
+    box-shadow: var(--yk-shadow-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .y1-btn,
+    .y1-card {
+        transition: none;
+    }
+
+    .y1-btn:hover,
+    .y1-btn:focus-visible {
+        transform: none;
+    }
+}

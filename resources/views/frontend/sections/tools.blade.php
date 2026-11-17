@@ -32,7 +32,7 @@
 <main class="yk-tools" id="tools" data-tools>
     <div class="yk-tools__wrap">
         <header class="yk-tools__intro">
-            <h1 id="tools-heading">Explore Tools</h1>
+            <h1 id="tools-heading">Try <span>Our Tools</span></h1>
             <p class="yk-tools__lead">Practical tools for mental, emotional and personal growth — open what you need, when you need it.</p>
         </header>
 
@@ -102,9 +102,15 @@
                     @endif
                 </div>
             @else
-                <ul class="yk-rows yk-rows--tools">
+                <ul class="yk-tools__tiles">
                     @foreach ($items as $tool)
-                        <li>@include('frontend.sections.partials.catalog-tool-row', ['tool' => $tool])</li>
+                        <li>
+                            @include('frontend.sections.partials.tool-tile', [
+                                'label' => $tool['name'],
+                                'url' => $tool['url'],
+                                'icon' => $tool['icon'],
+                            ])
+                        </li>
                     @endforeach
                 </ul>
 

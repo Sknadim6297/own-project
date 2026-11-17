@@ -2,8 +2,8 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0.35rem 1rem 2.5rem;
-    background: #fffefc;
-    color: #142b4d;
+    background: var(--y1-pearl);
+    color: var(--y1-charcoal);
     font-family: "DM Sans", sans-serif;
 }
 
@@ -34,7 +34,7 @@
 
 .yk-services__eyebrow {
     margin: 0;
-    color: #7b5ea7;
+    color: var(--y1-lilac);
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.16em;
@@ -52,12 +52,12 @@
 
 .yk-services__heading-navy {
     display: block;
-    color: #0b2048;
+    color: var(--y1-charcoal);
 }
 
 .yk-services__heading-lavender {
     display: block;
-    color: #7b5ea7;
+    color: var(--y1-lilac);
 }
 
 .yk-services__lead {
@@ -88,10 +88,10 @@
     height: 38px;
     margin: 0;
     padding: 0;
-    border: 1px solid #e0e4ea;
+    border: 1px solid var(--y1-silver);
     border-radius: 999px;
     background: #fff;
-    color: #142b4d;
+    color: var(--y1-charcoal);
     cursor: pointer;
     transition: background-color 0.15s ease, border-color 0.15s ease;
 }
@@ -108,8 +108,8 @@
 
 .yk-services__nav-btn:hover:not(:disabled),
 .yk-services__nav-btn:focus-visible {
-    border-color: #142b4d;
-    background: #f5f7fb;
+    border-color: var(--y1-charcoal);
+    background: var(--y1-pearl);
     outline: none;
 }
 
@@ -125,7 +125,7 @@
     min-height: 38px;
     padding: 0 0.95rem;
     border-radius: 999px;
-    background: #142b4d;
+    background: var(--y1-charcoal);
     color: #fff;
     font-size: 0.875rem;
     font-weight: 600;
@@ -135,7 +135,7 @@
 
 .yk-services__all:hover,
 .yk-services__all:focus-visible {
-    background: #0b2048;
+    background: var(--y1-charcoal);
     color: #fff;
 }
 
@@ -210,7 +210,7 @@
 
 .yk-services__name {
     display: block;
-    color: #0b2048;
+    color: var(--y1-charcoal);
     font-size: 1rem;
     font-weight: 700;
     letter-spacing: -0.02em;
@@ -233,7 +233,7 @@
 .yk-services__card--cream { background: #fff5e9; }
 .yk-services__card--blue { background: #edf5ff; }
 
-.yk-services__card--mint .yk-services__cta { color: #24554c; }
+.yk-services__card--mint .yk-services__cta { color: var(--y1-magenta); }
 .yk-services__card--blush .yk-services__cta { color: #b14d67; }
 .yk-services__card--cream .yk-services__cta { color: #a8661d; }
 .yk-services__card--blue .yk-services__cta { color: #2f63b8; }

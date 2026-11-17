@@ -1,10 +1,10 @@
 /* Premium compact Tools + Experts 2-column grid */
 .yk-rows {
-    --yk-navy: #142b4d;
-    --yk-navy-deep: #0b2048;
-    --yk-teal: #36877f;
-    --yk-muted: #6b7a8d;
-    --yk-line: #e6ebf2;
+    --yk-navy: var(--y1-charcoal, #1f1f1f);
+    --yk-navy-deep: var(--y1-charcoal, #1f1f1f);
+    --yk-teal: var(--y1-plum, #8a0f4d);
+    --yk-muted: var(--y1-grey, #6b6b7a);
+    --yk-line: var(--y1-silver, #d9d9de);
     list-style: none;
     margin: 0;
     padding: 0;
@@ -44,8 +44,8 @@ a.yk-row:hover,
 a.yk-row:focus-visible,
 .yk-row--expert:hover {
     transform: translateY(-2px);
-    border-color: rgba(54, 135, 127, 0.35);
-    box-shadow: 0 10px 22px rgba(11, 32, 72, 0.08);
+    border-color: rgba(138, 15, 77, 0.28);
+    box-shadow: 0 10px 22px rgba(138, 15, 77, 0.1);
     outline: none;
 }
 
@@ -86,17 +86,20 @@ a.yk-row:focus-visible,
     stroke-linejoin: round;
 }
 
-.yk-row__icon--mood { background: #efe8ff; color: #7a5cff; }
-.yk-row__icon--journal { background: #e8f0ff; color: #3d6fd8; }
-.yk-row__icon--gratitude { background: #fff0e8; color: #d9773a; }
-.yk-row__icon--career { background: #ffe8ec; color: #d6455d; }
-.yk-row__icon--skills { background: #e8f7f0; color: #2f9d6a; }
+.yk-row__icon--mood,
+.yk-row__icon--journal,
+.yk-row__icon--gratitude,
+.yk-row__icon--career,
+.yk-row__icon--skills,
 .yk-row__icon--bmi,
 .yk-row__icon--water,
 .yk-row__icon--weight,
-.yk-row__icon--nutrition { background: #e8f7ef; color: #2f9d6a; }
-.yk-row__icon--coins { background: #fff6e5; color: #d9892d; }
-.yk-row__icon--leaf { background: #eaf6f2; color: #36877f; }
+.yk-row__icon--nutrition,
+.yk-row__icon--coins,
+.yk-row__icon--leaf {
+    background: var(--y1-plum-soft, #f8eaf1);
+    color: var(--y1-plum, #8a0f4d);
+}
 
 .yk-row__chev {
     width: 16px;

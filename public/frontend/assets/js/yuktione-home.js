@@ -393,3 +393,4 @@ const bindHomeCarousel = (rootSelector, trackAttr, prevAttr, nextAttr) => {
 
 bindHomeCarousel('[data-categories-carousel]', 'data-categories-track', 'data-categories-prev', 'data-categories-next');
 bindHomeCarousel('[data-services-carousel]', 'data-services-track', 'data-services-prev', 'data-services-next');
+bindHomeCarousel('[data-tools-carousel]', 'data-tools-track', 'data-tools-prev', 'data-tools-next');

@@ -6,16 +6,16 @@
 
 :root {
     /* Brand tokens (shared reference; tools opt in via .yk-tools-ds) */
-    --yk-ds-navy: #142b4d;
-    --yk-ds-navy-deep: #0b2048;
-    --yk-ds-teal: #316d61;
-    --yk-ds-teal-deep: #24554c;
+    --yk-ds-navy: var(--y1-charcoal);
+    --yk-ds-navy-deep: var(--y1-charcoal);
+    --yk-ds-teal: var(--y1-plum);
+    --yk-ds-teal-deep: var(--y1-magenta);
     --yk-ds-cream: #fff6ed;
     --yk-ds-cream-2: #f7f1e8;
     --yk-ds-gold: #c4a35a;
     --yk-ds-gold-soft: rgba(196, 163, 90, 0.16);
-    --yk-ds-mint: #eaf6f2;
-    --yk-ds-line: #e6ebf2;
+    --yk-ds-mint: var(--y1-plum-soft);
+    --yk-ds-line: var(--y1-silver);
     --yk-ds-muted: #5b6b7c;
     --yk-ds-ink: #1c2b28;
     --yk-ds-surface: #ffffff;
@@ -68,7 +68,7 @@
     background:
         radial-gradient(900px 380px at 6% -10%, rgba(49, 109, 97, 0.1), transparent 55%),
         radial-gradient(700px 300px at 100% 0%, rgba(196, 163, 90, 0.1), transparent 50%),
-        linear-gradient(180deg, #fbfcfe 0%, var(--yk-ds-cream-2) 100%);
+        linear-gradient(180deg, var(--y1-pearl) 0%, var(--yk-ds-cream-2) 100%);
 }
 
 .yk-tools-ds *,
@@ -245,7 +245,7 @@
     border: 1px solid var(--yk-ds-line);
     border-radius: var(--yk-ds-radius-sm);
     padding: 0.65rem 0.85rem;
-    background: #fbfcfe;
+    background: var(--y1-pearl);
     color: var(--yk-ds-navy);
     font-family: var(--yk-ds-font);
     font-size: 1rem;

@@ -31,7 +31,7 @@
 
 .yk-featured-experts__eyebrow {
     margin: 0 0 .38rem;
-    color: #36877F;
+    color: var(--y1-plum);
     font-size: .68rem;
     font-weight: 600;
     letter-spacing: .11em;
@@ -41,7 +41,7 @@
 
 .yk-featured-experts__heading h2 {
     margin: 0;
-    color: #142B4D;
+    color: var(--y1-charcoal);
     font-size: clamp(1.45rem, 2.2vw, 1.85rem);
     font-weight: 600;
     letter-spacing: -.04em;
@@ -67,7 +67,7 @@
     min-height: 2.25rem;
     align-items: center;
     gap: .4rem;
-    color: #36877F;
+    color: var(--y1-plum);
     font-size: .76rem;
     font-weight: 600;
     text-decoration: none;
@@ -101,16 +101,16 @@
     border: 1px solid #E2E9EE;
     border-radius: 50%;
     background: #fff;
-    color: #142B4D;
+    color: var(--y1-charcoal);
     cursor: pointer;
     font: inherit;
     transition: border-color .2s ease, background-color .2s ease, color .2s ease;
 }
 
 .yk-featured-experts__carousel-controls button:hover:not(:disabled) {
-    border-color: #36877F;
-    background: #EAF6F2;
-    color: #286E67;
+    border-color: var(--y1-plum);
+    background: var(--y1-plum-soft);
+    color: var(--y1-magenta);
 }
 
 .yk-featured-experts__carousel-controls button:disabled {
@@ -138,7 +138,7 @@
     border: 1px solid #E2E9EE;
     border-radius: 999px;
     background: #fff;
-    color: #142B4D;
+    color: var(--y1-charcoal);
     cursor: pointer;
     font: inherit;
     font-size: .68rem;
@@ -153,8 +153,8 @@
 }
 
 .yk-featured-experts__filter.is-active {
-    border-color: #36877F;
-    background: #36877F;
+    border-color: var(--y1-plum);
+    background: var(--y1-plum);
     color: #fff;
 }
 
@@ -204,8 +204,8 @@
     flex: 0 0 176px;
     place-items: center;
     overflow: hidden;
-    background: #EAF6F2;
-    color: #286E67;
+    background: var(--y1-plum-soft);
+    color: var(--y1-magenta);
     text-decoration: none;
 }
 
@@ -246,8 +246,8 @@
     width: 100%;
     height: 100%;
     place-items: center;
-    background: #EAF6F2;
-    color: #286E67;
+    background: var(--y1-plum-soft);
+    color: var(--y1-magenta);
     font-size: 1.5rem;
     font-weight: 600;
     letter-spacing: .04em;
@@ -266,7 +266,7 @@
     min-height: 2.6em;
     margin: 0;
     overflow: hidden;
-    color: #142B4D;
+    color: var(--y1-charcoal);
     font-size: .92rem;
     font-weight: 600;
     letter-spacing: -.015em;

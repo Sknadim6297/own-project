@@ -2,8 +2,8 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0.25rem 1rem 2.75rem;
-    background: #fffefc;
-    color: #0b2048;
+    background: var(--y1-pearl);
+    color: var(--y1-charcoal);
     font-family: "DM Sans", sans-serif;
 }
 
@@ -33,7 +33,7 @@
 
 .yk-insight__eyebrow {
     margin: 0;
-    color: #316d61;
+    color: var(--y1-plum);
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.16em;
@@ -50,11 +50,11 @@
 }
 
 .yk-insight__heading-navy {
-    color: #0b2048;
+    color: var(--y1-charcoal);
 }
 
 .yk-insight__heading-lavender {
-    color: #9d81db;
+    color: var(--y1-lilac);
 }
 
 .yk-insight__lead {
@@ -115,7 +115,7 @@
 }
 
 .yk-insight__card--mint {
-    background: #eaf6f2;
+    background: var(--y1-plum-soft);
 }
 
 .yk-insight__card--blush {
@@ -149,7 +149,7 @@
 }
 
 .yk-insight__badge--teal {
-    color: #316d61;
+    color: var(--y1-plum);
 }
 
 .yk-insight__badge--pink {
@@ -162,7 +162,7 @@
 
 .yk-insight__name {
     margin: 0;
-    color: #0b2048;
+    color: var(--y1-charcoal);
     font-size: 1.125rem;
     font-weight: 700;
     line-height: 1.25;
@@ -201,7 +201,7 @@ a.yk-insight__cta:hover {
 }
 
 a.yk-insight__cta:focus-visible {
-    outline: 2px solid #316d61;
+    outline: 2px solid var(--y1-plum);
     outline-offset: 3px;
     border-radius: 4px;
 }
@@ -211,7 +211,7 @@ a.yk-insight__cta:focus-visible {
 }
 
 .yk-insight__cta--teal {
-    color: #316d61;
+    color: var(--y1-plum);
 }
 
 .yk-insight__cta--pink {

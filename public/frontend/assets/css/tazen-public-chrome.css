@@ -1,12 +1,12 @@
 :root {
-    /* Align public chrome with yk-navbar / toolpage tokens */
-    --tazen-chrome-navy: #0b2048;
-    --tazen-chrome-teal: #316d61;
-    --tazen-chrome-white: #fff;
-    --tazen-chrome-soft: #eaf6f2;
-    --tazen-chrome-border: #e0e4ea;
-    --tazen-chrome-muted: #64748b;
-    --tazen-chrome-shadow: 0 8px 24px rgb(11 32 72 / 7%);
+    /* Mapped to YuktiOne brand tokens (yuktione-brand.css) */
+    --tazen-chrome-navy: var(--y1-charcoal, #1f1f1f);
+    --tazen-chrome-teal: var(--y1-plum, #8a0f4d);
+    --tazen-chrome-white: var(--y1-white, #fff);
+    --tazen-chrome-soft: var(--y1-plum-soft, #f8eaf1);
+    --tazen-chrome-border: var(--y1-silver, #d9d9de);
+    --tazen-chrome-muted: var(--y1-grey, #6b6b7a);
+    --tazen-chrome-shadow: 0 8px 24px rgb(31 31 31 / 7%);
 }
 
 #cookie-bar {
@@ -43,7 +43,7 @@
 }
 
 #cookie-bar .cb-enable:hover {
-    background: #27574e;
+    background: var(--y1-magenta, #c3196b);
     color: #fff;
 }
 
@@ -55,7 +55,7 @@
 
 #cookie-bar .cb-policy:hover {
     background: var(--tazen-chrome-soft);
-    color: #0b2048;
+    color: var(--y1-charcoal, #1f1f1f);
 }
 
 @media (max-width: 575px) {
@@ -504,7 +504,7 @@
 
 .tazen-footer__social-title {
     margin: 0 0 .75rem;
-    color: var(--tazen-chrome-navy, #0b2048);
+    color: var(--tazen-chrome-navy, var(--y1-charcoal));
     font-size: .95rem;
     font-weight: 700;
     line-height: 1.3;
@@ -530,10 +530,10 @@
     flex: 0 0 42px;
     align-items: center;
     justify-content: center;
-    border: 1px solid #e6ebf2;
+    border: 1px solid var(--y1-silver);
     border-radius: 50%;
     background: #fff;
-    color: var(--social, #316d61);
+    color: var(--social, var(--y1-plum));
     box-shadow: 0 1px 2px rgb(11 32 72 / 6%);
     text-decoration: none;
     transition: transform 200ms ease, background-color 200ms ease, color 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
@@ -624,7 +624,7 @@
 }
 
 .tazen-footer__contact-form button:hover {
-    background: #27574e;
+    background: var(--y1-magenta);
 }
 
 .tazen-footer__bottom {
@@ -1237,7 +1237,7 @@ html.tazen-public-nav-open body {
 .tazen-footer__social a.is-instagram { --social: #d62976; }
 .tazen-footer__social a.is-linkedin { --social: #0a66c2; }
 .tazen-footer__social a.is-youtube { --social: #ff0000; }
-.tazen-footer__social a.is-x { --social: #0b2048; }
+.tazen-footer__social a.is-x { --social: var(--y1-charcoal); }
 .tazen-footer__social a.is-whatsapp { --social: #25d366; }
 
 .tazen-footer__social a:hover,
@@ -1257,7 +1257,7 @@ html.tazen-public-nav-open body {
     left: 50%;
     padding: .28rem .5rem;
     border-radius: 8px;
-    background: #0b2048;
+    background: var(--y1-charcoal);
     color: #fff;
     font-size: .72rem;
     font-weight: 600;
@@ -1862,7 +1862,7 @@ html.tazen-public-nav-open body {
 }
 
 .whatsapp-float:focus-visible {
-    outline: 3px solid #142B4D;
+    outline: 3px solid var(--y1-charcoal);
     outline-offset: 4px;
 }
 

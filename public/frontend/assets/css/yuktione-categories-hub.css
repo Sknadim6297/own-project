@@ -1,10 +1,10 @@
 .yk-cat-hub,
 .yk-cat-detail {
-    --yk-navy: #142b4d;
-    --yk-navy-deep: #0b2048;
-    --yk-teal: #36877f;
-    --yk-cream: #fffefc;
-    --yk-line: #e6ebf2;
+    --yk-navy: var(--y1-charcoal);
+    --yk-navy-deep: var(--y1-charcoal);
+    --yk-teal: var(--y1-plum);
+    --yk-cream: var(--y1-pearl);
+    --yk-line: var(--y1-silver);
     --yk-muted: #5b6b7c;
     background: var(--yk-cream);
     color: var(--yk-navy);
@@ -139,7 +139,7 @@
     width: 48px;
     height: 48px;
     border-radius: 14px;
-    background: #eaf6f2;
+    background: var(--y1-plum-soft);
     color: var(--yk-teal);
 }
 

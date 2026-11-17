@@ -1,24 +1,25 @@
 /* Phase 4 — Premium Tools discovery (tools.index only) */
 .yk-tools-page {
-    --yk-navy: #142B4D;
-    --yk-teal: #316d61;
-    --yk-teal-deep: #24554c;
-    --yk-lavender: #9d81db;
-    --yk-mint: #eaf6f2;
+    --yk-navy: var(--y1-charcoal);
+    --yk-teal: var(--y1-plum);
+    --yk-teal-deep: var(--y1-magenta);
+    --yk-lavender: var(--y1-lilac);
+    --yk-mint: var(--y1-plum-soft);
     --yk-lilac: #f4f0ff;
     --yk-blush: #fff0f3;
     --yk-cream: #fff6ed;
-    --yk-line: #e6ebf2;
+    --yk-rose: var(--y1-plum);
+    --yk-line: var(--y1-silver);
     --yk-muted: #5b6b7c;
-    --yk-surface: #f7f9fc;
+    --yk-surface: var(--y1-pearl);
     --yk-card: #ffffff;
     --yk-shadow-hover: 0 14px 32px rgba(11, 32, 72, 0.12);
     --yk-radius: 14px;
     --yk-ease: 180ms ease;
     background:
-        radial-gradient(1200px 420px at 10% -12%, rgba(154, 129, 219, 0.08), transparent 60%),
-        radial-gradient(900px 380px at 94% 0%, rgba(49, 109, 97, 0.07), transparent 55%),
-        linear-gradient(180deg, #fbfcfe 0%, var(--yk-surface) 42%, #f5f7fb 100%);
+        radial-gradient(1000px 360px at 8% -8%, rgba(255, 214, 224, 0.45), transparent 58%),
+        radial-gradient(900px 380px at 94% 0%, rgba(49, 109, 97, 0.06), transparent 55%),
+        linear-gradient(180deg, #fff8f9 0%, #fffbfb 38%, var(--y1-pearl) 100%);
     color: var(--yk-navy);
 }
 
@@ -43,11 +44,60 @@
 .yk-tools__intro h1 {
     margin: 0;
     font-family: "DM Sans", system-ui, sans-serif;
-    font-size: clamp(1.55rem, 2.4vw, 1.9rem);
+    font-size: clamp(1.7rem, 2.8vw, 2.15rem);
     font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-    color: var(--yk-navy);
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    color: #1a1a1a;
+}
+
+.yk-tools__intro h1 span {
+    color: var(--yk-rose);
+}
+
+.yk-tools__tiles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.yk-tools__tiles > li {
+    min-width: 0;
+}
+
+.yk-tools__tiles .yk-tool-tile {
+    min-height: 132px;
+    padding-inline: 0.85rem;
+}
+
+.yk-tools__tiles .yk-tool-tile__label {
+    max-width: 16ch;
+}
+
+@media (min-width: 640px) {
+    .yk-tools__tiles {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+    }
+}
+
+@media (min-width: 900px) {
+    .yk-tools__tiles {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1100px) {
+    .yk-tools__tiles {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .yk-tools__tiles .yk-tool-tile {
+        min-height: 140px;
+    }
 }
 
 .yk-tools__lead {
@@ -117,13 +167,15 @@
     font-size: 0.76rem;
 }
 
-.yk-tools__chip.is-mint:not(.is-active) { background: var(--yk-mint); }
-.yk-tools__chip.is-lilac:not(.is-active) { background: var(--yk-lilac); }
-.yk-tools__chip.is-blush:not(.is-active) { background: var(--yk-blush); }
-.yk-tools__chip.is-cream:not(.is-active) { background: var(--yk-cream); }
-.yk-tools__chip.is-lavender:not(.is-active) { background: #efeafc; }
-.yk-tools__chip.is-sage:not(.is-active) { background: #eef6ef; }
-.yk-tools__chip.is-blue:not(.is-active) { background: #eaf2fb; }
+.yk-tools__chip.is-mint:not(.is-active),
+.yk-tools__chip.is-lilac:not(.is-active),
+.yk-tools__chip.is-blush:not(.is-active),
+.yk-tools__chip.is-cream:not(.is-active),
+.yk-tools__chip.is-lavender:not(.is-active),
+.yk-tools__chip.is-sage:not(.is-active),
+.yk-tools__chip.is-blue:not(.is-active) {
+    background: var(--y1-plum-soft, #f8eaf1);
+}
 
 .yk-tools__toolbar {
     display: flex;
@@ -306,9 +358,9 @@
 .yk-tool-card__media--skills { background: linear-gradient(145deg, #e8eef8, #eef3ff); }
 .yk-tool-card__media--bmi { background: linear-gradient(145deg, #e7f4ef, #eef8f4); }
 .yk-tool-card__media--water { background: linear-gradient(145deg, #e3f3fb, #eef8ff); }
-.yk-tool-card__media--weight { background: linear-gradient(145deg, #eaf6f2, #eef4ff); }
+.yk-tool-card__media--weight { background: linear-gradient(145deg, var(--y1-plum-soft), #eef4ff); }
 .yk-tool-card__media--nutrition { background: linear-gradient(145deg, #eaf6e8, #f3fae9); }
-.yk-tool-card__media--leaf { background: linear-gradient(145deg, #eaf6f2, #e8eef8); }
+.yk-tool-card__media--leaf { background: linear-gradient(145deg, var(--y1-plum-soft), #e8eef8); }
 
 .yk-tool-card__mark {
     display: grid;
@@ -341,7 +393,7 @@
     stroke-linejoin: round;
 }
 
-.yk-tool-card__mark--mood { color: #316d61; }
+.yk-tool-card__mark--mood { color: var(--y1-plum); }
 .yk-tool-card__mark--journal { color: #3d6ea8; }
 .yk-tool-card__mark--gratitude { color: #b85b78; }
 .yk-tool-card__mark--career { color: #6d56a8; }

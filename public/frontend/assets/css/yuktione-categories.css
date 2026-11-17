@@ -2,7 +2,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0.2rem 0 1.35rem;
-    background: #fffefc;
+    background: var(--y1-pearl);
     font-family: "DM Sans", sans-serif;
 }
 
@@ -27,7 +27,7 @@
 
 .yk-home-cats__head h2 {
     margin: 0;
-    color: #0b2048;
+    color: var(--y1-charcoal);
     font-size: 1rem;
     font-weight: 700;
     letter-spacing: -0.02em;
@@ -48,10 +48,10 @@
     height: 34px;
     margin: 0;
     padding: 0;
-    border: 1px solid #e0e4ea;
+    border: 1px solid var(--y1-silver);
     border-radius: 999px;
     background: #fff;
-    color: #142b4d;
+    color: var(--y1-charcoal);
     cursor: pointer;
     transition: background-color 0.15s ease, border-color 0.15s ease;
 }
@@ -68,8 +68,8 @@
 
 .yk-home-cats__nav:hover:not(:disabled),
 .yk-home-cats__nav:focus-visible {
-    border-color: #142b4d;
-    background: #f5f7fb;
+    border-color: var(--y1-charcoal);
+    background: var(--y1-pearl);
     outline: none;
 }
 
@@ -84,7 +84,7 @@
     min-height: 34px;
     padding: 0 0.8rem;
     border-radius: 999px;
-    background: #142b4d;
+    background: var(--y1-plum, #8a0f4d);
     color: #fff;
     font-size: 0.78rem;
     font-weight: 600;
@@ -94,7 +94,7 @@
 
 .yk-home-cats__more:hover,
 .yk-home-cats__more:focus-visible {
-    background: #0b2048;
+    background: var(--y1-magenta, #c3196b);
     color: #fff;
 }
 
@@ -188,20 +188,21 @@
     text-wrap: balance;
 }
 
-.yk-home-cats__card--violet { color: #5b4db8; }
-.yk-home-cats__card--violet .yk-home-cats__glow { background: #cfc4ff; }
+.yk-home-cats__card--violet,
+.yk-home-cats__card--blue,
+.yk-home-cats__card--green,
+.yk-home-cats__card--magenta,
+.yk-home-cats__card--amber {
+    color: var(--y1-plum, #8a0f4d);
+}
 
-.yk-home-cats__card--blue { color: #2f63b8; }
-.yk-home-cats__card--blue .yk-home-cats__glow { background: #bfd4ff; }
-
-.yk-home-cats__card--green { color: #2f7a4d; }
-.yk-home-cats__card--green .yk-home-cats__glow { background: #bfe8cb; }
-
-.yk-home-cats__card--magenta { color: #8a3f9d; }
-.yk-home-cats__card--magenta .yk-home-cats__glow { background: #ecc0f5; }
-
-.yk-home-cats__card--amber { color: #c46a1b; }
-.yk-home-cats__card--amber .yk-home-cats__glow { background: #ffd39a; }
+.yk-home-cats__card--violet .yk-home-cats__glow,
+.yk-home-cats__card--blue .yk-home-cats__glow,
+.yk-home-cats__card--green .yk-home-cats__glow,
+.yk-home-cats__card--magenta .yk-home-cats__glow,
+.yk-home-cats__card--amber .yk-home-cats__glow {
+    background: var(--y1-lilac, #d8b4e2);
+}
 
 @media (min-width: 768px) {
     .yk-home-cats__shell {

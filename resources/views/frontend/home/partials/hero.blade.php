@@ -17,7 +17,7 @@
             <p class="yk:m-0 yk:text-[0.72rem] yk:font-semibold yk:uppercase yk:tracking-[0.16em] yk:text-[#6d7892]">Your journey starts here</p>
             <h1 class="yk:m-0 yk:mt-3 yk:text-[2.05rem] yk:font-semibold yk:leading-[1.08] yk:tracking-[-0.03em] yk:sm:text-[2.3rem] yk:md:text-[2.7rem] yk:lg:text-[2.05rem] yk:xl:text-[2.55rem] yk:2xl:text-[2.85rem]" id="yuktione-home-title">
                 <span class="yk:block yk:text-[#0B2048]">Clarity today.</span>
-                <span class="yk:mt-1 yk:block yk:text-[#9D81DB]">A brighter tomorrow.</span>
+                <span class="yk:mt-1 yk:block yk:text-[#8A0F4D]">A brighter tomorrow.</span>
             </h1>
             <p class="yk:m-0 yk:mt-4 yk:max-w-[40rem] yk:text-base yk:leading-relaxed yk:text-[#42506a] yk:lg:max-w-[36ch] yk:lg:text-[0.98rem] yk:xl:text-[1.02rem]">Personalised tools, trusted experts and practical guidance for every area of your life.</p>
 
@@ -28,7 +28,7 @@
                 </svg>
                 <label class="visually-hidden" for="serviceSearch">What are you looking for today?</label>
                 <input class="yk:min-w-0 yk:flex-1 yk:border-0 yk:bg-transparent yk:text-[0.98rem] yk:text-[#0B2048] yk:outline-none yk:placeholder:text-[#8b95ab]" type="search" id="serviceSearch" placeholder="What are you looking for today?" autocomplete="off" enterkeyhint="search" data-search-endpoint="{{ route('search.services') }}" data-service-base="{{ url('/service') }}">
-                <button class="yk:inline-flex yk:size-10 yk:shrink-0 yk:items-center yk:justify-center yk:rounded-full yk:border-0 yk:bg-[#316D61] yk:text-white yk:transition-colors yk:duration-150 yk:hover:bg-[#27574e]" type="button" id="searchButton" aria-label="Search">
+                <button class="yk:inline-flex yk:size-10 yk:shrink-0 yk:items-center yk:justify-center yk:rounded-full yk:border-0 yk:bg-[#8A0F4D] yk:text-white yk:transition-colors yk:duration-150 yk:hover:bg-[#C3196B]" type="button" id="searchButton" aria-label="Search">
                     <svg class="yk:size-5" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
                     </svg>
@@ -81,14 +81,14 @@
                 @foreach (['Practical guidance', 'Trusted experts', 'A supportive community'] as $benefit)
                     <li class="yk:flex yk:items-center yk:gap-2.5 yk:text-[0.98rem] yk:font-medium yk:text-[#0B2048]">
                         <svg class="yk:size-5 yk:shrink-0" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-                            <circle cx="10" cy="10" r="10" fill="#316D61"></circle>
+                            <circle cx="10" cy="10" r="10" fill="#8A0F4D"></circle>
                             <path d="M5.8 10.2 8.5 12.9 14.2 7.2" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
                         </svg>
                         <span>{{ $benefit }}</span>
                     </li>
                 @endforeach
             </ul>
-            <a class="yk:relative yk:z-[1] yk:mt-6 yk:inline-flex yk:w-fit yk:items-center yk:justify-center yk:gap-2 yk:rounded-full yk:bg-[#316D61] yk:px-5 yk:py-3 yk:text-[0.95rem] yk:font-semibold yk:text-white yk:no-underline yk:transition-colors yk:duration-150 yk:hover:bg-[#27574e] yk:lg:mt-auto" href="{{ route('register') }}">
+            <a class="yk:relative yk:z-[1] yk:mt-6 yk:inline-flex yk:w-fit yk:items-center yk:justify-center yk:gap-2 yk:rounded-full yk:bg-[#8A0F4D] yk:px-5 yk:py-3 yk:text-[0.95rem] yk:font-semibold yk:text-white yk:no-underline yk:transition-colors yk:duration-150 yk:hover:bg-[#C3196B] yk:lg:mt-auto" href="{{ route('register') }}">
                 Join YuktiOne
                 <span aria-hidden="true">→</span>
             </a>

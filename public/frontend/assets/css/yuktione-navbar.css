@@ -1,14 +1,14 @@
 .yk-navbar {
-    --yk-nav-text: #0b2048;
-    --yk-nav-navy: #142b4d;
-    --yk-nav-navy-hover: #0b2048;
-    --yk-nav-lavender: #7b5ea7;
-    --yk-nav-lavender-soft: #f3eef9;
-    --yk-nav-bg: #ffffff;
-    --yk-nav-border: #e0e4ea;
-    --yk-nav-line: #e6eaf0;
-    --yk-nav-placeholder: #7c88a3;
-    --yk-nav-soft: #f5f7fb;
+    --yk-nav-text: var(--y1-charcoal, #1f1f1f);
+    --yk-nav-navy: var(--y1-plum, #8a0f4d);
+    --yk-nav-navy-hover: var(--y1-magenta, #c3196b);
+    --yk-nav-lavender: var(--y1-lilac, #d8b4e2);
+    --yk-nav-lavender-soft: var(--y1-lilac-soft, #f6eef9);
+    --yk-nav-bg: var(--y1-white, #ffffff);
+    --yk-nav-border: var(--y1-silver, #d9d9de);
+    --yk-nav-line: var(--y1-silver, #d9d9de);
+    --yk-nav-placeholder: var(--y1-grey, #6b6b7a);
+    --yk-nav-soft: var(--y1-pearl, #fff8fb);
     --yk-nav-font: "DM Sans", sans-serif;
     /* legacy aliases kept for older rules */
     --yk-nav-green: var(--yk-nav-navy);
@@ -379,7 +379,7 @@
 }
 
 .yk-navbar__login {
-    border: 1px solid rgb(20 43 77 / 22%);
+    border: 1px solid var(--y1-plum, #8a0f4d);
     background: var(--yk-nav-bg);
     color: var(--yk-nav-navy);
 }
@@ -405,7 +405,7 @@
 }
 
 .yk-navbar__dashboard {
-    border: 1px solid rgb(20 43 77 / 18%);
+    border: 1px solid var(--y1-silver, #d9d9de);
     background: var(--yk-nav-lavender-soft);
     color: var(--yk-nav-navy);
 }
@@ -413,12 +413,12 @@
 .yk-navbar__dashboard:hover,
 .yk-navbar__dashboard:focus-visible {
     border-color: var(--yk-nav-lavender);
-    background: #ebe4f6;
+    background: var(--y1-plum-soft, #f8eaf1);
     color: var(--yk-nav-navy-hover);
 }
 
 .yk-navbar__dashboard:focus-visible {
-    box-shadow: 0 0 0 3px rgb(123 94 167 / 18%);
+    box-shadow: 0 0 0 3px rgb(195 25 107 / 18%);
 }
 
 .yk-navbar__account {

@@ -2,8 +2,8 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0.35rem 1rem 2.75rem;
-    background: #fffefc;
-    color: #0b2048;
+    background: var(--y1-pearl);
+    color: var(--y1-charcoal);
     font-family: "DM Sans", sans-serif;
 }
 
@@ -38,7 +38,7 @@
 
 .yk-talk__eyebrow {
     margin: 0;
-    color: #316d61;
+    color: var(--y1-plum);
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.16em;
@@ -55,11 +55,11 @@
 }
 
 .yk-talk__heading-navy {
-    color: #0b2048;
+    color: var(--y1-charcoal);
 }
 
 .yk-talk__heading-lavender {
-    color: #9d81db;
+    color: var(--y1-lilac);
 }
 
 .yk-talk__lead {
@@ -78,10 +78,10 @@
     align-items: center;
     gap: 0.4rem;
     padding: 0.7rem 1.15rem;
-    border: 1.5px solid #316d61;
+    border: 1.5px solid var(--y1-plum);
     border-radius: 999px;
     background: transparent;
-    color: #316d61;
+    color: var(--y1-plum);
     font-size: 0.95rem;
     font-weight: 600;
     line-height: 1;
@@ -95,7 +95,7 @@
 
 .yk-talk__all:focus-visible,
 .yk-talk__book:focus-visible {
-    outline: 2px solid #316d61;
+    outline: 2px solid var(--y1-plum);
     outline-offset: 3px;
 }
 
@@ -152,7 +152,7 @@
 }
 
 .yk-talk__card--lavender { background: #f4f0ff; }
-.yk-talk__card--mint { background: #eaf6f2; }
+.yk-talk__card--mint { background: var(--y1-plum-soft); }
 .yk-talk__card--blush { background: #fff0f3; }
 .yk-talk__card--blue { background: #eef3ff; }
 .yk-talk__card--cream { background: #fff6ed; }
@@ -194,7 +194,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #316d61;
+    background: var(--y1-plum);
     color: #fff;
     font-size: 1.35rem;
     font-weight: 600;
@@ -202,7 +202,7 @@
 
 .yk-talk__name {
     margin: 0;
-    color: #0b2048;
+    color: var(--y1-charcoal);
     font-size: 1.05rem;
     font-weight: 700;
     line-height: 1.25;
@@ -224,7 +224,7 @@
     justify-content: center;
     gap: 0.28rem;
     margin: 0.45rem 0 0;
-    color: #0b2048;
+    color: var(--y1-charcoal);
     font-size: 0.84rem;
     font-weight: 600;
 }
@@ -249,7 +249,7 @@
     margin-top: auto;
     padding: 0.72rem 0.8rem;
     border-radius: 10px;
-    background: #316d61;
+    background: var(--y1-plum);
     color: #fff;
     font-size: 0.92rem;
     font-weight: 600;
@@ -258,7 +258,7 @@
 }
 
 .yk-talk__book:hover {
-    background: #27574e;
+    background: var(--y1-magenta);
 }
 
 @media (max-width: 639px) {

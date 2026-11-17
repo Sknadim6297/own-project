@@ -1,49 +1,49 @@
 .yuktione-auth-page {
-    --color-brand-50: #F3F8F9;
-    --color-brand-100: #EAF6F2;
-    --color-brand-200: #D9EDE7;
-    --color-brand-300: #A9D0C0;
-    --color-brand-400: #7EB0A5;
-    --color-brand-500: #316D61;
-    --color-brand-600: #2A5E54;
-    --color-brand-700: #245048;
-    --color-brand-800: #1E4340;
-    --color-brand-900: #142B4D;
-    --color-brand-950: #0F1F36;
-    --color-brand-primary: #316D61;
-    --color-brand-secondary: #142B4D;
-    --color-brand-accent: #8EB5DD;
+    --color-brand-50: #FFF8FB;
+    --color-brand-100: #F8EAF1;
+    --color-brand-200: #F0D4E2;
+    --color-brand-300: #D8B4E2;
+    --color-brand-400: #C3196B;
+    --color-brand-500: #8A0F4D;
+    --color-brand-600: #C3196B;
+    --color-brand-700: #6E0B3C;
+    --color-brand-800: #5A0932;
+    --color-brand-900: #1F1F1F;
+    --color-brand-950: #141414;
+    --color-brand-primary: #8A0F4D;
+    --color-brand-secondary: #1F1F1F;
+    --color-brand-accent: #D8B4E2;
 
-    --color-background: #F7FAFB;
+    --color-background: #FFF8FB;
     --color-surface: #ffffff;
-    --color-surface-muted: #F3F7F8;
-    --color-text-primary: #142B4D;
-    --color-text-secondary: #475569;
-    --color-text-muted: #718096;
-    --color-border: #E2E9EE;
-    --color-divider: #EAF1F4;
-    --color-info: #316D61;
-    --color-info-surface: #EAF6F2;
-    --color-focus-ring: #316D61;
+    --color-surface-muted: #FFF1F6;
+    --color-text-primary: #1F1F1F;
+    --color-text-secondary: #6B6B7A;
+    --color-text-muted: #6B6B7A;
+    --color-border: #D9D9DE;
+    --color-divider: #EFE7EC;
+    --color-info: #8A0F4D;
+    --color-info-surface: #F8EAF1;
+    --color-focus-ring: #8A0F4D;
     --font-sans: "DM Sans", sans-serif;
     --font-display: "DM Sans", sans-serif;
 
-    color: #475569;
+    color: #6B6B7A;
     font-family: "DM Sans", sans-serif;
 }
 
 body.yuktione-auth-page {
-    background: #F7FAFB;
-    color: #475569;
+    background: #FFF8FB;
+    color: #6B6B7A;
     font-family: "DM Sans", sans-serif;
 }
 
 .yuktione-auth-page :where(h1, h2, h3, h4, h5, h6) {
-    color: #142B4D;
+    color: #1F1F1F;
 }
 
 .yuktione-auth-page :where(a:not([class])) {
-    color: #316D61;
+    color: #8A0F4D;
 }
 
 .yuktione-auth-page :where(button, input, select, textarea) {
@@ -51,36 +51,36 @@ body.yuktione-auth-page {
 }
 
 .yuktione-auth-page :where(button, input, select, textarea):focus-visible {
-    outline-color: #316D61;
+    outline-color: #8A0F4D;
 }
 
 .yuktione-auth-page button:disabled {
-    border-color: #BBDBD4;
-    background-color: #BBDBD4;
+    border-color: #E2B7CB;
+    background-color: #E2B7CB;
     color: #ffffff;
     cursor: not-allowed;
 }
 
 .yuktione-auth-page #signInButton:disabled {
-    border-color: #316D61;
-    background-color: #316D61;
+    border-color: #8A0F4D;
+    background-color: #8A0F4D;
     color: #ffffff;
     opacity: 0.72;
     cursor: wait;
 }
 
 .yuktione-auth-page [role="tab"][aria-selected="true"] {
-    background-color: #316D61;
+    background-color: #8A0F4D;
     color: #ffffff;
     box-shadow: none;
 }
 
 .yuktione-auth-page [role="tab"][aria-selected="false"] {
-    color: #475569;
+    color: #6B6B7A;
 }
 
 .yuktione-auth-page [role="tab"][aria-selected="false"]:hover {
-    color: #245048;
+    color: #8A0F4D;
 }
 
 .yuktione-auth-page [data-registration-step] h2:focus {
@@ -89,7 +89,7 @@ body.yuktione-auth-page {
 }
 
 .yuktione-auth-page .login-hero {
-    background: linear-gradient(135deg, #245048 0%, #316D61 45%, #8EB5DD 100%);
+    background: linear-gradient(135deg, #6E0B3C 0%, #8A0F4D 45%, #D8B4E2 100%);
 }
 
 .yuktione-auth-page .login-hero :where(h1, h2, h3, p, a) {

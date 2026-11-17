@@ -58,24 +58,6 @@ class ToolsCatalogueTest extends TestCase
             $this->assertTrue($tool->canLaunch(), $slug);
         }
 
-        $stillComingSoon = [
-            'career-interest-test',
-            'skills-strengths-assessment',
-            'bmi-bmr-calculator',
-            'water-intake-tracker',
-            'weight-journey',
-            'calorie-nutrition-tracker',
-        ];
-        $this->assertSame(
-            count($stillComingSoon),
-            Tool::query()
-                ->whereIn('slug', $stillComingSoon)
-                ->where('status', 'coming_soon')
-                ->where('is_implemented', false)
-                ->whereNull('route_name')
-                ->count()
-        );
-
         $category = ToolCategory::query()->firstOrFail();
         Tool::query()->create([
             'tool_category_id' => $category->id,
@@ -93,26 +75,17 @@ class ToolsCatalogueTest extends TestCase
         $page = $this->get(route('tools.index'));
 
         $page->assertOk()
-            ->assertSee('Showing 3 tools')
+            ->assertSee('Try')
+            ->assertSee('Our Tools')
             ->assertSee('Daily Mood Check-in')
-            ->assertSee('Understand and track your emotions.')
             ->assertSee('Digital Journal')
-            ->assertSee('Express your thoughts in your own words.')
             ->assertSee('Gratitude Journal')
-            ->assertSee('Notice and appreciate the good in your day.')
-            ->assertSee('Free')
-            ->assertSee('Start Check-in')
-            ->assertSee('Open')
+            ->assertSee('yk-tools__tiles', false)
+            ->assertSee('yk-tool-tile', false)
             ->assertSee('href="'.route('tools.psychology.mood').'"', false)
             ->assertSee('href="'.route('tools.psychology.journal').'"', false)
             ->assertSee('href="'.route('tools.psychology.gratitude').'"', false)
             ->assertDontSee('No published tools yet')
-            ->assertDontSee('Career Interest Test')
-            ->assertDontSee('Skills & Strengths Assessment')
-            ->assertDontSee('BMI & BMR Calculator')
-            ->assertDontSee('Water Intake Tracker')
-            ->assertDontSee('Weight Journey')
-            ->assertDontSee('Calorie & Nutrition Tracker')
             ->assertDontSee('Private History')
             ->assertDontSee('saved reflection')
             ->assertDontSee(route('tools.psychology.mood.history'), false)

@@ -143,7 +143,7 @@
 		.seven { background-color: #f8d7da; }
 		.eight { background-color: #d1e7dd; }
 		.btn_1 {
-			background: #4e63d7;
+			background: #8A0F4D;
 			color: #fff;
 			padding: 8px 20px;
 			border-radius: 30px;
@@ -152,7 +152,7 @@
 			display: inline-block;
 		}
 		.btn_1:hover {
-			background: #3a4eb3;
+			background: #C3196B;
 			color: #fff;
 		}
 		.content-discover {
@@ -170,7 +170,7 @@
 	<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
 	<link rel="shortcut icon" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
 	<meta name="msapplication-TileImage" content="{{ asset('frontend/assets/Yuktione_logo.png') }}">
-	<meta name="theme-color" content="#316d61">
+	<meta name="theme-color" content="#8A0F4D">
 	
 	<!-- Schema Markup -->
 	@yield('schema')
@@ -179,6 +179,7 @@
 		@vite('resources/css/customer-panel.css')
 		<link href="{{ asset('frontend/assets/css/yuktione-booking.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-booking.css')) }}" rel="stylesheet">
 	@endif
+	<link href="{{ asset('frontend/assets/css/yuktione-brand.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-brand.css')) }}" rel="stylesheet">
 	<link href="{{ asset('frontend/assets/css/tazen-public-chrome.css') }}?v={{ filemtime(public_path('frontend/assets/css/tazen-public-chrome.css')) }}" rel="stylesheet">
 	@if (request()->routeIs('home'))
 		<link href="{{ asset('frontend/assets/css/yuktione-home.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-home.css')) }}" rel="stylesheet">
@@ -210,6 +211,7 @@
 		<link href="{{ asset('frontend/assets/css/yuktione-experts.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-experts.css')) }}" rel="stylesheet">
 	@endif
 	@if (request()->routeIs('tools.index'))
+		<link href="{{ asset('frontend/assets/css/yuktione-tools.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-tools-page.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools-page.css')) }}" rel="stylesheet">
 	@endif
 	@if (request()->routeIs('tools.psychology', 'tools.psychology.*'))

@@ -7,12 +7,12 @@
 
 @theme {
   --font-sans: "DM Sans", sans-serif;
-  --color-navy: #0b2048;
-  --color-teal: #316d61;
-  --color-lavender: #9d81db;
-  --color-cream: #fffefc;
-  --color-lilac: #f4f0fa;
-  --color-line: #e0e4ea;
+  --color-navy: #1f1f1f;
+  --color-teal: #8a0f4d;
+  --color-lavender: #8a0f4d;
+  --color-cream: #fff8fb;
+  --color-lilac: #f6eef9;
+  --color-line: #d9d9de;
 }
 
 .yk-hero,
@@ -52,7 +52,7 @@
 }
 
 .yk-hero__search:focus-within {
-  border-color: #316d61;
+  border-color: #8a0f4d;
 }
 
 .yk-hero__search input {
@@ -66,7 +66,7 @@
   background: transparent;
   box-shadow: none;
   font: inherit;
-  color: #0b2048;
+  color: #1f1f1f;
 }
 
 .yk-hero__search input::-webkit-search-decoration,
@@ -82,7 +82,7 @@
   left: 0;
   z-index: 30;
   overflow: hidden;
-  border: 1px solid #e0e4ea;
+  border: 1px solid #d9d9de;
   border-radius: 1rem;
   background: #fff;
 }
@@ -93,10 +93,10 @@
 
 .yk-hero__results .list-group-item {
   border: 0;
-  border-bottom: 1px solid #eef1f4;
+  border-bottom: 1px solid #efe7ec;
   border-radius: 0;
   background: #fff;
-  color: #0b2048;
+  color: #1f1f1f;
   font-family: inherit;
   font-size: 0.92rem;
 }
@@ -107,8 +107,8 @@
 
 .yk-hero__results .list-group-item:hover,
 .yk-hero__results .list-group-item:focus-visible {
-  background: #f4f0fa;
-  color: #0b2048;
+  background: #f8eaf1;
+  color: #1f1f1f;
 }
 
 .yk-hero__chip {
@@ -118,8 +118,8 @@
   padding: 0.32rem 0.75rem;
   border: 0;
   border-radius: 999px;
-  background: #f3eef9;
-  color: #0b2048;
+  background: #f6eef9;
+  color: #1f1f1f;
   font: inherit;
   font-size: 0.82rem;
   font-weight: 500;
@@ -129,8 +129,8 @@
 }
 
 .yk-hero__chip:hover {
-  background: #e7def6;
-  color: #0b2048;
+  background: #f0d4e2;
+  color: #1f1f1f;
 }
 
 .yk-hero__script {
@@ -147,12 +147,12 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(90deg, rgb(11 32 72 / 34%) 0%, rgb(11 32 72 / 8%) 46%, transparent 72%);
+  background: linear-gradient(90deg, rgb(31 31 31 / 34%) 0%, rgb(31 31 31 / 8%) 46%, transparent 72%);
   pointer-events: none;
 }
 
 .yk-hero__video-copy {
-  text-shadow: 0 1px 8px rgb(11 32 72 / 28%);
+  text-shadow: 0 1px 8px rgb(31 31 31 / 28%);
 }
 
 .yk-hero__video.is-playing::after,
@@ -173,7 +173,7 @@
 
 .yk-hero a:focus-visible,
 .yk-hero button:focus-visible {
-  outline: 2px solid #316d61;
+  outline: 2px solid #8a0f4d;
   outline-offset: 3px;
 }
 

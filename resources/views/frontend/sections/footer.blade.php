@@ -1,7 +1,7 @@
 <footer class="tazen-footer" id="tazen-public-footer">
     <svg class="tazen-footer__wave-art" viewBox="0 0 2000 700" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-        <path d="M0 430c170 120 245 118 405 60 157-57 270-74 440-8 154 60 274 181 475 149 175-28 250-159 415-154 103 3 174 51 265 111v112H0Z" fill="#b5f1ed" fill-opacity=".5"></path>
-        <path d="M0 490c160 101 252 113 430 57 181-57 267-73 425-2 171 77 293 162 465 118 186-47 263-150 426-121 95 17 177 62 254 108v89H0Z" fill="#9bece6" fill-opacity=".25"></path>
+        <path d="M0 430c170 120 245 118 405 60 157-57 270-74 440-8 154 60 274 181 475 149 175-28 250-159 415-154 103 3 174 51 265 111v112H0Z" fill="#D8B4E2" fill-opacity=".35"></path>
+        <path d="M0 490c160 101 252 113 430 57 181-57 267-73 425-2 171 77 293 162 465 118 186-47 263-150 426-121 95 17 177 62 254 108v89H0Z" fill="#D9D9DE" fill-opacity=".45"></path>
     </svg>
     <div class="tazen-footer__main">
         <div class="tazen-footer__brand">

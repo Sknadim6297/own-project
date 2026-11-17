@@ -10,7 +10,8 @@ class ToolsPageTest extends TestCase
     {
         $this->get(route('tools.index'))
             ->assertOk()
-            ->assertSee('Explore Tools')
+            ->assertSee('Try')
+            ->assertSee('Our Tools')
             ->assertSee('Showing 0 tools')
             ->assertSee('No published tools yet')
             ->assertSee('it will appear in this catalogue')

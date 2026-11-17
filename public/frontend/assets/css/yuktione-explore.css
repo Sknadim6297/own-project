@@ -3,14 +3,14 @@
 }
 
 .yk-explore {
-    --yk-navy: #0b2048;
-    --yk-teal: #316d61;
-    --yk-lavender: #9d81db;
-    --yk-mint: #eaf6f2;
+    --yk-navy: var(--y1-charcoal);
+    --yk-teal: var(--y1-plum);
+    --yk-lavender: var(--y1-lilac);
+    --yk-mint: var(--y1-plum-soft);
     --yk-lilac: #f4f0ff;
     --yk-blush: #fff0f3;
     --yk-cream: #fff6ed;
-    --yk-line: #e6ebf2;
+    --yk-line: var(--y1-silver);
     color: var(--yk-navy);
     font-family: "DM Sans", sans-serif;
     font-optical-sizing: auto;
@@ -100,7 +100,7 @@
     height: 58px;
     margin-top: 1.15rem;
     padding: 0 0.4rem 0 1rem;
-    border: 1px solid #e0e4ea;
+    border: 1px solid var(--y1-silver);
     border-radius: 999px;
     background: #fff;
     box-shadow: 0 10px 30px rgb(11 32 72 / 6%);
@@ -279,7 +279,7 @@
 
 .yk-explore__category.is-mint,
 .yk-explore__category.is-sage,
-.yk-explore__category.is-all { background: var(--yk-mint); color: #316d61; }
+.yk-explore__category.is-all { background: var(--yk-mint); color: var(--y1-plum); }
 .yk-explore__category.is-lavender,
 .yk-explore__category.is-lilac { background: var(--yk-lilac); color: #6d56a8; }
 .yk-explore__category.is-blush { background: var(--yk-blush); color: #b85b78; }
@@ -588,7 +588,7 @@
     display: block;
     height: 112px;
     overflow: hidden;
-    background: #eaf6f2;
+    background: var(--y1-plum-soft);
 }
 
 .yk-card--programme .yk-card__media { background: #fff6ed; }
@@ -615,8 +615,8 @@
 .yk-card__fallback {
     display: grid;
     place-items: center;
-    background: linear-gradient(160deg, #eaf6f2 0%, #f4f0ff 100%);
-    color: #316d61;
+    background: linear-gradient(160deg, var(--y1-plum-soft) 0%, #f4f0ff 100%);
+    color: var(--y1-plum);
     font-size: 1.35rem;
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -792,7 +792,7 @@
     text-decoration: none;
 }
 
-.yk-card--expert .yk-card__cta { background: #316d61; color: #fff; }
+.yk-card--expert .yk-card__cta { background: var(--y1-plum); color: #fff; }
 .yk-card--programme .yk-card__cta { background: #f4a25c; color: #fff; }
 .yk-card--article .yk-card__cta { background: #7eb0d8; color: #fff; }
 .yk-card__cta:hover { filter: brightness(0.96); }
@@ -864,7 +864,7 @@
     stroke-width: 1.7;
 }
 
-.yk-explore__featured .is-mint { background: var(--yk-mint); color: #316d61; }
+.yk-explore__featured .is-mint { background: var(--yk-mint); color: var(--y1-plum); }
 .yk-explore__featured .is-lilac { background: var(--yk-lilac); color: #6d56a8; }
 .yk-explore__featured .is-blush { background: var(--yk-blush); color: #b85b78; }
 .yk-explore__featured .is-cream { background: var(--yk-cream); color: #b47a32; }

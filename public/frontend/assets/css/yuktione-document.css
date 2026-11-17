@@ -1,17 +1,17 @@
 .yk-doc {
-    --yk-navy: #142B4D;
-    --yk-teal: #316d61;
-    --yk-lavender: #9d81db;
-    --yk-mint: #eaf6f2;
-    --yk-line: #e6ebf2;
-    --yk-muted: #41506d;
+    --yk-navy: var(--y1-charcoal, #1f1f1f);
+    --yk-teal: var(--y1-plum, #8a0f4d);
+    --yk-lavender: var(--y1-lilac, #d8b4e2);
+    --yk-mint: var(--y1-plum-soft, #f8eaf1);
+    --yk-line: var(--y1-silver, #d9d9de);
+    --yk-muted: var(--y1-grey, #6b6b7a);
     box-sizing: border-box;
     margin: 0;
     padding: 0 0 3rem;
     background:
-        radial-gradient(circle at 8% 0%, rgba(157, 129, 219, 0.16), transparent 28%),
-        radial-gradient(circle at 92% 8%, rgba(49, 109, 97, 0.12), transparent 26%),
-        #fff;
+        radial-gradient(circle at 8% 0%, rgba(216, 180, 226, 0.28), transparent 28%),
+        radial-gradient(circle at 92% 8%, rgba(138, 15, 77, 0.08), transparent 26%),
+        var(--y1-pearl, #fff8fb);
     color: var(--yk-navy);
     font-family: "DM Sans", sans-serif;
 }

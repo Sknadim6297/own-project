@@ -78,18 +78,16 @@ class Phase12ToolsConsistencyTest extends TestCase
 
     public function test_nutrition_catalogue_pending_clears_when_food_published(): void
     {
-        $request = Request::create(route('tools.index'), 'GET');
-        $browse = app(ToolsCatalog::class)->browse($request);
-        $card = collect($browse['items']->items())->firstWhere('slug', 'calorie-nutrition-tracker');
-        $this->assertNotNull($card);
-        $this->assertSame('Pending', $card['availability']);
-        $this->assertSame('pending', $card['availability_state']);
-        $this->assertSame('View status', $card['cta']);
+        $pending = $this->catalogueCard('calorie-nutrition-tracker');
+        $this->assertNotNull($pending);
+        $this->assertSame('Pending', $pending['availability']);
+        $this->assertSame('pending', $pending['availability_state']);
+        $this->assertSame('View status', $pending['cta']);
 
-        $this->get(route('tools.index'))
+        $this->get(route('tools.index', ['q' => 'Calorie']))
             ->assertOk()
-            ->assertSee('Pending')
-            ->assertSee('View status');
+            ->assertSee('Calorie & Nutrition Tracker')
+            ->assertSee('href="'.route('tools.nutrition').'"', false);
 
         $category = NutritionFoodCategory::query()->create([
             'name' => 'Staples',
@@ -111,11 +109,23 @@ class Phase12ToolsConsistencyTest extends TestCase
             'is_published' => true,
         ]);
 
-        $browseReady = app(ToolsCatalog::class)->browse(Request::create(route('tools.index'), 'GET'));
-        $ready = collect($browseReady['items']->items())->firstWhere('slug', 'calorie-nutrition-tracker');
+        $ready = $this->catalogueCard('calorie-nutrition-tracker');
+        $this->assertNotNull($ready);
         $this->assertSame('Available', $ready['availability']);
         $this->assertSame('available', $ready['availability_state']);
         $this->assertSame('Open', $ready['cta']);
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function catalogueCard(string $slug): ?array
+    {
+        $browse = app(ToolsCatalog::class)->browse(Request::create(route('tools.index'), 'GET', [
+            'q' => 'Calorie',
+        ]));
+
+        return collect($browse['items']->items())->firstWhere('slug', $slug);
     }
 
     public function test_tools_nav_active_for_registered_tool_routes(): void
