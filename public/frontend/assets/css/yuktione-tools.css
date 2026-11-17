@@ -66,7 +66,7 @@
 }
 
 .yk-tools-strip__nav {
-    display: none;
+    display: inline-flex;
     align-items: center;
     gap: 0.35rem;
 }
@@ -81,7 +81,7 @@
     padding: 0;
     border: 1px solid #ead7de;
     border-radius: 999px;
-    background: #fff;
+    background: #fff5f7;
     color: var(--yk-tools-rose);
     cursor: pointer;
     transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
@@ -144,6 +144,7 @@
 
 .yk-tools-strip__track {
     display: flex;
+    align-items: stretch;
     gap: 0.85rem;
     margin: 0;
     padding: 0.2rem 0.05rem 0.45rem;
@@ -160,8 +161,9 @@
 }
 
 .yk-tools-strip__track > li {
-    flex: 0 0 auto;
-    width: min(38vw, 132px);
+    flex: 0 0 136px;
+    width: 136px;
+    height: 138px;
     scroll-snap-align: start;
 }
 
@@ -173,14 +175,17 @@
     justify-content: center;
     gap: 0.7rem;
     width: 100%;
-    min-height: 128px;
-    padding: 1rem 0.7rem 0.9rem;
+    height: 100%;
+    min-height: 138px;
+    max-height: 138px;
+    padding: 0.95rem 0.65rem 0.85rem;
     border: 1px solid var(--yk-tools-line);
-    border-radius: 16px;
+    border-radius: 18px;
     background: var(--yk-tools-card);
     box-shadow: var(--yk-tools-shadow);
     color: var(--yk-tools-ink);
     text-decoration: none;
+    overflow: hidden;
     transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
@@ -195,6 +200,7 @@
 .yk-tool-tile__icon {
     display: grid;
     place-items: center;
+    flex: 0 0 auto;
     width: 42px;
     height: 42px;
     color: var(--yk-tools-rose);
@@ -211,14 +217,33 @@
 }
 
 .yk-tool-tile__label {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
     max-width: 12ch;
+    min-height: 2.5em;
     color: var(--yk-tools-ink);
-    font-size: 0.84rem;
+    font-size: 0.86rem;
     font-weight: 650;
     letter-spacing: -0.02em;
     line-height: 1.25;
     text-align: center;
     text-wrap: balance;
+}
+
+@media (max-width: 767px) {
+    .yk-tools-strip__track > li {
+        flex-basis: 128px;
+        width: 128px;
+        height: 132px;
+    }
+
+    .yk-tool-tile {
+        min-height: 132px;
+        max-height: 132px;
+        border-radius: 16px;
+    }
 }
 
 @media (min-width: 768px) {
@@ -228,23 +253,6 @@
 
     .yk-tools-strip__shell {
         width: min(100% - 3rem, 1180px);
-    }
-
-    .yk-tools-strip__nav {
-        display: inline-flex;
-    }
-
-    .yk-tools-strip__track > li {
-        width: 136px;
-    }
-
-    .yk-tool-tile {
-        min-height: 138px;
-        border-radius: 18px;
-    }
-
-    .yk-tool-tile__label {
-        font-size: 0.88rem;
     }
 }
 
@@ -258,7 +266,14 @@
     }
 
     .yk-tools-strip__track > li {
+        flex-basis: 142px;
         width: 142px;
+        height: 142px;
+    }
+
+    .yk-tool-tile {
+        min-height: 142px;
+        max-height: 142px;
     }
 }
 

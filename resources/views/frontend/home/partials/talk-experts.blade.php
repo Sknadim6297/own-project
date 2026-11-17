@@ -1,5 +1,5 @@
 @php
-    $talkExperts = collect($featuredExperts ?? [])->take(6);
+    $talkExperts = collect($talkExperts ?? $featuredExperts ?? []);
 
     $talkSessionCounts = $talkExperts->isEmpty()
         ? collect()
@@ -14,22 +14,8 @@
             ->groupBy('professional_id')
             ->pluck('session_count', 'professional_id');
 
-    $toneForCategory = function (?string $category): string {
-        $value = \Illuminate\Support\Str::lower((string) $category);
-        if (\Illuminate\Support\Str::contains($value, ['psychiatr'])) {
-            return 'rose';
-        }
-        if (\Illuminate\Support\Str::contains($value, ['nutrition', 'diet'])) {
-            return 'sage';
-        }
-        if (\Illuminate\Support\Str::contains($value, ['astrolog', 'tarot'])) {
-            return 'lavender';
-        }
-        if (\Illuminate\Support\Str::contains($value, ['influencer'])) {
-            return 'blush';
-        }
-        return 'teal';
-    };
+    // Rotate brand tones by card index so adjacent cards never share a colour.
+    $talkTones = ['plum', 'magenta', 'lilac', 'copper', 'charcoal', 'berry'];
 
     $nextSlotLabel = function ($expert): ?string {
         $dayMap = [
@@ -93,7 +79,7 @@
         foreach (['education', 'education2'] as $field) {
             $value = trim(strip_tags((string) ($expert->profile?->{$field} ?? '')));
             if ($value !== '' && !\Illuminate\Support\Str::startsWith($value, ['{', '['])) {
-                return \Illuminate\Support\Str::limit($value, 36);
+                return \Illuminate\Support\Str::limit($value, 42);
             }
         }
 
@@ -160,7 +146,7 @@
 
                             $qualification = $qualificationFor($expert);
                             if (!$qualification && filled($expert->profile?->specialization) && $expert->profile?->specialization !== $category) {
-                                $qualification = \Illuminate\Support\Str::limit(trim((string) $expert->profile->specialization), 36);
+                                $qualification = \Illuminate\Support\Str::limit(trim((string) $expert->profile->specialization), 42);
                             }
 
                             $chipSource = collect();
@@ -174,7 +160,7 @@
                                 $chipSource = $chipSource->merge(preg_split('/\s*,\s*/', (string) $expert->profile->specialization));
                             }
                             $chips = $chipSource->map(fn ($chip) => trim((string) $chip))->filter()->unique()->values();
-                            $visibleChips = $chips->take(2);
+                            $visibleChips = $chips->take(3);
                             $extraChips = max(0, $chips->count() - $visibleChips->count());
 
                             $sessionCount = (int) ($talkSessionCounts[$expert->id] ?? 0);
@@ -190,7 +176,7 @@
                                 'id' => $expert->id,
                                 'professional_name' => \Illuminate\Support\Str::slug($expert->name),
                             ]);
-                            $tone = $toneForCategory($category);
+                            $tone = $talkTones[$loop->index % count($talkTones)];
                             $nextSlot = $nextSlotLabel($expert);
                         @endphp
                         <li class="yk-talk__slide">

@@ -1,0 +1,516 @@
+/**
+ * Homepage soft-bright polish (must load AFTER home/hero/categories/tools/navbar)
+ */
+body.yk-home-bright {
+    /* Match mockup cream: #F8F3F1 / #F5F1EB */
+    --y1-bright-cream: #f8f3f1;
+    --y1-bright-pearl: #f5f1eb;
+    --y1-bright-burgundy: #6b1d3f;
+    background:
+        radial-gradient(ellipse 70% 48% at 0% 8%, rgba(255, 250, 246, 0.9), transparent 58%),
+        radial-gradient(ellipse 55% 40% at 100% 12%, rgba(232, 224, 214, 0.45), transparent 52%),
+        radial-gradient(ellipse 70% 40% at 50% 45%, rgba(248, 243, 241, 0.95), transparent 65%),
+        linear-gradient(180deg, #f8f3f1 0%, #f5f1eb 28%, #f7f2ec 62%, #f2ede4 100%) !important;
+    color: #1a1a1a;
+}
+
+/* Soft floating sheen — fixed, never in document flow */
+body.yk-home-bright::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 44% 30% at 16% 18%, rgba(255, 255, 255, 0.8), transparent 70%),
+        radial-gradient(ellipse 38% 26% at 82% 36%, rgba(245, 236, 226, 0.55), transparent 72%),
+        radial-gradient(ellipse 42% 28% at 42% 78%, rgba(236, 228, 218, 0.35), transparent 70%);
+}
+
+body.yk-home-bright .yk-navbar,
+body.yk-home-bright main,
+body.yk-home-bright .site-footer,
+body.yk-home-bright footer {
+    position: relative;
+    z-index: 1;
+}
+
+body.yk-home-bright main {
+    background: transparent !important;
+}
+
+/* Silk ribbon wash under section content — do NOT force children to relative */
+body.yk-home-bright main > section {
+    position: relative;
+    isolation: isolate;
+}
+
+body.yk-home-bright main > section::after {
+    content: "";
+    position: absolute;
+    left: -12%;
+    right: -12%;
+    bottom: -22%;
+    height: 48%;
+    pointer-events: none;
+    z-index: 0;
+    background:
+        radial-gradient(ellipse 75% 90% at 30% 100%, rgba(255, 255, 255, 0.75), transparent 68%),
+        radial-gradient(ellipse 60% 70% at 78% 90%, rgba(240, 230, 220, 0.4), transparent 70%);
+    opacity: 0.65;
+}
+
+/* Keep decorative layers out of flow */
+body.yk-home-bright .yk-hero__glow,
+body.yk-home-bright .yk-home-experience__ribbon,
+body.yk-home-bright .yk-home-experience__ornament {
+    position: absolute !important;
+    z-index: 0 !important;
+    pointer-events: none;
+}
+
+body.yk-home-bright .yk-hero__grid,
+body.yk-home-bright .yk-home-cats__shell,
+body.yk-home-bright .yk-tools-strip__shell,
+body.yk-home-bright .yk-home-container,
+body.yk-home-bright .yk-insight__shell,
+body.yk-home-bright .yk-talk__shell,
+body.yk-home-bright .yk-home-how__heading,
+body.yk-home-bright .yk-home-how__grid,
+body.yk-home-bright .yk-home-testimonials__heading,
+body.yk-home-bright .yk-home-testimonials__track,
+body.yk-home-bright .yk-home-professional .yk-home-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* ——— Hero ——— */
+body.yk-home-bright .yk-hero--soft {
+    --hero-max: 1280px;
+    --hero-plum: #6b1d3f;
+    --hero-magenta: #8a2550;
+    background:
+        radial-gradient(ellipse 58% 48% at 10% 16%, rgba(255, 250, 246, 0.95), transparent 62%),
+        radial-gradient(ellipse 48% 42% at 90% 10%, rgba(232, 224, 214, 0.5), transparent 58%),
+        linear-gradient(165deg, #f8f3f1 0%, #f5f1eb 45%, #f2ede4 100%) !important;
+    padding-block: clamp(0.85rem, 2vw, 1.5rem) clamp(1.35rem, 2.4vw, 2rem);
+}
+
+body.yk-home-bright .yk-hero__glow--a {
+    background: rgba(184, 140, 110, 0.16) !important;
+    opacity: 0.45 !important;
+    filter: blur(48px) !important;
+}
+
+body.yk-home-bright .yk-hero__glow--b {
+    background: rgba(200, 185, 170, 0.26) !important;
+    opacity: 0.45 !important;
+    filter: blur(48px) !important;
+}
+
+body.yk-home-bright .yk-hero__copy h1 {
+    font-size: clamp(1.65rem, 2.9vw, 2.35rem) !important;
+    line-height: 1.08 !important;
+    text-shadow: none;
+    color: #111 !important;
+}
+
+@media (min-width: 1100px) {
+    body.yk-home-bright .yk-hero__title-line:first-child {
+        white-space: nowrap !important;
+    }
+}
+
+body.yk-home-bright .yk-hero__title-accent {
+    color: #6b1d3f !important;
+}
+
+body.yk-home-bright .yk-hero__btn--primary {
+    background: linear-gradient(90deg, #8d1f52 0%, #6f143f 55%, #5c1035 100%) !important;
+    box-shadow:
+        0 12px 26px rgba(92, 16, 53, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+}
+
+body.yk-home-bright .yk-hero__lead {
+    color: #2a2a2a !important;
+    font-weight: 500 !important;
+}
+
+body.yk-home-bright .yk-hero__btn--primary,
+body.yk-home-bright .yk-hero__btn--ghost {
+    min-height: 2.85rem !important;
+}
+
+body.yk-home-bright .yk-hero__btn--ghost {
+    background: rgba(255, 252, 248, 0.96) !important;
+    border: 2px solid #111 !important;
+    color: #111 !important;
+    font-size: 0.96rem !important;
+    font-weight: 750 !important;
+    min-width: 10.75rem !important;
+    box-shadow: none !important;
+}
+
+/* Landscape frame — white border + soft under-shadow */
+body.yk-home-bright .yk-hero__video {
+    aspect-ratio: 1.55 / 1 !important;
+    border: 4px solid #fff !important;
+    box-shadow:
+        0 2px 4px rgba(90, 60, 40, 0.06),
+        0 12px 28px rgba(90, 60, 40, 0.12),
+        0 28px 56px rgba(80, 55, 35, 0.16),
+        0 40px 72px rgba(70, 45, 30, 0.1) !important;
+    border-radius: 1.4rem !important;
+    max-height: 360px !important;
+}
+
+body.yk-home-bright .yk-hero__rail {
+    max-height: none !important;
+    overflow: visible !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+}
+
+@media (max-width: 959px) {
+    body.yk-home-bright .yk-hero__video {
+        max-height: 280px !important;
+        aspect-ratio: 1.45 / 1 !important;
+    }
+
+    body.yk-home-bright .yk-hero__title-line:first-child {
+        white-space: normal !important;
+    }
+}
+
+@media (max-width: 640px) {
+    body.yk-home-bright .yk-hero__video {
+        max-height: 220px !important;
+        border-width: 1.5px !important;
+        box-shadow: 0 12px 28px rgba(60, 40, 30, 0.12) !important;
+    }
+
+    body.yk-home-bright .yk-hero__btn--primary,
+    body.yk-home-bright .yk-hero__btn--ghost {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+}
+
+body.yk-home-bright .yk-hero__video::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.12), transparent 48%, rgba(92, 16, 53, 0.04) 100%);
+}
+
+body.yk-home-bright .yk-hero__rail-name {
+    font-size: 0.9rem !important;
+    font-weight: 750 !important;
+    color: #0f0f0f !important;
+    line-height: 1.05 !important;
+}
+
+body.yk-home-bright .yk-hero__rail-hint {
+    font-size: 0.7rem !important;
+    color: #5a5a62 !important;
+    line-height: 1.05 !important;
+    margin-top: -1px !important;
+}
+
+body.yk-home-bright .yk-hero__rail-icon {
+    width: 3.35rem !important;
+    height: 3.35rem !important;
+    background:
+        radial-gradient(circle at 32% 28%, #ffffff 0%, #faf7f3 52%, #efe9e2 100%) !important;
+    color: #6b1d3f !important;
+    box-shadow:
+        0 10px 22px rgba(60, 40, 30, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.98) !important;
+}
+
+body.yk-home-bright .yk-hero__rail-icon svg {
+    width: 1.45rem !important;
+    height: 1.45rem !important;
+}
+
+@media (min-width: 960px) {
+    body.yk-home-bright .yk-hero__grid {
+        grid-template-columns: minmax(0, 0.9fr) minmax(480px, 560px) minmax(220px, max-content) !important;
+        gap: 0.85rem 1.25rem !important;
+    }
+
+    body.yk-home-bright .yk-hero__video {
+        justify-self: center !important;
+        width: 100% !important;
+        max-width: 560px !important;
+        max-height: 360px !important;
+        aspect-ratio: 1.55 / 1 !important;
+    }
+
+    body.yk-home-bright .yk-hero__copy {
+        max-width: 28rem !important;
+    }
+
+    body.yk-home-bright .yk-hero__rail {
+        justify-self: end !important;
+        width: max-content !important;
+        max-width: 280px !important;
+    }
+
+    body.yk-home-bright .yk-hero__rail-list {
+        gap: 0.15rem !important;
+    }
+
+    body.yk-home-bright .yk-hero__rail-list a {
+        padding-block: 0.05rem !important;
+        gap: 0.65rem !important;
+    }
+
+    body.yk-home-bright .yk-hero__rail-text {
+        gap: 0 !important;
+        line-height: 1 !important;
+    }
+}
+
+/* ——— Categories ——— */
+body.yk-home-bright .yk-home-cats {
+    padding: 0.15rem 0 clamp(1.5rem, 3vw, 2.5rem) !important;
+    background: transparent !important;
+}
+
+body.yk-home-bright .yk-home-cats__head h2 {
+    font-size: clamp(1.55rem, 3vw, 2.1rem) !important;
+}
+
+body.yk-home-bright .yk-home-cats__track {
+    gap: 1.05rem !important;
+    padding-bottom: 0.85rem !important;
+}
+
+body.yk-home-bright .yk-home-cats__track > li {
+    width: min(48vw, 176px) !important;
+}
+
+@media (min-width: 768px) {
+    body.yk-home-bright .yk-home-cats__track > li {
+        width: 176px !important;
+    }
+}
+
+body.yk-home-bright .yk-home-cats__track > li {
+    width: min(52vw, 176px) !important;
+}
+
+@media (min-width: 768px) {
+    body.yk-home-bright .yk-home-cats__track > li {
+        width: 176px !important;
+    }
+}
+
+body.yk-home-bright .yk-home-cats__card--photo {
+    padding: 0.9rem 0.8rem 1.05rem !important;
+    border-radius: 1.45rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.98) !important;
+    background: linear-gradient(180deg, #ffffff 0%, #fff8fc 100%) !important;
+    box-shadow:
+        0 20px 44px rgba(138, 15, 77, 0.13),
+        0 2px 0 rgba(255, 255, 255, 0.95) inset !important;
+}
+
+body.yk-home-bright .yk-home-cats__card--photo:hover,
+body.yk-home-bright .yk-home-cats__card--photo:focus-visible {
+    transform: translateY(-6px) !important;
+    box-shadow:
+        0 28px 52px rgba(138, 15, 77, 0.2),
+        0 2px 0 rgba(255, 255, 255, 0.98) inset !important;
+}
+
+body.yk-home-bright .yk-home-cats__media {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65);
+}
+
+body.yk-home-bright .yk-home-cats__label {
+    font-size: 0.94rem !important;
+    font-weight: 750 !important;
+}
+
+body.yk-home-bright .yk-home-cats__more {
+    background: linear-gradient(135deg, #9b1458 0%, #8a0f4d 45%, #c3196b 100%) !important;
+    border-color: transparent !important;
+    color: #fff !important;
+    box-shadow:
+        0 12px 26px rgba(138, 15, 77, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+/* Single page scrollbar only — overflow-x:hidden on body+main creates a 2nd Y scrollbar */
+html:has(body.yk-home-bright) {
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+}
+
+body.yk-home-bright {
+    overflow-x: clip !important;
+    overflow-y: auto !important;
+}
+
+body.yk-home-bright main {
+    overflow: visible !important;
+}
+
+body.yk-home-bright .yk-silk-band {
+    width: min(100% - 1rem, 1320px) !important;
+    height: clamp(44px, 5.5vw, 64px) !important;
+    margin-top: -1.35rem !important;
+    margin-bottom: -0.15rem !important;
+    opacity: 1 !important;
+}
+
+/* ——— Tools ——— */
+body.yk-home-bright .yk-tools-strip {
+    padding-block: clamp(1.75rem, 4vw, 3rem) !important;
+    background:
+        radial-gradient(ellipse 70% 60% at 50% 0%, rgba(240, 230, 220, 0.45), transparent 65%),
+        transparent !important;
+}
+
+body.yk-home-bright .yk-tools-strip__title {
+    font-size: clamp(1.55rem, 3vw, 2.1rem) !important;
+    font-weight: 750 !important;
+}
+
+body.yk-home-bright .yk-tool-tile {
+    border-radius: 18px !important;
+    background: #fff !important;
+    border: 1px solid rgba(138, 15, 77, 0.1) !important;
+    box-shadow: 0 12px 28px rgba(138, 15, 77, 0.1) !important;
+    min-height: 138px !important;
+    max-height: 138px !important;
+}
+
+@media (min-width: 1024px) {
+    body.yk-home-bright .yk-tool-tile {
+        min-height: 142px !important;
+        max-height: 142px !important;
+    }
+}
+
+body.yk-home-bright .yk-tool-tile:hover,
+body.yk-home-bright .yk-tool-tile:focus-visible {
+    box-shadow: 0 18px 36px rgba(138, 15, 77, 0.16) !important;
+    border-color: rgba(138, 15, 77, 0.18) !important;
+}
+
+body.yk-home-bright .yk-tool-tile__icon {
+    color: var(--y1-plum, #8a0f4d) !important;
+}
+
+/* ——— Kill mint / teal section fills ——— */
+body.yk-home-bright .yk-insight,
+body.yk-home-bright .yk-talk,
+body.yk-home-bright .yk-home-how,
+body.yk-home-bright .yk-home-experience,
+body.yk-home-bright .yk-home-experience--why,
+body.yk-home-bright .yk-home-testimonials,
+body.yk-home-bright .yk-home-professional {
+    background:
+        radial-gradient(ellipse 65% 50% at 18% 0%, rgba(245, 236, 226, 0.5), transparent 60%),
+        radial-gradient(ellipse 50% 42% at 92% 28%, rgba(230, 222, 212, 0.35), transparent 55%),
+        transparent !important;
+}
+
+body.yk-home-bright .yk-home-testimonials {
+    background:
+        radial-gradient(ellipse 72% 55% at 50% 0%, rgba(245, 236, 226, 0.55), transparent 62%),
+        linear-gradient(180deg, transparent, rgba(250, 247, 243, 0.85)) !important;
+}
+
+body.yk-home-bright .yk-home-experience--why {
+    background:
+        radial-gradient(ellipse 60% 50% at 100% 8%, rgba(230, 222, 212, 0.4), transparent 55%),
+        radial-gradient(ellipse 50% 42% at 0% 85%, rgba(245, 236, 226, 0.35), transparent 55%),
+        transparent !important;
+}
+
+body.yk-home-bright .yk-home-pillar,
+body.yk-home-bright .yk-home-how-card,
+body.yk-home-bright .yk-home-experience-card,
+body.yk-home-bright .yk-home-testimonial-card {
+    border: 1px solid rgba(255, 255, 255, 0.98) !important;
+    background: linear-gradient(180deg, #ffffff 0%, #fffafc 100%) !important;
+    box-shadow: 0 18px 40px rgba(138, 15, 77, 0.1) !important;
+}
+
+body.yk-home-bright .yk-home-testimonial-card:hover {
+    border-color: rgba(138, 15, 77, 0.16) !important;
+    box-shadow: 0 24px 48px rgba(138, 15, 77, 0.14) !important;
+}
+
+body.yk-home-bright .yk-home-testimonial-card__avatar,
+body.yk-home-bright .yk-home-testimonial-card__avatar-fallback {
+    border-color: rgba(138, 15, 77, 0.14) !important;
+    background: #f8eaf1 !important;
+}
+
+body.yk-home-bright .yk-home-pillar__icon,
+body.yk-home-bright .yk-home-how-card__icon,
+body.yk-home-bright .yk-home-experience-card__icon {
+    background: var(--y1-plum-soft, #f8eaf1) !important;
+    color: var(--y1-plum, #8a0f4d) !important;
+    box-shadow: 0 8px 18px rgba(138, 15, 77, 0.12);
+}
+
+/* Mint chips / badges → pearl-plum */
+body.yk-home-bright .yk-home-how-card__number,
+body.yk-home-bright [class*="__avatar"],
+body.yk-home-bright .yk-home-testimonials__avatar {
+    background: #f8eaf1 !important;
+    border-color: rgba(138, 15, 77, 0.12) !important;
+    color: var(--y1-plum, #8a0f4d) !important;
+}
+
+body.yk-home-bright .yk-home-professional--banner .yk-home-professional__panel {
+    box-shadow: 0 30px 64px rgba(110, 11, 60, 0.3) !important;
+}
+
+/* ——— Navbar float ——— */
+body.yk-home-bright .yk-navbar {
+    background: rgba(255, 255, 255, 0.92) !important;
+    backdrop-filter: blur(14px) saturate(1.05);
+    border-bottom: 1px solid rgba(232, 232, 236, 0.95);
+    box-shadow: 0 8px 24px rgba(17, 17, 17, 0.04);
+}
+
+body.yk-home-bright .yk-navbar__signup {
+    border-color: transparent !important;
+    background: linear-gradient(135deg, #d81b60 0%, #9b1458 48%, #6a0dad 100%) !important;
+    box-shadow: 0 10px 22px rgba(154, 20, 88, 0.22);
+}
+
+body.yk-home-bright .yk-navbar__signup:hover,
+body.yk-home-bright .yk-navbar__signup:focus-visible {
+    background: linear-gradient(135deg, #e0246a 0%, #ad1a66 48%, #7a18c4 100%) !important;
+}
+
+body.yk-home-bright .yk-navbar__login {
+    background: #fff;
+    border-color: #111111;
+    box-shadow: none;
+}
+
+body.yk-home-bright .yk-home-button--primary,
+body.yk-home-bright .yk-home-professional .yk-home-button {
+    background: linear-gradient(135deg, #9b1458 0%, #8a0f4d 42%, #c3196b 100%) !important;
+    border-color: transparent !important;
+    box-shadow:
+        0 16px 34px rgba(138, 15, 77, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+}

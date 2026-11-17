@@ -1,5 +1,6 @@
 <!-- /header -->
 @extends('layouts.layout')
+@section('body_class', 'yk-home-bright')
 @section('styles')
    {{-- <link rel="stylesheet" href="{{ asset('admin/css/styles.css') }}" /> --}}
    <link rel="stylesheet" href="{{ asset('frontend/assets/css/newslidertwo.css') }}">
@@ -7,13 +8,18 @@
 	<link rel="stylesheet" href="{{ asset('frontend/assets/css/responsive2.css') }}" media="screen and (max-width: 992px)">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 	 <style>
-        html, body {
-            overflow-x: hidden;
+        /* overflow-x:hidden on both html/body/main forces a 2nd vertical scrollbar — use clip */
+        html {
+            overflow-x: clip;
             width: 100%;
         }
-
-        main {
-            overflow-x: hidden;
+        body.yk-home-bright {
+            overflow-x: clip;
+            overflow-y: auto;
+            width: 100%;
+        }
+        body.yk-home-bright main {
+            overflow: visible;
         }
 
 		@media only screen and (min-width: 768px) and (max-width: 1024px) {

@@ -31,9 +31,23 @@
 @section('content')
 <main class="yk-tools" id="tools" data-tools>
     <div class="yk-tools__wrap">
-        <header class="yk-tools__intro">
-            <h1 id="tools-heading">Try <span>Our Tools</span></h1>
-            <p class="yk-tools__lead">Practical tools for mental, emotional and personal growth — open what you need, when you need it.</p>
+        <header class="yk-tools__hero">
+            <div class="yk-tools__hero-copy">
+                <p class="yk-tools__eyebrow"><span class="yk-tools__eyebrow-mark" aria-hidden="true"></span>YUKTI TOOLS</p>
+                <h1 id="tools-heading">Try Our <span>Tools</span></h1>
+                <p class="yk-tools__lead">Practical tools for mental, emotional and personal growth — open what you need, when you need it.</p>
+            </div>
+            <div class="yk-tools__hero-visual">
+                <img
+                    class="yk-tools__hero-img"
+                    src="{{ asset('frontend/assets/img/yuktione-tools-hero.png') }}"
+                    alt="Mindful wellness — calm focus with growth, health and clarity"
+                    width="900"
+                    height="900"
+                    fetchpriority="high"
+                    decoding="async"
+                >
+            </div>
         </header>
 
         <nav class="yk-tools__cats" aria-label="Tool categories" role="tablist">
@@ -43,6 +57,9 @@
                 role="tab"
                 aria-selected="{{ $filters['category'] === '' ? 'true' : 'false' }}"
             >
+                <span class="yk-tools__chip-icon" aria-hidden="true">
+                    @include('frontend.sections.partials.tool-icon-svg', ['icon' => 'grid'])
+                </span>
                 All Tools
                 <span class="yk-tools__chip-count">({{ $allToolsCount }})</span>
             </a>
@@ -53,6 +70,9 @@
                     role="tab"
                     aria-selected="{{ $filters['category'] === $slug ? 'true' : 'false' }}"
                 >
+                    <span class="yk-tools__chip-icon" aria-hidden="true">
+                        @include('frontend.sections.partials.tool-icon-svg', ['icon' => $category['icon'] ?? 'leaf'])
+                    </span>
                     {{ $category['label'] }}
                     <span class="yk-tools__chip-count">({{ $counts[$slug] ?? 0 }})</span>
                 </a>
@@ -76,8 +96,11 @@
                             <input type="hidden" name="category" value="{{ $filters['category'] }}">
                         @endif
                         <label class="visually-hidden" for="tools-search">Search tools</label>
+                        <span class="yk-tools__search-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16.2 16.2 3.3 3.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                        </span>
                         <input id="tools-search" type="search" name="q" value="{{ $filters['q'] }}" placeholder="Search tools…" autocomplete="off" maxlength="100">
-                        <button type="submit" aria-label="Search tools">Search</button>
+                        <button type="submit">Search</button>
                     </form>
                 </div>
             </div>
@@ -102,13 +125,15 @@
                     @endif
                 </div>
             @else
-                <ul class="yk-tools__tiles">
+                <ul class="yk-tools__grid">
                     @foreach ($items as $tool)
                         <li>
-                            @include('frontend.sections.partials.tool-tile', [
+                            @include('frontend.sections.partials.tool-card', [
                                 'label' => $tool['name'],
                                 'url' => $tool['url'],
                                 'icon' => $tool['icon'],
+                                'slug' => $tool['slug'] ?? '',
+                                'description' => $tool['description'] ?? '',
                             ])
                         </li>
                     @endforeach
