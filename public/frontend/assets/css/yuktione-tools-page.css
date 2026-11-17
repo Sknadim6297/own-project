@@ -1,11 +1,8 @@
 /**
  * YuktiOne Tools discovery — pastel wellness mockup
  */
-.yk-tools-page .yk-navbar__list a.is-active {
-    background: #fff1f7;
+.yk-tools-page .yk-navbar__link.is-active:not(.yk-navbar__link--pill) {
     color: #97004f;
-    border-radius: 999px;
-    padding-inline: 0.85rem;
 }
 
 .yk-tools-page {
@@ -49,11 +46,24 @@
 }
 
 .yk-tools__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0 0 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1;
+    text-transform: uppercase;
+    color: #97004f;
+}
+
+.yk-tools__eyebrow-mark {
     width: 2.25rem;
     height: 3px;
-    margin: 0 0 0.75rem;
     border-radius: 999px;
     background: linear-gradient(90deg, #97004f, #74113f);
+    flex: 0 0 auto;
 }
 
 .yk-tools__hero-copy h1 {
@@ -164,15 +174,15 @@
 .yk-tools__chip-icon {
     display: grid;
     place-items: center;
-    width: 1.15rem;
-    height: 1.15rem;
+    width: 1.45rem;
+    height: 1.45rem;
     color: #97004f;
     flex: 0 0 auto;
 }
 
 .yk-tools__chip-icon svg {
-    width: 1.1rem;
-    height: 1.1rem;
+    width: 1.4rem;
+    height: 1.4rem;
     fill: none;
     stroke: currentColor;
     stroke-width: 1.7;

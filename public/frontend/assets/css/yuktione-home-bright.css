@@ -483,28 +483,27 @@ body.yk-home-bright .yk-home-professional--banner .yk-home-professional__panel {
 
 /* ——— Navbar float ——— */
 body.yk-home-bright .yk-navbar {
-    background: rgba(251, 248, 244, 0.82) !important;
-    backdrop-filter: blur(16px) saturate(1.05);
-    border-bottom: 1px solid rgba(230, 222, 212, 0.7);
-    box-shadow: 0 10px 28px rgba(60, 40, 30, 0.04);
+    background: rgba(255, 255, 255, 0.92) !important;
+    backdrop-filter: blur(14px) saturate(1.05);
+    border-bottom: 1px solid rgba(232, 232, 236, 0.95);
+    box-shadow: 0 8px 24px rgba(17, 17, 17, 0.04);
 }
 
 body.yk-home-bright .yk-navbar__signup {
     border-color: transparent !important;
-    background: linear-gradient(90deg, #8d1f52 0%, #6f143f 55%, #5c1035 100%) !important;
-    box-shadow:
-        0 10px 22px rgba(92, 16, 53, 0.26),
-        inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    background: linear-gradient(135deg, #d81b60 0%, #9b1458 48%, #6a0dad 100%) !important;
+    box-shadow: 0 10px 22px rgba(154, 20, 88, 0.22);
 }
 
 body.yk-home-bright .yk-navbar__signup:hover,
 body.yk-home-bright .yk-navbar__signup:focus-visible {
-    background: linear-gradient(90deg, #9a255c 0%, #7a1848 55%, #6f143f 100%) !important;
+    background: linear-gradient(135deg, #e0246a 0%, #ad1a66 48%, #7a18c4 100%) !important;
 }
 
 body.yk-home-bright .yk-navbar__login {
-    background: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 6px 16px rgba(31, 31, 31, 0.05);
+    background: #fff;
+    border-color: #111111;
+    box-shadow: none;
 }
 
 body.yk-home-bright .yk-home-button--primary,

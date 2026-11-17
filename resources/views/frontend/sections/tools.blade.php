@@ -33,7 +33,7 @@
     <div class="yk-tools__wrap">
         <header class="yk-tools__hero">
             <div class="yk-tools__hero-copy">
-                <p class="yk-tools__eyebrow" aria-hidden="true"></p>
+                <p class="yk-tools__eyebrow"><span class="yk-tools__eyebrow-mark" aria-hidden="true"></span>YUKTI TOOLS</p>
                 <h1 id="tools-heading">Try Our <span>Tools</span></h1>
                 <p class="yk-tools__lead">Practical tools for mental, emotional and personal growth — open what you need, when you need it.</p>
             </div>
@@ -57,6 +57,9 @@
                 role="tab"
                 aria-selected="{{ $filters['category'] === '' ? 'true' : 'false' }}"
             >
+                <span class="yk-tools__chip-icon" aria-hidden="true">
+                    @include('frontend.sections.partials.tool-icon-svg', ['icon' => 'grid'])
+                </span>
                 All Tools
                 <span class="yk-tools__chip-count">({{ $allToolsCount }})</span>
             </a>
@@ -67,6 +70,9 @@
                     role="tab"
                     aria-selected="{{ $filters['category'] === $slug ? 'true' : 'false' }}"
                 >
+                    <span class="yk-tools__chip-icon" aria-hidden="true">
+                        @include('frontend.sections.partials.tool-icon-svg', ['icon' => $category['icon'] ?? 'leaf'])
+                    </span>
                     {{ $category['label'] }}
                     <span class="yk-tools__chip-count">({{ $counts[$slug] ?? 0 }})</span>
                 </a>

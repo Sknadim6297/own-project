@@ -25,47 +25,92 @@
         ? route('user.admin-chat.index')
         : ($professional ? route('professional.admin-chat.index') : null);
 
+    $catalogCategories = \App\Services\ExploreCatalog::CATEGORIES;
+    $programmesEnabled = (bool) config('yuktione.programmes_enabled');
+
+    $exploreDropdown = collect($catalogCategories)
+        ->map(fn (array $category, string $slug) => [
+            'label' => $category['label'],
+            'href' => route('categories.show', $slug),
+        ])
+        ->values()
+        ->all();
+
+    $solutionsDropdown = array_merge(
+        [
+            ['label' => 'All Tools', 'href' => route('tools.index')],
+            ['label' => 'All Categories', 'href' => route('categories.index')],
+        ],
+        collect($catalogCategories)
+            ->take(6)
+            ->map(fn (array $category, string $slug) => [
+                'label' => $category['label'].' tools',
+                'href' => route('tools.index', ['category' => $slug]),
+            ])
+            ->values()
+            ->all()
+    );
+
+    $expertsDropdown = array_merge(
+        [
+            ['label' => 'Browse all experts', 'href' => route('professionals')],
+        ],
+        collect($catalogCategories)
+            ->map(fn (array $category, string $slug) => [
+                'label' => $category['label'],
+                'href' => route('professionals', ['category' => $slug]),
+            ])
+            ->values()
+            ->all()
+    );
+
     $navLinks = [
         [
-            'label' => 'All Categories',
+            'id' => 'explore',
+            'label' => 'Explore',
             'href' => route('categories.index'),
-            'active' => request()->routeIs('categories.*'),
+            'active' => request()->routeIs('categories.*', 'gridlisting'),
             'placeholder' => false,
+            'variant' => 'pill',
+            'dropdown' => $exploreDropdown,
         ],
         [
-            'label' => 'Tools',
+            'id' => 'solutions',
+            'label' => 'Solutions',
             'href' => route('tools.index'),
             'active' => \App\Support\Tools\ToolsSection::isActive(),
             'placeholder' => false,
+            'variant' => 'link',
+            'dropdown' => $solutionsDropdown,
         ],
         [
+            'id' => 'experts',
             'label' => 'Experts',
             'href' => route('professionals'),
             'active' => request()->routeIs('professionals', 'professionals.details', 'professionals.details.simple'),
             'placeholder' => false,
+            'variant' => 'link',
+            'dropdown' => $expertsDropdown,
         ],
         [
+            'id' => 'programmes',
+            'label' => 'Programmes',
+            'href' => $programmesEnabled ? route('programmes.index') : '#',
+            'active' => $programmesEnabled && request()->routeIs('programmes.*', 'event.list', 'event.details'),
+            'placeholder' => ! $programmesEnabled,
+            'variant' => 'link',
+            'dropdown' => [],
+        ],
+        [
+            'id' => 'community',
             'label' => 'Community',
             'href' => '#',
             'active' => false,
             'placeholder' => true,
-        ],
-        [
-            'label' => 'Shop',
-            'href' => '#',
-            'active' => false,
-            'placeholder' => true,
+            'variant' => 'link',
+            'dropdown' => [],
         ],
     ];
-
-    if (config('yuktione.programmes_enabled')) {
-        array_splice($navLinks, 3, 0, [[
-            'label' => 'Programmes',
-            'href' => route('programmes.index'),
-            'active' => request()->routeIs('programmes.*', 'event.list', 'event.details'),
-            'placeholder' => false,
-        ]]);
-    }
 @endphp
 
 <header class="yk-navbar" id="tazen-public-header" data-public-header>
@@ -93,44 +138,113 @@
             <nav class="yk-navbar__links" aria-label="Main navigation">
                 <ul class="yk-navbar__list">
                     @foreach ($navLinks as $link)
-                        <li>
-                            <a
-                                href="{{ $link['href'] }}"
-                                @class([
-                                    'is-active' => $link['active'],
-                                    'is-placeholder' => $link['placeholder'],
-                                ])
-                                @if ($link['active']) aria-current="page" @endif
-                                @if ($link['placeholder'])
-                                    data-placeholder-link
-                                    aria-disabled="true"
-                                    tabindex="-1"
-                                    title="Not available yet"
-                                @endif
-                            >
-                                {{ $link['label'] }}
-                                @if ($link['placeholder'])
-                                    <span class="yk-navbar__soon" aria-hidden="true">Soon</span>
-                                    <span class="visually-hidden">, not available yet</span>
-                                @endif
-                            </a>
+                        @php
+                            $hasDropdown = ! empty($link['dropdown']);
+                            $menuId = 'yk-nav-menu-'.$link['id'];
+                        @endphp
+                        <li @class(['yk-navbar__item', 'has-dropdown' => $hasDropdown]) @if ($hasDropdown) data-nav-item @endif>
+                            @if ($hasDropdown)
+                                <div class="yk-navbar__item-row">
+                                    <a
+                                        href="{{ $link['href'] }}"
+                                        @class([
+                                            'yk-navbar__link',
+                                            'yk-navbar__link--'.$link['variant'],
+                                            'is-active' => $link['active'],
+                                            'is-placeholder' => $link['placeholder'],
+                                        ])
+                                        @if ($link['active']) aria-current="page" @endif
+                                    >
+                                        <span>{{ $link['label'] }}</span>
+                                    </a>
+                                    <button
+                                        class="yk-navbar__caret"
+                                        type="button"
+                                        aria-expanded="false"
+                                        aria-controls="{{ $menuId }}"
+                                        aria-label="{{ $link['label'] }} menu"
+                                        data-nav-toggle
+                                    >
+                                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                            <path d="m6 9 6 6 6-6"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="yk-navbar__dropdown" id="{{ $menuId }}" hidden data-nav-panel>
+                                    <ul class="yk-navbar__dropdown-list">
+                                        @foreach ($link['dropdown'] as $item)
+                                            <li>
+                                                <a href="{{ $item['href'] }}">{{ $item['label'] }}</a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @else
+                                <a
+                                    href="{{ $link['href'] }}"
+                                    @class([
+                                        'yk-navbar__link',
+                                        'yk-navbar__link--'.$link['variant'],
+                                        'is-active' => $link['active'],
+                                        'is-placeholder' => $link['placeholder'],
+                                    ])
+                                    @if ($link['active']) aria-current="page" @endif
+                                    @if ($link['placeholder'])
+                                        data-placeholder-link
+                                        aria-disabled="true"
+                                        tabindex="-1"
+                                        title="Not available yet"
+                                    @endif
+                                >
+                                    <span>{{ $link['label'] }}</span>
+                                    @if ($link['placeholder'])
+                                        <span class="yk-navbar__soon" aria-hidden="true">Soon</span>
+                                        <span class="visually-hidden">, not available yet</span>
+                                    @endif
+                                </a>
+                            @endif
                         </li>
                     @endforeach
                 </ul>
             </nav>
 
             <div class="yk-navbar__end">
-                <form class="yk-navbar__search" action="{{ route('search.services') }}" method="get" role="search" data-header-search data-search-endpoint="{{ route('search.services') }}" data-service-url="{{ url('/service') }}">
-                    <label class="visually-hidden" for="tazen-header-search">Search tools, experts, and topics</label>
-                    <button type="submit" aria-label="Search">
+                <div class="yk-navbar__search-wrap">
+                    <button
+                        class="yk-navbar__search-toggle"
+                        type="button"
+                        aria-expanded="false"
+                        aria-controls="yk-navbar-search"
+                        aria-label="Open search"
+                        data-home-search-toggle
+                    >
                         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                             <circle cx="11" cy="11" r="6.25"></circle>
                             <path d="m16 16 4 4"></path>
                         </svg>
                     </button>
-                    <input id="tazen-header-search" type="search" name="query" placeholder="Search tools, experts, topics..." autocomplete="off" enterkeyhint="search" required>
-                    <span class="yk-navbar__search-status" role="status" aria-live="polite" data-search-status></span>
-                </form>
+
+                    <form
+                        class="yk-navbar__search"
+                        id="yk-navbar-search"
+                        action="{{ route('search.services') }}"
+                        method="get"
+                        role="search"
+                        data-header-search
+                        data-search-endpoint="{{ route('search.services') }}"
+                        data-service-url="{{ url('/service') }}"
+                    >
+                        <label class="visually-hidden" for="tazen-header-search">Search tools, experts, and topics</label>
+                        <button type="submit" aria-label="Search">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <circle cx="11" cy="11" r="6.25"></circle>
+                                <path d="m16 16 4 4"></path>
+                            </svg>
+                        </button>
+                        <input id="tazen-header-search" type="search" name="query" placeholder="Search tools, experts, topics..." autocomplete="off" enterkeyhint="search" required>
+                        <span class="yk-navbar__search-status" role="status" aria-live="polite" data-search-status></span>
+                    </form>
+                </div>
 
                 <div class="yk-navbar__auth">
                     @if ($user || $professional)

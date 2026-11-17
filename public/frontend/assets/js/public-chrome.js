@@ -8,9 +8,32 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
     const accountMenu = header.querySelector('[data-account-panel]') || accountMenuRoot?.querySelector('.yk-navbar__account-menu');
     const searchToggle = header.querySelector('[data-home-search-toggle]');
     const searchForm = header.querySelector('[data-header-search]');
+    const navItems = [...header.querySelectorAll('[data-nav-item]')];
     const desktopBreakpoint = window.matchMedia('(min-width: 64rem)');
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let accountCloseTimer = null;
+
+    const setNavDropdown = (item, isOpen) => {
+        const toggle = item.querySelector('[data-nav-toggle]');
+        const panel = item.querySelector('[data-nav-panel]');
+
+        if (!toggle || !panel) {
+            return;
+        }
+
+        toggle.setAttribute('aria-expanded', String(isOpen));
+        item.classList.toggle('is-open', isOpen);
+        panel.hidden = !isOpen;
+        panel.classList.toggle('is-open', isOpen);
+    };
+
+    const closeAllNavDropdowns = (except = null) => {
+        navItems.forEach((item) => {
+            if (item !== except) {
+                setNavDropdown(item, false);
+            }
+        });
+    };
 
     const setAccountMenu = (isOpen) => {
         if (!accountToggle || !accountMenu) {
@@ -87,11 +110,32 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
 
         const isOpen = searchToggle.getAttribute('aria-expanded') === 'true';
         searchToggle.setAttribute('aria-expanded', String(!isOpen));
+        searchToggle.setAttribute('aria-label', !isOpen ? 'Close search' : 'Open search');
         searchForm.classList.toggle('is-open', !isOpen);
+        closeAllNavDropdowns();
 
         if (!isOpen) {
             searchForm.querySelector('input[name="query"]')?.focus();
         }
+    });
+
+    navItems.forEach((item) => {
+        const toggle = item.querySelector('[data-nav-toggle]');
+
+        toggle?.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+            closeAllNavDropdowns(item);
+            setNavDropdown(item, !isOpen);
+            setAccountMenu(false);
+
+            if (searchForm?.classList.contains('is-open')) {
+                searchForm.classList.remove('is-open');
+                searchToggle?.setAttribute('aria-expanded', 'false');
+                searchToggle?.setAttribute('aria-label', 'Open search');
+            }
+        });
     });
 
     accountToggle?.addEventListener('click', (event) => {
@@ -101,6 +145,7 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
         }
 
         const isOpen = accountToggle.getAttribute('aria-expanded') === 'true';
+        closeAllNavDropdowns();
         setAccountMenu(!isOpen);
     });
 
@@ -178,7 +223,11 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
             setAccountMenu(false);
         }
 
-        if (mobileNav?.classList.contains('is-open') && event.target.closest('a[href]')) {
+        if (!event.target.closest('[data-nav-item]')) {
+            closeAllNavDropdowns();
+        }
+
+        if (mobileNav?.classList.contains('is-open') && event.target.closest('a[href]') && !event.target.closest('[data-nav-toggle]')) {
             setMobileNavigation(false);
         }
     });
@@ -188,7 +237,10 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
             if (searchForm?.classList.contains('is-open')) {
                 searchForm.classList.remove('is-open');
                 searchToggle?.setAttribute('aria-expanded', 'false');
+                searchToggle?.setAttribute('aria-label', 'Open search');
                 searchToggle?.focus();
+            } else if (navItems.some((item) => item.classList.contains('is-open'))) {
+                closeAllNavDropdowns();
             } else if (accountMenu && accountToggle?.getAttribute('aria-expanded') === 'true') {
                 setAccountMenu(false);
                 accountToggle?.focus();
@@ -217,6 +269,11 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
         if (searchForm?.classList.contains('is-open') && !header.contains(event.target)) {
             searchForm.classList.remove('is-open');
             searchToggle?.setAttribute('aria-expanded', 'false');
+            searchToggle?.setAttribute('aria-label', 'Open search');
+        }
+
+        if (!header.contains(event.target)) {
+            closeAllNavDropdowns();
         }
 
         if (
