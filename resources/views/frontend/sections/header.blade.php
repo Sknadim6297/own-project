@@ -209,8 +209,8 @@
                             </div>
                         </div>
                     @else
-                        <a class="yk-navbar__login" href="{{ route('login') }}">Login</a>
-                        <a class="yk-navbar__signup" href="{{ route('register') }}">Sign Up</a>
+                        <a class="yk-navbar__login" href="{{ route('login') }}">Log In</a>
+                        <a class="yk-navbar__signup" href="{{ route('register') }}">Get Started</a>
                     @endif
                 </div>
             </div>

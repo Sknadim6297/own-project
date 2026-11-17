@@ -1,69 +1,59 @@
-<section class="yk-home-experience" aria-labelledby="yk-home-experience-title">
-    <div class="yk-home-experience__ornament yk-home-experience__ornament--one" aria-hidden="true"></div>
-    <div class="yk-home-experience__ornament yk-home-experience__ornament--two" aria-hidden="true"></div>
-
-    <div class="yk-home-experience__layout yk-home-container">
+<section class="yk-home-experience yk-home-experience--why" aria-labelledby="yk-home-experience-title">
+    <div class="yk-home-experience__ribbon" aria-hidden="true"></div>
+    <div class="yk-home-container">
         <header class="yk-home-experience__intro" data-home-reveal>
-            <p class="yk-home-experience__eyebrow">The {{ config('yuktione.name', 'YuktiOne') }} Experience</p>
-            <h2 id="yk-home-experience-title">One Platform. Endless Possibilities.</h2>
+            <p class="yk-home-experience__eyebrow">Why {{ config('yuktione.name', 'YuktiOne') }}</p>
+            <h2 id="yk-home-experience-title">Why Choose <span>{{ config('yuktione.name', 'YuktiOne') }}?</span></h2>
             <p class="yk-home-experience__summary">
-                Explore professional guidance, personalised support and practical resources in one connected experience.
+                A trusted marketplace that brings expert guidance, practical tools, and supportive community into one calm experience.
             </p>
-            <a class="yk-home-experience__cta" href="{{ route('categories.index') }}">
-                <span>Browse Categories</span>
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M5 12h14m-6-6 6 6-6 6"/>
-                </svg>
-            </a>
         </header>
 
-        <div class="yk-home-experience__grid">
-            <article class="yk-home-experience-card yk-home-experience-card--featured" data-home-reveal>
-                <span class="yk-home-experience-card__icon" aria-hidden="true">
+        <div class="yk-home-experience__pillars">
+            <article class="yk-home-pillar" data-home-reveal>
+                <span class="yk-home-pillar__icon" aria-hidden="true">
                     <svg viewBox="0 0 32 32" focusable="false">
-                        <circle cx="14" cy="14" r="8"/>
-                        <path d="m20 20 7 7M10 14h8m-4-4v8"/>
+                        <path d="M16 4.5 7 8.5v6.2c0 6.1 3.9 11.5 9 13.3 5.1-1.8 9-7.2 9-13.3V8.5L16 4.5Z" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="m12.2 16.2 2.6 2.6 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </span>
-                <h3>Explore Experts</h3>
-                <p>Discover professionals and explore their services.</p>
-                <span class="yk-home-experience-card__index" aria-hidden="true">01</span>
+                <h3>Expert-Led Guidance</h3>
+                <p>Connect with verified professionals across wellbeing, career, health, and more.</p>
             </article>
 
-            <article class="yk-home-experience-card" data-home-reveal>
-                <span class="yk-home-experience-card__icon" aria-hidden="true">
+            <article class="yk-home-pillar" data-home-reveal>
+                <span class="yk-home-pillar__icon" aria-hidden="true">
                     <svg viewBox="0 0 32 32" focusable="false">
-                        <path d="M5 7.5A3.5 3.5 0 0 1 8.5 4h12A3.5 3.5 0 0 1 24 7.5v8a3.5 3.5 0 0 1-3.5 3.5H14l-5 4v-4.3A3.5 3.5 0 0 1 5 15.5v-8Z"/>
-                        <path d="M13 23h7.5A3.5 3.5 0 0 0 24 19.5V19m-10-9h5m-5 4h3"/>
+                        <rect x="5" y="6" width="22" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="M5 12h22M12 12v14" fill="none" stroke="currentColor" stroke-width="1.8"/>
                     </svg>
                 </span>
-                <h3>Personalised Guidance</h3>
-                <p>Find support and consultation options suited to your needs.</p>
-                <span class="yk-home-experience-card__index" aria-hidden="true">02</span>
+                <h3>All-in-One Growth Platform</h3>
+                <p>Tools, experts, and insights together — so progress feels simple and connected.</p>
             </article>
 
-            <article class="yk-home-experience-card" data-home-reveal>
-                <span class="yk-home-experience-card__icon" aria-hidden="true">
+            <article class="yk-home-pillar" data-home-reveal>
+                <span class="yk-home-pillar__icon" aria-hidden="true">
                     <svg viewBox="0 0 32 32" focusable="false">
-                        <rect x="4" y="5" width="24" height="21" rx="3"/>
-                        <path d="M4 11h24m-17 0v15m-3-19h.01M12 8h.01m4 8h7m-7 4h5"/>
+                        <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                        <circle cx="21" cy="13.5" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="M5 25c.8-4 3.4-6 7-6s6.2 2 7 6M18 19.5c2.2-.8 4.2-.2 5.8 1.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
                     </svg>
                 </span>
-                <h3>Smart Dashboard</h3>
-                <p>Keep track of your bookings and appointments in one place.</p>
-                <span class="yk-home-experience-card__index" aria-hidden="true">03</span>
+                <h3>Supportive Community</h3>
+                <p>Learn, share, and grow with people who care about the same goals you do.</p>
             </article>
 
-            <article class="yk-home-experience-card" data-home-reveal>
-                <span class="yk-home-experience-card__icon" aria-hidden="true">
+            <article class="yk-home-pillar" data-home-reveal>
+                <span class="yk-home-pillar__icon" aria-hidden="true">
                     <svg viewBox="0 0 32 32" focusable="false">
-                        <path d="M6 5h14a3 3 0 0 1 3 3v18H9a3 3 0 0 1-3-3V5Z"/>
-                        <path d="M23 10h3a2 2 0 0 1 2 2v14H10m1-15h7m-7 4h7"/>
+                        <rect x="8" y="14" width="16" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="M12 14V11a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                        <circle cx="16" cy="20" r="1.4" fill="currentColor"/>
                     </svg>
                 </span>
-                <h3>{{ config('yuktione.programmes_enabled') ? 'Programmes & Insights' : 'Insights & Guidance' }}</h3>
-                <p>{{ config('yuktione.programmes_enabled') ? 'Discover workshops, programmes and helpful articles.' : 'Discover helpful articles and expert guidance.' }}</p>
-                <span class="yk-home-experience-card__index" aria-hidden="true">04</span>
+                <h3>Safe &amp; Private</h3>
+                <p>Your conversations and data stay protected with secure booking and privacy-first design.</p>
             </article>
         </div>
     </div>

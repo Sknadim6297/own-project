@@ -375,10 +375,20 @@ const bindHomeCarousel = (rootSelector, trackAttr, prevAttr, nextAttr) => {
             next.disabled = track.scrollLeft >= maxScrollLeft - 2;
         };
 
+        const scrollAmount = () => {
+            const item = track.querySelector(':scope > li');
+            if (item instanceof HTMLElement) {
+                const styles = window.getComputedStyle(track);
+                const gap = Number.parseFloat(styles.columnGap || styles.gap || '0') || 0;
+                return Math.max(item.getBoundingClientRect().width + gap, 160);
+            }
+
+            return Math.max(track.clientWidth * 0.75, 180);
+        };
+
         const scrollByPage = (direction) => {
-            const amount = Math.max(track.clientWidth * 0.75, 180);
             track.scrollBy({
-                left: direction * amount,
+                left: direction * scrollAmount(),
                 behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
             });
         };

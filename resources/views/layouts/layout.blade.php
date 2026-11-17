@@ -181,6 +181,7 @@
 	@endif
 	<link href="{{ asset('frontend/assets/css/tazen-public-chrome.css') }}?v={{ filemtime(public_path('frontend/assets/css/tazen-public-chrome.css')) }}" rel="stylesheet">
 	@if (request()->routeIs('home'))
+		<link href="{{ asset('frontend/assets/css/yuktione-brand.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-brand.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-home.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-home.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-hero.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-hero.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-categories.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-categories.css')) }}" rel="stylesheet">
@@ -211,6 +212,8 @@
 		<script src="{{ asset('frontend/assets/js/yuktione-experts.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-experts.js')) }}" defer></script>
 	@endif
 	@if (request()->routeIs('tools.index'))
+		<link href="{{ asset('frontend/assets/css/yuktione-brand.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-brand.css')) }}" rel="stylesheet">
+		<link href="{{ asset('frontend/assets/css/yuktione-tools.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-tools-page.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools-page.css')) }}" rel="stylesheet">
 	@endif
 	@if (request()->routeIs('tools.psychology', 'tools.psychology.*'))
@@ -265,6 +268,10 @@
 	@endif
 
 	<link href="{{ asset('frontend/assets/css/yuktione-document.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-document.css')) }}" rel="stylesheet">
+	@if (request()->routeIs('home'))
+		{{-- Soft-bright overrides last so they win over home/hero/tools/navbar --}}
+		<link href="{{ asset('frontend/assets/css/yuktione-home-bright.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-home-bright.css')) }}" rel="stylesheet">
+	@endif
 	@endif
 </head>
 

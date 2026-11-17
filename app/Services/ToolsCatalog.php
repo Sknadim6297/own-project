@@ -187,6 +187,7 @@ class ToolsCatalog
             'parent-child-conversation-guide' => 'parenting',
             'daily-mindfulness-calm',
             'purpose-values-finder' => 'lotus',
+            'tarot-reflection' => 'tarot',
             default => match ($tool->module_key) {
                 'psychology' => 'mood',
                 'career-guidance' => 'career',
