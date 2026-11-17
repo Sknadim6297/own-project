@@ -182,7 +182,7 @@ class HomeController extends Controller
             ->orderBy('order')
             ->orderBy('id')
             ->get();
-        $featuredExperts = Professional::query()
+        $acceptedExpertsQuery = Professional::query()
             ->with([
                 'profile',
                 'professionalServices.service',
@@ -194,9 +194,9 @@ class HomeController extends Controller
             ->where('active', true)
             ->whereHas('profile')
             ->whereHas('professionalServices')
-            ->latest()
-            ->limit(8)
-            ->get();
+            ->latest();
+        $talkExperts = (clone $acceptedExpertsQuery)->get();
+        $featuredExperts = $talkExperts->take(8)->values();
         $featuredExpertCategories = $featuredExperts
             ->flatMap(function ($expert) {
                 $serviceCategories = $expert->professionalServices
@@ -217,7 +217,7 @@ class HomeController extends Controller
             ->orderByDesc('id')
             ->limit(6)
             ->get();
-        return view('frontend.index', compact('services', 'banners', 'about_us', 'whychooses', 'testimonials', 'homeblogs', 'howworks', 'mcqs', 'blogPosts', 'upcomingProgrammeEvents', 'pastProgrammeEvents', 'homepageCategories', 'featuredExperts', 'featuredExpertCategories', 'faqs'));
+        return view('frontend.index', compact('services', 'banners', 'about_us', 'whychooses', 'testimonials', 'homeblogs', 'howworks', 'mcqs', 'blogPosts', 'upcomingProgrammeEvents', 'pastProgrammeEvents', 'homepageCategories', 'featuredExperts', 'featuredExpertCategories', 'talkExperts', 'faqs'));
     }
 
     //     public function getServiceQuestions($serviceId)
@@ -309,7 +309,16 @@ class HomeController extends Controller
             'types' => ['experts'],
         ]);
 
-        return view('frontend.sections.experts', $catalog->browse($request));
+        // Skip explore facet counts — professionals UI does not use them and they dominate latency.
+        $data = $catalog->browse($request, false);
+
+        if ($request->boolean('partial') || $request->ajax()) {
+            return response()
+                ->view('frontend.sections.partials.experts-results', $data)
+                ->header('Cache-Control', 'no-store');
+        }
+
+        return view('frontend.sections.experts', $data);
     }
 
     public function explore(Request $request, ExploreCatalog $catalog)

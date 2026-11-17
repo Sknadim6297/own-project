@@ -208,6 +208,7 @@
 	@endif
 	@if (request()->routeIs('professionals'))
 		<link href="{{ asset('frontend/assets/css/yuktione-experts.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-experts.css')) }}" rel="stylesheet">
+		<script src="{{ asset('frontend/assets/js/yuktione-experts.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-experts.js')) }}" defer></script>
 	@endif
 	@if (request()->routeIs('tools.index'))
 		<link href="{{ asset('frontend/assets/css/yuktione-tools-page.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools-page.css')) }}" rel="stylesheet">

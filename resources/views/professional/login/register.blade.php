@@ -5,13 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Create your Yuktione professional account">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="theme-color" content="#316D61">
+    <meta name="theme-color" content="#8A0F4D">
     <title>Professional Registration | YuktiOne</title>
     @include('partials.dm-sans')
     <link rel="icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
     @vite(['resources/css/tazen.css', 'resources/css/yuktione-feedback.css', 'resources/css/auth-theme.css'])
+    <style>
+        /* Match customer register — plum brand on this page only */
+        body.yuktione-auth-page.professional-registration-page {
+            --yk-primary: #8a0f4d;
+            --yk-primary-hover: #c3196b;
+            --yk-primary-light: #f8eaf1;
+            --color-brand-50: #fff8fb;
+            --color-brand-100: #f8eaf1;
+            --color-brand-200: #f0d4e2;
+            --color-brand-300: #d8b4e2;
+            --color-brand-400: #c3196b;
+            --color-brand-500: #8a0f4d;
+            --color-brand-600: #c3196b;
+            --color-brand-700: #6e0b3c;
+            --color-brand-800: #5a0932;
+            --color-brand-900: #1f1f1f;
+            --color-brand-950: #141414;
+            --color-brand-primary: #8a0f4d;
+            --color-brand-secondary: #1f1f1f;
+            --color-brand-accent: #d8b4e2;
+            --color-background: #fff8fb;
+            --color-surface: #ffffff;
+            --color-surface-muted: #fff1f6;
+            --color-text-primary: #1a1a22;
+            --color-text-secondary: #6b6b7a;
+            --color-text-muted: #6b6b7a;
+            --color-border: #d9d9de;
+            --color-divider: #efe7ec;
+            --color-info: #8a0f4d;
+            --color-info-surface: #f8eaf1;
+            --color-focus-ring: #8a0f4d;
+            accent-color: #8a0f4d;
+        }
+
+        body.yuktione-auth-page.professional-registration-page button:disabled {
+            border-color: #e2b7cb;
+            background-color: #e2b7cb;
+            color: #ffffff;
+        }
+    </style>
 </head>
-<body class="yuktione-auth-page min-h-screen bg-background font-sans text-text-primary antialiased">
+<body class="yuktione-auth-page professional-registration-page min-h-screen bg-background font-sans text-text-primary antialiased">
     <main class="flex min-h-screen items-center justify-center bg-linear-to-br from-brand-50 via-background to-white px-3 py-5 sm:px-5">
         <section class="w-full max-w-xl rounded-panel border border-divider bg-surface p-4 shadow-card sm:p-6 md:p-8" aria-labelledby="registration-title">
             <header class="mb-5 sm:mb-7">

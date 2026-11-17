@@ -244,7 +244,7 @@ class ExpertsDirectoryTest extends TestCase
             ->assertSee('Explore Experts', false)
             ->assertSee('yuktione-experts.css', false)
             ->assertSee('All Experts', false)
-            ->assertSee('Years of experience', false)
+            ->assertSee('Experience', false)
             ->assertSee('Career Coach Ava', false)
             ->assertSee('Psych Therapist Bo', false)
             ->assertDontSee('Pending Expert', false)
@@ -252,9 +252,86 @@ class ExpertsDirectoryTest extends TestCase
             ->assertDontSee('Find the right', false)
             ->assertDontSee('yk-toolpage__hero', false)
             ->assertSee('View Profile', false)
-            ->assertSee('Book Consultation', false)
+            ->assertSee('Book', false)
+            ->assertSee('yuktione-experts.js', false)
             ->assertSee('2–4 years', false)
             ->assertSee('10+ years', false);
+    }
+
+    public function test_expert_name_prefix_search_is_case_insensitive(): void
+    {
+        $this->get(route('professionals', ['q' => 'c']))
+            ->assertOk()
+            ->assertSee('Career Coach Ava', false)
+            ->assertDontSee('Psych Therapist Bo', false)
+            ->assertDontSee('Archana Career Counsellor', false);
+
+        $this->get(route('professionals', ['q' => 'ca']))
+            ->assertOk()
+            ->assertSee('Career Coach Ava', false)
+            ->assertDontSee('Archana Career Counsellor', false);
+
+        $this->get(route('professionals', ['q' => 'car']))
+            ->assertOk()
+            ->assertSee('Career Coach Ava', false)
+            ->assertDontSee('Psych Therapist Bo', false);
+
+        $this->get(route('professionals', ['q' => 'CA']))
+            ->assertOk()
+            ->assertSee('Career Coach Ava', false);
+
+        $this->get(route('professionals', ['q' => 'psy']))
+            ->assertOk()
+            ->assertSee('Psych Therapist Bo', false)
+            ->assertDontSee('Career Coach Ava', false);
+
+        $this->get(route('professionals', ['q' => 'zzz']))
+            ->assertOk()
+            ->assertSee('No matching results found', false)
+            ->assertDontSee('Career Coach Ava', false);
+    }
+
+    public function test_prefix_search_does_not_match_mid_name_or_specialty_only(): void
+    {
+        // "Coach" appears mid-name on Ava; prefix search must not match.
+        $this->get(route('professionals', ['q' => 'Coach']))
+            ->assertOk()
+            ->assertSee('No matching results found', false)
+            ->assertDontSee('Career Coach Ava', false);
+
+        // Specialization-only match must not surface under name-prefix search.
+        $this->get(route('professionals', ['q' => 'Clinical']))
+            ->assertOk()
+            ->assertSee('No matching results found', false)
+            ->assertDontSee('Psych Therapist Bo', false);
+    }
+
+    public function test_live_search_partial_response_returns_results_fragment(): void
+    {
+        $response = $this->get(route('professionals', [
+            'q' => 'Arch',
+            'partial' => 1,
+        ]), [
+            'X-Requested-With' => 'XMLHttpRequest',
+        ]);
+
+        $response->assertOk()
+            ->assertSee('Archana Career Counsellor', false)
+            ->assertDontSee('Explore Experts', false)
+            ->assertDontSee('Career Coach Ava', false);
+
+        $this->assertStringContainsString('no-store', (string) $response->headers->get('Cache-Control'));
+    }
+
+    public function test_prefix_search_works_with_category_filter(): void
+    {
+        $this->get(route('professionals', [
+            'category' => 'career-business',
+            'q' => 'a',
+        ]))->assertOk()
+            ->assertSee('Archana Career Counsellor', false)
+            ->assertDontSee('Career Coach Ava', false)
+            ->assertDontSee('Psych Therapist Bo', false);
     }
 
     public function test_category_mental_health_filter_and_empty_state(): void

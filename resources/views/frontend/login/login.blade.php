@@ -7,10 +7,72 @@
 @endphp
 
 @push('head')
+    <meta name="theme-color" content="#8A0F4D">
     <style>
+        /* Match register pages — plum brand on login only */
+        body.yuktione-auth-page,
+        body.yuktione-auth-page .yuktione-auth-page,
+        #loginPanel[data-yuktione-auth],
+        #loginPanel[data-yuktione-panel="customer"],
+        #termsDialog[data-yuktione-panel="customer"] {
+            --yk-primary: #8a0f4d;
+            --yk-primary-hover: #c3196b;
+            --yk-primary-light: #f8eaf1;
+            --yk-mint: #fff8fb;
+            --yk-eucalyptus: #f8eaf1;
+            --color-brand-50: #fff8fb;
+            --color-brand-100: #f8eaf1;
+            --color-brand-200: #f0d4e2;
+            --color-brand-300: #d8b4e2;
+            --color-brand-400: #c3196b;
+            --color-brand-500: #8a0f4d;
+            --color-brand-600: #c3196b;
+            --color-brand-700: #6e0b3c;
+            --color-brand-800: #5a0932;
+            --color-brand-900: #1f1f1f;
+            --color-brand-950: #141414;
+            --color-brand-primary: #8a0f4d;
+            --color-brand-secondary: #1a1a22;
+            --color-brand-accent: #d8b4e2;
+            --color-background: #fff8fb;
+            --color-surface: #ffffff;
+            --color-surface-muted: #fff1f6;
+            --color-text-primary: #1a1a22;
+            --color-text-secondary: #6b6b7a;
+            --color-text-muted: #6b6b7a;
+            --color-border: #d9d9de;
+            --color-divider: #efe7ec;
+            --color-info: #8a0f4d;
+            --color-info-surface: #f8eaf1;
+            --color-focus-ring: #8a0f4d;
+            accent-color: #8a0f4d;
+        }
+
+        body.yuktione-auth-page {
+            background: #fff8fb !important;
+        }
+
+        #loginPanel.yuktione-auth-page {
+            background: #fff8fb !important;
+        }
+
+        .yuktione-auth-page [role="tab"][aria-selected="true"] {
+            background-color: #8a0f4d !important;
+            color: #ffffff !important;
+            box-shadow: none;
+        }
+
+        .yuktione-auth-page [role="tab"][aria-selected="false"] {
+            color: #6b6b7a;
+        }
+
+        .yuktione-auth-page [role="tab"][aria-selected="false"]:hover {
+            color: #8a0f4d;
+        }
+
         .yuktione-auth-page #signInButton:disabled {
-            border-color: #316D61;
-            background-color: #316D61;
+            border-color: #8a0f4d;
+            background-color: #8a0f4d;
             color: #ffffff;
             opacity: 0.72;
             cursor: wait;
@@ -231,10 +293,10 @@
             return;
         }
         role = nextRole;
-        [loginPanel, termsDialog].forEach((element) => {
-            if (role === 'customer') element.dataset.yuktionePanel = 'customer';
-            else delete element.dataset.yuktionePanel;
-        });
+        // Keep login on plum brand; do not attach customer-panel teal tokens.
+        delete loginPanel.dataset.yuktionePanel;
+        if (role === 'customer') termsDialog.dataset.yuktionePanel = 'customer';
+        else delete termsDialog.dataset.yuktionePanel;
         const config = roleLinks[role];
         form.action = config.action;
         document.getElementById('forgotLink').href = config.forgot;
