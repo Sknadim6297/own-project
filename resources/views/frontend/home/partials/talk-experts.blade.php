@@ -1,18 +1,107 @@
 @php
     $talkExperts = collect($featuredExperts ?? [])->take(6);
-    $talkReviewStats = $talkExperts->isEmpty()
+
+    $talkSessionCounts = $talkExperts->isEmpty()
         ? collect()
-        : \App\Models\Review::query()
+        : \App\Models\Booking::query()
             ->whereIn('professional_id', $talkExperts->pluck('id'))
-            ->where('is_approved', 1)
-            ->selectRaw('professional_id, COUNT(*) as review_count, AVG(rating) as average_rating')
+            ->where(function ($query) {
+                $query->where('status', 'completed')
+                    ->orWhere('payment_status', 'paid')
+                    ->orWhere('paid_status', 'paid');
+            })
+            ->selectRaw('professional_id, COUNT(*) as session_count')
             ->groupBy('professional_id')
-            ->get()
-            ->keyBy('professional_id');
-    $talkTones = ['lavender', 'mint', 'blush', 'blue', 'cream', 'mint'];
+            ->pluck('session_count', 'professional_id');
+
+    $toneForCategory = function (?string $category): string {
+        $value = \Illuminate\Support\Str::lower((string) $category);
+        if (\Illuminate\Support\Str::contains($value, ['psychiatr'])) {
+            return 'rose';
+        }
+        if (\Illuminate\Support\Str::contains($value, ['nutrition', 'diet'])) {
+            return 'sage';
+        }
+        if (\Illuminate\Support\Str::contains($value, ['astrolog', 'tarot'])) {
+            return 'lavender';
+        }
+        if (\Illuminate\Support\Str::contains($value, ['influencer'])) {
+            return 'blush';
+        }
+        return 'teal';
+    };
+
+    $nextSlotLabel = function ($expert): ?string {
+        $dayMap = [
+            'mon' => 1, 'tue' => 2, 'wed' => 3, 'thu' => 4, 'fri' => 5, 'sat' => 6, 'sun' => 7,
+            'monday' => 1, 'tuesday' => 2, 'wednesday' => 3, 'thursday' => 4,
+            'friday' => 5, 'saturday' => 6, 'sunday' => 7,
+        ];
+
+        $candidates = [];
+        foreach ($expert->availabilities ?? [] as $availability) {
+            $slots = collect($availability->slots ?? []);
+            if ($slots->isEmpty()) {
+                continue;
+            }
+
+            $weekdaySlots = [];
+            foreach ($slots as $slot) {
+                $weekday = \Illuminate\Support\Str::lower((string) ($slot->weekday ?? ''));
+                $iso = $dayMap[$weekday] ?? null;
+                if (!$iso || !filled($slot->start_time)) {
+                    continue;
+                }
+                $weekdaySlots[$iso][] = (string) $slot->start_time;
+            }
+
+            if ($weekdaySlots === []) {
+                continue;
+            }
+
+            $cursor = \Carbon\Carbon::today();
+            for ($i = 0; $i < 45; $i++) {
+                $date = $cursor->copy()->addDays($i);
+                $iso = $date->dayOfWeekIso;
+                if (!isset($weekdaySlots[$iso])) {
+                    continue;
+                }
+                sort($weekdaySlots[$iso]);
+                try {
+                    $time = \Carbon\Carbon::parse($date->toDateString().' '.$weekdaySlots[$iso][0]);
+                } catch (\Throwable $e) {
+                    continue;
+                }
+                if ($time->isPast()) {
+                    continue;
+                }
+                $candidates[] = $time;
+                break;
+            }
+        }
+
+        if ($candidates === []) {
+            return null;
+        }
+
+        usort($candidates, fn ($a, $b) => $a <=> $b);
+
+        return $candidates[0]->format('D, j M g:i A');
+    };
+
+    $qualificationFor = function ($expert): ?string {
+        foreach (['education', 'education2'] as $field) {
+            $value = trim(strip_tags((string) ($expert->profile?->{$field} ?? '')));
+            if ($value !== '' && !\Illuminate\Support\Str::startsWith($value, ['{', '['])) {
+                return \Illuminate\Support\Str::limit($value, 36);
+            }
+        }
+
+        return null;
+    };
 @endphp
 
-<section class="yk-talk" aria-labelledby="yk-talk-title">
+<section class="yk-talk" aria-labelledby="yk-talk-title" data-talk-experts>
     <div class="yk-talk__inner">
         <header class="yk-talk__head">
             <div class="yk-talk__copy">
@@ -23,7 +112,17 @@
                 </h2>
                 <p class="yk-talk__lead">Connect with experienced experts for personalised advice and support.</p>
             </div>
-            <a class="yk-talk__all" href="{{ route('professionals') }}">View All Experts <span aria-hidden="true">→</span></a>
+            <div class="yk-talk__actions">
+                <div class="yk-talk__controls" data-talk-controls hidden>
+                    <button type="button" class="yk-talk__arrow" data-talk-prev aria-label="Show previous experts" disabled>
+                        <span aria-hidden="true">←</span>
+                    </button>
+                    <button type="button" class="yk-talk__arrow" data-talk-next aria-label="Show next experts" disabled>
+                        <span aria-hidden="true">→</span>
+                    </button>
+                </div>
+                <a class="yk-talk__all" href="{{ route('professionals') }}">View All Experts <span aria-hidden="true">→</span></a>
+            </div>
             <svg class="yk-talk__leaves" viewBox="0 0 180 150" aria-hidden="true" focusable="false">
                 <path d="M96 146c8-46 24-86 50-122" fill="none" stroke="#7d9a68" stroke-width="2.2" stroke-linecap="round"></path>
                 <path d="M140 18c16 18 16 42 2 58-22-8-36-30-32-54 10-2 20-4 30-4Z" fill="#9d81db" opacity=".8"></path>
@@ -35,79 +134,114 @@
         @if ($talkExperts->isEmpty())
             <p class="yk-talk__empty">Approved experts will appear here once their profiles are public.</p>
         @else
-            <ul class="yk-talk__grid">
-                @foreach ($talkExperts as $expert)
-                    @php
-                        $displayName = trim($expert->profile?->name ?: $expert->name);
-                        $nameParts = collect(preg_split('/\s+/', $displayName))->filter()->take(2);
-                        $initials = $nameParts
-                            ->map(fn ($part) => \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($part, 0, 1)))
-                            ->implode('');
+            <div
+                class="yk-talk__viewport"
+                id="yk-talk-track"
+                role="region"
+                aria-label="Featured experts"
+                tabindex="0"
+                data-talk-track
+            >
+                <ul class="yk-talk__track">
+                    @foreach ($talkExperts as $expert)
+                        @php
+                            $displayName = trim($expert->profile?->name ?: $expert->name);
+                            $nameParts = collect(preg_split('/\s+/', $displayName))->filter()->take(2);
+                            $initials = $nameParts
+                                ->map(fn ($part) => \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($part, 0, 1)))
+                                ->implode('');
 
-                        $specialization = $expert->profile?->specialization;
-                        if (!filled($specialization)) {
-                            $specialization = $expert->professionalServices
+                            $category = $expert->professionalServices
                                 ->map(fn ($professionalService) => $professionalService->service?->name)
                                 ->filter()
                                 ->unique()
-                                ->first();
-                        }
+                                ->first()
+                                ?: $expert->profile?->specialization;
 
-                        $reviewStat = $talkReviewStats->get($expert->id);
-                        $reviewCount = (int) ($reviewStat->review_count ?? 0);
-                        $averageRating = $reviewCount > 0 ? number_format((float) $reviewStat->average_rating, 1) : null;
+                            $qualification = $qualificationFor($expert);
+                            if (!$qualification && filled($expert->profile?->specialization) && $expert->profile?->specialization !== $category) {
+                                $qualification = \Illuminate\Support\Str::limit(trim((string) $expert->profile->specialization), 36);
+                            }
 
-                        $photoPath = $expert->profile?->photo;
-                        $photoNeedsReview = $photoPath === 'professional_documents/McPqTOLmpLHhukE6ka0DJmmNWTU3qG6segI57ccy.jpg'
-                            || $photoPath === 'uploads/professionals/photo/media_68b52ad01436a.jpg';
-                        $photoUrl = null;
-                        if (filled($photoPath) && !$photoNeedsReview) {
-                            $photoUrl = preg_match('/^https?:\/\//i', $photoPath)
-                                ? $photoPath
-                                : asset(str_starts_with($photoPath, 'storage/') ? $photoPath : 'storage/' . ltrim($photoPath, '/'));
-                        }
+                            $chipSource = collect();
+                            foreach ($expert->professionalServices as $professionalService) {
+                                if (filled($professionalService->tags)) {
+                                    $chipSource = $chipSource->merge(preg_split('/\s*,\s*/', (string) $professionalService->tags));
+                                }
+                                $chipSource = $chipSource->merge($professionalService->subServices->pluck('name'));
+                            }
+                            if (filled($expert->profile?->specialization)) {
+                                $chipSource = $chipSource->merge(preg_split('/\s*,\s*/', (string) $expert->profile->specialization));
+                            }
+                            $chips = $chipSource->map(fn ($chip) => trim((string) $chip))->filter()->unique()->values();
+                            $visibleChips = $chips->take(2);
+                            $extraChips = max(0, $chips->count() - $visibleChips->count());
 
-                        $profileUrl = route('professionals.details', [
-                            'id' => $expert->id,
-                            'professional_name' => \Illuminate\Support\Str::slug($expert->name),
-                        ]);
-                        $tone = $talkTones[$loop->index % count($talkTones)];
-                    @endphp
-                    <li>
-                        <article class="yk-talk__card yk-talk__card--{{ $tone }}">
-                            <div class="yk-talk__portrait">
-                                <svg class="yk-talk__botanical" viewBox="0 0 140 140" aria-hidden="true" focusable="false">
-                                    <circle cx="70" cy="74" r="52" fill="rgba(255,255,255,0.55)"></circle>
-                                    <path d="M18 78c16-28 34-36 48-22-8 18-22 28-48 22Z" fill="#8fb67c" opacity=".85"></path>
-                                    <path d="M122 70c-14-26-34-30-46-14 10 16 24 24 46 14Z" fill="#b7a4e4" opacity=".8"></path>
-                                    <path d="M28 108c18-6 28-2 34 10-16 2-28-2-34-10Z" fill="#7ea36a"></path>
-                                    <path d="M112 104c-16-4-28 2-32 14 16 0 28-4 32-14Z" fill="#9d81db" opacity=".7"></path>
-                                </svg>
-                                @if ($photoUrl)
-                                    <img class="yk-talk__photo" src="{{ $photoUrl }}" alt="{{ $displayName }}" width="160" height="160" loading="lazy" onerror="this.hidden=true; this.nextElementSibling.hidden=false;">
-                                    <span class="yk-talk__initials" hidden aria-hidden="true">{{ $initials }}</span>
-                                @else
-                                    <span class="yk-talk__initials" aria-hidden="true">{{ $initials }}</span>
+                            $sessionCount = (int) ($talkSessionCounts[$expert->id] ?? 0);
+                            $sessionLabel = null;
+                            if ($sessionCount >= 1000) {
+                                $sessionLabel = number_format($sessionCount / 1000, $sessionCount % 1000 === 0 ? 0 : 1).'k+';
+                            } elseif ($sessionCount > 0) {
+                                $sessionLabel = $sessionCount.'+';
+                            }
+
+                            $photoUrl = \App\Helpers\ImageHelper::professionalPhotoUrl($expert->profile?->photo);
+                            $profileUrl = route('professionals.details', [
+                                'id' => $expert->id,
+                                'professional_name' => \Illuminate\Support\Str::slug($expert->name),
+                            ]);
+                            $tone = $toneForCategory($category);
+                            $nextSlot = $nextSlotLabel($expert);
+                        @endphp
+                        <li class="yk-talk__slide">
+                            <article class="yk-talk__card yk-talk__card--{{ $tone }}">
+                                <header class="yk-talk__card-head">
+                                    @if (filled($category))
+                                        <span class="yk-talk__badge">{{ $category }}</span>
+                                    @endif
+                                    <div class="yk-talk__avatar">
+                                        @if ($photoUrl)
+                                            <img src="{{ $photoUrl }}" alt="{{ $displayName }}" width="48" height="48" loading="lazy" onerror="this.hidden=true; this.nextElementSibling.hidden=false;">
+                                            <span class="yk-talk__initials" hidden aria-hidden="true">{{ $initials }}</span>
+                                        @else
+                                            <span class="yk-talk__initials" aria-hidden="true">{{ $initials }}</span>
+                                        @endif
+                                    </div>
+                                    <h3 class="yk-talk__name">{{ $displayName }}</h3>
+                                    @if (filled($qualification))
+                                        <p class="yk-talk__credential">{{ $qualification }}</p>
+                                    @endif
+                                </header>
+
+                                <div class="yk-talk__card-body">
+                                    @if ($visibleChips->isNotEmpty())
+                                        <ul class="yk-talk__chips">
+                                            @foreach ($visibleChips as $chip)
+                                                <li>{{ $chip }}</li>
+                                            @endforeach
+                                            @if ($extraChips > 0)
+                                                <li class="yk-talk__chip-more">+{{ $extraChips }}</li>
+                                            @endif
+                                        </ul>
+                                    @endif
+
+                                    @if ($sessionLabel)
+                                        <p class="yk-talk__sessions">Sessions <strong>{{ $sessionLabel }}</strong></p>
+                                    @endif
+
+                                    <a class="yk-talk__book" href="{{ $profileUrl }}">View Profile</a>
+                                </div>
+
+                                @if ($nextSlot)
+                                    <footer class="yk-talk__card-foot" title="Next Available Slot: {{ $nextSlot }}">
+                                        {{ $nextSlot }}
+                                    </footer>
                                 @endif
-                            </div>
-                            <h3 class="yk-talk__name">{{ $displayName }}</h3>
-                            @if (filled($specialization))
-                                <p class="yk-talk__role">{{ $specialization }}</p>
-                            @endif
-                            <p class="yk-talk__rating" @unless($averageRating) aria-label="No reviews yet" @endunless>
-                                <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="#e0a106" d="M8 1.4 9.8 5.8l4.7.4-3.6 3.1 1.1 4.6L8 11.6 3.9 14l1.1-4.6L1.5 6.2l4.7-.4Z"></path></svg>
-                                @if ($averageRating)
-                                    <span>{{ $averageRating }}</span>
-                                    <span class="yk-talk__count">({{ $reviewCount }})</span>
-                                @else
-                                    <span class="yk-talk__count">New</span>
-                                @endif
-                            </p>
-                            <a class="yk-talk__book" href="{{ $profileUrl }}">Book Now <span aria-hidden="true">→</span></a>
-                        </article>
-                    </li>
-                @endforeach
-            </ul>
+                            </article>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
         @endif
     </div>
 </section>

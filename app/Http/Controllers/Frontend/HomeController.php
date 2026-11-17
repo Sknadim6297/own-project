@@ -183,7 +183,13 @@ class HomeController extends Controller
             ->orderBy('id')
             ->get();
         $featuredExperts = Professional::query()
-            ->with(['profile', 'professionalServices.service', 'professionalServices.subServices', 'rates'])
+            ->with([
+                'profile',
+                'professionalServices.service',
+                'professionalServices.subServices',
+                'rates',
+                'availabilities.slots',
+            ])
             ->where('status', 'accepted')
             ->where('active', true)
             ->whereHas('profile')
