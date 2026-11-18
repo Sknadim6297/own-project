@@ -26,6 +26,14 @@ class JournalRecorder
             throw new InvalidArgumentException('The journal draft is incomplete.');
         }
 
+        return $this->record((int) $userId, $key, $promptKey, $title, $body);
+    }
+
+    /**
+     * Shared by the website draft flow and the mobile API: one set of rules, one reward path.
+     */
+    public function record(int $userId, string $key, ?string $promptKey, ?string $title, string $body): PsychologyJournalEntry
+    {
         $body = $this->cleanBody($body);
         if ($body === '' || mb_strlen($body) > PsychologyCatalog::JOURNAL_BODY_MAX) {
             throw new InvalidArgumentException('The journal thoughts are invalid.');
@@ -45,12 +53,12 @@ class JournalRecorder
         }
 
         try {
-            $record = $this->persist((int) $userId, $key, $promptKey, $title, $body);
+            $record = $this->persist($userId, $key, $promptKey, $title, $body);
         } catch (UniqueConstraintViolationException) {
-            $record = $this->existingForUser($key, (int) $userId);
+            $record = $this->existingForUser($key, $userId);
         } catch (QueryException $exception) {
             if (str_contains(strtolower($exception->getMessage()), 'unique')) {
-                $record = $this->existingForUser($key, (int) $userId);
+                $record = $this->existingForUser($key, $userId);
             } else {
                 throw $exception;
             }

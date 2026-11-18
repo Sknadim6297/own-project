@@ -3,6 +3,10 @@
 use App\Http\Controllers\Api\ProfessionalAvailabilityController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ExpertController;
+use App\Http\Controllers\Api\V1\MyActivityController;
+use App\Http\Controllers\Api\V1\MyBookingsController;
+use App\Http\Controllers\Api\V1\MyNotificationsController;
+use App\Http\Controllers\Api\V1\MyPsychologyController;
 use App\Http\Controllers\Api\V1\PasswordResetController;
 use App\Http\Controllers\Api\V1\ProgrammeEventController;
 use App\Http\Controllers\Api\V1\ProfileController;
@@ -61,6 +65,25 @@ Route::prefix('v1')->group(function () {
         Route::get('/profile', [ProfileController::class, 'show']);
         Route::put('/profile', [ProfileController::class, 'update']);
         Route::patch('/profile', [ProfileController::class, 'update']);
+
+        // My Space — the signed-in customer's own website records. The only writes are new
+        // mood/journal/gratitude entries, saved through the same recorders as the website.
+        Route::prefix('my')->group(function () {
+            Route::get('/bookings', [MyBookingsController::class, 'index']);
+            Route::get('/activity/summary', [MyActivityController::class, 'summary']);
+            Route::get('/mood-checkins', [MyActivityController::class, 'moods']);
+            Route::get('/journal-entries', [MyActivityController::class, 'journal']);
+            Route::get('/gratitude-entries', [MyActivityController::class, 'gratitude']);
+            Route::get('/notifications', [MyNotificationsController::class, 'index']);
+            Route::post('/notifications/{notificationId}/read', [MyNotificationsController::class, 'markRead'])
+                ->where('notificationId', '[0-9a-fA-F-]{36}');
+            Route::get('/psychology/options', [MyPsychologyController::class, 'options']);
+            Route::middleware('throttle:30,1')->group(function () {
+                Route::post('/mood-checkins', [MyPsychologyController::class, 'storeMood']);
+                Route::post('/journal-entries', [MyPsychologyController::class, 'storeJournal']);
+                Route::post('/gratitude-entries', [MyPsychologyController::class, 'storeGratitude']);
+            });
+        });
     });
 
     // Public catalogue (same DB rows as website); write actions stay authenticated above.

@@ -24,6 +24,22 @@ class MoodCheckinRecorder
         if (!$userId || !is_string($mood) || !is_string($key) || !$draft->hasEmotions()) {
             throw new InvalidArgumentException('The check-in draft is incomplete.');
         }
+
+        return $this->record((int) $userId, $key, $mood, $emotions, $reflection);
+    }
+
+    /**
+     * Shared by the website draft flow and the mobile API: one set of rules, one reward path.
+     *
+     * @param  array<int, string>  $emotions
+     */
+    public function record(int $userId, string $key, string $mood, array $emotions, ?string $reflection): PsychologyMoodCheckin
+    {
+        $emotions = array_values(array_unique($emotions));
+
+        if ($emotions === []) {
+            throw new InvalidArgumentException('Choose at least one emotion.');
+        }
         if (!in_array($mood, PsychologyCatalog::moodKeys(), true)) {
             throw new InvalidArgumentException('The primary mood is not allowed.');
         }
@@ -38,12 +54,12 @@ class MoodCheckinRecorder
         }
 
         try {
-            $record = $this->persist((int) $userId, $key, $mood, $emotions, $reflection);
+            $record = $this->persist($userId, $key, $mood, $emotions, $reflection);
         } catch (UniqueConstraintViolationException) {
-            $record = $this->existingForUser($key, (int) $userId);
+            $record = $this->existingForUser($key, $userId);
         } catch (QueryException $exception) {
             if (str_contains(strtolower($exception->getMessage()), 'unique')) {
-                $record = $this->existingForUser($key, (int) $userId);
+                $record = $this->existingForUser($key, $userId);
             } else {
                 throw $exception;
             }

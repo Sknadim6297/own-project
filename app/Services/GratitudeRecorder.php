@@ -24,16 +24,26 @@ class GratitudeRecorder
             throw new InvalidArgumentException('The gratitude draft is incomplete.');
         }
 
+        return $this->record((int) $userId, $key, $answers);
+    }
+
+    /**
+     * Shared by the website draft flow and the mobile API: one set of rules, one reward path.
+     *
+     * @param  array<string, string>  $answers  card key => answer
+     */
+    public function record(int $userId, string $key, array $answers): PsychologyGratitudeEntry
+    {
         $normalized = $this->normalize($answers);
         $this->assertAtLeastOne($normalized);
 
         try {
-            $record = $this->persist((int) $userId, $key, $normalized);
+            $record = $this->persist($userId, $key, $normalized);
         } catch (UniqueConstraintViolationException) {
-            $record = $this->existingForUser($key, (int) $userId);
+            $record = $this->existingForUser($key, $userId);
         } catch (QueryException $exception) {
             if (str_contains(strtolower($exception->getMessage()), 'unique')) {
-                $record = $this->existingForUser($key, (int) $userId);
+                $record = $this->existingForUser($key, $userId);
             } else {
                 throw $exception;
             }
