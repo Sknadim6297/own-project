@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Tool;
 use App\Models\ToolCategory;
+use App\Services\ExploreCatalog;
 use App\Services\ToolsCatalog;
 use App\Support\Tools\ToolIllustration;
 use Illuminate\Http\JsonResponse;
@@ -32,6 +33,18 @@ class ToolController extends Controller
         'weight-journey',
         'calorie-nutrition-tracker',
         'tarot-reflection',
+    ];
+
+    /** Card copy shown by resources/views/frontend/sections/partials/tool-card.blade.php; keep in sync. */
+    private const WEBSITE_CARD_COPY = [
+        'daily-mood-check-in' => 'Track your mood, reflect and feel more balanced.',
+        'career-interest-test' => 'Discover your strengths and ideal career path.',
+        'bmi-bmr-calculator' => 'Check your body metrics and fitness range.',
+        'tarot-reflection' => 'Get intuitive insights and guidance for your journey.',
+        'monthly-money-planner' => 'Plan, track and manage your monthly finances.',
+        'parenting-stress-check' => 'Assess your parenting stress and get helpful insights.',
+        'daily-mindfulness-calm' => 'Simple practices to reduce stress and stay centered.',
+        'digital-journal' => 'Write, reflect and build a healthier, happier you.',
     ];
 
     public function categories(): JsonResponse
@@ -95,6 +108,13 @@ class ToolController extends Controller
             'status' => 'success',
             'tools' => $tools,
             'topics' => ToolsCatalog::TOPICS,
+            'explore_categories' => collect(ExploreCatalog::CATEGORIES)
+                ->map(fn (array $category, string $slug) => [
+                    'slug' => $slug,
+                    'label' => $category['label'],
+                    'icon' => $category['icon'] ?? null,
+                ])
+                ->values(),
         ]);
     }
 
@@ -173,6 +193,19 @@ class ToolController extends Controller
                 'slug' => $tool->category->slug,
             ] : null,
         ];
+
+        $webCard = app(ToolsCatalog::class)->cardFor($tool);
+        $payload['in_website_catalogue'] = $webCard !== null;
+        $payload['web_url'] = $webCard['url'] ?? route($tool->route_name);
+        $payload['card_description'] = self::WEBSITE_CARD_COPY[$tool->slug]
+            ?? (filled($webCard['description'] ?? null)
+                ? $webCard['description']
+                : 'Open this tool for practical guidance and a clearer next step.');
+        $payload['catalogue_description'] = $webCard['description'] ?? null;
+        $payload['explore_category'] = filled($webCard['category'] ?? null) ? [
+            'slug' => $webCard['category'],
+            'label' => $webCard['category_label'],
+        ] : null;
 
         if ($detailed) {
             $payload['route_name'] = $tool->route_name;

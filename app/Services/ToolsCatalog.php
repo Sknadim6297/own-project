@@ -107,6 +107,14 @@ class ToolsCatalog
         }
     }
 
+    /**
+     * The /tools catalogue card for one tool, or null when the website does not list it.
+     */
+    public function cardFor(Tool $tool): ?array
+    {
+        return $this->present($tool);
+    }
+
     private function present(Tool $tool): ?array
     {
         if (!$this->isPublicEntry($tool)) {
