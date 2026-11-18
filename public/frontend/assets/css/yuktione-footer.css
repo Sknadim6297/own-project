@@ -1,0 +1,212 @@
+/* Footer — YuktiOne brand colours (burgundy / soft pink) and the "Get the App" badges.
+   Loaded after tazen-public-chrome.css; every rule is scoped to #tazen-public-footer
+   so it wins over the older teal footer rules without touching other chrome. */
+
+#tazen-public-footer {
+    --yf-burgundy: #8a0f4d;
+    --yf-burgundy-deep: #6e0c3f;
+    --yf-navy: #14141f;
+    --yf-text: #4a3a48;
+    --yf-muted: #7a6573;
+    --yf-line: rgba(138, 15, 77, 0.14);
+    --yf-field: #fffafc;
+
+    background:
+        radial-gradient(ellipse at 100% 0%, rgba(252, 231, 240, 0.85), transparent 34rem),
+        linear-gradient(180deg, #fffafc 0%, #fdf1f6 100%);
+    border-top: 1px solid var(--yf-line);
+    color: var(--yf-text);
+}
+
+#tazen-public-footer::after {
+    display: none;
+}
+
+/* Soft pink waves at the bottom edge (recoloured from the old lavender/grey) */
+#tazen-public-footer .tazen-footer__wave-art path:first-child {
+    fill: #f3cde0;
+    fill-opacity: 0.45;
+}
+
+#tazen-public-footer .tazen-footer__wave-art path:last-child {
+    fill: #f9e4ee;
+    fill-opacity: 0.65;
+}
+
+#tazen-public-footer .tazen-footer__brand p,
+#tazen-public-footer .tazen-footer__contact > p,
+#tazen-public-footer .tazen-footer__contact-form > p {
+    color: var(--yf-text);
+}
+
+/* Column headings + underline */
+#tazen-public-footer .tazen-footer__column h2,
+#tazen-public-footer .tazen-footer__contact-form label,
+#tazen-public-footer .tazen-footer__apps-title,
+#tazen-public-footer .tazen-footer__social-title {
+    color: var(--yf-navy);
+}
+
+#tazen-public-footer .tazen-footer__column h2::after {
+    background: var(--yf-burgundy);
+}
+
+/* Quick links */
+#tazen-public-footer .tazen-footer__column li a,
+#tazen-public-footer .tazen-footer__contact > a {
+    color: var(--yf-text);
+}
+
+#tazen-public-footer .tazen-footer__column li a::after,
+#tazen-public-footer .tazen-footer__contact > a svg {
+    color: var(--yf-burgundy);
+}
+
+#tazen-public-footer .tazen-footer__column li a:hover,
+#tazen-public-footer .tazen-footer__contact > a:hover {
+    color: var(--yf-burgundy);
+}
+
+#tazen-public-footer .tazen-footer__contact > a svg {
+    background: rgba(138, 15, 77, 0.08);
+    border-radius: 8px;
+    padding: 4px;
+}
+
+/* Get the App (sits under the Services & Resources links) */
+#tazen-public-footer .tazen-footer__apps {
+    margin-top: 2rem;
+}
+
+#tazen-public-footer .tazen-footer__apps h2 {
+    margin: 0 0 1rem;
+}
+
+#tazen-public-footer .tazen-footer__store-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+#tazen-public-footer .tazen-footer__store {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.9rem;
+    padding: 0.4rem 0.95rem 0.4rem 0.8rem;
+    border-radius: 11px;
+    background: #14141f;
+    color: #ffffff;
+    box-shadow: 0 8px 18px rgba(20, 20, 31, 0.16);
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.1;
+    white-space: nowrap;
+}
+
+#tazen-public-footer .tazen-footer__store small {
+    display: block;
+    margin-bottom: 0.15rem;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    opacity: 0.85;
+}
+
+#tazen-public-footer .tazen-footer__store > svg {
+    flex: 0 0 auto;
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: currentColor;
+}
+
+#tazen-public-footer .tazen-footer__store > svg path {
+    fill: currentColor;
+}
+
+/* Connect with us */
+#tazen-public-footer .tazen-footer__social-title {
+    margin-top: 1.4rem;
+}
+
+#tazen-public-footer .tazen-footer__social a {
+    --social: var(--yf-burgundy);
+    border: 1px solid rgba(138, 15, 77, 0.2);
+    background: #ffffff;
+    color: var(--yf-burgundy);
+    box-shadow: 0 4px 10px rgba(138, 15, 77, 0.08);
+}
+
+#tazen-public-footer .tazen-footer__social a:hover,
+#tazen-public-footer .tazen-footer__social a:focus-visible {
+    background: var(--yf-burgundy);
+    border-color: var(--yf-burgundy);
+    color: #ffffff;
+}
+
+/* Contact form */
+#tazen-public-footer .tazen-footer__contact-form > div {
+    background: #ffffff;
+    border-color: rgba(138, 15, 77, 0.16);
+    box-shadow: 0 6px 18px rgba(138, 15, 77, 0.07);
+}
+
+#tazen-public-footer .tazen-footer__contact-form > div > svg {
+    color: var(--yf-burgundy);
+}
+
+#tazen-public-footer .tazen-footer__contact-form input {
+    color: var(--yf-navy);
+    background: transparent;
+}
+
+#tazen-public-footer .tazen-footer__contact-form input::placeholder {
+    color: var(--yf-muted);
+}
+
+#tazen-public-footer .tazen-footer__contact-form button {
+    background: linear-gradient(105deg, #a7165f 0%, var(--yf-burgundy) 55%, var(--yf-burgundy-deep) 100%);
+    color: #ffffff;
+}
+
+/* Bottom bar */
+#tazen-public-footer .tazen-footer__bottom {
+    border-color: var(--yf-line);
+    color: var(--yf-text);
+}
+
+#tazen-public-footer .tazen-footer__copyright > span:first-child {
+    color: var(--yf-navy);
+}
+
+#tazen-public-footer .tazen-footer__copyright > span:last-child {
+    color: var(--yf-muted);
+}
+
+#tazen-public-footer .tazen-footer__select-wrap {
+    background: #ffffff;
+    border-color: rgba(138, 15, 77, 0.16);
+    box-shadow: 0 4px 12px rgba(138, 15, 77, 0.06);
+}
+
+#tazen-public-footer .tazen-footer__select-wrap > svg:first-of-type,
+#tazen-public-footer .tazen-footer__select-chevron {
+    color: var(--yf-burgundy);
+    stroke: var(--yf-burgundy);
+}
+
+#tazen-public-footer .tazen-footer__preferences select {
+    color: var(--yf-navy);
+}
+
+#tazen-public-footer .tazen-footer__bottom > nav a {
+    color: var(--yf-muted);
+}
+
+#tazen-public-footer .tazen-footer__bottom > nav a:hover {
+    color: var(--yf-burgundy);
+}
+
+#tazen-public-footer .tazen-footer__bottom > nav a + a {
+    border-left-color: rgba(138, 15, 77, 0.25);
+}

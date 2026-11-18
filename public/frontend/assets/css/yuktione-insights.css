@@ -54,7 +54,7 @@
 }
 
 .yk-insight__heading-lavender {
-    color: var(--y1-lilac);
+    color: #c42c74;
 }
 
 .yk-insight__lead {
@@ -347,6 +347,92 @@ a.yk-insight__cta:focus-visible {
     .yk-insight__art {
         flex-basis: 128px;
         width: 128px;
+    }
+}
+
+/* Phone: two compact cards per row, emoji on the right, heading on two lines with the magenta phrase */
+@media (max-width: 767.98px) {
+    .yk-insight {
+        padding: 0.25rem 0.9rem 2.25rem;
+    }
+
+    .yk-insight__copy {
+        max-width: none;
+        padding-right: 3.6rem;
+    }
+
+    .yk-insight__title {
+        margin: 0.3rem 0 0.4rem;
+        font-size: 1.6rem;
+        line-height: 1.12;
+    }
+
+    .yk-insight__title > span {
+        display: block;
+    }
+
+    .yk-insight__lead {
+        font-size: 0.82rem;
+        line-height: 1.45;
+    }
+
+    .yk-insight__leaves {
+        display: block;
+        top: -4px;
+        right: -2px;
+        width: 76px;
+        height: auto;
+    }
+
+    .yk-insight__head {
+        margin-bottom: 1rem;
+    }
+
+    .yk-insight__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.6rem;
+    }
+
+    .yk-insight__card {
+        min-height: 0;
+        gap: 0.3rem;
+        padding: 0.7rem 0.5rem 0.65rem 0.7rem;
+        border-radius: 16px;
+    }
+
+    .yk-insight__badge {
+        display: none;
+    }
+
+    .yk-insight__name {
+        font-size: 0.8rem;
+        line-height: 1.22;
+    }
+
+    .yk-insight__text {
+        margin-top: 0.3rem;
+        font-size: 0.68rem;
+        line-height: 1.4;
+    }
+
+    .yk-insight__cta {
+        gap: 0.25rem;
+        padding-top: 0.45rem;
+        font-size: 0.68rem;
+        white-space: nowrap;
+    }
+
+    .yk-insight__art {
+        flex: 0 0 2.3rem;
+        width: 2.3rem;
+        align-items: flex-start;
+    }
+
+    .yk-insight__emoji {
+        width: 2.3rem;
+        height: 2.3rem;
+        font-size: 1.1rem;
+        box-shadow: none;
     }
 }
 

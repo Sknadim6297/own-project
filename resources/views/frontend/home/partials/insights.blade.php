@@ -50,8 +50,8 @@
             <div class="yk-insight__copy">
                 <p class="yk-insight__eyebrow">Today's insight</p>
                 <h2 class="yk-insight__title" id="yk-insight-title">
-                    <span class="yk-insight__heading-navy">Fresh perspectives for</span>
-                    <span class="yk-insight__heading-lavender">a brighter you.</span>
+                    <span class="yk-insight__heading-navy">Fresh perspectives</span>
+                    <span class="yk-insight__heading-lavender">for a brighter you.</span>
                 </h2>
                 <p class="yk-insight__lead">Explore tools, experts and articles to guide your day.</p>
             </div>

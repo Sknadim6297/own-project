@@ -807,11 +807,11 @@
 
 		@if (config('yuktione.programmes_enabled'))
 			@include('frontend.home.partials.events')
+		@else
+			@include('frontend.home.partials.programmes-showcase')
 		@endif
-		@include('frontend.home.partials.how-it-works')
-
-		@include('frontend.home.partials.testimonials')
-		@include('frontend.home.partials.professional-cta')
+		@include('frontend.home.partials.professional-showcase')
+		@include('frontend.home.partials.testimonials-showcase')
 
 	</main>
 

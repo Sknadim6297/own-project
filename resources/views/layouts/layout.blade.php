@@ -180,6 +180,7 @@
 		<link href="{{ asset('frontend/assets/css/yuktione-booking.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-booking.css')) }}" rel="stylesheet">
 	@endif
 	<link href="{{ asset('frontend/assets/css/tazen-public-chrome.css') }}?v={{ filemtime(public_path('frontend/assets/css/tazen-public-chrome.css')) }}" rel="stylesheet">
+	<link href="{{ asset('frontend/assets/css/yuktione-footer.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-footer.css')) }}" rel="stylesheet">
 	@if (request()->routeIs('home'))
 		<link href="{{ asset('frontend/assets/css/yuktione-brand.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-brand.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-home.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-home.css')) }}" rel="stylesheet">
@@ -190,6 +191,10 @@
 		<link href="{{ asset('frontend/assets/css/yuktione-featured-experts.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-featured-experts.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-insights.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-insights.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-talk.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-talk.css')) }}" rel="stylesheet">
+		<link href="{{ asset('frontend/assets/css/yuktione-why-choose.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-why-choose.css')) }}" rel="stylesheet">
+		<link href="{{ asset('frontend/assets/css/yuktione-programmes-showcase.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-programmes-showcase.css')) }}" rel="stylesheet">
+		<link href="{{ asset('frontend/assets/css/yuktione-join-professional.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-join-professional.css')) }}" rel="stylesheet">
+		<link href="{{ asset('frontend/assets/css/yuktione-join-testimonials.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-join-testimonials.css')) }}" rel="stylesheet">
 		@if (config('yuktione.programmes_enabled'))
 			<link href="{{ asset('frontend/assets/css/yuktione-programmes.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-programmes.css')) }}" rel="stylesheet">
 		@endif

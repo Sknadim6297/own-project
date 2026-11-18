@@ -33,7 +33,7 @@
 }
 
 .yk-tools-strip__shell {
-    width: min(100% - 2rem, 1180px);
+    width: min(100% - 2rem, 1280px);
     margin: 0 auto;
 }
 
@@ -253,17 +253,50 @@
     text-wrap: balance;
 }
 
+/* Phone: three tiles per view (swipe for more), arrows hidden, "View All Tools" stays */
 @media (max-width: 767px) {
+    .yk-tools-strip__title {
+        white-space: nowrap;
+    }
+
+    .yk-tools-strip__nav {
+        display: none;
+    }
+
+    .yk-tools-strip__track {
+        gap: 0.6rem;
+    }
+
     .yk-tools-strip__track > li {
-        flex-basis: 128px;
-        width: 128px;
-        height: 132px;
+        flex-basis: calc((100% - 1.2rem) / 3.3);
+        width: calc((100% - 1.2rem) / 3.3);
+        min-width: 88px;
+        height: 124px;
     }
 
     .yk-tool-tile {
-        min-height: 132px;
-        max-height: 132px;
+        min-height: 124px;
+        max-height: 124px;
+        gap: 0.4rem;
+        padding: 0.7rem 0.4rem 0.6rem;
         border-radius: 16px;
+    }
+
+    .yk-tool-tile:has(.yk-tool-tile__illust) {
+        gap: 0.3rem;
+        padding-top: 0.55rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .yk-tool-tile__icon:has(.yk-tool-tile__illust),
+    .yk-tool-tile__illust {
+        width: 72px;
+        height: 54px;
+    }
+
+    .yk-tool-tile__label {
+        max-width: none;
+        font-size: 0.76rem;
     }
 }
 
@@ -273,13 +306,13 @@
     }
 
     .yk-tools-strip__shell {
-        width: min(100% - 3rem, 1180px);
+        width: min(100% - 3rem, 1280px);
     }
 }
 
 @media (min-width: 1024px) {
     .yk-tools-strip__shell {
-        width: min(100% - 4rem, 1180px);
+        width: min(100% - 4rem, 1280px);
     }
 
     .yk-tools-strip__track {
@@ -300,7 +333,7 @@
 
 @media (min-width: 1280px) {
     .yk-tools-strip__shell {
-        width: min(100% - 5.5rem, 1180px);
+        width: min(100% - 5.5rem, 1280px);
     }
 }
 
