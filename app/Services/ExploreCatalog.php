@@ -614,6 +614,24 @@ class ExploreCatalog
         return $query;
     }
 
+    /** Public entry for the mobile experts API, using the website's category rules. */
+    public function constrainExpertsToCategory(Builder $query, string $categoryKey): void
+    {
+        $this->whereExpertCategory($query, $categoryKey);
+    }
+
+    /** Public entry for the mobile programme events API, matching the website's programme filter. */
+    public function constrainProgrammesToCategory(Builder $query, string $categoryKey): void
+    {
+        if (! array_key_exists($categoryKey, self::CATEGORIES)) {
+            $query->whereRaw('1 = 0');
+
+            return;
+        }
+
+        $this->whereTextMatches($query, self::CATEGORIES[$categoryKey]['needles'], 'programme');
+    }
+
     /**
      * Restrict experts to a single Explore category.
      *

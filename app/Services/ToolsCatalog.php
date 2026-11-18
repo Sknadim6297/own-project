@@ -162,7 +162,7 @@ class ToolsCatalog
         }
     }
 
-    private function iconKey(Tool $tool): string
+    public function iconKey(Tool $tool): string
     {
         return match ($tool->slug) {
             'daily-mood-check-in' => 'mood',

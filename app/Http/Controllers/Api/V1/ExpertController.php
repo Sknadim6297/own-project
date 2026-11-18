@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Professional;
 use App\Models\Rate;
 use App\Services\ExploreCatalog;
+use App\Support\Explore\CategoryImages;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -22,6 +23,7 @@ class ExpertController extends Controller
         $q = trim(strip_tags((string) $request->query('q', '')));
         $q = Str::limit($q, 100, '');
         $specialty = trim(strip_tags((string) $request->query('specialty', '')));
+        $category = trim((string) $request->query('category', ''));
         $limit = min(50, max(1, (int) $request->query('limit', 24)));
         $featured = $request->boolean('featured');
 
@@ -60,6 +62,10 @@ class ExpertController extends Controller
             });
         }
 
+        if ($category !== '') {
+            app(ExploreCatalog::class)->constrainExpertsToCategory($query, $category);
+        }
+
         $experts = $query->get()
             ->map(fn (Professional $expert) => $this->present($expert))
             ->filter()
@@ -73,6 +79,7 @@ class ExpertController extends Controller
                 ->map(fn (array $category, string $slug) => [
                     'slug' => $slug,
                     'label' => $category['label'],
+                    'image_url' => CategoryImages::url($slug),
                 ])
                 ->values(),
         ]);

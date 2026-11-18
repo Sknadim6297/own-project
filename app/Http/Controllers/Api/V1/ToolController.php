@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tool;
 use App\Models\ToolCategory;
 use App\Services\ToolsCatalog;
+use App\Support\Tools\ToolIllustration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -154,6 +155,7 @@ class ToolController extends Controller
             'name' => $tool->name,
             'description' => $detailed ? trim($description) : Str::limit(trim($description), 160),
             'icon' => $tool->icon,
+            'image_url' => $this->imageUrl($tool),
             'access_type' => $tool->access_type,
             'status' => $tool->status,
             'status_label' => $tool->statusLabel(),
@@ -177,5 +179,16 @@ class ToolController extends Controller
         }
 
         return $payload;
+    }
+
+    /** The same illustration the website tool tiles and catalogue cards render. */
+    private function imageUrl(Tool $tool): ?string
+    {
+        $file = ToolIllustration::for($tool->slug, app(ToolsCatalog::class)->iconKey($tool));
+        if ($file === null || ! is_file(public_path(ToolIllustration::DIRECTORY.$file))) {
+            return null;
+        }
+
+        return asset(ToolIllustration::DIRECTORY.$file);
     }
 }
