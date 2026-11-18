@@ -22,4 +22,15 @@ return [
     | flip this to true when programmes should appear again.
     */
     'programmes_enabled' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Placeholder expert ratings
+    |--------------------------------------------------------------------------
+    | TEMPORARY. While real ratings are not live, expert cards without approved
+    | reviews show a stable placeholder rating so the card design is complete.
+    | Set YUKTIONE_PLACEHOLDER_RATINGS=false (or this to false) to show only
+    | real ratings.
+    */
+    'placeholder_ratings' => env('YUKTIONE_PLACEHOLDER_RATINGS', true),
 ];

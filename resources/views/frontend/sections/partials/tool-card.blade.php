@@ -22,22 +22,7 @@
         $description = 'Open this tool for practical guidance and a clearer next step.';
     }
 
-    $illustration = match (true) {
-        $slug === 'daily-mood-check-in', $icon === 'mood' => 'daily-mood-3d.webp',
-        $slug === 'career-interest-test', $icon === 'career' => 'career-interest-3d.webp',
-        $slug === 'bmi-bmr-calculator', $icon === 'bmi' => 'bmi-bmr-3d.webp',
-        $slug === 'tarot-reflection', $icon === 'tarot' => 'tarot-reflection-3d.webp',
-        $slug === 'monthly-money-planner' => 'monthly-money-3d.webp',
-        $slug === 'parenting-stress-check' => 'parenting-stress-3d.webp',
-        $slug === 'daily-mindfulness-calm' => 'mindfulness-calm-3d.webp',
-        $slug === 'digital-journal', $icon === 'journal' => 'digital-journal-3d.webp',
-        $icon === 'finance', $icon === 'coins', $icon === 'goal' => 'monthly-money-3d.webp',
-        $icon === 'parenting', $icon === 'family' => 'parenting-stress-3d.webp',
-        $icon === 'lotus', $icon === 'gratitude' => 'mindfulness-calm-3d.webp',
-        $icon === 'skills' => 'career-interest-3d.webp',
-        $icon === 'weight', $icon === 'nutrition', $icon === 'water' => 'bmi-bmr-3d.webp',
-        default => null,
-    };
+    $illustration = \App\Support\Tools\ToolIllustration::for($slug, $icon);
 @endphp
 <a class="yk-tool-card yk-tool-card--{{ $icon }}{{ $illustration ? '' : ' yk-tool-card--fallback' }}" href="{{ $url }}">
     <div class="yk-tool-card__content">
@@ -55,7 +40,7 @@
         @if ($illustration)
             <img
                 class="yk-tool-card__illust"
-                src="{{ asset('frontend/assets/img/tools-illustrations/'.$illustration) }}"
+                src="{{ asset(\App\Support\Tools\ToolIllustration::DIRECTORY.$illustration) }}"
                 alt=""
                 width="180"
                 height="140"

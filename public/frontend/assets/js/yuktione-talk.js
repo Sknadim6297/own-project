@@ -9,6 +9,32 @@
     const nextButton = section.querySelector('[data-talk-next]');
     if (!viewport || !track || !controls || !previousButton || !nextButton) return;
 
+    // Favourite hearts: visual toggle only (nothing is stored yet).
+    // Synced across the looping clones by expert id.
+    section.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const heart = target.closest('[data-talk-fav]');
+        if (!heart || !section.contains(heart)) return;
+
+        event.preventDefault();
+        const pressed = heart.getAttribute('aria-pressed') !== 'true';
+        const id = heart.getAttribute('data-expert-id');
+        section.querySelectorAll('[data-talk-fav]').forEach((button) => {
+            if (button.getAttribute('data-expert-id') !== id) return;
+            button.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+            const name = button.getAttribute('aria-label') || '';
+            button.setAttribute(
+                'aria-label',
+                pressed ? name.replace(/^Save /, 'Remove ').replace(/ to favourites$/, ' from favourites')
+                    : name.replace(/^Remove /, 'Save ').replace(/ from favourites$/, ' to favourites')
+            );
+        });
+        heart.classList.remove('is-pop');
+        void heart.offsetWidth;
+        heart.classList.add('is-pop');
+    });
+
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const slides = () => [...track.querySelectorAll('.yk-talk__slide:not([data-talk-clone])')];
     let offset = 0;

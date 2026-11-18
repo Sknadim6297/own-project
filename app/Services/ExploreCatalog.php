@@ -13,6 +13,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -247,7 +248,7 @@ class ExploreCatalog
         $experts = $expertIds === []
             ? collect()
             : Professional::query()
-                ->with(['profile', 'professionalServices.service'])
+                ->with(['profile', 'professionalServices.service', 'professionalServices.subServices'])
                 ->withAvg(['reviews as average_rating' => fn ($query) => $query->where('is_approved', 1)], 'rating')
                 ->withCount(['reviews as review_count' => fn ($query) => $query->where('is_approved', 1)])
                 ->withMin('rates as min_rate', 'final_rate')
@@ -271,20 +272,102 @@ class ExploreCatalog
                 ->get()
                 ->keyBy('id');
 
-        return $rows->map(function ($row) use ($experts, $programmes, $articles) {
+        $sessionCounts = $this->sessionCounts($experts->keys()->all());
+
+        return $rows->map(function ($row) use ($experts, $programmes, $articles, $sessionCounts) {
             return match ($row->kind) {
-                'expert' => $this->expertCard($experts->get($row->item_id)),
+                'expert' => $this->expertCard($experts->get($row->item_id), (int) ($sessionCounts[$row->item_id] ?? 0)),
                 'programme' => $this->programmeCard($programmes->get($row->item_id)),
                 default => $this->articleCard($articles->get($row->item_id)),
             };
         })->filter()->values();
     }
 
-    private function expertCard(?Professional $expert): ?array
+    /**
+     * Headline numbers for the /professionals hero (cached briefly).
+     *
+     * @return array{experts: int, rating: ?string, categories: int}
+     */
+    public function directoryStats(): array
+    {
+        return Cache::remember('yuktione.directory-stats', 300, function () {
+            $experts = Professional::query()
+                ->where('status', 'accepted')
+                ->where('active', true)
+                ->count();
+
+            $average = Review::query()->where('is_approved', 1)->avg('rating');
+
+            return [
+                'experts' => $experts,
+                'rating' => $average !== null ? number_format((float) $average, 1) : null,
+                'categories' => count(self::CATEGORIES),
+            ];
+        });
+    }
+
+    /**
+     * Paid / completed booking totals per professional (shown as "N+ sessions").
+     *
+     * @param  list<int|string>  $professionalIds
+     * @return array<int|string, int>
+     */
+    private function sessionCounts(array $professionalIds): array
+    {
+        if ($professionalIds === []) {
+            return [];
+        }
+
+        try {
+            return \App\Models\Booking::query()
+                ->whereIn('professional_id', $professionalIds)
+                ->where(function ($query) {
+                    $query->where('status', 'completed')
+                        ->orWhere('payment_status', 'paid')
+                        ->orWhere('paid_status', 'paid');
+                })
+                ->selectRaw('professional_id, COUNT(*) as session_count')
+                ->groupBy('professional_id')
+                ->pluck('session_count', 'professional_id')
+                ->map(fn ($count) => (int) $count)
+                ->all();
+        } catch (\Throwable $e) {
+            // Bookings are optional context for the card; never break the directory.
+            return [];
+        }
+    }
+
+    private function expertCard(?Professional $expert, int $sessions = 0): ?array
     {
         if (!$expert) {
             return null;
         }
+
+        $role = $this->plain($expert->profile?->specialization)
+            ?: $this->plain($expert->professionalServices->map(fn ($service) => $service->service?->name ?: $service->service_name)->filter()->first());
+
+        $topicSource = collect();
+        foreach ($expert->professionalServices as $professionalService) {
+            if (filled($professionalService->tags)) {
+                // Tags are typed either comma-separated ("a, b") or as hashtags ("#a #b").
+                $rawTags = (string) $professionalService->tags;
+                $tagParts = str_contains($rawTags, '#')
+                    ? preg_split('/[#,]+/', $rawTags)
+                    : preg_split('/\s*,\s*/', $rawTags);
+                $topicSource = $topicSource->merge($tagParts);
+            }
+            $topicSource = $topicSource->merge($professionalService->subServices->pluck('name'));
+        }
+        $topicSource = $topicSource->merge(
+            $expert->professionalServices->map(fn ($service) => $service->service?->name ?: $service->service_name)
+        );
+        $topics = $topicSource
+            ->map(fn ($chip) => trim((string) $chip))
+            ->filter(fn ($chip) => $chip !== '' && ($role === null || mb_strtolower($chip) !== mb_strtolower($role)))
+            ->unique(fn ($chip) => mb_strtolower($chip))
+            ->take(2)
+            ->values()
+            ->all();
 
         $price = is_numeric($expert->profile?->starting_price)
             ? (float) $expert->profile->starting_price
@@ -299,7 +382,14 @@ class ExploreCatalog
 
         return [
             'kind' => 'expert',
+            'id' => $expert->id,
+            'icon' => self::CATEGORIES[$this->categoryKeyForText(
+                implode(' ', array_filter([$role, ...$expert->professionalServices->map(fn ($service) => $service->service?->name ?: $service->service_name)->all()]))
+            )]['icon'] ?? 'spark',
             'kicker' => 'Expert',
+            'role' => $role,
+            'topics' => $topics,
+            'sessions' => $sessions,
             'title' => $expert->name,
             'subtitle' => $this->plain($expert->profile?->specialization),
             'excerpt' => null,
