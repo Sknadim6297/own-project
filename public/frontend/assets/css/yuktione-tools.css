@@ -216,6 +216,27 @@
     stroke-linejoin: round;
 }
 
+.yk-tool-tile:has(.yk-tool-tile__illust) {
+    gap: 0.45rem;
+    padding-top: 0.8rem;
+    padding-bottom: 0.7rem;
+}
+
+.yk-tool-tile__icon:has(.yk-tool-tile__illust) {
+    width: 92px;
+    height: 68px;
+}
+
+.yk-tool-tile__illust {
+    display: block;
+    width: 92px;
+    height: 68px;
+    max-width: none;
+    max-height: none;
+    object-fit: contain;
+    pointer-events: none;
+}
+
 .yk-tool-tile__label {
     display: -webkit-box;
     -webkit-box-orient: vertical;

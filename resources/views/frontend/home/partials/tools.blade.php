@@ -32,6 +32,7 @@
                                 'label' => $card['label'],
                                 'url' => $card['url'],
                                 'icon' => $card['icon'],
+                                'slug' => $card['slug'] ?? '',
                             ])
                         </li>
                     @endforeach

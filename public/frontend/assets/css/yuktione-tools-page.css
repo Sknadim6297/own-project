@@ -326,6 +326,23 @@
     filter: brightness(1.06);
 }
 
+/* Desktop: keep "Clear filters" and the search box on one line beside the count. */
+@media (min-width: 760px) {
+    .yk-tools__toolbar-actions {
+        flex-wrap: nowrap;
+    }
+
+    .yk-tools__clear {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    .yk-tools__search {
+        flex: 0 1 26rem;
+        min-width: 0;
+    }
+}
+
 /* ——— Illustrated tool cards (4-col at desktop) ——— */
 .yk-tools__grid {
     list-style: none;

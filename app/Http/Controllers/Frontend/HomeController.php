@@ -318,6 +318,20 @@ class HomeController extends Controller
                 ->header('Cache-Control', 'no-store');
         }
 
+        $data['stats'] = $catalog->directoryStats();
+
+        // Career Tools tab: same page shell, tools catalogue in place of the expert list.
+        $data['activeTab'] = $request->query('view') === 'tools' ? 'tools' : 'experts';
+        if ($data['activeTab'] === 'tools') {
+            // The experts merge above must not leak into the tools URLs (links, pager, search form).
+            $request->query->remove('type');
+            $request->query->remove('types');
+
+            $tools = app(ToolsCatalog::class)->browse($request);
+            $tools['items'] = $tools['items']->withPath(route('professionals'));
+            $data['tools'] = $tools;
+        }
+
         return view('frontend.sections.experts', $data);
     }
 

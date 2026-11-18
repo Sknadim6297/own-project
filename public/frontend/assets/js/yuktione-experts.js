@@ -4,6 +4,75 @@
         return;
     }
 
+    // Favourite (heart) — visual toggle only, nothing is stored yet.
+    // Delegated so it keeps working after live-search replaces the results.
+    root.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) {
+            return;
+        }
+        const fav = target.closest("[data-pro-fav]");
+        if (!fav) {
+            return;
+        }
+        event.preventDefault();
+        const pressed = fav.getAttribute("aria-pressed") !== "true";
+        fav.setAttribute("aria-pressed", pressed ? "true" : "false");
+        const card = fav.closest(".yk-pcard");
+        const name = card?.querySelector(".yk-pcard__name")?.textContent?.trim() || "expert";
+        fav.setAttribute("aria-label", pressed ? `Remove ${name} from favourites` : `Save ${name} to favourites`);
+        fav.classList.remove("is-pop");
+        void fav.offsetWidth;
+        fav.classList.add("is-pop");
+    });
+
+    // Experience / sort selects submit the whole filter form (keeps the current search text).
+    root.querySelectorAll("[data-experts-auto-submit]").forEach((select) => {
+        select.addEventListener("change", () => {
+            if (select.hasAttribute("data-experts-category-select")) {
+                // A new category invalidates any service-level filter carried in the form.
+                select.form?.querySelectorAll('input[name="service"], input[name="sub_service"]').forEach((input) => input.remove());
+            }
+            select.form?.submit();
+        });
+    });
+
+    // Category tabs: scroll arrows + edge fades, active tab kept in view.
+    const cats = root.querySelector("[data-pro-cats]");
+    const catsScroll = cats?.querySelector("[data-pro-cats-scroll]");
+    if (cats && catsScroll) {
+        const prev = cats.querySelector("[data-pro-cats-prev]");
+        const next = cats.querySelector("[data-pro-cats-next]");
+
+        const syncCats = () => {
+            const max = catsScroll.scrollWidth - catsScroll.clientWidth;
+            const atStart = catsScroll.scrollLeft <= 2;
+            const atEnd = catsScroll.scrollLeft >= max - 2;
+            const overflowing = max > 4;
+            cats.classList.toggle("has-overflow-start", overflowing && !atStart);
+            cats.classList.toggle("has-overflow-end", overflowing && !atEnd);
+            if (prev) {
+                prev.hidden = !(overflowing && !atStart);
+            }
+            if (next) {
+                next.hidden = !(overflowing && !atEnd);
+            }
+        };
+
+        const step = () => Math.max(160, Math.round(catsScroll.clientWidth * 0.7));
+        prev?.addEventListener("click", () => catsScroll.scrollBy({ left: -step(), behavior: "smooth" }));
+        next?.addEventListener("click", () => catsScroll.scrollBy({ left: step(), behavior: "smooth" }));
+        catsScroll.addEventListener("scroll", syncCats, { passive: true });
+        window.addEventListener("resize", syncCats);
+
+        const active = catsScroll.querySelector(".is-active");
+        if (active) {
+            const left = active.offsetLeft - (catsScroll.clientWidth - active.offsetWidth) / 2;
+            catsScroll.scrollTo({ left: Math.max(0, left), behavior: "auto" });
+        }
+        syncCats();
+    }
+
     const endpoint = root.getAttribute("data-experts-endpoint") || window.location.pathname;
     const form = root.querySelector("[data-experts-search]");
     const input = root.querySelector("[data-experts-q]");

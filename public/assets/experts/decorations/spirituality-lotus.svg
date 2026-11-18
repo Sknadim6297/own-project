@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96">
+<defs>
+<linearGradient id="pc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFC1DB"/><stop offset="1" stop-color="#EE74A6"/></linearGradient>
+<linearGradient id="ps" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFDCEB"/><stop offset="1" stop-color="#F5A1C4"/></linearGradient>
+<linearGradient id="po" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFEAF3"/><stop offset="1" stop-color="#F8BCD6"/></linearGradient>
+<path id="pt" d="M48 20 C60 36 60 58 48 74 C36 58 36 36 48 20Z"/>
+</defs>
+<ellipse cx="48" cy="82" rx="30" ry="5" fill="#DDF1EE" opacity=".85"/>
+<use href="#pt" fill="url(#po)" transform="rotate(-72 48 74)"/>
+<use href="#pt" fill="url(#po)" transform="rotate(72 48 74)"/>
+<use href="#pt" fill="url(#ps)" transform="rotate(-38 48 74)"/>
+<use href="#pt" fill="url(#ps)" transform="rotate(38 48 74)"/>
+<use href="#pt" fill="url(#pc)"/>
+<path d="M44 38 C42 48 43 58 46 66" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2.4" stroke-linecap="round"/>
+</svg>

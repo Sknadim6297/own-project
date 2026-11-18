@@ -15,13 +15,7 @@
 
         return route('professionals', $params);
     };
-    $sorts = [
-        'relevant' => 'Most Relevant',
-        'newest' => 'Newest',
-        'rating' => 'Highest Rated',
-        'price_asc' => 'Price Low to High',
-        'price_desc' => 'Price High to Low',
-    ];
+
     $filtering = ($filters['q'] ?? '') !== ''
         || ($filters['category'] ?? '') !== ''
         || ($filters['service'] ?? '') !== ''
@@ -33,40 +27,16 @@
     $searching = ($filters['q'] ?? '') !== '';
 @endphp
 
-<div class="yk-experts__toolbar">
-    <div class="yk-experts__count" aria-live="polite">
-        <span class="yk-experts__count-pill">
-            <span class="yk-experts__count-num">{{ number_format($items->total()) }}</span>
-            <span class="yk-experts__count-label">{{ $items->total() === 1 ? 'Expert' : 'Experts' }} available</span>
-        </span>
-        @if ($filtering)
-            <span class="yk-experts__count-hint">{{ $searching ? 'Matching your search' : 'Showing filtered results' }}</span>
-        @endif
+@if ($filtering)
+    <div class="yk-pro__toolbar">
+        <div class="yk-pro__count" aria-live="polite">
+            <span class="yk-pro__count-num">{{ number_format($items->total()) }}</span>
+            <span class="yk-pro__count-label">{{ $items->total() === 1 ? 'Expert' : 'Experts' }} found</span>
+            <span class="yk-pro__count-hint">· {{ $searching ? 'Matching your search' : 'Showing filtered results' }}</span>
+        </div>
+        <a class="yk-pro__clear" href="{{ $clearFiltersUrl }}" data-experts-clear-filters>Clear filters</a>
     </div>
-    <div class="yk-experts__toolbar-actions">
-        @if ($filtering)
-            <a class="yk-experts__clear" href="{{ $clearFiltersUrl }}" data-experts-clear-filters>Clear filters</a>
-        @endif
-        <form class="yk-experts__sort" method="get" action="{{ route('professionals') }}">
-            @foreach (request()->except('sort', 'page', 'partial') as $key => $value)
-                @if (is_array($value))
-                    @foreach ($value as $item)
-                        <input type="hidden" name="{{ $key }}[]" value="{{ $item }}">
-                    @endforeach
-                @else
-                    <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                @endif
-            @endforeach
-            <label class="visually-hidden" for="experts-sort">Sort by</label>
-            <select id="experts-sort" name="sort" onchange="this.form.submit()">
-                @foreach ($sorts as $value => $label)
-                    <option value="{{ $value }}" @selected(($filters['sort'] ?? 'relevant') === $value)>{{ $label }}</option>
-                @endforeach
-            </select>
-        </form>
-    </div>
-</div>
-
+@endif
 @if ($items->isEmpty())
     <div class="yk-experts__empty" role="status">
         <div class="yk-experts__empty-mark" aria-hidden="true">
@@ -96,9 +66,10 @@
         @endif
     </div>
 @else
-    <ul class="yk-experts__grid">
+    @php $decorMap = \App\Support\ExpertDecoration::assign($items); @endphp
+    <ul class="yk-pro__grid">
         @foreach ($items as $card)
-            <li>@include('frontend.sections.partials.catalog-expert-row', ['expert' => $card])</li>
+            <li>@include('frontend.sections.partials.pro-expert-card', ['expert' => $card, 'decor' => $decorMap[$card['id'] ?? null] ?? null])</li>
         @endforeach
     </ul>
 
@@ -106,49 +77,47 @@
         @php
             $current = $items->currentPage();
             $last = $items->lastPage();
-            $window = collect(range(max(1, $current - 1), min($last, $current + 1)));
-            if ($window->first() > 1) {
-                $window = $window->prepend(1);
-            }
-            if ($window->last() < $last) {
-                $window = $window->push($last);
+            if ($last <= 7) {
+                $window = collect(range(1, $last));
+            } elseif ($current <= 3) {
+                $window = collect([1, 2, 3, 4, $last]);
+            } elseif ($current >= $last - 2) {
+                $window = collect([1, $last - 3, $last - 2, $last - 1, $last]);
+            } else {
+                $window = collect([1, $current - 1, $current, $current + 1, $last]);
             }
             $window = $window->unique()->values();
         @endphp
-        <nav class="yk-experts__pager" aria-label="Expert pages">
+        <nav class="yk-pro__pager" aria-label="Expert pages">
             @if ($items->onFirstPage())
-                <span class="yk-experts__pager-btn is-disabled" aria-disabled="true">
+                <span class="yk-pro__pager-btn is-disabled" aria-disabled="true" aria-label="Previous page">
                     <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5"/></svg>
-                    <span>Prev</span>
                 </span>
             @else
-                <a class="yk-experts__pager-btn" href="{{ $items->previousPageUrl() }}" data-experts-page>
+                <a class="yk-pro__pager-btn" href="{{ $items->previousPageUrl() }}" data-experts-page rel="prev" aria-label="Previous page">
                     <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5"/></svg>
-                    <span>Prev</span>
                 </a>
             @endif
 
-            <div class="yk-experts__pager-pages">
+            <div class="yk-pro__pager-pages">
                 @foreach ($window as $page)
-                    @if (!$loop->first && $page - $window[$loop->index - 1] > 1)
-                        <span class="yk-experts__pager-gap" aria-hidden="true">…</span>
+                    @if (! $loop->first && $page - $window[$loop->index - 1] > 1)
+                        <span class="yk-pro__pager-gap" aria-hidden="true">…</span>
                     @endif
                     @if ($page === $current)
-                        <span class="yk-experts__pager-num is-active" aria-current="page">{{ $page }}</span>
+                        <span class="yk-pro__pager-num is-active" aria-current="page">{{ $page }}</span>
                     @else
-                        <a class="yk-experts__pager-num" href="{{ $items->url($page) }}" data-experts-page>{{ $page }}</a>
+                        <a class="yk-pro__pager-num" href="{{ $items->url($page) }}" data-experts-page aria-label="Page {{ $page }}">{{ $page }}</a>
                     @endif
                 @endforeach
             </div>
 
             @if ($items->hasMorePages())
-                <a class="yk-experts__pager-btn" href="{{ $items->nextPageUrl() }}" data-experts-page>
-                    <span>Next</span>
+                <a class="yk-pro__pager-btn" href="{{ $items->nextPageUrl() }}" data-experts-page rel="next" aria-label="Next page">
                     <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 4.5 13 10l-5.5 5.5"/></svg>
                 </a>
             @else
-                <span class="yk-experts__pager-btn is-disabled" aria-disabled="true">
-                    <span>Next</span>
+                <span class="yk-pro__pager-btn is-disabled" aria-disabled="true" aria-label="Next page">
                     <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 4.5 13 10l-5.5 5.5"/></svg>
                 </span>
             @endif

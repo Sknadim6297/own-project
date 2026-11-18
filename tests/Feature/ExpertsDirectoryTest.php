@@ -241,9 +241,13 @@ class ExpertsDirectoryTest extends TestCase
         $response = $this->get(route('professionals'));
 
         $response->assertOk()
-            ->assertSee('Explore Experts', false)
+            ->assertSee('Explore <span>Experts</span>', false)
             ->assertSee('yuktione-experts.css', false)
-            ->assertSee('All Experts', false)
+            ->assertSee('yuktione-pro-directory.css', false)
+            ->assertSee('Talk to an', false)
+            ->assertSee('yk-pcard', false)
+            ->assertSee('data-pro-fav', false)
+            ->assertSee('Book a Session', false)
             ->assertSee('Experience', false)
             ->assertSee('Career Coach Ava', false)
             ->assertSee('Psych Therapist Bo', false)
