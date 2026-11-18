@@ -115,15 +115,48 @@
 
 <header class="yk-navbar" id="tazen-public-header" data-public-header>
     <div class="yk-navbar__bar">
-        <a class="yk-navbar__brand" href="{{ route('home') }}" aria-label="YuktiOne home">
-            <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" width="168" height="56">
-        </a>
-
         <button class="yk-navbar__toggle" type="button" aria-expanded="false" aria-controls="yk-navbar-panel" aria-label="Open navigation menu" data-mobile-nav-toggle>
             <span></span>
             <span></span>
             <span></span>
         </button>
+
+        <a class="yk-navbar__brand" href="{{ route('home') }}" aria-label="YuktiOne home">
+            <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" width="168" height="56">
+        </a>
+
+        {{-- Phone/tablet quick actions (hidden from 1024px up, where the full nav shows) --}}
+        <div class="yk-navbar__quick">
+            <button class="yk-navbar__quick-btn" type="button" aria-label="Search" data-mobile-search>
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <circle cx="11" cy="11" r="6.25"></circle>
+                    <path d="m16 16 4 4"></path>
+                </svg>
+            </button>
+            @if ($user || $professional)
+                <a class="yk-navbar__quick-btn yk-navbar__quick-avatar" href="{{ $user ? route('user.dashboard') : route('professional.dashboard') }}" aria-label="My account">
+                    @if ($profilePhoto)
+                        <img
+                            src="{{ $profilePhoto }}"
+                            alt=""
+                            width="32"
+                            height="32"
+                            data-fallback-avatar="{{ $defaultAvatar }}"
+                            onerror="this.onerror=null;this.src=this.dataset.fallbackAvatar||'';"
+                        >
+                    @else
+                        <span aria-hidden="true">{{ $accountInitials !== '' ? $accountInitials : 'YO' }}</span>
+                    @endif
+                </a>
+            @else
+                <a class="yk-navbar__quick-btn yk-navbar__quick-avatar" href="{{ route('login') }}" aria-label="Log in">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <circle cx="12" cy="8.5" r="3.6"></circle>
+                        <path d="M4.8 20c.9-3.6 3.5-5.4 7.2-5.4s6.3 1.8 7.2 5.4"></path>
+                    </svg>
+                </a>
+            @endif
+        </div>
 
         <div class="yk-navbar__panel" id="yk-navbar-panel" data-mobile-nav>
             <div class="yk-navbar__mobile-heading">

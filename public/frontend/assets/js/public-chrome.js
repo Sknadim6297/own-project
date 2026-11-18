@@ -100,6 +100,14 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
     mobileToggle?.addEventListener('click', () => {
         setMobileNavigation(mobileToggle.getAttribute('aria-expanded') !== 'true');
     });
+    header.querySelector('[data-mobile-search]')?.addEventListener('click', () => {
+        if (mobileToggle?.getAttribute('aria-expanded') !== 'true') {
+            setMobileNavigation(true);
+        }
+
+        const searchInput = searchForm?.querySelector('input[name="query"]');
+        window.requestAnimationFrame(() => searchInput?.focus());
+    });
     mobileClose?.addEventListener('click', () => setMobileNavigation(false));
     mobileBackdrop?.addEventListener('click', () => setMobileNavigation(false));
 

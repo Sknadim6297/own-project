@@ -55,7 +55,7 @@
 .yk-navbar__brand {
     display: block;
     flex: 0 1 auto;
-    width: min(148px, 46vw);
+    width: min(148px, 40vw);
     min-width: 0;
     margin-right: auto;
     line-height: 0;
@@ -95,6 +95,9 @@
 }
 
 .yk-navbar__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
     gap: 5px;
 }
@@ -118,6 +121,70 @@
 
 .yk-navbar__toggle[aria-expanded="true"] span:nth-child(3) {
     transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* Phone / tablet quick actions: search + account sit on the bar, menu opens from the left hamburger */
+.yk-navbar__quick {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.1rem;
+}
+
+.yk-navbar__quick-btn {
+    display: inline-grid;
+    flex: 0 0 auto;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--yk-nav-text);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.yk-navbar__quick-btn svg {
+    display: block;
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.yk-navbar__quick-btn:hover,
+.yk-navbar__quick-btn:focus-visible {
+    background: var(--yk-nav-soft);
+}
+
+.yk-navbar__quick-avatar {
+    width: 38px;
+    height: 38px;
+    margin-left: 0.2rem;
+    overflow: hidden;
+    border: 1px solid rgb(138 15 77 / 22%);
+    background: var(--y1-plum-soft, #f8eaf1);
+    color: var(--yk-nav-navy);
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.yk-navbar__quick-avatar svg {
+    width: 20px;
+    height: 20px;
+}
+
+.yk-navbar__quick-avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .yk-navbar__bell--toolbar,
@@ -736,6 +803,7 @@
 
     .yk-navbar__bell--bar,
     .yk-navbar__toggle,
+    .yk-navbar__quick,
     .yk-navbar__mobile-heading,
     .yk-navbar__panel.is-open .yk-navbar__mobile-heading {
         display: none;
@@ -993,6 +1061,62 @@
     .yk-navbar__account-copy {
         display: grid;
         max-width: 140px;
+    }
+}
+
+/* Landscape tablet / small laptop: keep the whole nav on one row without overlap */
+@media (min-width: 1024px) and (max-width: 1199.98px) {
+    .yk-navbar__bar {
+        column-gap: 0.6rem;
+        min-height: 72px;
+        padding-inline: 1rem;
+    }
+
+    .yk-navbar__brand {
+        width: 128px;
+    }
+
+    .yk-navbar__list {
+        gap: 0.1rem;
+    }
+
+    .yk-navbar__link,
+    .yk-navbar__list > li > a {
+        padding-inline: 0.4rem;
+        font-size: 0.875rem;
+    }
+
+    .yk-navbar__item:has(.yk-navbar__link--pill) .yk-navbar__link {
+        padding-inline: 0.7rem 0.2rem;
+    }
+
+    .yk-navbar__caret {
+        width: 24px;
+        height: 24px;
+        flex-basis: 24px;
+    }
+
+    .yk-navbar__soon {
+        display: none;
+    }
+
+    .yk-navbar__end,
+    .yk-navbar__auth {
+        gap: 0.45rem;
+    }
+
+    .yk-navbar__search-toggle {
+        width: 38px;
+        height: 38px;
+    }
+
+    .yk-navbar__login,
+    .yk-navbar__signup,
+    .yk-navbar__dashboard {
+        height: 40px;
+        min-height: 40px;
+        padding-inline: 0.9rem;
+        font-size: 0.82rem;
     }
 }
 

@@ -1,0 +1,303 @@
+/* Home — "Join as a Professional" horizontal band (matches the approved mockup). */
+
+.yk-pro {
+    --yp-burgundy: #8a0f4d;
+    --yp-navy: #14141f;
+    --yp-text: #3a3a4a;
+    padding: clamp(1.25rem, 2.5vw, 2rem) 0 clamp(1rem, 2vw, 1.5rem);
+    font-family: "DM Sans", system-ui, sans-serif;
+    color: var(--yp-text);
+}
+
+.yk-pro *,
+.yk-pro *::before,
+.yk-pro *::after {
+    box-sizing: border-box;
+}
+
+.yk-pro__container {
+    width: min(100% - 3rem, 1240px);
+    margin-inline: auto;
+}
+
+.yk-pro__strip {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.7fr) minmax(0, 1.3fr) auto;
+    align-items: center;
+    gap: 0 clamp(1rem, 2vw, 1.75rem);
+    min-height: 9.5rem;
+    padding: 0 clamp(1rem, 2vw, 1.75rem) 0 0;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 28px;
+    background:
+        radial-gradient(ellipse 35% 90% at 100% 0%, rgba(252, 231, 240, 0.8), transparent 70%),
+        linear-gradient(100deg, #fdf1f6 0%, #fff9fb 55%, #fbeaf2 100%);
+    box-shadow:
+        inset 0 1px 0 #ffffff,
+        0 18px 40px -22px rgba(138, 15, 77, 0.28);
+}
+
+/* Photo: bleeds to the left edge; the banner keeps its ribbon and figure */
+.yk-pro__media {
+    align-self: stretch;
+    min-width: 0;
+    min-height: 9.5rem;
+}
+
+.yk-pro__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 0% 60%;
+}
+
+/* Heading + icon */
+.yk-pro__intro {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    min-width: 0;
+    padding-left: 0.25rem;
+    border-right: 1px solid rgba(200, 192, 202, 0.7);
+    padding-right: clamp(0.75rem, 1.6vw, 1.5rem);
+    align-self: stretch;
+}
+
+.yk-pro__icon {
+    flex: 0 0 auto;
+    display: inline-flex;
+    width: 3rem;
+    height: 2.5rem;
+    color: var(--yp-burgundy);
+}
+
+.yk-pro__icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.yk-pro__title {
+    margin: 0;
+    color: var(--yp-navy);
+    font-family: inherit;
+    font-size: clamp(1.3rem, 2vw, 1.6rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+}
+
+.yk-pro__title span {
+    color: var(--yp-burgundy);
+}
+
+.yk-pro__lead {
+    margin: 0.4rem 0 0;
+    font-size: 0.86rem;
+    line-height: 1.45;
+    color: var(--yp-text);
+}
+
+/* Checklist */
+.yk-pro__points {
+    display: grid;
+    gap: 0.55rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--yp-navy);
+}
+
+.yk-pro__points li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.yk-pro__points svg {
+    flex: 0 0 auto;
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: var(--yp-burgundy);
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* CTA */
+.yk-pro__actions {
+    display: grid;
+    justify-items: center;
+    gap: 0.45rem;
+}
+
+.yk-pro__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 2.9rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 999px;
+    background: linear-gradient(105deg, #a7165f 0%, #8a0f4d 55%, #6e0c3f 100%);
+    box-shadow: 0 14px 26px -12px rgba(138, 15, 77, 0.6);
+    color: #fff;
+    font-size: 0.92rem;
+    font-weight: 650;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.yk-pro__cta svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.18s ease;
+}
+
+.yk-pro__cta:hover,
+.yk-pro__cta:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 32px -12px rgba(138, 15, 77, 0.65);
+    filter: brightness(1.05);
+    color: #fff;
+}
+
+.yk-pro__cta:hover svg,
+.yk-pro__cta:focus-visible svg {
+    transform: translateX(3px);
+}
+
+.yk-pro__cta:focus-visible,
+.yk-pro__login:focus-visible {
+    outline: 2px solid var(--yp-burgundy);
+    outline-offset: 3px;
+}
+
+.yk-pro__login {
+    font-size: 0.75rem;
+    color: #4a4a58;
+    text-decoration: none;
+}
+
+.yk-pro__login span {
+    color: var(--yp-burgundy);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+}
+
+/* Tablet: photo + heading on top row, checklist and CTA below */
+@media (max-width: 1099.98px) {
+    .yk-pro__strip {
+        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+        grid-template-rows: auto auto auto;
+        gap: 1.1rem 0;
+        padding: 0 1.25rem 1.25rem 0;
+    }
+
+    .yk-pro__media {
+        grid-column: 1;
+        grid-row: 1 / span 3;
+        align-self: stretch;
+        min-height: 100%;
+    }
+
+    .yk-pro__intro {
+        grid-column: 2;
+        grid-row: 1;
+        border-right: 0;
+        padding-right: 0;
+        padding-top: 1.25rem;
+    }
+
+    .yk-pro__points {
+        grid-column: 2;
+        grid-row: 2;
+        padding-left: 0.1rem;
+    }
+
+    .yk-pro__actions {
+        grid-column: 2;
+        grid-row: 3;
+        justify-items: start;
+    }
+}
+
+/* Mobile: stacked card with the photo on top */
+@media (max-width: 640px) {
+    .yk-pro__container {
+        width: min(100% - 2rem, 1240px);
+    }
+
+    .yk-pro__strip {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto;
+        gap: 1rem;
+        padding: 0 1.1rem 1.25rem;
+        border-radius: 24px;
+    }
+
+    .yk-pro__media {
+        grid-column: auto;
+        grid-row: auto;
+        min-height: 8.5rem;
+        margin: 0 -1.1rem;
+    }
+
+    .yk-pro__intro,
+    .yk-pro__points,
+    .yk-pro__actions {
+        grid-column: auto;
+        grid-row: auto;
+    }
+
+    .yk-pro__intro {
+        padding-top: 0;
+    }
+
+    .yk-pro__actions {
+        justify-items: stretch;
+    }
+
+    .yk-pro__cta {
+        width: 100%;
+    }
+
+    .yk-pro__login {
+        justify-self: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .yk-pro__cta,
+    .yk-pro__cta svg {
+        transition: none;
+    }
+
+    .yk-pro__cta:hover,
+    .yk-pro__cta:focus-visible,
+    .yk-pro__cta:hover svg,
+    .yk-pro__cta:focus-visible svg {
+        transform: none;
+    }
+}

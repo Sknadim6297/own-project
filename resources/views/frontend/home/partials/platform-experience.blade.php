@@ -1,60 +1,91 @@
-<section class="yk-home-experience yk-home-experience--why" aria-labelledby="yk-home-experience-title">
-    <div class="yk-home-experience__ribbon" aria-hidden="true"></div>
-    <div class="yk-home-container">
-        <header class="yk-home-experience__intro" data-home-reveal>
-            <p class="yk-home-experience__eyebrow">Why {{ config('yuktione.name', 'YuktiOne') }}</p>
-            <h2 id="yk-home-experience-title">Why Choose <span>{{ config('yuktione.name', 'YuktiOne') }}?</span></h2>
-            <p class="yk-home-experience__summary">
+@php
+    $brand = config('yuktione.name', 'YuktiOne');
+    $whyFeatures = [
+        [
+            'icon' => 'shield',
+            'title' => 'Expert-Led Guidance',
+            'description' => 'Connect with verified professionals across wellbeing, career, health, and more.',
+        ],
+        [
+            'icon' => 'platform',
+            'title' => 'All-in-One Growth Platform',
+            'description' => 'Tools, experts, and insights together — so progress feels simple and connected.',
+        ],
+        [
+            'icon' => 'community',
+            'title' => 'Supportive Community',
+            'description' => 'Learn, share, and grow with people who care about the same goals you do.',
+        ],
+        [
+            'icon' => 'lock',
+            'title' => 'Safe & Private',
+            'description' => 'Your conversations and data stay protected with secure booking and privacy-first design.',
+        ],
+    ];
+@endphp
+
+<section class="yukti-why-choose" aria-labelledby="yk-home-experience-title">
+    <div class="yukti-why-panel" data-home-reveal>
+        <div class="yukti-why-lotus-area" aria-hidden="true">
+            <img
+                class="yukti-why-lotus"
+                src="{{ asset('frontend/assets/img/' . rawurlencode('Glossy Pink Lotus Flower.png')) }}"
+                alt=""
+                width="2172"
+                height="724"
+                loading="lazy"
+                decoding="async"
+            >
+        </div>
+
+        <header class="yukti-why-heading">
+            <p class="yukti-why-eyebrow">Why {{ $brand }}</p>
+            <h2 id="yk-home-experience-title">Why Choose <span>{{ $brand }}?</span></h2>
+            <p class="yukti-why-summary">
                 A trusted marketplace that brings expert guidance, practical tools, and supportive community into one calm experience.
             </p>
         </header>
 
-        <div class="yk-home-experience__pillars">
-            <article class="yk-home-pillar" data-home-reveal>
-                <span class="yk-home-pillar__icon" aria-hidden="true">
-                    <svg viewBox="0 0 32 32" focusable="false">
-                        <path d="M16 4.5 7 8.5v6.2c0 6.1 3.9 11.5 9 13.3 5.1-1.8 9-7.2 9-13.3V8.5L16 4.5Z" fill="none" stroke="currentColor" stroke-width="1.8"/>
-                        <path d="m12.2 16.2 2.6 2.6 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </span>
-                <h3>Expert-Led Guidance</h3>
-                <p>Connect with verified professionals across wellbeing, career, health, and more.</p>
-            </article>
+        <span class="yukti-why-rule" aria-hidden="true"></span>
 
-            <article class="yk-home-pillar" data-home-reveal>
-                <span class="yk-home-pillar__icon" aria-hidden="true">
-                    <svg viewBox="0 0 32 32" focusable="false">
-                        <rect x="5" y="6" width="22" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/>
-                        <path d="M5 12h22M12 12v14" fill="none" stroke="currentColor" stroke-width="1.8"/>
-                    </svg>
-                </span>
-                <h3>All-in-One Growth Platform</h3>
-                <p>Tools, experts, and insights together — so progress feels simple and connected.</p>
-            </article>
-
-            <article class="yk-home-pillar" data-home-reveal>
-                <span class="yk-home-pillar__icon" aria-hidden="true">
-                    <svg viewBox="0 0 32 32" focusable="false">
-                        <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/>
-                        <circle cx="21" cy="13.5" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/>
-                        <path d="M5 25c.8-4 3.4-6 7-6s6.2 2 7 6M18 19.5c2.2-.8 4.2-.2 5.8 1.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                    </svg>
-                </span>
-                <h3>Supportive Community</h3>
-                <p>Learn, share, and grow with people who care about the same goals you do.</p>
-            </article>
-
-            <article class="yk-home-pillar" data-home-reveal>
-                <span class="yk-home-pillar__icon" aria-hidden="true">
-                    <svg viewBox="0 0 32 32" focusable="false">
-                        <rect x="8" y="14" width="16" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
-                        <path d="M12 14V11a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.8"/>
-                        <circle cx="16" cy="20" r="1.4" fill="currentColor"/>
-                    </svg>
-                </span>
-                <h3>Safe &amp; Private</h3>
-                <p>Your conversations and data stay protected with secure booking and privacy-first design.</p>
-            </article>
+        <div class="yukti-why-features">
+            @foreach ($whyFeatures as $feature)
+                <article class="yukti-why-feature">
+                    <span class="yukti-why-feature__icon" aria-hidden="true">
+                        {{-- Presentation mapping: identifier -> approved icon silhouette --}}
+                        <svg viewBox="0 0 48 40" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                            @switch($feature['icon'])
+                                @case('shield')
+                                    {{-- diamond --}}
+                                    <path d="M14 4h20l10 11-20 21L4 15Z"/>
+                                    <path d="M4 15h40M14 4l5 11 5-11 5 11 5-11M19 15l5 21 5-21"/>
+                                    @break
+                                @case('platform')
+                                    {{-- layered stack --}}
+                                    <path d="M24 4 6 12l18 8 18-8Z"/>
+                                    <path d="m6 19 18 8 18-8M6 26l18 8 18-8"/>
+                                    @break
+                                @case('community')
+                                    {{-- people --}}
+                                    <circle cx="24" cy="12" r="5"/>
+                                    <path d="M14 32c.8-6 4.5-9.5 10-9.5S33.200 26 34 32"/>
+                                    <circle cx="10.500" cy="16" r="3.600"/>
+                                    <path d="M3.500 32c.4-4.400 2.600-7 6.200-7.500"/>
+                                    <circle cx="37.500" cy="16" r="3.600"/>
+                                    <path d="M44.500 32c-.4-4.400-2.600-7-6.200-7.500"/>
+                                    @break
+                                @case('lock')
+                                    {{-- shield with check --}}
+                                    <path d="M24 3 11 8v10c0 8.500 5.400 14.500 13 18 7.600-3.500 13-9.500 13-18V8L24 3Z"/>
+                                    <path d="m18.500 19 4.200 4.200 7.300-8"/>
+                                    @break
+                            @endswitch
+                        </svg>
+                    </span>
+                    <h3>{{ $feature['title'] }}</h3>
+                    <p>{{ $feature['description'] }}</p>
+                </article>
+            @endforeach
         </div>
     </div>
 </section>

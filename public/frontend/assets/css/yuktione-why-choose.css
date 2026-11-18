@@ -1,0 +1,430 @@
+/* Home — Why Choose YuktiOne (horizontal lotus panel) */
+
+.yukti-why-choose {
+    --yw-burgundy: #a00055;
+    --yw-navy: #10152e;
+    --yw-text: #252d50;
+    --yw-divider: #c8c0ca;
+
+    position: relative;
+    isolation: isolate;
+    overflow-x: clip;
+    padding: 1rem 0 2rem;
+    font-family: "DM Sans", sans-serif;
+    color: var(--yw-text);
+}
+
+.yukti-why-choose *,
+.yukti-why-choose *::before,
+.yukti-why-choose *::after {
+    box-sizing: border-box;
+}
+
+/* Panel */
+.yukti-why-panel {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    /* lotus | heading | 4 features — proportions measured from the approved reference */
+    grid-template-columns:
+        minmax(0, 13.4fr) minmax(0, 20.8fr)
+        minmax(0, 17.3fr) minmax(0, 16.1fr) minmax(0, 15.7fr) minmax(0, 17fr);
+    align-items: stretch;
+    width: 96%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding: 0.45rem 0 0.65rem;
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 42px;
+    background:
+        radial-gradient(ellipse 38% 90% at 12% 100%, rgba(248, 222, 232, 0.55), transparent 70%),
+        radial-gradient(ellipse 30% 80% at 96% 0%, rgba(250, 230, 238, 0.6), transparent 70%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 46%),
+        linear-gradient(100deg, rgba(255, 249, 245, 0.92) 0%, rgba(255, 250, 251, 0.9) 50%, rgba(253, 243, 247, 0.9) 100%);
+    box-shadow:
+        inset 0 1px 0 #ffffff,
+        inset 0 -12px 26px rgba(242, 220, 230, 0.4),
+        0 20px 44px rgba(122, 40, 80, 0.11),
+        0 3px 10px rgba(122, 40, 80, 0.05);
+}
+
+/* Lotus column */
+.yukti-why-lotus-area {
+    position: relative;
+    z-index: 2;
+    min-height: 1px;
+}
+
+/* Art: lotus + silver/gold waves (2172×724). Lotus spans ~5%–30% of width and
+   ~31%–83% of height, so the image is sized and offset from those ratios. */
+.yukti-why-lotus {
+    --yw-art: clamp(520px, 45.9vw, 662px);
+    position: absolute;
+    z-index: 1;
+    left: calc(var(--yw-art) * -0.052 + 15px);
+    bottom: calc(var(--yw-art) * -0.0563 + 1px);
+    display: block;
+    width: var(--yw-art);
+    max-width: none;
+    height: auto;
+    -webkit-mask-image: linear-gradient(90deg, #000 0, #000 45%, transparent 58%);
+    mask-image: linear-gradient(90deg, #000 0, #000 45%, transparent 58%);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Heading */
+.yukti-why-heading {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 0.5rem 0.6rem 0;
+}
+
+.yukti-why-eyebrow {
+    display: none;
+    margin: 0 0 0.4rem;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--yw-burgundy);
+}
+
+.yukti-why-heading h2 {
+    margin: 0;
+    font-size: clamp(1.85rem, 2.5vw, 2.4rem);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.04em;
+    color: var(--yw-navy);
+}
+
+.yukti-why-heading h2 span {
+    display: block;
+    color: var(--yw-burgundy);
+}
+
+/* Shown on smaller layouts; kept for assistive tech on desktop */
+.yukti-why-summary {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.yukti-why-rule {
+    display: none;
+}
+
+/* Features */
+.yukti-why-features {
+    display: contents;
+}
+
+.yukti-why-feature {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.1rem 0.5rem;
+    text-align: center;
+}
+
+.yukti-why-feature::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 1px;
+    height: 68%;
+    transform: translateY(-50%);
+    background: var(--yw-divider);
+}
+
+.yukti-why-feature__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 40px;
+    margin-bottom: 0.3rem;
+    color: var(--yw-burgundy);
+}
+
+.yukti-why-feature__icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.yukti-why-feature h3 {
+    max-width: 9em;
+    margin: 0;
+    text-wrap: balance;
+    font-size: clamp(0.98rem, 1.2vw, 1.08rem);
+    font-weight: 750;
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+    color: var(--yw-navy);
+}
+
+.yukti-why-feature p {
+    margin: 0.2rem 0 0;
+    font-size: clamp(0.84rem, 0.98vw, 0.92rem);
+    line-height: 1.3;
+    color: var(--yw-text);
+    text-wrap: pretty;
+}
+
+@media (min-width: 1200px) {
+    /* left edge runs to the screen edge; right edge keeps its margin */
+    .yukti-why-panel {
+        width: 98%;
+        max-width: none;
+        margin-inline: 0 auto;
+        border-left-width: 0;
+        border-radius: 0 42px 42px 0;
+    }
+
+    .yukti-why-lotus {
+        left: calc(var(--yw-art) * -0.052 + 44px);
+    }
+
+    .yukti-why-heading h2 {
+        white-space: nowrap;
+    }
+
+    /* reference indents the second heading line */
+    .yukti-why-heading h2 span {
+        margin-left: 0.5em;
+        font-size: 1.28em;
+        line-height: 1.1;
+    }
+}
+
+/* Tablet */
+@media (max-width: 1199.98px) {
+    .yukti-why-panel {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        row-gap: 1.1rem;
+        padding: 1.5rem 1.5rem 1.6rem;
+        border-radius: 40px;
+    }
+
+    /* Lotus and heading share the first row: lotus on the left, text beside it */
+    .yukti-why-lotus-area {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        height: 150px;
+        pointer-events: none;
+    }
+
+    .yukti-why-lotus {
+        --yw-art: 480px;
+        top: -6px;
+        left: -22px;
+        bottom: auto;
+        -webkit-mask-image: linear-gradient(90deg, #000 0, #000 29%, transparent 40%);
+        mask-image: linear-gradient(90deg, #000 0, #000 29%, transparent 40%);
+    }
+
+    .yukti-why-heading {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        align-self: center;
+        min-height: 150px;
+        padding: 0 0 0 clamp(10.5rem, 22%, 13.5rem);
+    }
+
+    .yukti-why-eyebrow {
+        display: block;
+    }
+
+    .yukti-why-summary {
+        position: static;
+        width: auto;
+        height: auto;
+        max-width: 34rem;
+        margin: 0.6rem 0 0;
+        overflow: visible;
+        clip: auto;
+        white-space: normal;
+        font-size: 0.95rem;
+        line-height: 1.55;
+        color: var(--yw-text);
+    }
+
+    .yukti-why-rule {
+        display: block;
+        grid-column: 1 / -1;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(200, 192, 202, 0), var(--yw-divider) 12%, var(--yw-divider) 88%, rgba(200, 192, 202, 0));
+    }
+
+    .yukti-why-feature:nth-child(1)::before {
+        display: none;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .yukti-why-panel {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* Tablet portrait: two white cards, icon on the left, text on the right */
+    .yukti-why-feature {
+        display: grid;
+        grid-template-columns: 2.6rem minmax(0, 1fr);
+        column-gap: 0.75rem;
+        align-items: center;
+        align-content: center;
+        padding: 0.85rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.95);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: 0 8px 18px rgba(122, 40, 80, 0.06);
+        text-align: left;
+    }
+
+    .yukti-why-feature::before {
+        display: none;
+    }
+
+    .yukti-why-feature__icon {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        width: 40px;
+        height: 36px;
+        margin: 0;
+    }
+
+    .yukti-why-feature h3 {
+        grid-column: 2;
+        grid-row: 1;
+        max-width: none;
+        font-size: 0.98rem;
+    }
+
+    .yukti-why-feature p {
+        grid-column: 2;
+        grid-row: 2;
+        max-width: none;
+        margin-top: 0.15rem;
+        font-size: 0.84rem;
+    }
+}
+
+/* Mobile */
+/* Phone: small lotus + title side by side, then four full-width rows with a chevron */
+@media (max-width: 767.98px) {
+    .yukti-why-choose {
+        padding: 2.5rem 0 2.75rem;
+    }
+
+    .yukti-why-panel {
+        width: calc(100% - 1.5rem);
+        grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+        column-gap: 0.5rem;
+        row-gap: 0.6rem;
+        padding: 1rem 0.8rem 1.1rem;
+        border-radius: 28px;
+    }
+
+    .yukti-why-lotus-area {
+        grid-column: 1;
+        grid-row: 1;
+        height: 118px;
+    }
+
+    .yukti-why-lotus {
+        --yw-art: 300px;
+        top: auto;
+        bottom: -4px;
+        left: -12px;
+        -webkit-mask-image: linear-gradient(90deg, #000 0, #000 40%, transparent 60%);
+        mask-image: linear-gradient(90deg, #000 0, #000 40%, transparent 60%);
+    }
+
+    .yukti-why-heading {
+        grid-column: 2;
+        grid-row: 1;
+        align-items: flex-start;
+        justify-content: center;
+        min-height: 118px;
+        padding: 0;
+        text-align: left;
+    }
+
+    .yukti-why-eyebrow,
+    .yukti-why-summary,
+    .yukti-why-rule {
+        display: none;
+    }
+
+    .yukti-why-heading h2 {
+        font-size: 1.5rem;
+        line-height: 1.2;
+    }
+
+    .yukti-why-features {
+        display: contents;
+    }
+
+    .yukti-why-feature {
+        grid-column: 1 / -1;
+        grid-template-columns: 2.2rem minmax(0, 1fr) auto;
+        padding: 0.7rem 0.8rem;
+        border-radius: 16px;
+    }
+
+    .yukti-why-feature::after {
+        content: "";
+        grid-column: 3;
+        grid-row: 1 / span 2;
+        width: 7px;
+        height: 7px;
+        margin-right: 0.3rem;
+        border-top: 2px solid var(--yw-burgundy);
+        border-right: 2px solid var(--yw-burgundy);
+        transform: rotate(45deg);
+    }
+
+    .yukti-why-feature__icon {
+        width: 2.2rem;
+        height: 2rem;
+    }
+
+    .yukti-why-feature h3 {
+        font-size: 0.9rem;
+        line-height: 1.2;
+    }
+
+    .yukti-why-feature p {
+        font-size: 0.76rem;
+        line-height: 1.35;
+    }
+}
+
+@media (max-width: 339.98px) {
+    .yukti-why-panel {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .yukti-why-feature::before {
+        display: none;
+    }
+
+    .yukti-why-feature + .yukti-why-feature {
+        border-top: 1px solid rgba(200, 192, 202, 0.55);
+    }
+}

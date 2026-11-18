@@ -64,8 +64,8 @@
                     <button type="button" class="yk-talk__arrow" data-talk-next aria-label="Show next experts" disabled>
                         <span aria-hidden="true">→</span>
                     </button>
-                </div>
-                <a class="yk-talk__all" href="{{ route('professionals') }}">View All Experts <span aria-hidden="true">→</span></a>
+            </div>
+            <a class="yk-talk__all" href="{{ route('professionals') }}">View All Experts <span aria-hidden="true">→</span></a>
             </div>
             <svg class="yk-talk__leaves" viewBox="0 0 180 150" aria-hidden="true" focusable="false">
                 <path d="M96 146c8-46 24-86 50-122" fill="none" stroke="#7d9a68" stroke-width="2.2" stroke-linecap="round"></path>
@@ -87,13 +87,13 @@
                 data-talk-track
             >
                 <ul class="yk-talk__track">
-                    @foreach ($talkExperts as $expert)
-                        @php
-                            $displayName = trim($expert->profile?->name ?: $expert->name);
-                            $nameParts = collect(preg_split('/\s+/', $displayName))->filter()->take(2);
-                            $initials = $nameParts
-                                ->map(fn ($part) => \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($part, 0, 1)))
-                                ->implode('');
+                @foreach ($talkExperts as $expert)
+                    @php
+                        $displayName = trim($expert->profile?->name ?: $expert->name);
+                        $nameParts = collect(preg_split('/\s+/', $displayName))->filter()->take(2);
+                        $initials = $nameParts
+                            ->map(fn ($part) => \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($part, 0, 1)))
+                            ->implode('');
 
                             $category = $expert->professionalServices
                                 ->map(fn ($professionalService) => $professionalService->service?->name)
@@ -146,11 +146,11 @@
                             }
 
                             $photoUrl = \App\Helpers\ImageHelper::professionalPhotoUrl($expert->profile?->photo);
-                            $profileUrl = route('professionals.details', [
-                                'id' => $expert->id,
-                                'professional_name' => \Illuminate\Support\Str::slug($expert->name),
-                            ]);
-                        @endphp
+                        $profileUrl = route('professionals.details', [
+                            'id' => $expert->id,
+                            'professional_name' => \Illuminate\Support\Str::slug($expert->name),
+                        ]);
+                    @endphp
                         <li class="yk-talk__slide">
                             <article class="yk-talk__card" data-expert-id="{{ $expert->id }}">
                                 <button
@@ -166,10 +166,10 @@
 
                                 <div class="yk-talk__card-top">
                                     <a class="yk-talk__photo" href="{{ $profileUrl }}" tabindex="-1" aria-hidden="true">
-                                        @if ($photoUrl)
+                                @if ($photoUrl)
                                             <img src="{{ $photoUrl }}" alt="" width="84" height="104" loading="lazy" decoding="async" onerror="this.hidden=true; this.nextElementSibling.hidden=false;">
                                             <span class="yk-talk__initials" hidden>{{ $initials }}</span>
-                                        @else
+                                @else
                                             <span class="yk-talk__initials">{{ $initials }}</span>
                                         @endif
                                     </a>
@@ -190,8 +190,8 @@
                                                 <strong>{{ $ratingValue }}</strong>
                                                 <span>({{ number_format($ratingCount) }})</span>
                                             </p>
-                                        @endif
-                                    </div>
+                                @endif
+                            </div>
                                 </div>
 
                                 @if ($visibleChips->isNotEmpty())
@@ -206,10 +206,10 @@
                                     <a class="yk-talk__btn yk-talk__btn--ghost" href="{{ $profileUrl }}">View Profile</a>
                                     <a class="yk-talk__btn yk-talk__btn--solid" href="{{ $profileUrl }}">Book a Session <span aria-hidden="true">→</span></a>
                                 </div>
-                            </article>
-                        </li>
-                    @endforeach
-                </ul>
+                        </article>
+                    </li>
+                @endforeach
+            </ul>
             </div>
         @endif
     </div>
