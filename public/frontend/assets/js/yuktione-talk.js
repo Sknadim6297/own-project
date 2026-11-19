@@ -37,12 +37,20 @@
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const slides = () => [...track.querySelectorAll('.yk-talk__slide:not([data-talk-clone])')];
-    let offset = 0;
+    const speed = 36; // px per second, left
+    const resumeDelay = 1500; // ms to wait after a manual scroll before auto-advance continues
+
     let halfWidth = 0;
+    let offset = 0; // our own float position (scrollLeft can round to whole pixels)
     let frame = null;
     let lastTs = 0;
     let paused = false;
-    const speed = 36; // px per second, right -> left
+    let jumping = false;
+    let resumeAt = 0;
+    let dragState = null;
+    let suppressClick = false;
+
+    const now = () => window.performance.now();
 
     const measure = () => {
         halfWidth = track.scrollWidth / (track.querySelector('[data-talk-clone]') ? 2 : 1);
@@ -62,11 +70,15 @@
         measure();
     };
 
-    const applyTransform = () => {
-        if (halfWidth > 0) {
-            offset = ((offset % halfWidth) + halfWidth) % halfWidth;
+    // Keep the position inside the first copy so the loop stays seamless (clones are identical).
+    const wrap = (value) => (halfWidth > 0 ? ((value % halfWidth) + halfWidth) % halfWidth : value);
+
+    const normalize = () => {
+        const wrapped = wrap(offset);
+        if (wrapped !== offset) {
+            offset = wrapped;
+            viewport.scrollLeft = wrapped;
         }
-        track.style.transform = `translate3d(${-offset}px, 0, 0)`;
     };
 
     const stepSize = () => {
@@ -82,9 +94,16 @@
         const delta = Math.min(32, ts - lastTs);
         lastTs = ts;
 
-        if (!paused && !reducedMotion.matches && halfWidth > 0 && slides().length > 1) {
-            offset += (speed * delta) / 1000;
-            applyTransform();
+        const canMove = !paused
+            && !jumping
+            && !reducedMotion.matches
+            && halfWidth > 0
+            && slides().length > 1
+            && ts >= resumeAt;
+
+        if (canMove) {
+            offset = wrap(offset + (speed * delta) / 1000);
+            viewport.scrollLeft = offset;
         }
 
         frame = window.requestAnimationFrame(tick);
@@ -96,16 +115,36 @@
         frame = window.requestAnimationFrame(tick);
     };
 
-    const stop = () => {
-        if (frame) {
-            window.cancelAnimationFrame(frame);
-            frame = null;
-        }
-    };
+    // Any scroll the browser did itself (trackpad, touch, scrollbar, keyboard, drag) becomes the new position.
+    viewport.addEventListener('scroll', () => {
+        const current = viewport.scrollLeft;
+        if (Math.abs(current - offset) <= 2) return; // our own auto-advance write
+        offset = current;
+        resumeAt = now() + resumeDelay;
+        if (!jumping) normalize();
+    }, { passive: true });
 
     const jump = (direction) => {
-        offset += direction * stepSize();
-        applyTransform();
+        if (halfWidth <= 0) return;
+        resumeAt = now() + resumeDelay;
+        jumping = true;
+
+        // At the very start, step into the identical second copy first so "previous" loops smoothly.
+        if (direction < 0 && viewport.scrollLeft < stepSize()) {
+            offset = viewport.scrollLeft + halfWidth;
+            viewport.scrollLeft = offset;
+        }
+
+        viewport.scrollBy({
+            left: direction * stepSize(),
+            behavior: reducedMotion.matches ? 'auto' : 'smooth',
+        });
+
+        window.setTimeout(() => {
+            jumping = false;
+            offset = viewport.scrollLeft;
+            normalize();
+        }, 700);
     };
 
     const updateControls = () => {
@@ -135,7 +174,40 @@
     });
     viewport.addEventListener('pointerup', () => {
         paused = false;
+        resumeAt = now() + resumeDelay;
     });
+
+    // Mouse drag-to-scroll (touch and trackpad already scroll natively).
+    viewport.addEventListener('pointerdown', (event) => {
+        if (event.pointerType !== 'mouse' || event.button !== 0) return;
+        dragState = { x: event.clientX, left: viewport.scrollLeft, moved: false };
+    });
+    window.addEventListener('pointermove', (event) => {
+        if (!dragState) return;
+        const dx = event.clientX - dragState.x;
+        if (!dragState.moved && Math.abs(dx) > 4) {
+            dragState.moved = true;
+            viewport.classList.add('is-dragging');
+        }
+        if (dragState.moved) {
+            viewport.scrollLeft = dragState.left - dx;
+        }
+    });
+    const endDrag = () => {
+        if (!dragState) return;
+        if (dragState.moved) suppressClick = true;
+        dragState = null;
+        viewport.classList.remove('is-dragging');
+    };
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
+    viewport.addEventListener('dragstart', (event) => event.preventDefault());
+    viewport.addEventListener('click', (event) => {
+        if (!suppressClick) return;
+        suppressClick = false;
+        event.preventDefault();
+        event.stopPropagation();
+    }, true);
 
     document.addEventListener('visibilitychange', () => {
         paused = document.hidden;
@@ -143,7 +215,7 @@
 
     window.addEventListener('resize', () => {
         measure();
-        applyTransform();
+        normalize();
         updateControls();
     }, { passive: true });
 
@@ -151,13 +223,14 @@
         reducedMotion.addEventListener('change', () => {
             if (reducedMotion.matches) {
                 offset = 0;
-                applyTransform();
+                viewport.scrollLeft = 0;
             }
         });
     }
 
     ensureClones();
-    applyTransform();
+    viewport.scrollLeft = 0;
+    offset = 0;
     updateControls();
     start();
 })();

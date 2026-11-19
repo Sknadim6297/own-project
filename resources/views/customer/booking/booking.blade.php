@@ -5,17 +5,17 @@
 @section('styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
-        .login-popup-title { font-size: 1.5rem !important; color: #142B4D !important; }
-        .login-popup-title .wave-icon { font-size: 1.8rem !important; color: #36877F !important; }
+        .login-popup-title { font-size: 1.5rem !important; color: #1F1F1F !important; }
+        .login-popup-title .wave-icon { font-size: 1.8rem !important; color: #8A0F4D !important; }
         .login-popup-custom {
             background: #ffffff !important;
-            border: 1px solid #E2E9EE !important;
+            border: 1px solid #D9D9DE !important;
             border-radius: 1.25rem !important;
-            color: #475569 !important;
+            color: #6B6B7A !important;
             padding: 25px 20px !important;
         }
         .login-popup-btn {
-            background-color: #36877F !important;
+            background-color: #8A0F4D !important;
             border: none !important;
             border-radius: 0.75rem !important;
             box-shadow: none !important;
@@ -24,9 +24,9 @@
             font-weight: 600 !important;
             padding: 12px 30px !important;
         }
-        .login-popup-btn:hover { background-color: #286E67 !important; box-shadow: none !important; transform: none !important; }
-        .login-popup-close { color: #718096 !important; font-size: 1.5rem !important; opacity: 1 !important; }
-        .login-popup-close:hover { color: #142B4D !important; }
+        .login-popup-btn:hover { background-color: #6E0B3C !important; box-shadow: none !important; transform: none !important; }
+        .login-popup-close { color: #6B6B7A !important; font-size: 1.5rem !important; opacity: 1 !important; }
+        .login-popup-close:hover { color: #1F1F1F !important; }
     </style>
 @endsection
 
@@ -352,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                             text: data.message,
                                             icon: 'warning',
                                             confirmButtonText: 'Login Again',
-                                            confirmButtonColor: '#36877F'
+                                            confirmButtonColor: '#8A0F4D'
                                         }).then(() => {
                                             window.location.href = data.redirect;
                                         });
@@ -382,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                                 showCloseButton: true,
                                                 showCancelButton: false,
                                                 confirmButtonText: 'Login',
-                                                confirmButtonColor: '#3085d6'
+                                                confirmButtonColor: '#8A0F4D'
                                             }).then(() => {
                                                 window.location.href = errorData.redirect;
                                             });
@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             contact: data.phone
                         },
                         theme: {
-                            color: "#36877F"
+                            color: "#8A0F4D"
                         }
                     };
                     const rzp = new Razorpay(options);
@@ -478,7 +478,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 confirmButton: 'login-popup-btn',
                                 closeButton: 'login-popup-close'
                             },
-                            confirmButtonColor: '#36877F'
+                            confirmButtonColor: '#8A0F4D'
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 window.location.href = data.redirect;
@@ -507,7 +507,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 showCloseButton: true,
                                 showCancelButton: false,
                                 confirmButtonText: 'Login',
-                                confirmButtonColor: '#3085d6'
+                                confirmButtonColor: '#8A0F4D'
                             }).then(() => {
                                 window.location.href = errorData.redirect;
                             });
@@ -546,7 +546,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <i class="fa fa-shield"></i> No amount has been deducted from your account.
                     </p>
                     ${logData?.notifications_sent ? 
-                        '<p style="margin-bottom: 15px; color: #36877F; font-size: 14px;"><i class="fa fa-check"></i> Your assigned professional and our support team have been notified.</p>' : 
+                        '<p style="margin-bottom: 15px; color: #8A0F4D; font-size: 14px;"><i class="fa fa-check"></i> Your assigned professional and our support team have been notified.</p>' : 
                         ''
                     }
                 </div>
@@ -555,7 +555,7 @@ document.addEventListener('DOMContentLoaded', function () {
             showCancelButton: true,
             confirmButtonText: isRetryable ? '<i class="fa fa-refresh"></i> Retry Payment' : '<i class="fa fa-phone"></i> Contact Support',
             cancelButtonText: '<i class="fa fa-arrow-left"></i> Modify Booking',
-            confirmButtonColor: isRetryable ? '#dc3545' : '#36877F',
+            confirmButtonColor: isRetryable ? '#dc3545' : '#8A0F4D',
             cancelButtonColor: '#6c757d',
             allowOutsideClick: false
         }).then((result) => {
@@ -595,7 +595,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <p style="margin: 5px 0;"><strong><i class="fa fa-envelope"></i> Email:</strong> {{ config('yuktione.email', 'info@yuktione.in') }}</p>
                         <p style="margin: 5px 0;"><strong><i class="fa fa-clock"></i> Hours:</strong> {{ config('yuktione.hours', 'Monday to Friday, 9am–6pm. Saturday, 9am–2pm.') }}</p>
                     </div>
-                    <p style="margin-bottom: 15px; color: #36877F; font-size: 14px;">
+                    <p style="margin-bottom: 15px; color: #8A0F4D; font-size: 14px;">
                         <i class="fa fa-user-md"></i> Your assigned professional has been notified about the payment issue.
                     </p>
                 </div>
@@ -604,7 +604,7 @@ document.addEventListener('DOMContentLoaded', function () {
             showCancelButton: true,
             confirmButtonText: '<i class="fa fa-refresh"></i> Try Again',
             cancelButtonText: '<i class="fa fa-home"></i> Go to Dashboard',
-            confirmButtonColor: '#36877F',
+            confirmButtonColor: '#8A0F4D',
             cancelButtonColor: '#6c757d'
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1151,8 +1151,8 @@ document.addEventListener('DOMContentLoaded', function () {
             showCancelButton: true,
             confirmButtonText: '<i class="fa fa-check"></i> Yes, Skip',
             cancelButtonText: '<i class="fa fa-times"></i> Continue Questions',
-            confirmButtonColor: '#36877F',
-            cancelButtonColor: '#718096',
+            confirmButtonColor: '#8A0F4D',
+            cancelButtonColor: '#6B6B7A',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1217,8 +1217,8 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 
 .swal2-icon.swal2-info {
-    border-color: #36877F !important;
-    color: #36877F !important;
+    border-color: #8A0F4D !important;
+    color: #8A0F4D !important;
 }
 
 .btn_1[disabled] {
@@ -1259,31 +1259,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
 .loading-spinner {
     animation: yk-spin 1s linear infinite;
-    border: 4px solid #E2E9EE;
+    border: 4px solid #D9D9DE;
     border-radius: 50%;
-    border-top-color: #36877F;
+    border-top-color: #8A0F4D;
     height: 50px;
     width: 50px;
 }
 
 #mcqModal .modal-content {
     background: #ffffff;
-    border: 1px solid #E2E9EE;
+    border: 1px solid #D9D9DE;
     border-radius: 1.25rem;
-    box-shadow: 0 18px 42px -20px rgb(20 43 77 / 0.24);
+    box-shadow: 0 18px 42px -20px rgb(110 11 60 / 0.24);
     overflow: hidden;
 }
 
 #mcqModal .modal-header {
-    background: #EAF6F2;
-    border-bottom: 1px solid #E2E9EE;
-    color: #142B4D;
+    background: #F8EAF1;
+    border-bottom: 1px solid #D9D9DE;
+    color: #1F1F1F;
     padding: 1.25rem 1.5rem;
 }
 
 #mcqModal .modal-title {
     align-items: center;
-    color: #142B4D;
+    color: #1F1F1F;
     display: flex;
     font-size: 1.125rem;
     font-weight: 700;
@@ -1291,7 +1291,7 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 
 #mcqModal .modal-title i {
-    color: #36877F;
+    color: #8A0F4D;
 }
 
 #mcqModal .modal-body {
@@ -1301,8 +1301,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 #mcqModal .modal-footer {
     align-items: center;
-    background: #F7FAFB;
-    border-top: 1px solid #E2E9EE;
+    background: #FFF8FB;
+    border-top: 1px solid #D9D9DE;
     display: flex;
     gap: 0.75rem;
     justify-content: space-between;
@@ -1318,15 +1318,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 .question-card {
     background: #ffffff;
-    border: 1px solid #E2E9EE;
+    border: 1px solid #D9D9DE;
     border-radius: 1rem;
-    box-shadow: 0 2px 8px rgb(20 43 77 / 0.05);
+    box-shadow: 0 2px 8px rgb(110 11 60 / 0.05);
     margin-bottom: 1rem;
     padding: 1.25rem;
 }
 
 .question-card h6 {
-    color: #142B4D;
+    color: #1F1F1F;
     font-size: 1.05rem;
     font-weight: 700;
     line-height: 1.5;
@@ -1334,9 +1334,9 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 
 .question-card .badge {
-    background: #EAF6F2;
+    background: #F8EAF1;
     border-radius: 999px;
-    color: #286E67;
+    color: #6E0B3C;
     font-size: 0.8125rem;
     font-weight: 600;
     padding: 0.35rem 0.7rem;
@@ -1348,8 +1348,8 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 
 .options-container .form-check {
-    background: #F7FAFB;
-    border: 1px solid #E2E9EE;
+    background: #FFF8FB;
+    border: 1px solid #D9D9DE;
     border-radius: 0.75rem;
     cursor: pointer;
     margin-bottom: 0;
@@ -1358,12 +1358,12 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 
 .options-container .form-check:hover {
-    background: #EAF6F2;
-    border-color: #36877F;
+    background: #F8EAF1;
+    border-color: #8A0F4D;
 }
 
 .options-container .form-check-label {
-    color: #475569;
+    color: #6B6B7A;
     cursor: pointer;
     font-size: 0.95rem;
     font-weight: 500;
@@ -1371,28 +1371,28 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 
 .options-container .form-check-input {
-    accent-color: #36877F;
+    accent-color: #8A0F4D;
 }
 
 .options-container .form-check-input:checked + .form-check-label {
-    color: #142B4D;
+    color: #1F1F1F;
     font-weight: 600;
 }
 
 .options-container .form-check:has(.form-check-input:checked) {
-    background: #EAF6F2;
-    border-color: #36877F;
+    background: #F8EAF1;
+    border-color: #8A0F4D;
 }
 
 .progress {
-    background: #E2E9EE;
+    background: #D9D9DE;
     border-radius: 999px;
     height: 0.5rem;
     overflow: hidden;
 }
 
 .progress-bar {
-    background: #36877F;
+    background: #8A0F4D;
     border-radius: 999px;
     color: #fff;
     font-size: 0.65rem;
@@ -1413,25 +1413,25 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 
 #mcqModal .btn-primary {
-    background: #36877F;
-    border-color: #36877F;
+    background: #8A0F4D;
+    border-color: #8A0F4D;
     color: #fff;
 }
 
 #mcqModal .btn-primary:hover {
-    background: #286E67;
-    border-color: #286E67;
+    background: #6E0B3C;
+    border-color: #6E0B3C;
 }
 
 #mcqModal .btn-secondary {
-    background: #E7F0FB;
-    border-color: #E2E9EE;
-    color: #142B4D;
+    background: #F6EEF9;
+    border-color: #D9D9DE;
+    color: #1F1F1F;
 }
 
 #mcqModal .btn-secondary:hover {
     background: #d9e6f5;
-    color: #142B4D;
+    color: #1F1F1F;
 }
 
 #mcqModal .btn-success {
@@ -1447,20 +1447,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
 #mcqModal .btn-outline-secondary {
     background: transparent;
-    border: 1px solid #E2E9EE;
-    color: #475569;
+    border: 1px solid #D9D9DE;
+    color: #6B6B7A;
 }
 
 #mcqModal .btn-outline-secondary:hover {
-    background: #F7FAFB;
-    border-color: #36877F;
-    color: #36877F;
+    background: #FFF8FB;
+    border-color: #8A0F4D;
+    color: #8A0F4D;
 }
 
 #mcqModal textarea.form-control,
 #mcqModal input[type="text"].form-control {
     background: #ffffff;
-    border: 1px solid #E2E9EE;
+    border: 1px solid #D9D9DE;
     border-radius: 0.75rem;
     box-shadow: none;
     font-size: 0.95rem;
@@ -1469,7 +1469,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 #mcqModal textarea.form-control:focus,
 #mcqModal input[type="text"].form-control:focus {
-    border-color: #36877F;
+    border-color: #8A0F4D;
     box-shadow: 0 0 0 3px rgb(54 135 127 / 0.12);
     transform: none;
 }

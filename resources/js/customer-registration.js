@@ -108,40 +108,20 @@ if (registrationForm) {
     };
 
     const setStep = (activeStep) => {
+        const totalSteps = 2;
+        const stepLabel = document.querySelector('[data-registration-step-label]');
+        const progressBar = document.querySelector('[data-registration-progress]');
+
         infoStep.hidden = activeStep !== 1;
         verificationStep.hidden = activeStep !== 2;
 
-        const first = document.querySelector('#stepInfo');
-        const second = document.querySelector('#stepVerifyPassword');
-        const connector = document.querySelector('#stepConnector');
-        const setIndicator = (item, state) => {
-            const indicator = item.querySelector('.step-indicator');
-            const label = item.querySelector('.step-label');
-            const isActive = state === 'active';
-            const isComplete = state === 'complete';
-
-            indicator.className = `step-indicator grid size-7 place-items-center rounded-full border-2 text-xs font-semibold ${
-                isActive
-                    ? 'border-brand-primary bg-brand-primary text-white'
-                    : isComplete
-                        ? 'border-success bg-success text-white'
-                        : 'border-border bg-white text-text-muted'
-            }`;
-            indicator.textContent = isComplete ? '✓' : (item === first ? '1' : '2');
-            label.className = `step-label text-xs ${
-                isActive
-                    ? 'font-semibold text-brand-primary'
-                    : isComplete
-                        ? 'font-semibold text-success'
-                        : 'font-medium text-text-muted'
-            }`;
-        };
-        setIndicator(first, activeStep === 1 ? 'active' : 'complete');
-        setIndicator(second, activeStep === 2 ? 'active' : 'idle');
-        first.setAttribute('aria-current', activeStep === 1 ? 'step' : 'false');
-        second.setAttribute('aria-current', activeStep === 2 ? 'step' : 'false');
-        connector.classList.toggle('bg-brand-primary', activeStep === 2);
-        connector.classList.toggle('bg-brand-100', activeStep !== 2);
+        if (stepLabel) {
+            stepLabel.textContent = `Step ${activeStep} of ${totalSteps}`;
+        }
+        if (progressBar) {
+            progressBar.style.width = `${(activeStep / totalSteps) * 100}%`;
+            progressBar.parentElement?.setAttribute('aria-valuenow', String(activeStep));
+        }
     };
 
     const validatePersonalInformation = () => {
@@ -418,7 +398,6 @@ if (registrationForm) {
     form.querySelectorAll('input:not([type="checkbox"]):not([type="hidden"])').forEach((field) => {
         field.addEventListener('input', () => setFieldError(field.name, ''));
     });
-    termsCheckbox.addEventListener('change', () => termsError.classList.add('hidden'));
 
     form.querySelectorAll('[data-toggle-password]').forEach((button) => {
         button.addEventListener('click', () => {
@@ -430,13 +409,75 @@ if (registrationForm) {
         });
     });
 
-    document.querySelector('#openTerms').addEventListener('click', () => {
-        document.querySelector('#termsDialog').showModal();
+    // Terms: same behaviour as the login page. Clicking the checkbox opens the terms,
+    // the checkbox is only ticked after the user scrolls to the end and presses "I Agree".
+    const termsDialog = document.querySelector('#termsDialog');
+    const termsContent = document.querySelector('#termsContent');
+    const termsScrollStatus = document.querySelector('#termsScrollStatus');
+    const agreeTerms = document.querySelector('#agreeTerms');
+    const termsBox = document.querySelector('#termsAcceptBox');
+    const isTermsUnlocked = () => termsCheckbox.dataset.unlocked === '1';
+
+    const markTermsScrolledToEnd = () => {
+        agreeTerms.disabled = false;
+        termsScrollStatus.textContent = 'You have reached the end of the terms.';
+    };
+
+    const openTermsDialog = () => {
+        agreeTerms.disabled = true;
+        termsContent.scrollTop = 0;
+        termsScrollStatus.textContent = 'Scroll to the end of the terms to enable acceptance.';
+        termsDialog.showModal();
+        requestAnimationFrame(() => {
+            if (termsContent.scrollHeight <= termsContent.clientHeight + 10) {
+                markTermsScrolledToEnd();
+            }
+        });
+    };
+
+    document.querySelector('#openTerms').addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        openTermsDialog();
+    });
+    termsCheckbox.addEventListener('click', (event) => {
+        if (isTermsUnlocked()) {
+            return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        openTermsDialog();
+    });
+    termsBox?.addEventListener('click', (event) => {
+        if (event.target.closest('#openTerms') || isTermsUnlocked()) {
+            return;
+        }
+        event.preventDefault();
+        openTermsDialog();
+    });
+    termsCheckbox.addEventListener('change', () => {
+        if (!isTermsUnlocked()) {
+            termsCheckbox.checked = false;
+            openTermsDialog();
+            return;
+        }
+        termsError.classList.add('hidden');
+    });
+    termsContent.addEventListener('scroll', () => {
+        if (termsContent.scrollTop + termsContent.clientHeight >= termsContent.scrollHeight - 10) {
+            markTermsScrolledToEnd();
+        }
+    });
+    agreeTerms.addEventListener('click', () => {
+        termsCheckbox.dataset.unlocked = '1';
+        termsCheckbox.checked = true;
+        termsError.classList.add('hidden');
+        termsDialog.close();
     });
     document.querySelectorAll('[data-close-terms]').forEach((button) => {
-        button.addEventListener('click', () => document.querySelector('#termsDialog').close());
+        button.addEventListener('click', () => termsDialog.close());
     });
-    document.querySelector('#termsDialog').addEventListener('click', (event) => {
+    termsDialog.addEventListener('click', (event) => {
         if (event.target === event.currentTarget) {
             event.currentTarget.close();
         }

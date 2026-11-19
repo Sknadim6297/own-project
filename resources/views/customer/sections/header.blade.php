@@ -117,7 +117,7 @@
             >
                 <x-tazen-v2.panel.icon name="menu" />
             </button>
-            <a href="{{ route('user.dashboard') }}" class="inline-flex items-center lg:hidden">
+            <a href="{{ route('home') }}" class="inline-flex items-center lg:hidden" aria-label="YuktiOne home">
                 <img
                     src="{{ asset('frontend/assets/Yuktione_logo.png') }}"
                     alt="Yuktione"

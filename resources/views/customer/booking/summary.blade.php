@@ -4,7 +4,7 @@
 
 @section('styles')
 <style>
-    .box_booking_2 .main h6 { color: #142B4D; font-weight: 700; margin-bottom: 1rem; }
+    .box_booking_2 .main h6 { color: #1F1F1F; font-weight: 700; margin-bottom: 1rem; }
 </style>
 @endsection
 

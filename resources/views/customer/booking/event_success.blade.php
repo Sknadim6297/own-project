@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{{ asset('frontend/assets/css/booking-sign_up.css') }}" />
 <style>
     .success-icon {
-        color: #36877F;
+        color: #8A0F4D;
         display: block;
         font-size: 3rem;
         margin-bottom: 1rem;
@@ -19,10 +19,10 @@
     }
 
     .booking-id {
-        background-color: #EAF6F2;
-        border: 1px solid #E2E9EE;
+        background-color: #F8EAF1;
+        border: 1px solid #D9D9DE;
         border-radius: 0.75rem;
-        color: #142B4D;
+        color: #1F1F1F;
         font-weight: 600;
         margin: 1rem 0;
         padding: 0.75rem;

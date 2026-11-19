@@ -9,7 +9,7 @@
     <title>@yield('title', 'Customer Panel | Yuktione')</title>
     <link rel="icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
-    <meta name="theme-color" content="#36877F">
+    <meta name="theme-color" content="#8A0F4D">
     @include('partials.dm-sans')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite('resources/css/yuktione-feedback.css')
@@ -68,7 +68,7 @@
                     text: "You won't be able to revert this!",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#026FD8",
+                    confirmButtonColor: "#8A0F4D",
                     cancelButtonColor: "#b42318",
                     confirmButtonText: "Yes, delete it!",
                     cancelButtonText: "Cancel"

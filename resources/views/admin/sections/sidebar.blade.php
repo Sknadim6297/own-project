@@ -4,7 +4,7 @@
 
         <!-- Start::main-sidebar-header -->
         <div class="main-sidebar-header">
-            <a href="{{ route('admin.dashboard') }}" class="header-logo">
+            <a href="{{ route('home') }}" class="header-logo" aria-label="YuktiOne home">
                 <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="desktop-logo" style="width: 130px; height: auto;">
                 <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="toggle-dark" style="width: 40px; height: auto;">
                 <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="desktop-dark" style="width: 130px; height: auto;">

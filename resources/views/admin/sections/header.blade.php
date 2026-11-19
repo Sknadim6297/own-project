@@ -13,7 +13,7 @@
             <!-- Start::header-element -->
             <div class="header-element">
                 <div class="horizontal-logo">
-                    <a href="{{ route('admin.dashboard') }}" class="header-logo">
+                    <a href="{{ route('home') }}" class="header-logo" aria-label="YuktiOne home">
                         <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="desktop-logo">
                         <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="toggle-logo">
                         <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="desktop-dark">

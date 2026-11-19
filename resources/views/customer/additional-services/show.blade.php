@@ -4,30 +4,30 @@
 
 @section('styles')
 <style>
-.custom-modal{display:none;align-items:center;justify-content:center;position:fixed;inset:0;z-index:50;background:rgb(20 43 77 / 0.45);padding:1rem}
+.custom-modal{display:none;align-items:center;justify-content:center;position:fixed;inset:0;z-index:50;background:rgb(110 11 60 / 0.45);padding:1rem}
 .custom-modal.show{display:flex}
 .custom-modal .custom-modal-content,.custom-modal .modal-content{
-    background:#fff;border:1px solid #E2E9EE;border-radius:1rem;box-shadow:0 18px 42px -24px rgb(20 43 77 / 0.28);
+    background:#fff;border:1px solid #D9D9DE;border-radius:1rem;box-shadow:0 18px 42px -24px rgb(110 11 60 / 0.28);
     max-height:90vh;max-width:32rem;overflow:auto;width:100%
 }
-.custom-modal .modal-header{align-items:center;border-bottom:1px solid #E2E9EE;display:flex;justify-content:space-between;padding:1rem 1.25rem}
-.custom-modal .modal-title{color:#142B4D;font-size:1.05rem;font-weight:700;margin:0}
-.custom-modal .modal-close{background:transparent;border:0;color:#718096;cursor:pointer;font-size:1rem}
+.custom-modal .modal-header{align-items:center;border-bottom:1px solid #D9D9DE;display:flex;justify-content:space-between;padding:1rem 1.25rem}
+.custom-modal .modal-title{color:#1F1F1F;font-size:1.05rem;font-weight:700;margin:0}
+.custom-modal .modal-close{background:transparent;border:0;color:#6B6B7A;cursor:pointer;font-size:1rem}
 .custom-modal .modal-body{padding:1.25rem}
-.custom-modal .modal-footer{border-top:1px solid #E2E9EE;display:flex;gap:.75rem;justify-content:flex-end;padding:1rem 1.25rem}
+.custom-modal .modal-footer{border-top:1px solid #D9D9DE;display:flex;gap:.75rem;justify-content:flex-end;padding:1rem 1.25rem}
 .yk-as-price-table{width:100%}
-.yk-as-price-table td{border-bottom:1px solid #E2E9EE;color:#142B4D;font-size:.9rem;padding:.55rem 0}
+.yk-as-price-table td{border-bottom:1px solid #D9D9DE;color:#1F1F1F;font-size:.9rem;padding:.55rem 0}
 .yk-as-price-table tr:last-child td{border-bottom:0}
 .yk-as-actions .pay-now-btn,
 .yk-as-actions .negotiate-btn,
 .yk-as-actions .confirm-completion-btn{
     align-items:center;border-radius:.75rem;display:inline-flex;font-weight:600;gap:.5rem;justify-content:center;min-height:2.75rem;padding:.65rem 1rem;width:100%
 }
-.yk-as-actions .pay-now-btn{background:#36877F;border:1px solid #36877F;color:#fff}
-.yk-as-actions .pay-now-btn:hover{background:#286E67;border-color:#286E67;color:#fff}
-.yk-as-actions .negotiate-btn{background:#fff;border:1px solid #E2E9EE;color:#142B4D}
-.yk-as-actions .negotiate-btn:hover{border-color:#36877F;color:#36877F}
-.yk-as-actions .confirm-completion-btn{background:#36877F;border:1px solid #36877F;color:#fff}
+.yk-as-actions .pay-now-btn{background:#8A0F4D;border:1px solid #8A0F4D;color:#fff}
+.yk-as-actions .pay-now-btn:hover{background:#6E0B3C;border-color:#6E0B3C;color:#fff}
+.yk-as-actions .negotiate-btn{background:#fff;border:1px solid #D9D9DE;color:#1F1F1F}
+.yk-as-actions .negotiate-btn:hover{border-color:#8A0F4D;color:#8A0F4D}
+.yk-as-actions .confirm-completion-btn{background:#8A0F4D;border:1px solid #8A0F4D;color:#fff}
 </style>
 @endsection
 
@@ -446,7 +446,7 @@ $(document).ready(function() {
                             contact: '{{ Auth::guard('user')->user()->phone }}'
                         },
                         theme: {
-                            color: '#36877F'
+                            color: '#8A0F4D'
                         },
                         modal: {
                             ondismiss: function() {

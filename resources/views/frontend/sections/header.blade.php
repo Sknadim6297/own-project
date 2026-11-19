@@ -71,7 +71,7 @@
             'href' => route('categories.index'),
             'active' => request()->routeIs('categories.*', 'gridlisting'),
             'placeholder' => false,
-            'variant' => 'pill',
+            'variant' => 'link',
             'dropdown' => $exploreDropdown,
         ],
         [
@@ -111,6 +111,13 @@
             'dropdown' => [],
         ],
     ];
+
+    // Whichever menu item belongs to the page being viewed gets the gradient pill; all others stay normal links.
+    $navLinks = array_map(static function (array $link): array {
+        $link['variant'] = ($link['active'] && ! $link['placeholder']) ? 'pill' : 'link';
+
+        return $link;
+    }, $navLinks);
 @endphp
 
 <header class="yk-navbar" id="tazen-public-header" data-public-header>
@@ -127,40 +134,64 @@
 
         {{-- Phone/tablet quick actions (hidden from 1024px up, where the full nav shows) --}}
         <div class="yk-navbar__quick">
-            <button class="yk-navbar__quick-btn" type="button" aria-label="Search" data-mobile-search>
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <circle cx="11" cy="11" r="6.25"></circle>
-                    <path d="m16 16 4 4"></path>
-                </svg>
-            </button>
             @if ($user || $professional)
-                <a class="yk-navbar__quick-btn yk-navbar__quick-avatar" href="{{ $user ? route('user.dashboard') : route('professional.dashboard') }}" aria-label="My account">
-                    @if ($profilePhoto)
-                        <img
-                            src="{{ $profilePhoto }}"
-                            alt=""
-                            width="32"
-                            height="32"
-                            data-fallback-avatar="{{ $defaultAvatar }}"
-                            onerror="this.onerror=null;this.src=this.dataset.fallbackAvatar||'';"
-                        >
-                    @else
-                        <span aria-hidden="true">{{ $accountInitials !== '' ? $accountInitials : 'YO' }}</span>
-                    @endif
-                </a>
+                <div class="yk-navbar__quick-account" data-quick-account>
+                    <button
+                        class="yk-navbar__quick-btn yk-navbar__quick-avatar"
+                        type="button"
+                        aria-label="My account menu"
+                        aria-haspopup="menu"
+                        aria-expanded="false"
+                        aria-controls="yk-quick-account-menu"
+                        data-quick-account-toggle
+                    >
+                        @if ($profilePhoto)
+                            <img
+                                src="{{ $profilePhoto }}"
+                                alt=""
+                                width="32"
+                                height="32"
+                                data-fallback-avatar="{{ $defaultAvatar }}"
+                                onerror="this.onerror=null;this.src=this.dataset.fallbackAvatar||'';"
+                            >
+                        @else
+                            <span aria-hidden="true">{{ $accountInitials !== '' ? $accountInitials : 'YO' }}</span>
+                        @endif
+                    </button>
+                    <div class="yk-navbar__quick-menu" id="yk-quick-account-menu" role="menu" aria-label="Account menu" hidden data-quick-account-panel>
+                        <a href="{{ $user ? route('user.dashboard') : route('professional.dashboard') }}" role="menuitem">Dashboard</a>
+                        @if ($messagesUrl)
+                            <a href="{{ $messagesUrl }}" role="menuitem">Messages</a>
+                        @endif
+                        @if ($user)
+                            <a href="{{ route('user.profile.index') }}" role="menuitem">Profile</a>
+                            <a href="{{ route('user.all-appointment.index') }}" role="menuitem">My Bookings</a>
+                            <a href="{{ route('user.billing.index') }}" role="menuitem">Billing</a>
+                            <a href="{{ route('user.yukti-points.index') }}" role="menuitem">Refer &amp; Earn</a>
+                            <a class="is-danger" href="{{ route('user.logout') }}" role="menuitem">Logout</a>
+                        @else
+                            <a href="{{ route('professional.profile.index') }}" role="menuitem">Profile</a>
+                            <a href="{{ route('professional.booking.index') }}" role="menuitem">My Bookings</a>
+                            <a class="is-danger" href="{{ route('professional.logout') }}" role="menuitem">Logout</a>
+                        @endif
+                    </div>
+                </div>
             @else
-                <a class="yk-navbar__quick-btn yk-navbar__quick-avatar" href="{{ route('login') }}" aria-label="Log in">
+                <a class="yk-navbar__quick-login" href="{{ route('login') }}" aria-label="Log in">
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <circle cx="12" cy="8.5" r="3.6"></circle>
                         <path d="M4.8 20c.9-3.6 3.5-5.4 7.2-5.4s6.3 1.8 7.2 5.4"></path>
                     </svg>
+                    <span>Log in</span>
                 </a>
             @endif
         </div>
 
         <div class="yk-navbar__panel" id="yk-navbar-panel" data-mobile-nav>
             <div class="yk-navbar__mobile-heading">
-                <span>Menu</span>
+                <a class="yk-navbar__drawer-brand" href="{{ route('home') }}" aria-label="YuktiOne home">
+                    <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" width="168" height="56">
+                </a>
                 <button class="yk-navbar__close" type="button" aria-label="Close navigation menu" data-mobile-nav-close>
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="m6 6 12 12M18 6 6 18"></path>
@@ -170,6 +201,20 @@
 
             <nav class="yk-navbar__links" aria-label="Main navigation">
                 <ul class="yk-navbar__list">
+                    {{-- Phone/tablet menu only: goes to the home page (the desktop bar uses the logo for this) --}}
+                    <li class="yk-navbar__item yk-navbar__item--home">
+                        <a
+                            href="{{ route('home') }}"
+                            @class([
+                                'yk-navbar__link',
+                                'yk-navbar__link--'.(request()->routeIs('home') ? 'pill' : 'link'),
+                                'is-active' => request()->routeIs('home'),
+                            ])
+                            @if (request()->routeIs('home')) aria-current="page" @endif
+                        >
+                            <span>Home</span>
+                        </a>
+                    </li>
                     @foreach ($navLinks as $link)
                         @php
                             $hasDropdown = ! empty($link['dropdown']);

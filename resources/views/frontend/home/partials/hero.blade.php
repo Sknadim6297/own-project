@@ -13,6 +13,63 @@
     ];
 @endphp
 
+@push('scripts')
+    <script>
+    (function () {
+        const rail = document.querySelector('.yk-hero__rail');
+        const list = rail && rail.querySelector('.yk-hero__rail-list');
+        const bar = rail && rail.querySelector('.yk-hero__rail-progress');
+        if (!list || !bar) return;
+
+        const phone = window.matchMedia('(max-width: 959.98px)');
+
+        // Progress pill: thumb width = visible share, thumb position = scroll share.
+        const update = () => {
+            const max = list.scrollWidth - list.clientWidth;
+            const share = list.scrollWidth > 0 ? list.clientWidth / list.scrollWidth : 1;
+            bar.style.setProperty('--thumb', (share * 100).toFixed(2) + '%');
+            bar.style.setProperty('--p', max > 0 ? (list.scrollLeft / max).toFixed(4) : '0');
+            rail.classList.toggle('is-end', max <= 2 || list.scrollLeft >= max - 2);
+        };
+        list.addEventListener('scroll', () => window.requestAnimationFrame(update), { passive: true });
+        window.addEventListener('resize', update);
+        update();
+
+        // Mouse drag-to-scroll on phone/tablet widths (touch and trackpad already scroll natively).
+        let drag = null;
+        let suppressClick = false;
+        list.addEventListener('pointerdown', (event) => {
+            if (event.pointerType !== 'mouse' || event.button !== 0 || !phone.matches) return;
+            drag = { x: event.clientX, left: list.scrollLeft, moved: false };
+        });
+        window.addEventListener('pointermove', (event) => {
+            if (!drag) return;
+            const dx = event.clientX - drag.x;
+            if (!drag.moved && Math.abs(dx) > 4) {
+                drag.moved = true;
+                list.classList.add('is-dragging');
+            }
+            if (drag.moved) list.scrollLeft = drag.left - dx;
+        });
+        const endDrag = () => {
+            if (!drag) return;
+            if (drag.moved) suppressClick = true;
+            drag = null;
+            list.classList.remove('is-dragging');
+        };
+        window.addEventListener('pointerup', endDrag);
+        window.addEventListener('pointercancel', endDrag);
+        list.addEventListener('dragstart', (event) => event.preventDefault());
+        list.addEventListener('click', (event) => {
+            if (!suppressClick) return;
+            suppressClick = false;
+            event.preventDefault();
+            event.stopPropagation();
+        }, true);
+    })();
+    </script>
+@endpush
+
 {{-- Poster: Pollianna Bonnett, Pexels License --}}
 <section class="yk-hero yk-hero--soft" aria-labelledby="yuktione-home-title">
     <div class="yk-hero__glow yk-hero__glow--a" aria-hidden="true"></div>
@@ -96,6 +153,7 @@
                     </li>
                 @endforeach
             </ul>
+            <div class="yk-hero__rail-progress" aria-hidden="true"><span></span></div>
         </aside>
     </div>
 </section>
