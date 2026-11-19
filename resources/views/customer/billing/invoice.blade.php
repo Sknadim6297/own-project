@@ -336,7 +336,7 @@
                         @if($logoPath)
                             <img src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}" alt="{{ $brandName }} Logo" class="logo">
                         @else
-                            <div style="font-size: 24px; font-weight: bold; color: #142B4D; text-align: center; padding: 12px; border: 1px solid #E2E9EE; width: 270px; height: 80px; line-height: 56px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #1F1F1F; text-align: center; padding: 12px; border: 1px solid #D9D9DE; width: 270px; height: 80px; line-height: 56px;">
                                 {{ strtoupper($brandName) }}
                             </div>
                         @endif

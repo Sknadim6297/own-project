@@ -9,7 +9,7 @@
     <title>@yield('title', config('yuktione.name', 'YuktiOne') . ' | Booking')</title>
     <link rel="icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
-    <meta name="theme-color" content="#36877F">
+    <meta name="theme-color" content="#8A0F4D">
     @include('partials.dm-sans')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">

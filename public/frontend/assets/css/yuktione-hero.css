@@ -298,7 +298,8 @@
     }
 }
 
-.yk-hero__rail-label {
+.yk-hero__rail-label,
+.yk-hero__rail-progress {
     display: none;
 }
 
@@ -428,13 +429,13 @@
         aspect-ratio: 1.5 / 1;
     }
 
-    .yk-hero__rail-list li:nth-child(n + 5) {
-        display: none;
+    .yk-hero__rail-list {
+        gap: 0.1rem;
     }
 
     .yk-hero__rail-icon {
-        width: 2.8rem;
-        height: 2.8rem;
+        width: 2.5rem;
+        height: 2.5rem;
     }
 
     .yk-hero__rail-icon svg {
@@ -490,16 +491,68 @@
         display: block;
         order: 3;
         width: 100%;
-        max-width: none;
+        min-width: 0;
+        max-width: 100%;
     }
 
+    /* Four categories fit on screen; the rest scroll sideways (fifth item peeks in as a hint). */
     .yk-hero__rail-list {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 0.55rem;
+        --rail-gap: 0.55rem;
+        display: flex;
+        gap: var(--rail-gap);
+        margin: -0.4rem -0.2rem -0.6rem;
+        padding: 0.4rem 0.2rem 0.6rem;
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        /* Fade the fifth item's edge so the peek reads as "more here" */
+        -webkit-mask-image: linear-gradient(90deg, #000 93%, transparent 100%);
+        mask-image: linear-gradient(90deg, #000 93%, transparent 100%);
     }
 
-    .yk-hero__rail-list li:nth-child(n + 5) {
+    .yk-hero__rail-list::-webkit-scrollbar {
         display: none;
+    }
+
+    .yk-hero__rail-list.is-dragging {
+        cursor: grabbing;
+        user-select: none;
+    }
+
+    .yk-hero__rail.is-end .yk-hero__rail-list {
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+
+    .yk-hero__rail-list > li {
+        flex: 0 0 calc((100% - 3 * var(--rail-gap)) / 4.3);
+        min-width: 0;
+        scroll-snap-align: start;
+    }
+
+    /* Progress pill under the rail: shows how much is left to scroll */
+    .yk-hero__rail-progress {
+        position: relative;
+        display: block;
+        width: 4.5rem;
+        height: 3px;
+        margin: 0.5rem auto 0;
+        border-radius: 999px;
+        background: rgba(138, 15, 77, 0.12);
+        overflow: hidden;
+    }
+
+    .yk-hero__rail-progress span {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: calc(var(--p, 0) * (100% - var(--thumb, 70%)));
+        width: var(--thumb, 70%);
+        border-radius: inherit;
+        background: linear-gradient(90deg, #c3196b, #8a0f4d);
+        transition: left 0.18s ease-out;
     }
 
     .yk-hero__rail-list a {
@@ -575,7 +628,7 @@
     }
 
     .yk-hero__rail-list {
-        gap: 0.4rem;
+        --rail-gap: 0.4rem;
     }
 
     .yk-hero__rail-list a {

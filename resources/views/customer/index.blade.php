@@ -308,7 +308,7 @@
     </section>
 
     <section aria-labelledby="my-saved-tools-heading" class="overflow-hidden rounded-panel border border-border bg-surface shadow-card">
-        <div class="flex flex-col gap-4 border-b border-divider bg-gradient-to-br from-[#F7FBF9] via-surface to-[#F3F6FA] px-5 py-5 sm:flex-row sm:items-end sm:justify-between sm:px-6">
+        <div class="flex flex-col gap-4 border-b border-divider bg-gradient-to-br from-[#FFF8FB] via-surface to-[#F6EEF9] px-5 py-5 sm:flex-row sm:items-end sm:justify-between sm:px-6">
             <div class="min-w-0">
                 <p class="text-xs font-semibold uppercase tracking-[0.14em] text-brand-primary">Private workspace</p>
                 <h2 id="my-saved-tools-heading" class="mt-1 font-display text-section-title font-semibold text-brand-secondary">My Saved Tools</h2>
@@ -347,7 +347,7 @@
             </div>
 
             @if ($savedToolsPaginator->isEmpty())
-                <div class="flex flex-col items-start gap-3 rounded-card border border-dashed border-border bg-[#FAFCFB] px-5 py-8 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex flex-col items-start gap-3 rounded-card border border-dashed border-border bg-[#FFFAFC] px-5 py-8 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <p class="font-semibold text-brand-secondary">
                             @if ($savedToolsTab === 'drafts')

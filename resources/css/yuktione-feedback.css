@@ -1,17 +1,17 @@
 :root {
-    --yk-feedback-primary: #316D61;
-    --yk-feedback-cyan: #8EB5DD;
-    --yk-feedback-navy: #142B4D;
-    --yk-feedback-background: #F7FAFB;
-    --yk-feedback-text: #142B4D;
-    --yk-feedback-muted: #475569;
-    --yk-feedback-border: #E2E9EE;
+    --yk-feedback-primary: #8A0F4D;
+    --yk-feedback-cyan: #D8B4E2;
+    --yk-feedback-navy: #1F1F1F;
+    --yk-feedback-background: #FFF8FB;
+    --yk-feedback-text: #1F1F1F;
+    --yk-feedback-muted: #6B6B7A;
+    --yk-feedback-border: #D9D9DE;
     --yk-feedback-danger: #C85B65;
     --yk-feedback-success: #1D8C65;
     --yk-feedback-warning: #B78538;
-    --yk-feedback-info: #6E9AC7;
+    --yk-feedback-info: #8A0F4D;
     --yk-feedback-surface: #fff;
-    --yk-feedback-shadow: 0 18px 50px rgb(20 43 77 / 14%);
+    --yk-feedback-shadow: 0 18px 50px rgb(110 11 60 / 14%);
 }
 
 .yk-feedback,
@@ -107,7 +107,7 @@
 
 .yk-toast--info .yk-toast__icon,
 .yk-dialog--info .yk-dialog__icon {
-    background: #eff8ff;
+    background: #f8eaf1;
     color: var(--yk-feedback-info);
 }
 
@@ -280,8 +280,8 @@
 }
 
 .yk-dialog__button--primary:hover:not(:disabled) {
-    border-color: #11776f;
-    background: #11776f;
+    border-color: #6e0b3c;
+    background: #6e0b3c;
 }
 
 .yk-dialog__button--danger {
@@ -320,7 +320,7 @@
 }
 
 .yk-inline-alert--info {
-    background: #eff8ff;
+    background: #f8eaf1;
 }
 
 .yk-inline-alert__content {

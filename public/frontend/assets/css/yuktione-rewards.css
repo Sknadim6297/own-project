@@ -1,26 +1,31 @@
 /* Phase 3I — Premium Refer & Earn customer experience */
 .yk-rewards {
-    --yk-navy: #142B4D;
-    --yk-navy-deep: #0b2048;
-    --yk-teal: #316d61;
-    --yk-teal-deep: #24554c;
+    --yk-navy: #2A1020;
+    --yk-navy-deep: #3D0A26;
+    --yk-teal: #8A0F4D;
+    --yk-teal-deep: #6E0B3C;
     --yk-cream: #fff6ed;
     --yk-cream-2: #f7f1e8;
     --yk-gold: #c4a35a;
     --yk-gold-soft: rgba(196, 163, 90, 0.16);
-    --yk-mint: #eaf6f2;
-    --yk-line: #e6ebf2;
-    --yk-muted: #5b6b7c;
+    --yk-mint: #F8EAF1;
+    --yk-line: #EFE0E8;
+    --yk-muted: #6B6B7A;
     --yk-card: #ffffff;
     --yk-radius: 18px;
-    --yk-shadow: 0 16px 40px rgba(11, 32, 72, 0.1);
+    --yk-shadow: 0 16px 40px rgba(110, 11, 60, 0.1);
     --yk-ease: 180ms ease;
     color: var(--yk-navy);
     background:
-        radial-gradient(900px 380px at 8% -8%, rgba(49, 109, 97, 0.14), transparent 55%),
+        radial-gradient(900px 380px at 8% -8%, rgba(138, 15, 77, 0.10), transparent 55%),
         radial-gradient(700px 320px at 96% 0%, rgba(196, 163, 90, 0.12), transparent 50%),
-        linear-gradient(180deg, #fbfcfe 0%, #f5f7fb 48%, var(--yk-cream-2) 100%);
+        linear-gradient(180deg, #FFFBFD 0%, #FFF8FB 48%, #FFF1F6 100%);
     padding: 1rem 0 3.5rem;
+}
+
+/* Headings follow the page palette (the legacy global heading colour is blue) */
+.yk-rewards :where(h1, h2, h3, h4, h5, h6) {
+    color: inherit;
 }
 
 .yk-rewards__wrap {
@@ -60,7 +65,7 @@
 .yk-rewards__hero-main {
     padding: 1.35rem 1.4rem 1.5rem;
     background:
-        linear-gradient(145deg, #0b2048 0%, #142b4d 48%, #3d2f66 100%),
+        linear-gradient(145deg, #3D0A26 0%, #6E0B3C 48%, #8A0F4D 100%),
         var(--yk-navy);
     color: #fff;
     border: none;
@@ -189,9 +194,9 @@
 }
 
 .yk-rewards__btn--primary {
-    background: linear-gradient(135deg, #142b4d, #0b2048);
+    background: linear-gradient(135deg, #8A0F4D, #6E0B3C);
     color: #fff;
-    box-shadow: 0 8px 18px rgba(11, 32, 72, 0.22);
+    box-shadow: 0 8px 18px rgba(110, 11, 60, 0.24);
 }
 
 .yk-rewards__btn--primary:hover { transform: translateY(-1px); }
@@ -253,13 +258,13 @@
 
 .yk-rewards__pill--ok { background: #d1fae5; color: #065f46; }
 .yk-rewards__pill--wait { background: #fef3c7; color: #92400e; }
-.yk-rewards__pill--off { background: #eef2f7; color: #475569; }
+.yk-rewards__pill--off { background: #F6EEF9; color: #6B6B7A; }
 .yk-rewards__pill--done { background: var(--yk-gold-soft); color: #7a5d1d; }
 
 .yk-rewards__progress {
     height: 8px;
     border-radius: 999px;
-    background: #eef2f7;
+    background: #F6EEF9;
     overflow: hidden;
     margin: 0.65rem 0 0.35rem;
 }
@@ -303,7 +308,7 @@
     padding: 0.65rem 0.8rem;
     font-size: 0.86rem;
     color: var(--yk-navy);
-    background: #fbfcfe;
+    background: #FFFAFC;
 }
 
 .yk-rewards__select {
@@ -393,7 +398,7 @@
     font-size: 0.74rem;
     font-weight: 700;
 }
-.yk-rewards__status--joined { background: #e0e7ff; color: #3730a3; }
+.yk-rewards__status--joined { background: #F6EEF9; color: #6E0B3C; }
 .yk-rewards__status--activated { background: #fef3c7; color: #92400e; }
 .yk-rewards__status--rewarded { background: #d1fae5; color: #065f46; }
 .yk-rewards__status--rejected { background: #fee2e2; color: #991b1b; }

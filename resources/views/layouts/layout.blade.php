@@ -301,7 +301,13 @@
 	<x-yuktione.feedback />
 
 	<!-- WhatsApp Floating Button -->
-	@if (!$isAuthenticationRoute)
+	@if (!$isAuthenticationRoute && request()->routeIs('home'))
+		{{-- Home page: WhatsApp bubble is replaced by a right-edge "Need help?" tab --}}
+		<a href="{{ route('help.index') }}" class="yk-help-tab" aria-label="Need help? Open Help &amp; FAQ">
+			<span class="yk-help-tab__text">Need help?</span>
+			<span class="yk-help-tab__chev" aria-hidden="true">&rsaquo;</span>
+		</a>
+	@elseif (!$isAuthenticationRoute)
 		<a href="https://wa.me/+919147421560?text=Hello%20{{ rawurlencode(config('yuktione.name', 'YuktiOne')) }}!%20I%20need%20assistance%20with%20your%20services." target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Chat with us on WhatsApp">
 			<svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
 				<path d="M16 3.4a12.1 12.1 0 0 0-10.4 18.3L4 28l6.5-1.7A12.3 12.3 0 1 0 16 3.4Z"></path>

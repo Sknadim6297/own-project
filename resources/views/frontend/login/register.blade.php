@@ -13,10 +13,52 @@
     @vite([
         'resources/css/tazen.css',
         'resources/css/yuktione-feedback.css',
-        'resources/css/customer-panel.css',
         'resources/css/auth-theme.css',
     ])
     <style>
+        /* Same plum brand as the professional register page */
+        body.yuktione-auth-page.customer-registration-page {
+            --yk-primary: #8a0f4d;
+            --yk-primary-hover: #c3196b;
+            --yk-primary-light: #f8eaf1;
+            --yk-heading: #1a1a22;
+            --yk-body: #6b6b7a;
+            --yk-muted: #6b6b7a;
+            --yk-background: #fff8fb;
+            --color-brand-50: #fff8fb;
+            --color-brand-100: #f8eaf1;
+            --color-brand-200: #f0d4e2;
+            --color-brand-300: #d8b4e2;
+            --color-brand-400: #c3196b;
+            --color-brand-500: #8a0f4d;
+            --color-brand-600: #c3196b;
+            --color-brand-700: #6e0b3c;
+            --color-brand-800: #5a0932;
+            --color-brand-900: #1f1f1f;
+            --color-brand-950: #141414;
+            --color-brand-primary: #8a0f4d;
+            --color-brand-secondary: #1f1f1f;
+            --color-brand-accent: #d8b4e2;
+            --color-background: #fff8fb;
+            --color-surface: #ffffff;
+            --color-surface-muted: #fff1f6;
+            --color-text-primary: #1a1a22;
+            --color-text-secondary: #6b6b7a;
+            --color-text-muted: #6b6b7a;
+            --color-border: #d9d9de;
+            --color-divider: #efe7ec;
+            --color-info: #8a0f4d;
+            --color-info-surface: #f8eaf1;
+            --color-focus-ring: #8a0f4d;
+            accent-color: #8a0f4d;
+        }
+
+        body.yuktione-auth-page.customer-registration-page button:disabled {
+            border-color: #e2b7cb;
+            background-color: #e2b7cb;
+            color: #ffffff;
+        }
+
         /* Keep register on plum — override customer-panel teal tokens on this page only */
         body.yuktione-auth-page.customer-registration-page[data-yuktione-panel="customer"],
         .yk-signup[data-yuktione-panel="customer"],
@@ -535,27 +577,36 @@
                 transition: none !important;
             }
         }
+
+        /* views are toggled with the hidden attribute */
+        #accountTypeStep[hidden],
+        #customerRegisterStep[hidden] {
+            display: none !important;
+        }
     </style>
 </head>
-<body data-yuktione-panel="customer" class="yuktione-auth-page customer-registration-page yk-signup min-h-dvh antialiased">
+<body class="yuktione-auth-page customer-registration-page min-h-screen bg-background font-sans text-text-primary antialiased">
     @php
         $accountAs = strtolower((string) request()->query('as', ''));
         $startAsCustomer = $accountAs === 'customer';
         $professionalRegisterUrl = route('professional.register');
     @endphp
 
-    <main class="yk-signup__shell">
+    <div id="accountTypeStep" class="yk-signup" @if ($startAsCustomer) hidden @endif>
+        <main class="yk-signup__shell">
         <aside class="yk-signup__brand" aria-label="YuktiOne introduction">
             {{-- BG image later: set --brand-photo on .yk-signup__brand --}}
             <div class="yk-signup__brand-overlay" aria-hidden="true"></div>
             <div class="yk-signup__brand-inner">
                 <div class="yk-signup__brand-mark">
-                    <img
-                        src="{{ asset('frontend/assets/Yuktione_logo.png') }}"
-                        alt="YuktiOne"
-                        width="160"
-                        height="52"
-                    >
+                    <a href="{{ route('home') }}" aria-label="YuktiOne home" style="display:inline-block;line-height:0;">
+                        <img
+                            src="{{ asset('frontend/assets/Yuktione_logo.png') }}"
+                            alt="YuktiOne"
+                            width="160"
+                            height="52"
+                        >
+                    </a>
                 </div>
 
                 <div class="yk-signup__brand-copy">
@@ -588,7 +639,6 @@
 
         <section class="yk-signup__panel">
             <div class="yk-signup__card">
-                <div id="accountTypeStep" @if ($startAsCustomer) hidden @endif>
                     <a href="{{ route('home') }}" class="yk-signup__logo" aria-label="YuktiOne home">
                         <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" width="160" height="52">
                     </a>
@@ -652,35 +702,34 @@
                         Already have an account?
                         <a href="{{ route('login') }}">Sign In</a>
                     </p>
-                </div>
+            </div>
+        </section>
+        </main>
+    </div>
 
-                <div id="customerRegisterStep" @unless ($startAsCustomer) hidden @endunless>
-                    <button type="button" id="backToAccountType" class="yk-signup__back">
-                        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5"/></svg>
+    <main id="customerRegisterStep" class="flex min-h-screen items-center justify-center bg-linear-to-br from-brand-50 via-background to-white px-3 py-5 sm:px-5" @unless ($startAsCustomer) hidden @endunless>
+        <section class="w-full max-w-xl rounded-panel border border-divider bg-surface p-4 shadow-card sm:p-6 md:p-8">
+                <header class="mb-5 sm:mb-7">
+                    <div class="mb-4 flex items-center justify-between gap-3 sm:mb-6">
+                        <a href="{{ route('home') }}" aria-label="YuktiOne home" class="inline-flex items-center">
+                            <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="h-8 w-auto max-w-36 object-contain sm:h-9">
+                        </a>
+                        <span class="rounded-full bg-brand-50 px-2.5 py-1 text-[9px] font-semibold tracking-wide text-brand-800 sm:px-3 sm:text-[10px]">CUSTOMER SIGNUP</span>
+                    </div>
+
+                    <div class="mb-1.5 flex items-center justify-between gap-3">
+                        <h1 id="customer-registration-title" class="text-xl font-semibold leading-tight tracking-tight text-brand-950 sm:text-2xl md:text-3xl">Create your account</h1>
+                        <span class="shrink-0 text-xs font-medium text-text-muted" data-registration-step-label>Step 1 of 2</span>
+                    </div>
+                    <p class="mt-1.5 text-sm leading-6 text-text-muted">Join YuktiOne to connect with trusted professionals.</p>
+                    <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-brand-100" role="progressbar" aria-label="Registration progress" aria-valuemin="1" aria-valuemax="2" aria-valuenow="1">
+                        <div class="h-full w-1/2 rounded-full bg-brand-primary transition-[width] duration-300" data-registration-progress></div>
+                    </div>
+                    <button type="button" id="backToAccountType" class="mt-3 inline-flex min-h-8 items-center gap-1 text-xs font-semibold text-brand-primary underline-offset-2 hover:underline focus-visible:rounded focus-visible:outline-2 focus-visible:outline-focus-ring">
+                        <svg class="size-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5"/></svg>
                         Change account type
                     </button>
-
-                    <a href="{{ route('home') }}" class="yk-signup__logo" aria-label="YuktiOne home">
-                        <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" width="160" height="52">
-                    </a>
-
-                    <header class="yk-signup__form-head">
-                        <p class="yk-signup__badge">Customer signup</p>
-                        <h2 class="yk-signup__title">Create your account</h2>
-                        <p class="yk-signup__lead">Join YuktiOne to connect with trusted professionals.</p>
-                    </header>
-
-                    <ol class="relative mb-5 grid grid-cols-2" aria-label="Registration progress">
-                        <span id="stepConnector" aria-hidden="true" class="absolute left-1/4 right-1/4 top-3.5 h-0.5 -translate-y-1/2 bg-brand-100"></span>
-                        <li id="stepInfo" class="relative z-10 flex flex-col items-center gap-1.5 text-center" aria-current="step">
-                            <span class="step-indicator grid size-7 place-items-center rounded-full border-2 border-brand-primary bg-brand-primary text-xs font-semibold text-white">1</span>
-                            <span class="step-label text-xs font-semibold text-brand-primary">Personal Info</span>
-                        </li>
-                        <li id="stepVerifyPassword" class="relative z-10 flex flex-col items-center gap-1.5 text-center text-text-muted" aria-current="false">
-                            <span class="step-indicator grid size-7 place-items-center rounded-full border-2 border-border bg-white text-xs font-semibold text-text-muted">2</span>
-                            <span class="step-label text-xs font-medium">Verify &amp; Password</span>
-                        </li>
-                    </ol>
+                </header>
 
                     <form
                         id="registerForm"
@@ -724,12 +773,12 @@
                         </section>
 
                         <section id="verifyPasswordSection" hidden aria-labelledby="verification-title">
-                            <div class="mb-4 flex items-center gap-2 rounded-control border border-brand-100 bg-brand-50 px-3 py-2.5 text-sm text-brand-900">
+                            <div class="mb-4 flex items-start gap-2 rounded-control border border-brand-100 bg-brand-50 px-3 py-2.5 text-sm text-brand-900">
                                 <svg class="size-4 shrink-0 text-brand-primary" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                                     <path d="M3.333 5.833A1.667 1.667 0 0 1 5 4.167h10a1.667 1.667 0 0 1 1.667 1.666v8.334A1.667 1.667 0 0 1 15 15.833H5a1.667 1.667 0 0 1-1.667-1.666V5.833Z" stroke="currentColor" stroke-width="1.5"/>
                                     <path d="m4.167 5 5.833 4.583L15.833 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
-                                <span class="min-w-0 truncate">Code sent to <strong id="verifiedEmail" class="font-semibold"></strong></span>
+                                <span class="min-w-0 break-words">Code sent to <strong id="verifiedEmail" class="font-semibold"></strong></span>
                             </div>
 
                             <div id="otpVerificationSection" class="rounded-card border border-divider bg-surface-muted p-3.5 sm:p-4">
@@ -786,15 +835,14 @@
                                     <p id="password_confirmation-error" class="mt-1 hidden text-xs text-error" role="alert"></p>
                                 </div>
 
-                                <div class="rounded-control border border-divider bg-surface-muted px-3 py-2.5">
-                                    <div class="flex items-start gap-2.5 text-xs leading-5 text-text-secondary">
-                                        <input id="terms_accepted" name="terms_accepted" type="checkbox" value="1" class="mt-0.5 size-4 shrink-0 rounded border-border accent-brand-primary focus-visible:outline-2 focus-visible:outline-focus-ring">
-                                        <p class="m-0">
-                                            <label for="terms_accepted" class="cursor-pointer">I agree to YuktiOne's</label>
-                                            <button type="button" id="openTerms" class="font-semibold text-brand-primary underline underline-offset-2 hover:text-brand-800">Terms and Conditions</button>.
-                                        </p>
+                                <div id="termsAcceptBox" class="flex cursor-pointer items-start gap-2.5 rounded-card border border-border bg-surface-muted px-3 py-2.5">
+                                    <input id="terms_accepted" name="terms_accepted" type="checkbox" value="1" aria-describedby="terms-help terms-error" class="mt-0.5 size-4 shrink-0 cursor-pointer rounded border-border accent-brand-primary focus-visible:outline-2 focus-visible:outline-focus-ring">
+                                    <div class="min-w-0 text-xs leading-5 text-text-secondary">
+                                        <label for="terms_accepted" class="cursor-pointer">I have read and accept the</label>
+                                        <button type="button" id="openTerms" class="ml-0.5 font-semibold text-brand-primary underline underline-offset-2 hover:text-brand-800">Terms and Conditions</button>
+                                        <p id="terms-help" class="mt-1 text-xs text-text-muted">Click the checkbox to open and review the terms.</p>
+                                        <p id="terms-error" class="mt-1 hidden text-xs font-medium text-error" role="alert">Please read and accept the terms to continue.</p>
                                     </div>
-                                    <p id="terms-error" class="mt-1 hidden pl-6 text-xs text-error" role="alert">Please accept the Terms and Conditions to continue.</p>
                                 </div>
 
                                 <button type="submit" id="registerButton" class="inline-flex min-h-11 w-full items-center justify-center rounded-control bg-brand-primary px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring disabled:cursor-wait disabled:opacity-60">
@@ -812,8 +860,8 @@
                             <a href="{{ route('login') }}" class="font-semibold text-brand-primary underline-offset-2 hover:underline focus-visible:rounded focus-visible:outline-2 focus-visible:outline-focus-ring">Sign in</a>
                         </p>
                     </form>
-                </div>
-            </div>
+
+            <p class="mt-4 text-center text-[11px] text-text-muted sm:mt-5">© {{ date('Y') }} YuktiOne</p>
         </section>
     </main>
 
@@ -826,11 +874,15 @@
                 </svg>
             </button>
         </div>
-        <div tabindex="0" class="max-h-[65dvh] overflow-y-auto px-4 py-4 text-sm leading-6 text-text-secondary sm:px-6">
+        <div id="termsContent" tabindex="0" class="max-h-[60dvh] overflow-y-auto px-4 py-4 text-sm leading-6 text-text-secondary sm:px-6">
             @include('frontend.partials.terms_agreement')
         </div>
-        <div class="flex justify-end border-t border-divider px-4 py-3 sm:px-6">
-            <button type="button" data-close-terms class="inline-flex min-h-10 items-center justify-center rounded-control bg-brand-primary px-4 text-sm font-semibold text-white hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-focus-ring">Close</button>
+        <div class="flex flex-col gap-2 border-t border-divider px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <p id="termsScrollStatus" class="text-xs text-text-muted" aria-live="polite">Scroll to the end of the terms to enable acceptance.</p>
+            <div class="flex justify-end gap-2">
+                <button type="button" data-close-terms class="inline-flex min-h-9 items-center justify-center rounded-control border border-border bg-surface px-3 text-sm font-semibold text-text-primary hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-focus-ring">Close</button>
+                <button type="button" id="agreeTerms" disabled class="inline-flex min-h-9 items-center justify-center rounded-control border border-brand-primary bg-brand-primary px-3 text-sm font-semibold text-white hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-focus-ring disabled:cursor-not-allowed disabled:opacity-50">I Agree</button>
+            </div>
         </div>
     </dialog>
 

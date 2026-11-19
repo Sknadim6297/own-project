@@ -12,6 +12,7 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
     const desktopBreakpoint = window.matchMedia('(min-width: 64rem)');
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let accountCloseTimer = null;
+    let mobileNavCloseTimer = null;
 
     const setNavDropdown = (item, isOpen) => {
         const toggle = item.querySelector('[data-nav-toggle]');
@@ -73,10 +74,31 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
             return;
         }
 
+        window.clearTimeout(mobileNavCloseTimer);
         mobileToggle.setAttribute('aria-expanded', String(isOpen));
         mobileToggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
-        mobileNav.classList.toggle('is-open', isOpen);
-        mobileBackdrop.hidden = !isOpen;
+
+        if (isOpen) {
+            mobileNav.classList.remove('is-closing');
+            mobileBackdrop.classList.remove('is-closing');
+            mobileBackdrop.hidden = false;
+            mobileNav.classList.add('is-open');
+        } else {
+            const finishClose = () => {
+                mobileNav.classList.remove('is-open', 'is-closing');
+                mobileBackdrop.classList.remove('is-closing');
+                mobileBackdrop.hidden = true;
+            };
+
+            // Slide the drawer out first, then fully hide it.
+            if (mobileNav.classList.contains('is-open') && !prefersReducedMotion.matches && !desktopBreakpoint.matches) {
+                mobileNav.classList.add('is-closing');
+                mobileBackdrop.classList.add('is-closing');
+                mobileNavCloseTimer = window.setTimeout(finishClose, 280);
+            } else {
+                finishClose();
+            }
+        }
 
         if (isOpen) {
             mobileNav.setAttribute('role', 'dialog');
@@ -145,6 +167,56 @@ document.querySelectorAll('[data-public-header]').forEach((header) => {
             }
         });
     });
+
+    // Phone/tablet avatar dropdown
+    const quickToggle = header.querySelector('[data-quick-account-toggle]');
+    const quickPanel = header.querySelector('[data-quick-account-panel]');
+    let quickCloseTimer = null;
+
+    const setQuickMenu = (isOpen) => {
+        if (!quickToggle || !quickPanel) {
+            return;
+        }
+
+        window.clearTimeout(quickCloseTimer);
+        quickToggle.setAttribute('aria-expanded', String(isOpen));
+
+        if (isOpen) {
+            quickPanel.hidden = false;
+            window.requestAnimationFrame(() => quickPanel.classList.add('is-open'));
+            return;
+        }
+
+        quickPanel.classList.remove('is-open');
+        quickCloseTimer = window.setTimeout(
+            () => {
+                quickPanel.hidden = true;
+            },
+            prefersReducedMotion.matches ? 0 : 260
+        );
+    };
+
+    quickToggle?.addEventListener('click', (event) => {
+        event.stopPropagation();
+        closeAllNavDropdowns();
+        setAccountMenu(false);
+        setQuickMenu(quickToggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    document.addEventListener('click', (event) => {
+        if (quickToggle?.getAttribute('aria-expanded') === 'true' && !event.target.closest('[data-quick-account]')) {
+            setQuickMenu(false);
+        }
+    });
+
+    header.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && quickToggle?.getAttribute('aria-expanded') === 'true') {
+            setQuickMenu(false);
+            quickToggle.focus();
+        }
+    });
+
+    mobileToggle?.addEventListener('click', () => setQuickMenu(false));
 
     accountToggle?.addEventListener('click', (event) => {
         event.stopPropagation();

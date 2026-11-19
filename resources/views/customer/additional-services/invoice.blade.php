@@ -6,14 +6,14 @@
 <style>
 .yk-invoice-sheet {
     background: #fff;
-    border: 1px solid #E2E9EE;
+    border: 1px solid #D9D9DE;
     border-radius: 1rem;
     overflow: hidden;
 }
 .yk-invoice-sheet__banner {
-    background: #EAF6F2;
-    border-bottom: 1px solid #E2E9EE;
-    color: #142B4D;
+    background: #F8EAF1;
+    border-bottom: 1px solid #D9D9DE;
+    color: #1F1F1F;
     padding: 1rem 1.5rem;
 }
 .yk-invoice-table {
@@ -22,13 +22,13 @@
 }
 .yk-invoice-table th,
 .yk-invoice-table td {
-    border-bottom: 1px solid #E2E9EE;
+    border-bottom: 1px solid #D9D9DE;
     padding: 0.75rem 0.5rem;
     text-align: left;
     vertical-align: top;
 }
 .yk-invoice-table th {
-    color: #718096;
+    color: #6B6B7A;
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.04em;
@@ -36,13 +36,13 @@
     width: 34%;
 }
 .yk-invoice-table td {
-    color: #142B4D;
+    color: #1F1F1F;
     font-size: 0.9375rem;
     font-weight: 500;
 }
 .yk-invoice-total td {
     border-bottom: 0;
-    color: #142B4D;
+    color: #1F1F1F;
     font-weight: 700;
 }
 .yk-invoice-actions a,

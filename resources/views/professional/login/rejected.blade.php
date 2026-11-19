@@ -440,7 +440,9 @@
 {{-- Rejection modal --}}
 <div id="rejectionModal" class="custom-modal fixed inset-0 z-[60] items-center justify-center overflow-y-auto bg-brand-950/55 p-4" role="dialog" aria-modal="true" aria-labelledby="rejection-modal-title">
     <div class="custom-modal-content w-full max-w-md rounded-panel border border-divider bg-white p-5 text-center shadow-popover sm:p-7">
-        <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="Yuktione" class="mx-auto mb-4 h-9 w-auto max-w-36 object-contain">
+        <a href="{{ route('home') }}" aria-label="Yuktione home" class="mx-auto mb-4 flex w-fit items-center">
+            <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="Yuktione" class="h-9 w-auto max-w-36 object-contain">
+        </a>
         <div class="mx-auto mb-3 flex size-12 items-center justify-center rounded-full bg-error-surface text-error" aria-hidden="true">
             <svg class="size-5" viewBox="0 0 24 24" fill="none">
                 <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>

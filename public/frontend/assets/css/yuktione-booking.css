@@ -1,16 +1,16 @@
 /* YuktiOne token overlay for authenticated customer booking screens.
    Keeps existing markup hooks; restyles colours/typography to customer-panel tokens. */
 [data-yuktione-panel="customer"] {
-    --yk-primary: #36877F;
-    --yk-primary-hover: #286E67;
-    --yk-heading: #142B4D;
-    --yk-body: #475569;
-    --yk-muted: #718096;
-    --yk-background: #F7FAFB;
+    --yk-primary: #8A0F4D;
+    --yk-primary-hover: #6E0B3C;
+    --yk-heading: #1F1F1F;
+    --yk-body: #6B6B7A;
+    --yk-muted: #6B6B7A;
+    --yk-background: #FFF8FB;
     --yk-surface: #ffffff;
-    --yk-mint: #EAF6F2;
-    --yk-lavender: #F0EBF8;
-    --yk-border: #E2E9EE;
+    --yk-mint: #F8EAF1;
+    --yk-lavender: #F6EEF9;
+    --yk-border: #D9D9DE;
     font-family: "DM Sans", sans-serif;
     color: var(--yk-body);
 }
@@ -74,7 +74,7 @@
     background: var(--yk-surface) !important;
     border: 1px solid var(--yk-border) !important;
     border-radius: 1.25rem !important;
-    box-shadow: 0 2px 8px rgb(20 43 77 / 0.05), 0 16px 36px -24px rgb(20 43 77 / 0.18) !important;
+    box-shadow: 0 2px 8px rgb(110 11 60 / 0.05), 0 16px 36px -24px rgb(110 11 60 / 0.18) !important;
     overflow: hidden;
 }
 
@@ -145,7 +145,7 @@
 }
 
 [data-yuktione-panel="customer"] .booking-details {
-    background: #F3F7F8 !important;
+    background: #FFF1F6 !important;
     border: 1px solid var(--yk-border);
     border-radius: 1rem;
 }

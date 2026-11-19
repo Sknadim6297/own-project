@@ -19,13 +19,13 @@
         }
         
         .invoice-header {
-            border-bottom: 3px solid #36877F;
+            border-bottom: 3px solid #8A0F4D;
             margin-bottom: 30px;
             padding-bottom: 20px;
         }
         
         .invoice-title {
-            color: #142B4D;
+            color: #1F1F1F;
             font-size: 36px;
             font-weight: bold;
             margin-bottom: 5px;
@@ -91,7 +91,7 @@
             padding: 10px;
             background: white;
             border-radius: 5px;
-            border-left: 4px solid #36877F;
+            border-left: 4px solid #8A0F4D;
         }
         
         .price-stage {
@@ -106,14 +106,14 @@
             text-align: center;
             width: 5%;
             font-size: 18px;
-            color: #36877F;
+            color: #8A0F4D;
             vertical-align: middle;
         }
         
         .price-value {
             font-size: 16px;
             font-weight: bold;
-            color: #36877F;
+            color: #8A0F4D;
         }
         
         .price-label {
@@ -127,16 +127,16 @@
             border-radius: 5px;
             padding: 10px;
             margin: 10px 0;
-            border-left: 4px solid #36877F;
+            border-left: 4px solid #8A0F4D;
             font-size: 11px;
         }
         
         .negotiation-history {
-            background: #EAF6F2;
+            background: #F8EAF1;
             border-radius: 5px;
             padding: 15px;
             margin: 15px 0;
-            border-left: 4px solid #36877F;
+            border-left: 4px solid #8A0F4D;
         }
         
         .badge {

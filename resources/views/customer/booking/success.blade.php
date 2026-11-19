@@ -6,7 +6,7 @@
 <style>
     .btn-dashboard {
         align-items: center;
-        background: #36877F;
+        background: #8A0F4D;
         border-radius: 0.75rem;
         color: #fff;
         display: inline-flex;
@@ -16,7 +16,7 @@
         padding: 0.65rem 1.5rem;
         text-decoration: none;
     }
-    .btn-dashboard:hover { background: #286E67; color: #fff; text-decoration: none; }
+    .btn-dashboard:hover { background: #6E0B3C; color: #fff; text-decoration: none; }
 </style>
 @endsection
 
@@ -243,8 +243,8 @@
 
 <style>
 .question-text {
-    background: #F7FAFB;
-    border-left: 4px solid #36877F;
+    background: #FFF8FB;
+    border-left: 4px solid #8A0F4D;
     border-radius: 0.75rem;
     margin-bottom: 15px;
     padding: 15px;
@@ -261,11 +261,11 @@
 }
 
 .form-check:hover {
-    background-color: #EAF6F2;
+    background-color: #F8EAF1;
 }
 
 .form-check-input:checked + .form-check-label {
-    color: #36877F;
+    color: #8A0F4D;
     font-weight: 600;
 }
 
@@ -275,29 +275,29 @@
 }
 
 #mcqModal .modal-content {
-    border: 1px solid #E2E9EE;
+    border: 1px solid #D9D9DE;
     border-radius: 1.25rem;
     overflow: hidden;
 }
 
 #mcqModal .modal-header {
-    background: #EAF6F2;
-    border-bottom: 1px solid #E2E9EE;
-    color: #142B4D;
+    background: #F8EAF1;
+    border-bottom: 1px solid #D9D9DE;
+    color: #1F1F1F;
 }
 
 #mcqModal .modal-footer {
-    border-top: 1px solid #E2E9EE;
+    border-top: 1px solid #D9D9DE;
 }
 
 #mcqModal .btn-primary {
-    background: #36877F;
-    border-color: #36877F;
+    background: #8A0F4D;
+    border-color: #8A0F4D;
 }
 
 #mcqModal .btn-primary:hover {
-    background: #286E67;
-    border-color: #286E67;
+    background: #6E0B3C;
+    border-color: #6E0B3C;
 }
 
 #mcqModal .modal-body {

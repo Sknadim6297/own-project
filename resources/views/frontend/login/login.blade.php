@@ -265,6 +265,15 @@
     let role = @json($initialRole);
     let loginRequestInProgress = false;
 
+    // Terms were already accepted when the account was created, so the box is ticked automatically.
+    // The "Terms and Conditions" link still opens the full text, and the user can untick the box.
+    const autoAcceptTerms = () => {
+        termsAccepted.dataset.unlocked = '1';
+        termsAccepted.checked = true;
+        termsError.classList.add('hidden');
+        const help = document.getElementById('terms-help');
+        if (help) help.textContent = 'Already accepted when you created your account. Click the link to review.';
+    };
     const closeTerms = () => termsDialog.close();
     const setFieldError = (field, message) => {
         const error = document.getElementById(`${field.id}-error`);
@@ -306,10 +315,7 @@
         document.getElementById('roleEyebrow').textContent = config.eyebrow;
         document.getElementById('customerTerms').hidden = role !== 'customer';
         document.getElementById('professionalTerms').hidden = role !== 'professional';
-        termsAccepted.checked = false;
-        delete termsAccepted.dataset.unlocked;
-        termsError.classList.add('hidden');
-        agreeTerms.disabled = true;
+        autoAcceptTerms();
         roleTabs.forEach((tab) => {
             const selected = tab.dataset.role === role;
             tab.setAttribute('aria-selected', String(selected));
@@ -334,6 +340,8 @@
         });
     });
     setRole(role);
+    autoAcceptTerms();
+    window.addEventListener('pageshow', autoAcceptTerms);
 
     togglePassword.addEventListener('click', () => {
         const visible = password.type === 'password';

@@ -7,27 +7,27 @@
 
 [data-yuktione-booking="1"] .yk-booking-card {
     background: #ffffff;
-    border: 1px solid #E2E9EE;
+    border: 1px solid #D9D9DE;
     border-radius: 1rem;
     overflow: hidden;
 }
 
 [data-yuktione-booking="1"] .yk-booking-card__head {
-    background: #EAF6F2;
-    border-bottom: 1px solid #E2E9EE;
+    background: #F8EAF1;
+    border-bottom: 1px solid #D9D9DE;
     padding: 1.25rem 1.5rem;
 }
 
 [data-yuktione-booking="1"] .yk-booking-card__head h2,
 [data-yuktione-booking="1"] .yk-booking-card__head h3 {
-    color: #142B4D;
+    color: #1F1F1F;
     font-size: 1.25rem;
     font-weight: 700;
     margin: 0;
 }
 
 [data-yuktione-booking="1"] .yk-booking-card__head p {
-    color: #475569;
+    color: #6B6B7A;
     font-size: 0.875rem;
     margin: 0.35rem 0 0;
 }
@@ -44,7 +44,7 @@
 
 [data-yuktione-booking="1"] .yk-booking-dl > div {
     align-items: baseline;
-    border-bottom: 1px solid #E2E9EE;
+    border-bottom: 1px solid #D9D9DE;
     display: flex;
     gap: 1rem;
     justify-content: space-between;
@@ -57,7 +57,7 @@
 }
 
 [data-yuktione-booking="1"] .yk-booking-dl dt {
-    color: #718096;
+    color: #6B6B7A;
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.04em;
@@ -66,7 +66,7 @@
 }
 
 [data-yuktione-booking="1"] .yk-booking-dl dd {
-    color: #142B4D;
+    color: #1F1F1F;
     font-size: 0.9375rem;
     font-weight: 600;
     margin: 0;
@@ -83,8 +83,8 @@
 [data-yuktione-booking="1"] a.btn_1,
 [data-yuktione-booking="1"] button.btn_1 {
     align-items: center;
-    background: #36877F !important;
-    border: 1px solid #36877F !important;
+    background: #8A0F4D !important;
+    border: 1px solid #8A0F4D !important;
     border-radius: 0.75rem !important;
     box-shadow: none !important;
     color: #fff !important;
@@ -100,21 +100,21 @@
 [data-yuktione-booking="1"] .yk-booking-actions .btn_1:hover,
 [data-yuktione-booking="1"] a.btn_1:hover,
 [data-yuktione-booking="1"] button.btn_1:hover {
-    background: #286E67 !important;
-    border-color: #286E67 !important;
+    background: #6E0B3C !important;
+    border-color: #6E0B3C !important;
 }
 
 [data-yuktione-booking="1"] .yk-booking-actions .btn_1.outline,
 [data-yuktione-booking="1"] a.btn_1.outline {
     background: #fff !important;
-    border-color: #E2E9EE !important;
-    color: #142B4D !important;
+    border-color: #D9D9DE !important;
+    color: #1F1F1F !important;
 }
 
 [data-yuktione-booking="1"] .yk-booking-actions .btn_1.outline:hover,
 [data-yuktione-booking="1"] a.btn_1.outline:hover {
-    border-color: #36877F !important;
-    color: #36877F !important;
+    border-color: #8A0F4D !important;
+    color: #8A0F4D !important;
 }
 
 [data-yuktione-booking="1"] .yk-booking-phone {
@@ -124,9 +124,9 @@
 [data-yuktione-booking="1"] .yk-booking-phone .form-control,
 [data-yuktione-booking="1"] #phone {
     background: #fff;
-    border: 1px solid #E2E9EE;
+    border: 1px solid #D9D9DE;
     border-radius: 0.75rem;
-    color: #142B4D;
+    color: #1F1F1F;
     min-height: 2.75rem;
     padding: 0.65rem 0.9rem;
     width: 100%;
@@ -134,16 +134,16 @@
 
 [data-yuktione-booking="1"] .yk-booking-phone .form-control:focus,
 [data-yuktione-booking="1"] #phone:focus {
-    border-color: #36877F;
+    border-color: #8A0F4D;
     box-shadow: 0 0 0 3px rgb(54 135 127 / 0.15);
     outline: none;
 }
 
 [data-yuktione-booking="1"] .yk-booking-success-icon {
     align-items: center;
-    background: #EAF6F2;
+    background: #F8EAF1;
     border-radius: 999px;
-    color: #36877F;
+    color: #8A0F4D;
     display: inline-flex;
     font-size: 2rem;
     height: 4rem;

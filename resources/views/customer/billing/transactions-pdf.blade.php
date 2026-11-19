@@ -39,7 +39,7 @@
         .date {
             font-size: 12px;
             margin-bottom: 10px;
-            color: #718096;
+            color: #6B6B7A;
         }
         
         .user-info {
@@ -100,7 +100,7 @@
             border-top: 1px solid #ddd;
             text-align: center;
             font-size: 10px;
-            color: #718096;
+            color: #6B6B7A;
         }
         
         .badge {
@@ -116,8 +116,8 @@
         }
         
         .badge-monthly {
-            background-color: #EAF6F2;
-            color: #286E67;
+            background-color: #F8EAF1;
+            color: #6E0B3C;
         }
         
         .badge-quarterly {
@@ -126,8 +126,8 @@
         }
         
         .badge-one_time, .badge-free_hand {
-            background-color: #E7F0FB;
-            color: #142B4D;
+            background-color: #F6EEF9;
+            color: #1F1F1F;
         }
     </style>
 </head>
