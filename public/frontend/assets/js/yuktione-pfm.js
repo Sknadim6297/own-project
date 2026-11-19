@@ -32,11 +32,13 @@
             return true;
         }
 
+        var initial = true;
+
         function render() {
             steps.forEach(function (step, i) {
                 var active = i === index;
                 step.hidden = !active;
-                if (active) {
+                if (active && !initial) {
                     var focusable = step.querySelector('input, select, textarea, button');
                     if (focusable) {
                         focusable.focus({ preventScroll: true });
@@ -84,6 +86,7 @@
         });
 
         render();
+        initial = false;
     }
 
     document.addEventListener('DOMContentLoaded', function () {

@@ -14,29 +14,47 @@
         $investments = max(0, (float) ($inputs['investments'] ?? 0));
         $freeCash = (float) ($result['free_cash'] ?? 0);
         $bars = [
-            ['label' => 'Essential', 'value' => $essential, 'color' => '#142B4D'],
-            ['label' => 'Lifestyle', 'value' => $lifestyle, 'color' => '#5b6b7c'],
-            ['label' => 'EMIs', 'value' => $emis, 'color' => '#c4a35a'],
-            ['label' => 'Other', 'value' => $other, 'color' => '#8aa4b8'],
-            ['label' => 'Investments', 'value' => $investments, 'color' => '#36877F'],
-            ['label' => 'Free cash', 'value' => max(0, $freeCash), 'color' => '#2a6b65'],
+            ['label' => 'Income', 'value' => $income, 'color' => '#2a0d4a'],
+            ['label' => 'Essential', 'value' => $essential, 'color' => '#4c1a73'],
+            ['label' => 'Lifestyle', 'value' => $lifestyle, 'color' => '#a56bd0'],
+            ['label' => 'EMIs', 'value' => $emis, 'color' => '#e0a73f'],
+            ['label' => 'Other', 'value' => $other, 'color' => '#cdbbe0'],
+            ['label' => 'Invested', 'value' => $investments, 'color' => '#6a2396'],
+            ['label' => 'Free cash', 'value' => max(0, $freeCash), 'color' => '#2fa37c'],
         ];
         $max = max(1, $income, ...array_column($bars, 'value'));
+        // Compact Indian labels for the values above the bars (₹50K, ₹1.2L).
+        $short = function (float $v): string {
+            $trim = fn (float $x, int $d) => rtrim(rtrim(number_format($x, $d, '.', ''), '0'), '.');
+            if ($v >= 1e7) {
+                return '₹'.$trim($v / 1e7, 2).'Cr';
+            }
+            if ($v >= 1e5) {
+                return '₹'.$trim($v / 1e5, 2).'L';
+            }
+            if ($v >= 1e3) {
+                return '₹'.$trim($v / 1e3, 1).'K';
+            }
+
+            return '₹'.number_format($v);
+        };
     @endphp
     <figure class="yk-pfm__chart" aria-labelledby="{{ $chartId }}-title">
         <figcaption id="{{ $chartId }}-title" class="yk-pfm__chart-title">Monthly money picture</figcaption>
-        <svg viewBox="0 0 360 180" role="img" aria-label="Bar chart of monthly money allocation" preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 360 190" role="img" aria-label="Bar chart of monthly money allocation" preserveAspectRatio="xMidYMid meet">
+            <line x1="4" x2="356" y1="150" y2="150" stroke="#e7d9f4" stroke-width="1.5"></line>
             @foreach ($bars as $i => $bar)
                 @php
-                    $h = ($bar['value'] / $max) * 120;
-                    $x = 24 + ($i * 56);
-                    $y = 140 - $h;
+                    $h = ($bar['value'] / $max) * 118;
+                    $x = 10 + ($i * 48);
+                    $y = 150 - $h;
                 @endphp
-                <rect x="{{ $x }}" y="{{ $y }}" width="36" height="{{ max(1, $h) }}" rx="6" fill="{{ $bar['color'] }}"></rect>
-                <text x="{{ $x + 18 }}" y="158" text-anchor="middle" font-size="9" fill="#5b6b7c">{{ $bar['label'] }}</text>
+                <rect x="{{ $x }}" y="{{ $y }}" width="34" height="{{ max(1, $h) }}" rx="6" fill="{{ $bar['color'] }}"></rect>
+                <text x="{{ $x + 17 }}" y="{{ max(12, $y - 6) }}" text-anchor="middle" font-size="10" font-weight="700" fill="#2a0d4a">{{ $short($bar['value']) }}</text>
+                <text x="{{ $x + 17 }}" y="168" text-anchor="middle" font-size="10" fill="#6f6283">{{ $bar['label'] }}</text>
             @endforeach
         </svg>
-        <p class="yk-pfm__chart-note">Income {{ $money($income) }}. Bars use your entered amounts{{ $freeCash < 0 ? '; free cash is negative so that bar is empty.' : '.' }}</p>
+        <p class="yk-pfm__chart-note">Monthly income {{ $money($income) }}. Bars use your entered amounts{{ $freeCash < 0 ? '; free cash is negative so that bar is empty.' : '.' }}</p>
     </figure>
 
 @elseif ($toolKey === 'net-worth-calculator')
@@ -140,10 +158,10 @@
     <figure class="yk-pfm__chart" aria-labelledby="{{ $chartId }}-title">
         <figcaption id="{{ $chartId }}-title" class="yk-pfm__chart-title">Inflation impact</figcaption>
         <svg viewBox="0 0 220 180" role="img" aria-label="Current amount versus future cost" preserveAspectRatio="xMidYMid meet">
-            <rect x="40" y="{{ 140 - $cH }}" width="50" height="{{ max(1, $cH) }}" rx="8" fill="#36877F"></rect>
-            <rect x="130" y="{{ 140 - $fH }}" width="50" height="{{ max(1, $fH) }}" rx="8" fill="#142B4D"></rect>
-            <text x="65" y="158" text-anchor="middle" font-size="11" fill="#5b6b7c">Today</text>
-            <text x="155" y="158" text-anchor="middle" font-size="11" fill="#5b6b7c">Future</text>
+            <rect x="40" y="{{ 140 - $cH }}" width="50" height="{{ max(1, $cH) }}" rx="8" fill="#6a2396"></rect>
+            <rect x="130" y="{{ 140 - $fH }}" width="50" height="{{ max(1, $fH) }}" rx="8" fill="#e0a73f"></rect>
+            <text x="65" y="158" text-anchor="middle" font-size="11" fill="#6f6283">Today</text>
+            <text x="155" y="158" text-anchor="middle" font-size="11" fill="#6f6283">Future</text>
         </svg>
         <p class="yk-pfm__chart-note">Today {{ $money($current) }} · Future {{ $money($future) }}</p>
     </figure>

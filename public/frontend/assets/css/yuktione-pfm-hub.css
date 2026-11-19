@@ -1,0 +1,639 @@
+/**
+ * Money & Finance hub — soft lavender, deep violet and plum.
+ * Self-contained (hard-coded tokens): it does not depend on the shared PFM or brand variables.
+ */
+.yk-hub {
+    --h-ink: #2a0d4a;
+    --h-text: #4a3a5e;
+    --h-muted: #6f6283;
+    --h-plum: #6a2396;
+    --h-plum-2: #8a34a8;
+    --h-plum-deep: #4c1a73;
+    --h-lilac: #f1e4fb;
+    --h-lilac-2: #f8f1fd;
+    --h-lilac-3: #fcf9fe;
+    --h-line: #e7d9f4;
+    --h-line-2: #efe3f8;
+    --h-gold-soft: #fbefc9;
+    --h-gold-ink: #8a5a0b;
+    --h-ease: 180ms ease;
+
+    position: relative;
+    min-height: 70vh;
+    padding-bottom: 72px;
+    color: var(--h-ink);
+    font-family: "DM Sans", system-ui, sans-serif;
+    line-height: 1.45;
+    background:
+        radial-gradient(760px 420px at 12% -6%, rgba(216, 180, 240, 0.45), transparent 62%),
+        radial-gradient(640px 380px at 96% 8%, rgba(236, 200, 250, 0.5), transparent 60%),
+        linear-gradient(180deg, #f6edfc 0%, #fbf6fe 46%, #f8f1fd 100%);
+    overflow-x: clip;
+}
+
+.yk-hub *,
+.yk-hub *::before,
+.yk-hub *::after {
+    box-sizing: border-box;
+}
+
+.yk-hub__wrap {
+    position: relative;
+    z-index: 1;
+    width: min(1120px, calc(100% - 48px));
+    margin-inline: auto;
+}
+
+/* decorative leaves in the page corners */
+.yk-hub__leaf {
+    position: absolute;
+    bottom: 0;
+    z-index: 0;
+    width: 150px;
+    height: auto;
+    pointer-events: none;
+}
+
+.yk-hub__leaf--left {
+    left: 0;
+}
+
+.yk-hub__leaf--right {
+    right: 0;
+}
+
+/* ---- Hero ---- */
+.yk-hub__hero {
+    position: relative;
+    padding: 24px 0 8px;
+}
+
+.yk-hub__hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr);
+    align-items: center;
+    gap: 16px;
+}
+
+.yk-hub__crumbs {
+    margin-bottom: 14px;
+    font-size: 0.88rem;
+}
+
+.yk-hub__crumbs a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    color: var(--h-plum);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.yk-hub__crumbs a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.yk-hub__crumbs a:focus-visible {
+    outline: 2px solid var(--h-plum);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+.yk-hub__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 12px;
+    padding: 7px 16px 7px 11px;
+    border-radius: 999px;
+    background: #ead9f7;
+    color: var(--h-plum-deep);
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.yk-hub__eyebrow svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.yk-hub__hero h1 {
+    max-width: 22ch;
+    margin: 0;
+    color: var(--h-ink);
+    font-size: clamp(2.1rem, 1.3rem + 2.6vw, 3.3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.06;
+}
+
+.yk-hub__lead {
+    max-width: 52ch;
+    margin: 14px 0 0;
+    color: var(--h-text);
+    font-size: 1.06rem;
+    line-height: 1.55;
+}
+
+.yk-hub__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 22px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.yk-hub__facts li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px 8px 11px;
+    border: 1px solid var(--h-line);
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 8px 18px -12px rgba(106, 35, 150, 0.4);
+    color: var(--h-ink);
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.yk-hub__facts svg {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: var(--h-plum);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.yk-hub__facts b {
+    font-weight: 800;
+}
+
+.yk-hub__hero-art {
+    display: block;
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    margin-left: auto;
+}
+
+/* ---- Groups ---- */
+.yk-hub__body {
+    display: grid;
+    gap: 18px;
+    margin-top: 22px;
+}
+
+.yk-hub__group {
+    display: grid;
+    grid-template-columns: 330px minmax(0, 1fr);
+    gap: 0;
+    align-items: center;
+    padding: 14px 16px 14px 24px;
+    border: 1px solid var(--h-line);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 22px 44px -30px rgba(106, 35, 150, 0.45);
+}
+
+.yk-hub__group-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+    padding-right: 24px;
+}
+
+.yk-hub__group-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 68px;
+    height: 68px;
+    border-radius: 20px;
+    background: linear-gradient(160deg, #f7ecfd, #ead9f7);
+    color: var(--h-plum);
+}
+
+.yk-hub__group-icon svg {
+    width: 34px;
+    height: 34px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.yk-hub__group-text {
+    min-width: 0;
+}
+
+.yk-hub__group-no {
+    display: inline-grid;
+    place-items: center;
+    min-width: 34px;
+    height: 22px;
+    padding: 0 9px;
+    border-radius: 999px;
+    background: var(--h-gold-soft);
+    color: var(--h-gold-ink);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    font-variant-numeric: tabular-nums;
+}
+
+.yk-hub__group-text h2 {
+    margin: 4px 0 0;
+    color: var(--h-ink);
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.yk-hub__group-text p {
+    margin: 6px 0 0;
+    color: var(--h-muted);
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.yk-hub__list {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+    margin: 0;
+    padding: 6px 0 6px 20px;
+    border-left: 1px solid var(--h-line);
+    list-style: none;
+}
+
+/* ---- Tool row ---- */
+.yk-hub__card {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+    padding: 11px 14px;
+    border: 1px solid var(--h-line-2);
+    border-radius: 16px;
+    background: linear-gradient(90deg, #fff 0%, var(--h-lilac-3) 100%);
+    transition: transform var(--h-ease), border-color var(--h-ease), box-shadow var(--h-ease), background-color var(--h-ease);
+}
+
+.yk-hub__card:not(.is-closed):hover {
+    transform: translateY(-2px);
+    border-color: #cfaee9;
+    background: #fff;
+    box-shadow: 0 16px 28px -18px rgba(106, 35, 150, 0.5);
+}
+
+.yk-hub__icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    transition: transform var(--h-ease);
+}
+
+.yk-hub__card:not(.is-closed):hover .yk-hub__icon {
+    transform: scale(1.06);
+}
+
+.yk-hub__icon--rose {
+    background: #fbe5f0;
+    color: #b62374;
+}
+
+.yk-hub__icon--sage {
+    background: #e2f3ea;
+    color: #1f8a5b;
+}
+
+.yk-hub__icon--amber {
+    background: #fdf0d3;
+    color: #b8770b;
+}
+
+.yk-hub__icon--lilac {
+    background: #efe0fa;
+    color: var(--h-plum);
+}
+
+.yk-hub__icon svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.yk-hub__text {
+    min-width: 0;
+}
+
+.yk-hub__text h3 {
+    margin: 0;
+    color: var(--h-ink);
+    font-size: 1.04rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+}
+
+.yk-hub__text p {
+    margin: 2px 0 0;
+    color: var(--h-text);
+    font-size: 0.88rem;
+    line-height: 1.4;
+}
+
+/* The tool name is the single, stretched link, so the whole row is clickable. */
+.yk-hub__link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.yk-hub__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+}
+
+.yk-hub__link:focus-visible {
+    outline: none;
+}
+
+.yk-hub__link:focus-visible::after {
+    outline: 3px solid var(--h-plum);
+    outline-offset: 2px;
+}
+
+.yk-hub__cta {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px 12px;
+}
+
+.yk-hub__open {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 98px;
+    min-height: 42px;
+    padding: 0 18px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--h-plum-2), var(--h-plum-deep));
+    color: #fff;
+    font-size: 0.92rem;
+    font-weight: 800;
+    box-shadow: 0 12px 20px -10px rgba(76, 26, 115, 0.8);
+}
+
+.yk-hub__open svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform var(--h-ease);
+}
+
+.yk-hub__card:hover .yk-hub__open svg {
+    transform: translateX(3px);
+}
+
+.yk-hub__resume {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 18px;
+    border: 1.5px solid var(--h-plum);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--h-plum-deep);
+    font-size: 0.88rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.yk-hub__resume:hover {
+    background: var(--h-lilac);
+}
+
+.yk-hub__resume:focus-visible {
+    outline: 3px solid var(--h-plum);
+    outline-offset: 2px;
+}
+
+.yk-hub__badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.yk-hub__badge--off {
+    background: #ece6f2;
+    color: #6a5f78;
+}
+
+.yk-hub__card.is-closed {
+    background: #f5f1f9;
+}
+
+.yk-hub__card.is-closed .yk-hub__icon {
+    background: #e8e1ef;
+    color: #8a7f98;
+}
+
+.yk-hub__card.is-closed .yk-hub__text h3 {
+    color: #6a5f78;
+}
+
+/* ---- Footer note ---- */
+.yk-hub__note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 6px 0 0;
+    color: var(--h-text);
+    font-size: 0.88rem;
+    text-align: center;
+}
+
+.yk-hub__note svg {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1099.98px) {
+    .yk-hub__group {
+        grid-template-columns: 290px minmax(0, 1fr);
+    }
+
+    .yk-hub__group-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 17px;
+    }
+}
+
+@media (max-width: 1023.98px) {
+    .yk-hub__hero-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .yk-hub__hero-art {
+        display: none;
+    }
+
+    .yk-hub__group {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+        padding: 20px;
+    }
+
+    .yk-hub__group-head {
+        padding-right: 0;
+    }
+
+    .yk-hub__list {
+        padding: 0;
+        border-left: 0;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .yk-hub {
+        padding-bottom: 44px;
+    }
+
+    .yk-hub__wrap {
+        width: min(1120px, calc(100% - 32px));
+    }
+
+    .yk-hub__hero {
+        padding-top: 14px;
+    }
+
+    .yk-hub__lead {
+        font-size: 0.97rem;
+    }
+
+    .yk-hub__facts {
+        gap: 8px;
+        margin-top: 18px;
+    }
+
+    .yk-hub__facts li {
+        padding: 6px 12px 6px 9px;
+        font-size: 0.82rem;
+    }
+
+    .yk-hub__body {
+        gap: 14px;
+        margin-top: 18px;
+    }
+
+    .yk-hub__group {
+        padding: 16px 12px 12px;
+        border-radius: 20px;
+    }
+
+    .yk-hub__group-head {
+        padding-inline: 4px;
+        gap: 14px;
+    }
+
+    .yk-hub__group-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 15px;
+    }
+
+    .yk-hub__group-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .yk-hub__group-text h2 {
+        font-size: 1.22rem;
+    }
+
+    .yk-hub__card {
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 10px 14px;
+        padding: 12px;
+    }
+
+    .yk-hub__cta {
+        grid-column: 1 / -1;
+        justify-content: space-between;
+    }
+
+    .yk-hub__open {
+        margin-left: auto;
+    }
+
+    .yk-hub__leaf {
+        width: 90px;
+        opacity: 0.7;
+    }
+
+    .yk-hub__note {
+        align-items: flex-start;
+        text-align: left;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .yk-hub *,
+    .yk-hub *::before,
+    .yk-hub *::after {
+        transition-duration: 0.01ms !important;
+    }
+
+    .yk-hub__card:not(.is-closed):hover,
+    .yk-hub__card:not(.is-closed):hover .yk-hub__icon {
+        transform: none;
+    }
+}

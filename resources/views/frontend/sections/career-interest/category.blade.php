@@ -5,6 +5,7 @@
 @section('body_class', 'yk-cit-body')
 
 @php
+    $icon = fn (string $name, int $size = 18) => view('frontend.sections.career-interest.partials.icon', ['name' => $name, 'size' => $size])->render();
     $scaleOptions = $scaleOptions ?? collect($scale)->map(fn ($label, $value) => [
         'value' => (int) $value,
         'label' => $label,
@@ -15,6 +16,8 @@
     $perPage = max(1, count($questions));
     $qStart = (($step - 1) * $perPage) + 1;
     $qEnd = min($questionCount, $step * $perPage);
+    $allCategories = \App\Support\CareerInterest\CareerInterestCatalog::categories();
+    $categoryIcon = $category['icon'] ?? ($allCategories[$category['key']]['icon'] ?? 'compass');
 @endphp
 
 @section('content')
@@ -42,12 +45,29 @@
                 >
                     <span style="width: {{ $progress }}%"></span>
                 </div>
+
+                <ol class="yk-cit__steps" aria-hidden="true">
+                    @foreach ($allCategories as $key => $meta)
+                        <li class="yk-cit__step {{ $meta['step'] < $step ? 'is-done' : '' }} {{ $meta['step'] === $step ? 'is-current' : '' }}">
+                            <span class="yk-cit__step-dot">{!! $meta['step'] < $step ? $icon('check', 18) : $icon($meta['icon'], 18) !!}</span>
+                            <span class="yk-cit__step-label">{{ $meta['label'] }}</span>
+                        </li>
+                    @endforeach
+                </ol>
+
                 <p class="yk-cit__sr-only" aria-live="polite">
                     Step {{ $step }} of {{ $totalSteps }}. {{ $category['label'] }} interests. Answer how much you enjoy each activity.
                 </p>
-                <p class="yk-cit__kicker">{{ $category['kicker'] }}</p>
-                <h1>{{ $category['label'] }}</h1>
-                <p class="yk-cit__lead yk-cit__lead--tight">How much do you enjoy these activities?</p>
+
+                <div class="yk-cit__cat-head">
+                    <span class="yk-cit__cat-icon">{!! $icon($categoryIcon, 24) !!}</span>
+                    <div>
+                        <p class="yk-cit__kicker">{{ $category['kicker'] }}</p>
+                        <h1>{{ $category['label'] }}</h1>
+                        <p class="yk-cit__cat-desc">{{ $category['description'] }}</p>
+                    </div>
+                </div>
+                <p class="yk-cit__prompt">How much do you enjoy these activities?</p>
             </header>
 
             @if ($errors->any())
@@ -83,9 +103,11 @@
                 </fieldset>
             @endforeach
 
-            <div class="yk-cit__actions">
-                <a class="yk-cit__btn-secondary" href="{{ $previousUrl }}">Back</a>
-                <button class="yk-cit__btn" type="submit" data-cit-continue>{{ $nextLabel }}</button>
+            <p class="yk-cit__answered" aria-live="polite"><span data-cit-answered>0</span> of {{ count($questions) }} answered</p>
+
+            <div class="yk-cit__actions yk-cit__actions--between">
+                <a class="yk-cit__btn-secondary" href="{{ $previousUrl }}">{!! $icon('arrow-left', 18) !!} Back</a>
+                <button class="yk-cit__btn" type="submit" data-cit-continue>{{ $nextLabel }} {!! $icon($step === $totalSteps ? 'check' : 'arrow', 18) !!}</button>
             </div>
         </form>
     </div>

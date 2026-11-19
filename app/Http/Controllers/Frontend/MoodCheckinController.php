@@ -99,8 +99,13 @@ class MoodCheckinController extends Controller
             return redirect()->route('tools.psychology.mood.emotions');
         }
 
+        $summary = $open ? $checkin->summary($draft->mood(), $draft->emotions()) : ['mood' => null, 'emotions' => []];
+
         return view('frontend.sections.mood-reflection', [
             'open' => $open,
+            'moodKey' => $open ? $draft->mood() : null,
+            'moodLabel' => $summary['mood'],
+            'emotionChips' => $summary['emotions'],
             'reflection' => $open ? ($draft->reflection() ?? '') : '',
             'held' => $open && $draft->reflectionHeld(),
             'limit' => PsychologyCatalog::REFLECTION_MAX,
@@ -197,6 +202,7 @@ class MoodCheckinController extends Controller
             $at = $record->checked_in_at->timezone(self::HISTORY_TIMEZONE);
 
             return [
+                'moodKey' => $record->mood_key,
                 'mood' => $summary['mood'] ?? 'Saved check-in',
                 'emotions' => $summary['emotions'],
                 'reflection' => $record->reflection,
@@ -208,7 +214,41 @@ class MoodCheckinController extends Controller
         return view('frontend.sections.mood-history', [
             'items' => $items,
             'entries' => $entries,
+            'stats' => $entries->total() > 0 ? $this->historyStats($moods) : null,
         ]);
+    }
+
+    private function historyStats(MoodCheckin $moods): array
+    {
+        $owned = fn () => PsychologyMoodCheckin::query()->where('user_id', Auth::guard('user')->id());
+        $counts = $owned()
+            ->selectRaw('mood_key, COUNT(*) as total, MAX(checked_in_at) as latest')
+            ->groupBy('mood_key')
+            ->get();
+        $labels = collect($moods->options())->pluck('label', 'key');
+        $order = $labels->keys()->flip();
+
+        $mix = $counts
+            ->filter(fn ($row) => $labels->has($row->mood_key))
+            ->sortBy(fn ($row) => $order[$row->mood_key])
+            ->map(fn ($row) => [
+                'key' => $row->mood_key,
+                'label' => $labels[$row->mood_key],
+                'count' => (int) $row->total,
+            ])
+            ->values()
+            ->all();
+        $top = $counts
+            ->filter(fn ($row) => $labels->has($row->mood_key))
+            ->sort(fn ($a, $b) => [(int) $b->total, (string) $b->latest] <=> [(int) $a->total, (string) $a->latest])
+            ->first();
+
+        return [
+            'total' => (int) $counts->sum('total'),
+            'week' => $owned()->where('checked_in_at', '>=', now()->subDays(7))->count(),
+            'top' => $top ? ['key' => $top->mood_key, 'label' => $labels[$top->mood_key], 'count' => (int) $top->total] : null,
+            'mix' => $mix,
+        ];
     }
 
     public function saved(string $checkin, MoodCheckin $moods, PsychologyHome $home)
@@ -225,6 +265,8 @@ class MoodCheckinController extends Controller
         $summary = $moods->summary($record->mood_key, $record->emotion_keys ?? []);
 
         return view('frontend.sections.mood-complete', [
+            'moodKey' => $record->mood_key,
+            'checkedAt' => $record->checked_in_at?->copy()->timezone(self::HISTORY_TIMEZONE),
             'mood' => $summary['mood'],
             'emotions' => $summary['emotions'],
             'reflection' => $record->reflection,

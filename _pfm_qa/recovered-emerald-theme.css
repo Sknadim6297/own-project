@@ -1,0 +1,508 @@
+﻿
+/* =====================================================================
+   Themed pages — dark emerald header band, paper background, card sheet.
+   Same look as the Money & Finance hub and the Financial Goal tool.
+   ===================================================================== */
+.yk-pfm {
+    --yk-deep: #0b3d36;
+    --yk-gold-2: #f0c46a;
+    --yk-gold-soft: #fbf0d6;
+    padding: 0 0 72px;
+    background-color: #f6f3ec;
+    background-image: radial-gradient(rgba(11, 61, 54, 0.08) 1px, transparent 1px);
+    background-size: 22px 22px;
+    line-height: 1.45;
+}
+
+/* ---- Header band ---- */
+.yk-pfm__hero {
+    position: relative;
+    padding: 26px 0 84px;
+    color: #fff;
+    background:
+        radial-gradient(520px 260px at 90% 0%, rgba(240, 196, 106, 0.22), transparent 70%),
+        linear-gradient(135deg, #0b3d36 0%, #0f4f45 55%, #0b3d36 100%);
+    overflow: hidden;
+}
+
+.yk-pfm__hero-art {
+    position: absolute;
+    right: max(2%, calc(50% - 560px));
+    bottom: 0;
+    width: min(520px, 62%);
+    height: auto;
+    pointer-events: none;
+}
+
+.yk-pfm__hero-in {
+    position: relative;
+    width: min(1040px, calc(100% - 48px));
+    margin-inline: auto;
+}
+
+.yk-pfm__crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 10px;
+    margin-bottom: 18px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.86rem;
+}
+
+.yk-pfm__crumbs a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    color: rgba(255, 255, 255, 0.88);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.yk-pfm__crumbs a:hover {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.yk-pfm__crumbs a:focus-visible {
+    outline: 2px solid var(--yk-gold-2);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+.yk-pfm__crumb-now {
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 600;
+}
+
+.yk-pfm__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 12px;
+    padding: 6px 14px 6px 10px;
+    border: 1px solid rgba(240, 196, 106, 0.4);
+    border-radius: 999px;
+    background: rgba(240, 196, 106, 0.12);
+    color: var(--yk-gold-2);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.yk-pfm__eyebrow svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.yk-pfm__hero h1 {
+    max-width: 24ch;
+    margin: 0;
+    overflow-wrap: anywhere;
+    color: #fff;
+    font-size: clamp(2rem, 1.3rem + 2.4vw, 3.1rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.06;
+}
+
+.yk-pfm__hero-lead {
+    max-width: 58ch;
+    margin: 14px 0 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.05rem;
+    line-height: 1.55;
+}
+
+.yk-pfm__hero-meta {
+    margin: 8px 0 0;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.9rem;
+}
+
+/* ---- Card sheet that overlaps the band ---- */
+.yk-pfm__sheet {
+    position: relative;
+    margin-top: -52px;
+}
+
+.yk-pfm__card {
+    padding: 28px 32px 30px;
+    border: 1px solid #e1dccf;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 24px 50px -24px rgba(11, 61, 54, 0.35);
+}
+
+.yk-pfm__card h2 {
+    color: var(--yk-teal-deep);
+}
+
+.yk-pfm__note {
+    margin: 0 0 1rem;
+    font-size: 0.94rem;
+}
+
+.yk-pfm__disclaimer {
+    margin: 18px 0 0;
+    padding-top: 14px;
+    border-top: 1px dashed var(--yk-line);
+    font-size: 0.84rem;
+}
+
+.yk-pfm__error,
+.yk-pfm__status {
+    padding: 0.75rem 1rem;
+    border-radius: 14px;
+    font-weight: 600;
+}
+
+.yk-pfm__status a {
+    color: var(--yk-teal-deep);
+}
+
+/* ---- Wizard steps ---- */
+.yk-pfm__wizard-nav {
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.yk-pfm__wizard-step {
+    min-height: 38px;
+    padding: 0.3rem 0.95rem;
+    border: 1.5px solid var(--yk-line);
+    font-size: 0.85rem;
+}
+
+.yk-pfm__wizard-step.is-active {
+    border-color: var(--yk-deep);
+    background: var(--yk-deep);
+    color: #fff;
+}
+
+.yk-pfm__wizard-step.is-done {
+    border-color: #bfdfd1;
+    background: var(--yk-mint);
+    color: var(--yk-teal-deep);
+}
+
+/* ---- Fields ---- */
+.yk-pfm__field label,
+.yk-pfm__fieldset legend {
+    margin-bottom: 0.4rem;
+    font-weight: 700;
+}
+
+.yk-pfm__field input,
+.yk-pfm__field select {
+    min-height: 52px;
+    padding: 0.7rem 0.95rem;
+    border: 1.5px solid var(--yk-line);
+    border-radius: 14px;
+    background: #fff;
+    font-size: 1rem;
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.yk-pfm__field input:hover,
+.yk-pfm__field select:hover {
+    border-color: #b9c9c2;
+}
+
+.yk-pfm__field input:focus-visible,
+.yk-pfm__field select:focus-visible {
+    outline: none;
+    border-color: var(--yk-teal);
+    box-shadow: 0 0 0 4px rgba(224, 167, 63, 0.35);
+}
+
+/* ---- Buttons ---- */
+.yk-pfm__actions {
+    gap: 12px;
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid var(--yk-line);
+}
+
+.yk-pfm__btn {
+    min-height: 52px;
+    padding: 0.7rem 1.5rem;
+    border: 1.5px solid transparent;
+    border-radius: 15px;
+    background: linear-gradient(135deg, var(--yk-teal), var(--yk-deep));
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 800;
+    box-shadow: 0 12px 22px -10px rgba(11, 61, 54, 0.7);
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.yk-pfm__btn:hover,
+.yk-pfm__btn:focus-visible {
+    filter: none;
+    transform: translateY(-2px);
+}
+
+.yk-pfm__btn:focus-visible {
+    outline: 3px solid var(--yk-gold);
+    outline-offset: 3px;
+}
+
+.yk-pfm__btn--ghost {
+    border-color: var(--yk-line);
+    background: #fff;
+    color: var(--yk-teal-deep);
+    box-shadow: none;
+}
+
+.yk-pfm__btn--ghost:hover,
+.yk-pfm__btn--ghost:focus-visible {
+    border-color: var(--yk-teal);
+    background: #f1f8f4;
+    color: var(--yk-teal-deep);
+}
+
+.yk-pfm__btn--disabled {
+    background: #ece8dc;
+    box-shadow: none;
+    color: #5f5a4a;
+}
+
+/* ---- Result metrics ---- */
+.yk-pfm__metrics {
+    gap: 12px;
+    margin: 0 0 1.25rem;
+}
+
+.yk-pfm__metric {
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--yk-line);
+    border-radius: 18px;
+    background: #fbfaf6;
+}
+
+.yk-pfm__metric span {
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.yk-pfm__metric strong {
+    color: var(--yk-ink);
+    font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+}
+
+.yk-pfm__metric--primary {
+    border-color: transparent;
+    background:
+        radial-gradient(260px 120px at 100% 0%, rgba(240, 196, 106, 0.22), transparent 70%),
+        linear-gradient(160deg, #0f4f45, #0b3d36 70%);
+    box-shadow: 0 18px 30px -20px rgba(11, 61, 54, 0.8);
+}
+
+.yk-pfm__metric--primary span {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.yk-pfm__metric--primary strong {
+    color: var(--yk-gold-2);
+}
+
+.yk-pfm__metric--primary.yk-pfm__metric--bad {
+    background: linear-gradient(160deg, #8a2f26, #5c1f1a 70%);
+}
+
+.yk-pfm__metric--primary.yk-pfm__metric--bad strong {
+    color: #ffd9d4;
+}
+
+.yk-pfm__metric--good {
+    border-color: #bfdfd1;
+    background: #f1f8f4;
+}
+
+.yk-pfm__metric--warn {
+    border-color: #ecd6a0;
+    background: #fdf6e3;
+}
+
+.yk-pfm__metric--bad {
+    border-color: #f0c4be;
+    background: #fdeceb;
+}
+
+/* ---- Charts ---- */
+.yk-pfm__chart {
+    margin-top: 0;
+    padding: 1.15rem 1.25rem;
+    border: 1px solid var(--yk-line);
+    border-radius: 18px;
+}
+
+.yk-pfm__chart-title {
+    color: var(--yk-teal-deep);
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.yk-pfm__stack {
+    min-height: 26px;
+    border-radius: 12px;
+    background: #ece8dc;
+}
+
+.yk-pfm__stack-seg--teal {
+    background: linear-gradient(135deg, #1d8a74, #0b3d36);
+}
+
+.yk-pfm__stack-seg--navy,
+.yk-pfm__stack-seg--warn {
+    background: linear-gradient(135deg, #f0c46a, #e0a73f);
+}
+
+.yk-pfm__progress {
+    height: 18px;
+    background: #ece8dc;
+}
+
+.yk-pfm__progress > span {
+    background: linear-gradient(90deg, #1d8a74, #0b3d36);
+}
+
+.yk-pfm__readiness {
+    border: 3px solid #bfdfd1;
+}
+
+/* ---- History ---- */
+.yk-pfm__history-header {
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.yk-pfm__history-count {
+    margin: 0;
+    color: var(--yk-muted);
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.yk-pfm__history {
+    margin-top: 0;
+}
+
+.yk-pfm__history-card {
+    padding: 1.15rem 1.2rem;
+    border-radius: 20px;
+    background: #fbfaf6;
+    box-shadow: none;
+}
+
+.yk-pfm__history-card:hover {
+    border-color: #a9cfc2;
+    background: #fff;
+    box-shadow: 0 16px 28px -18px rgba(11, 61, 54, 0.45);
+}
+
+.yk-pfm__history-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+.yk-pfm__history-metric {
+    border-radius: 14px;
+    background: #fff;
+}
+
+.yk-pfm__pill--warn {
+    background: var(--yk-gold-soft);
+    color: #7a5712;
+}
+
+.yk-pfm__chip-btn {
+    min-height: 42px;
+    border: 1.5px solid var(--yk-line);
+    color: var(--yk-teal-deep);
+}
+
+.yk-pfm__chip-btn--danger {
+    color: #9b2c2c;
+}
+
+.yk-pfm__empty {
+    margin-top: 0.5rem;
+    padding: 2rem 1rem;
+    border: 1.5px dashed #cfc8b4;
+    border-radius: 20px;
+    background: #fbfaf6;
+}
+
+.yk-pfm__empty-title {
+    color: var(--yk-teal-deep);
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+/* ---- Themed responsive ---- */
+@media (max-width: 767.98px) {
+    .yk-pfm {
+        padding-bottom: 44px;
+    }
+
+    .yk-pfm__hero {
+        padding: 18px 0 72px;
+    }
+
+    .yk-pfm__hero-in {
+        width: min(1040px, calc(100% - 32px));
+    }
+
+    .yk-pfm__hero-art {
+        width: 78%;
+        opacity: 0.5;
+    }
+
+    .yk-pfm__hero-lead {
+        font-size: 0.97rem;
+    }
+
+    .yk-pfm__sheet {
+        margin-top: -44px;
+    }
+
+    .yk-pfm__card {
+        padding: 22px 16px 20px;
+        border-radius: 20px;
+    }
+
+    .yk-pfm__metrics {
+        gap: 10px;
+    }
+
+    .yk-pfm__metric {
+        padding: 0.85rem 1rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .yk-pfm *,
+    .yk-pfm *::before,
+    .yk-pfm *::after {
+        transition-duration: 0.01ms !important;
+    }
+
+    .yk-pfm__btn:hover,
+    .yk-pfm__btn:focus-visible {
+        transform: none;
+    }
+}
+

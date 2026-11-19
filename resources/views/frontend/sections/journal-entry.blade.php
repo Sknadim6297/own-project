@@ -6,27 +6,34 @@
 
 @section('content')
 <main class="yk-journal yk-journal-entry yk-tools-ds" data-yk-tools-ds data-yk-journal>
-    <div class="yk-journal__wrap">
-        <a class="yk-journal__back" href="{{ route('tools.psychology.journal.history') }}">
-            <span aria-hidden="true">←</span> Back to history
-        </a>
+    <div class="yk-journal__wrap yk-journal__wrap--write">
+        <div class="yk-journal__topbar">
+            <a class="yk-journal__back" href="{{ route('tools.psychology.journal.history') }}">
+                <span aria-hidden="true">←</span> Back to history
+            </a>
+        </div>
 
-        <div class="yk-journal__panel">
+        <div class="yk-journal__panel yk-journal__panel--write">
         @if (session('status'))
-            <p class="yk-journal-history__status" role="status">{{ session('status') }}</p>
+            <p class="yk-journal-history__status" role="status">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg>
+                {{ session('status') }}
+            </p>
         @endif
 
         <p class="yk-journal__badge">Private entry</p>
         <h1>{{ $title }}</h1>
         <p class="yk-journal-entry__meta">
-            <span>{{ $prompt }}</span>
-            <span aria-hidden="true">·</span>
+            <span class="yk-journal-entry__chip">{{ $prompt }}</span>
             <time>{{ $when }}</time>
         </p>
         @if ($question)
-            <p class="yk-journal-entry__question">{{ $question }}</p>
+            <p class="yk-journal-entry__question"><span aria-hidden="true">💡</span> {{ $question }}</p>
         @endif
-        <p class="yk-journal__private" role="status">Private · Only you can see this entry</p>
+        <p class="yk-journal__private" role="status">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-7-2a2 2 0 0 1 4 0v2h-4V7z"/></svg>
+            Private · Only you can see this entry
+        </p>
         <div class="yk-journal-entry__body">{{ $body }}</div>
 
         @include('frontend.sections.partials.psychology-connect', [

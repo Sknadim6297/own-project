@@ -4,17 +4,23 @@
 @section('meta_description', 'Tell us a little about yourself so we can show career information relevant to your stage.')
 @section('body_class', 'yk-cit-body')
 
+@php
+    $icon = fn (string $name, int $size = 18) => view('frontend.sections.career-interest.partials.icon', ['name' => $name, 'size' => $size])->render();
+@endphp
+
 @section('content')
 <main class="yk-cit yk-tools-ds" data-yk-tools-ds data-yk-cit>
     <div class="yk-cit__wrap">
+        @include('frontend.sections.partials.tool-back-to-tools')
+
         <form class="yk-cit__card" method="post" action="{{ route('tools.career-interest.about.store') }}">
             @csrf
-            <p class="yk-cit__badge">Before you begin</p>
+            <p class="yk-cit__badge">{!! $icon('user', 14) !!} Before you begin</p>
             <h1>Tell us a little about yourself</h1>
             <p class="yk-cit__lead">This helps us show career information relevant to your current stage.</p>
 
             @if ($errors->any())
-                <p class="yk-cit__error" role="alert">{{ $errors->first() }}</p>
+                <p class="yk-cit__error" role="alert">Please choose one option in every group to continue.</p>
             @endif
 
             @php
@@ -33,7 +39,7 @@
                         @foreach ($field['options'] as $value => $label)
                             <li>
                                 <label>
-                                    <input type="radio" name="{{ $name }}" value="{{ $value }}" @checked(old($name, $selected[$name] ?? null) === $value)>
+                                    <input type="radio" name="{{ $name }}" value="{{ $value }}" @checked(old($name, $selected[$name] ?? null) === $value) required>
                                     <span>{{ $label }}</span>
                                 </label>
                             </li>
@@ -42,9 +48,9 @@
                 </fieldset>
             @endforeach
 
-            <div class="yk-cit__actions">
-                <a class="yk-cit__btn-secondary" href="{{ route('tools.career-interest') }}">Back</a>
-                <button class="yk-cit__btn" type="submit">Continue</button>
+            <div class="yk-cit__actions yk-cit__actions--between">
+                <a class="yk-cit__btn-secondary" href="{{ route('tools.career-interest') }}">{!! $icon('arrow-left', 18) !!} Back</a>
+                <button class="yk-cit__btn" type="submit">Continue {!! $icon('arrow', 18) !!}</button>
             </div>
         </form>
     </div>

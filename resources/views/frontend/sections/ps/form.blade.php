@@ -2,7 +2,7 @@
 
 @section('title', $tool['name'].' | YuktiOne')
 @section('meta_description', $tool['description'])
-@section('body_class', 'yk-pfm-body')
+@section('body_class', 'yk-ps-body')
 
 @section('content')
 @php
@@ -17,72 +17,84 @@
     $partial = $config['partial'] ?? null;
     $steps = $config['steps'] ?? [];
     $wizard = $steps !== [];
+    $artFile = \App\Support\Tools\ToolIllustration::for($tool['slug'], '');
+    $artUrl = $artFile && file_exists(public_path(\App\Support\Tools\ToolIllustration::DIRECTORY.$artFile))
+        ? asset(\App\Support\Tools\ToolIllustration::DIRECTORY.$artFile)
+        : null;
 @endphp
-<main class="yk-pfm yk-tools-ds" data-yk-tools-ds data-yk-ps data-yk-pfm>
-    <div class="yk-pfm__wrap yk-pfm__wrap--wide">
+<main class="yk-ps yk-tools-ds" data-yk-tools-ds data-yk-ps>
+    <div class="yk-ps__wrap">
         @include('frontend.sections.partials.tool-back-to-tools')
-        <p class="yk-pfm__crumb"><a href="{{ route('tools.ps') }}">{{ $tool['category_label'] }}</a> / {{ $tool['name'] }}</p>
-        <section class="yk-pfm__card" aria-labelledby="ps-form-heading">
-            <p class="yk-pfm__badge">{{ $tool['category_label'] }} tool</p>
-            <h1 id="ps-form-heading">{{ $tool['name'] }}</h1>
-            <p class="yk-pfm__lead">{{ $tool['description'] }}</p>
-            <p class="yk-pfm__note">{{ $disclaimer }}</p>
+        <nav class="yk-ps__crumb" aria-label="Breadcrumb"><a href="{{ route('tools.ps') }}">{{ $tool['category_label'] }}</a> <span aria-hidden="true">/</span> <span aria-current="page">{{ $tool['name'] }}</span></nav>
 
+        <header class="yk-ps__head" aria-labelledby="ps-form-heading">
+            <span class="yk-ps__tool-icon yk-ps__tool-icon--{{ $tool['category'] }} yk-ps__tool-icon--lg">@include('frontend.sections.ps.partials.icon', ['name' => $tool['glyph'] ?? 'sparkle', 'size' => 30])</span>
+            <div class="yk-ps__head-copy">
+                <p class="yk-ps__badge">{{ $tool['category_label'] }} tool</p>
+                <h1 id="ps-form-heading">{{ $tool['name'] }}</h1>
+                <p class="yk-ps__lead">{{ $tool['description'] }}</p>
+            </div>
+            @if ($artUrl)
+                <img class="yk-ps__head-art" src="{{ $artUrl }}" alt="" decoding="async">
+            @endif
+        </header>
+
+        <section class="yk-ps__panel" aria-label="{{ $tool['name'] }} form">
             @if (! $open)
-                <p class="yk-pfm__error" role="alert">This tool is unavailable right now.</p>
+                <p class="yk-ps__error" role="alert">This tool is unavailable right now.</p>
             @else
                 @if ($errors->any())
-                    <p class="yk-pfm__error" role="alert">{{ $errors->first() }}</p>
+                    <p class="yk-ps__error" role="alert">@include('frontend.sections.ps.partials.icon', ['name' => 'alert', 'size' => 18]) <span>{{ $errors->first() }}</span></p>
                 @endif
 
                 @if ($hasResult)
-                    <p class="yk-pfm__status">
-                        You have a recent result.
-                        <a href="{{ route($tool['route'].'.results') }}">View results</a>
+                    <p class="yk-ps__status">
+                        @include('frontend.sections.ps.partials.icon', ['name' => 'sparkle', 'size' => 18])
+                        <span>You have a recent result. <a href="{{ route($tool['route'].'.results') }}">View results</a></span>
                     </p>
                 @endif
 
                 <form
                     method="post"
                     action="{{ route($tool['route'].'.calculate') }}"
-                    class="yk-pfm__form"
-                    data-pfm-form
-                    @if ($wizard) data-pfm-wizard="1" @endif
+                    class="yk-ps__form"
+                    data-ps-form
+                    @if ($wizard) data-ps-wizard="1" @endif
                     novalidate
                 >
                     @csrf
 
                     @if ($wizard)
-                        <nav class="yk-pfm__wizard-nav" aria-label="Tool steps">
+                        <div class="yk-ps__progress" aria-hidden="true"><span data-ps-progress style="width: {{ round(100 / count($steps)) }}%"></span></div>
+                        <ol class="yk-ps__stepper" aria-label="Progress">
                             @foreach ($steps as $index => $label)
-                                <span class="yk-pfm__wizard-step {{ $index === 0 ? 'is-active' : '' }}" data-pfm-step-label="{{ $index }}">{{ $index + 1 }}. {{ $label }}</span>
+                                <li class="yk-ps__stepper-item {{ $index === 0 ? 'is-active' : '' }}" data-ps-step-label="{{ $index }}">
+                                    <span class="yk-ps__stepper-dot"><b>{{ $index + 1 }}</b>@include('frontend.sections.ps.partials.icon', ['name' => 'check', 'size' => 13])</span>
+                                    <span class="yk-ps__stepper-text">{{ $label }}</span>
+                                </li>
                             @endforeach
-                        </nav>
+                        </ol>
                     @endif
 
                     @if ($partial)
                         @include('frontend.sections.ps.partials.'.$partial)
                     @endif
 
-                    <div class="yk-pfm__actions">
+                    <div class="yk-ps__actions yk-ps__actions--form">
                         @if ($wizard)
-                            <button type="button" class="yk-pfm__btn yk-pfm__btn--ghost" data-pfm-prev hidden>Back</button>
-                            <button type="button" class="yk-pfm__btn" data-pfm-next>Continue</button>
+                            <button type="button" class="yk-ps__btn yk-ps__btn--ghost" data-ps-prev hidden>@include('frontend.sections.ps.partials.icon', ['name' => 'arrow-left', 'size' => 16]) Back</button>
+                            <button type="button" class="yk-ps__btn" data-ps-next hidden>Continue @include('frontend.sections.ps.partials.icon', ['name' => 'arrow', 'size' => 16])</button>
                         @endif
-                        <button type="submit" class="yk-pfm__btn" data-pfm-submit @if ($wizard) hidden @endif>Generate result</button>
+                        <button type="submit" class="yk-ps__btn" data-ps-submit>Generate result @include('frontend.sections.ps.partials.icon', ['name' => 'sparkle', 'size' => 16])</button>
                         @auth('user')
-                            <a class="yk-pfm__btn yk-pfm__btn--ghost" href="{{ route($tool['route'].'.history') }}">View history</a>
+                            <a class="yk-ps__btn yk-ps__btn--ghost" href="{{ route($tool['route'].'.history') }}">@include('frontend.sections.ps.partials.icon', ['name' => 'history', 'size' => 16]) View history</a>
                         @endauth
                     </div>
                 </form>
             @endif
         </section>
+
+        <p class="yk-ps__note">@include('frontend.sections.ps.partials.icon', ['name' => 'info', 'size' => 16]) <span>{{ $disclaimer }}</span></p>
     </div>
 </main>
 @endsection
-
-@if ($toolKey === 'daily-mindfulness-calm')
-@push('scripts')
-<script src="{{ asset('frontend/assets/js/yuktione-ps.js') }}?v={{ @filemtime(public_path('frontend/assets/js/yuktione-ps.js')) ?: time() }}" defer></script>
-@endpush
-@endif

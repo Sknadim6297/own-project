@@ -16,6 +16,32 @@ class PfmCalculatorTest extends TestCase
         $this->calculator = new PfmCalculator;
     }
 
+    public function test_mp_rejects_infinite_and_absurd_amounts(): void
+    {
+        foreach (['1e400', '1e30', 100_000_000_001] as $bad) {
+            try {
+                $this->calculator->calculate('monthly-money-planner', ['monthly_income' => $bad]);
+                $this->fail('Expected rejection for '.$bad);
+            } catch (InvalidArgumentException $e) {
+                $this->assertStringContainsString('too large', $e->getMessage());
+            }
+        }
+
+        $ok = $this->calculator->calculate('monthly-money-planner', ['monthly_income' => 100_000_000_000]);
+        $this->assertSame(100_000_000_000.0, $ok['result']['free_cash']);
+    }
+
+    public function test_mp_summary_signs_negative_free_cash_consistently(): void
+    {
+        $payload = $this->calculator->calculate('monthly-money-planner', [
+            'monthly_income' => 10000,
+            'essential_expenses' => 9000,
+            'lifestyle_expenses' => 4000,
+        ]);
+
+        $this->assertStringStartsWith('Free cash −₹3,000.00', $payload['result']['summary']);
+    }
+
     public function test_mp01_free_cash_and_savings_rate(): void
     {
         $payload = $this->calculator->calculate('monthly-money-planner', [

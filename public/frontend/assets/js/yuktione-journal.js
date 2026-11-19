@@ -15,9 +15,25 @@
         var titleTouched = form.getAttribute('data-preserve-title') === '1'
             || Boolean(title && title.value.trim() !== '' && !form.querySelector('[data-journal-prompt].is-selected'));
 
+        var progress = form.querySelector('[data-journal-progress]');
+        var guide = form.querySelector('[data-journal-guide]');
+        var guideText = form.querySelector('[data-journal-guide-text]');
+
         var syncCount = function () {
-            if (!body || !count) return;
-            count.textContent = body.value.length + ' / ' + bodyMax.toLocaleString();
+            if (!body) return;
+            if (count) count.textContent = body.value.length + ' / ' + bodyMax.toLocaleString();
+            if (progress) {
+                var pct = Math.min(100, (body.value.length / bodyMax) * 100);
+                progress.style.width = pct + '%';
+                progress.classList.toggle('is-near', pct >= 90);
+            }
+        };
+
+        var syncGuide = function (label) {
+            if (!guide || !guideText) return;
+            var question = label ? (label.getAttribute('data-prompt-question') || '') : '';
+            guideText.textContent = question;
+            guide.hidden = question === '';
         };
 
         if (body) body.addEventListener('input', syncCount);
@@ -35,6 +51,7 @@
                     node.classList.remove('is-selected');
                 });
                 label.classList.add('is-selected');
+                syncGuide(label);
                 if (title && !titleTouched) {
                     title.value = label.getAttribute('data-prompt-label') || '';
                 }

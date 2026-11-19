@@ -78,6 +78,7 @@ class CareerInterestCatalog
         return [
             'realistic' => [
                 'key' => 'realistic',
+                'icon' => 'wrench',
                 'label' => 'Realistic',
                 'kicker' => 'Practical interests',
                 'description' => 'Hands-on work with tools, machines, technology, or tangible results.',
@@ -85,6 +86,7 @@ class CareerInterestCatalog
             ],
             'investigative' => [
                 'key' => 'investigative',
+                'icon' => 'search',
                 'label' => 'Investigative',
                 'kicker' => 'Analytical interests',
                 'description' => 'Analysis, research, problem-solving, and understanding how things work.',
@@ -92,6 +94,7 @@ class CareerInterestCatalog
             ],
             'artistic' => [
                 'key' => 'artistic',
+                'icon' => 'pen',
                 'label' => 'Artistic',
                 'kicker' => 'Creative interests',
                 'description' => 'Creating ideas, designs, and self-expression through creative activities.',
@@ -99,6 +102,7 @@ class CareerInterestCatalog
             ],
             'social' => [
                 'key' => 'social',
+                'icon' => 'users',
                 'label' => 'Social',
                 'kicker' => 'People & helping interests',
                 'description' => 'Helping, teaching, guiding, and supporting other people’s growth.',
@@ -106,6 +110,7 @@ class CareerInterestCatalog
             ],
             'enterprising' => [
                 'key' => 'enterprising',
+                'icon' => 'trend',
                 'label' => 'Enterprising',
                 'kicker' => 'Business & leadership interests',
                 'description' => 'Leading, persuading, organising people, and pursuing opportunities.',
@@ -113,6 +118,7 @@ class CareerInterestCatalog
             ],
             'conventional' => [
                 'key' => 'conventional',
+                'icon' => 'clipboard',
                 'label' => 'Conventional',
                 'kicker' => 'Organisation & structured interests',
                 'description' => 'Organising information, accuracy, procedures, and structured systems.',

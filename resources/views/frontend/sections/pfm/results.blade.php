@@ -6,14 +6,16 @@
 
 @section('content')
 <main class="yk-pfm yk-tools-ds" data-yk-tools-ds data-yk-pfm>
-    <div class="yk-pfm__wrap yk-pfm__wrap--wide">
-        @include('frontend.sections.partials.tool-back-to-tools')
-        <p class="yk-pfm__crumb"><a href="{{ route('tools.pfm') }}">Money &amp; Finance</a> / {{ $tool['name'] }}</p>
-        <section class="yk-pfm__card" aria-labelledby="pfm-results-heading">
-            <p class="yk-pfm__badge">Results</p>
-            <h1 id="pfm-results-heading">{{ $tool['name'] }}</h1>
-            <p class="yk-pfm__lead">{{ $result['summary'] ?? '' }}</p>
+    @include('frontend.sections.pfm.partials.page-hero', [
+        'crumbs' => [['Money & Finance', route('tools.pfm')], [$tool['name'], route($tool['route'])], ['Results', null]],
+        'eyebrow' => 'Your results',
+        'title' => $tool['name'],
+        'titleId' => 'pfm-results-heading',
+        'lead' => $result['summary'] ?? '',
+    ])
 
+    <div class="yk-pfm__wrap yk-pfm__wrap--wide yk-pfm__sheet">
+        <section class="yk-pfm__card" aria-labelledby="pfm-results-heading">
             @if ($errors->any())
                 <p class="yk-pfm__error" role="alert">{{ $errors->first() }}</p>
             @endif
@@ -21,7 +23,7 @@
             @include('frontend.sections.pfm.partials.result-metrics', ['toolKey' => $toolKey, 'result' => $result])
             @include('frontend.sections.pfm.partials.result-charts', ['toolKey' => $toolKey, 'result' => $result, 'inputs' => $inputs ?? []])
 
-            <p class="yk-pfm__note">These figures are educational estimates only and are not financial advice.</p>
+            <p class="yk-pfm__note yk-pfm__disclaimer">These figures are educational estimates only and are not financial advice.</p>
 
             <div class="yk-pfm__actions">
                 <form method="post" action="{{ route($tool['route'].'.recalculate') }}">

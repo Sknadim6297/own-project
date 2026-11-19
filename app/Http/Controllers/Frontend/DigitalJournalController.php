@@ -22,7 +22,7 @@ class DigitalJournalController extends Controller
     {
         $open = $journal->isOpen();
         $prompts = $open ? $journal->prompts() : [];
-        $selected = $open ? $draft->promptKey() : null;
+        $selected = $open ? ($draft->promptKey() ?? ($prompts[0]['key'] ?? null)) : null;
         $selectedLabel = $selected ? $journal->promptLabel($selected) : null;
 
         return view('frontend.sections.journal-write', [
