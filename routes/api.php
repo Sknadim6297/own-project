@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ProfessionalAvailabilityController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\ExpertBookingController;
 use App\Http\Controllers\Api\V1\ExpertController;
 use App\Http\Controllers\Api\V1\MyActivityController;
 use App\Http\Controllers\Api\V1\MyBookingsController;
@@ -84,6 +85,16 @@ Route::prefix('v1')->group(function () {
                 Route::post('/gratitude-entries', [MyPsychologyController::class, 'storeGratitude']);
             });
         });
+
+        // Expert consultation booking — website flow, priced and verified on the server.
+        Route::prefix('bookings')->middleware('throttle:30,1')->group(function () {
+            Route::post('/checkout', [ExpertBookingController::class, 'checkout']);
+            Route::post('/order', [ExpertBookingController::class, 'order']);
+            Route::post('/verify', [ExpertBookingController::class, 'verify']);
+            Route::post('/payment-failed', [ExpertBookingController::class, 'paymentFailed']);
+            Route::get('/{booking}/questions', [ExpertBookingController::class, 'questions'])->whereNumber('booking');
+            Route::post('/{booking}/answers', [ExpertBookingController::class, 'answers'])->whereNumber('booking');
+        });
     });
 
     // Public catalogue (same DB rows as website); write actions stay authenticated above.
@@ -92,5 +103,6 @@ Route::prefix('v1')->group(function () {
     Route::get('/tool-categories', [ToolController::class, 'categories']);
     Route::get('/experts', [ExpertController::class, 'index']);
     Route::get('/experts/{id}', [ExpertController::class, 'show'])->whereNumber('id');
+    Route::get('/experts/{id}/availability', [ExpertController::class, 'availability'])->whereNumber('id');
     Route::get('/programme-events', [ProgrammeEventController::class, 'index']);
 });

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Professional;
+use App\Models\ProfessionalOtherInformation;
 use App\Models\Rate;
 use App\Services\ExploreCatalog;
+use App\Services\Mobile\ExpertBookingCatalog;
 use App\Support\Explore\CategoryImages;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,6 +27,7 @@ class ExpertController extends Controller
         $specialty = trim(strip_tags((string) $request->query('specialty', '')));
         $category = trim((string) $request->query('category', ''));
         $limit = min(50, max(1, (int) $request->query('limit', 24)));
+        $page = max(1, (int) $request->query('page', 1));
         $featured = $request->boolean('featured');
 
         $query = Professional::query()
@@ -35,12 +38,6 @@ class ExpertController extends Controller
             ->where('status', 'accepted')
             ->where('active', true)
             ->whereHas('profile');
-
-        if ($featured) {
-            $query->whereHas('professionalServices')->latest()->limit(min(8, $limit));
-        } else {
-            $query->latest()->limit($limit);
-        }
 
         if ($q !== '') {
             $like = '%'.addcslashes($q, '%_\\').'%';
@@ -66,6 +63,21 @@ class ExpertController extends Controller
             app(ExploreCatalog::class)->constrainExpertsToCategory($query, $category);
         }
 
+        $meta = null;
+        if ($featured) {
+            $query->whereHas('professionalServices')->latest()->orderByDesc('id')->limit(min(8, $limit));
+        } else {
+            // Total of the filtered set so clients can show a real count and page through it.
+            $total = (clone $query)->count();
+            $query->latest()->orderByDesc('id')->forPage($page, $limit);
+            $meta = [
+                'current_page' => $page,
+                'per_page' => $limit,
+                'total' => $total,
+                'last_page' => max(1, (int) ceil($total / $limit)),
+            ];
+        }
+
         $experts = $query->get()
             ->map(fn (Professional $expert) => $this->present($expert))
             ->filter()
@@ -74,6 +86,7 @@ class ExpertController extends Controller
         return response()->json([
             'status' => 'success',
             'experts' => $experts,
+            'meta' => $meta,
             'experience_buckets' => ExploreCatalog::EXPERIENCE_BUCKETS,
             'categories' => collect(ExploreCatalog::CATEGORIES)
                 ->map(fn (array $category, string $slug) => [
@@ -107,6 +120,31 @@ class ExpertController extends Controller
             'status' => 'success',
             'expert' => $this->present($expert, true),
         ]);
+    }
+
+    /**
+     * Website booking calendar for one expert: bookable dates, each date's time slots and
+     * whether a slot is already taken (booking_timedates, cancelled excluded).
+     */
+    public function availability(int $id, ExpertBookingCatalog $catalog): JsonResponse
+    {
+        $expert = Professional::query()
+            ->where('status', 'accepted')
+            ->where('active', true)
+            ->whereHas('profile')
+            ->find($id);
+
+        if (! $expert) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Expert not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'timezone' => ExpertBookingCatalog::SLOT_TIMEZONE,
+        ] + $catalog->schedule($expert->id));
     }
 
     /**
@@ -157,20 +195,105 @@ class ExpertController extends Controller
         ];
 
         if ($detailed) {
+            // Website profile shows (and books) the service-level plans only.
             $payload['session_rates'] = $expert->rates
+                ->whereNull('sub_service_id')
+                ->sortBy('final_rate')
                 ->map(fn (Rate $rate) => [
                     'id' => $rate->id,
                     'session_type' => $rate->session_type,
-                    'num_sessions' => $rate->num_sessions,
+                    'num_sessions' => (int) $rate->num_sessions,
                     'rate_per_session' => (float) $rate->rate_per_session,
                     'final_rate' => (float) $rate->final_rate,
                     'duration' => $rate->duration,
+                    'features' => is_array($rate->features) ? array_values(array_filter($rate->features, 'is_string')) : [],
                 ])
                 ->values()
                 ->all();
+            $payload += $this->profileDetails($expert);
         }
 
         return $payload;
+    }
+
+    /**
+     * The rest of the website profile (expert-profile.blade.php): chips, quote, qualifications,
+     * service description, approved reviews and the lowest per-session price.
+     *
+     * @return array<string, mixed>
+     */
+    private function profileDetails(Professional $expert): array
+    {
+        $profile = $expert->profile;
+        $service = $expert->professionalServices->first();
+        $other = ProfessionalOtherInformation::where('professional_id', $expert->id)->first();
+
+        $chips = collect();
+        if ($specialization = $this->plain($profile->specialization)) {
+            $chips = $chips->merge(preg_split('/\s*,\s*/', $specialization));
+        }
+        if ($service && filled($service->tags)) {
+            $chips = $chips->merge(preg_split('/\s*,\s*/', (string) $service->tags));
+        }
+        if ($service) {
+            $chips = $chips->merge($service->subServices->pluck('name'));
+        }
+        if ($other && is_array($other->specializations)) {
+            $chips = $chips->merge($other->specializations);
+        }
+
+        $qualifications = collect();
+        $education = $other?->education;
+        if (is_string($education)) {
+            $education = json_decode($education, true);
+        }
+        if (is_array($education) && isset($education['college_name']) && is_array($education['college_name'])) {
+            foreach ($education['college_name'] as $index => $college) {
+                $degree = trim((string) ($education['degree'][$index] ?? ''));
+                $college = trim((string) $college);
+                if ($degree !== '' || $college !== '') {
+                    $qualifications->push(['title' => $degree !== '' ? $degree : $college, 'place' => $degree !== '' ? $college : '']);
+                }
+            }
+        }
+        foreach (['education', 'education2'] as $field) {
+            $value = trim(strip_tags((string) ($profile->{$field} ?? '')));
+            if ($value !== '' && ! str_starts_with($value, '{') && ! str_starts_with($value, '[')) {
+                $qualifications->push(['title' => $value, 'place' => '']);
+            }
+        }
+
+        $quote = $this->plain($profile->comments);
+        if ($quote !== null && strlen($quote) > 180) {
+            $quote = null;
+        }
+
+        $reviews = $expert->reviews()
+            ->where('is_approved', 1)
+            ->latest()
+            ->limit(30)
+            ->get(['id', 'rating', 'review_text', 'created_at'])
+            ->map(fn ($review) => [
+                'id' => $review->id,
+                'rating' => (int) $review->rating,
+                'text' => $this->plain($review->review_text),
+                'created_at' => optional($review->created_at)->toDateString(),
+            ])
+            ->values()
+            ->all();
+
+        $lowest = $expert->rates->whereNull('sub_service_id')
+            ->filter(fn (Rate $rate) => is_numeric($rate->rate_per_session))
+            ->min('rate_per_session');
+
+        return [
+            'quote' => $quote,
+            'chips' => $chips->map(fn ($chip) => trim(strip_tags((string) $chip)))->filter()->unique()->values()->all(),
+            'qualifications' => $qualifications->unique('title')->values()->all(),
+            'service_description' => $service ? $this->plain($service->description) : null,
+            'lowest_session_price' => is_numeric($lowest) ? (float) $lowest : null,
+            'reviews' => $reviews,
+        ];
     }
 
     private function plain(?string $value): ?string
