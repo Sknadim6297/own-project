@@ -30,10 +30,12 @@
         if (!form) return;
         var limit = parseInt(form.getAttribute('data-emotion-limit'), 10) || 6;
         var count = form.querySelector('[data-emotion-count]');
+        var clear = form.querySelector('[data-emotion-clear]');
         var sync = function () {
             var boxes = Array.prototype.slice.call(form.querySelectorAll('input[name="emotions[]"]'));
             var chosen = boxes.filter(function (box) { return box.checked; });
             if (count) count.textContent = chosen.length + ' of ' + limit + ' selected';
+            if (clear) clear.disabled = chosen.length === 0;
             boxes.forEach(function (box) {
                 var chip = box.closest('[data-emotion-chip]');
                 if (!chip) return;
@@ -55,6 +57,16 @@
             }
             sync();
         });
+        if (clear) {
+            clear.addEventListener('click', function () {
+                form.querySelectorAll('input[name="emotions[]"]').forEach(function (box) {
+                    box.checked = false;
+                });
+                sync();
+                var first = form.querySelector('input[name="emotions[]"]');
+                if (first) first.focus();
+            });
+        }
         sync();
     }
 

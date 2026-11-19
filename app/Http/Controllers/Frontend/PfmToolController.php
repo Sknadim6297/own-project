@@ -8,6 +8,7 @@ use App\Models\Tool;
 use App\Services\Pfm\PfmCalculator;
 use App\Services\Pfm\PfmDraft;
 use App\Services\Pfm\PfmRecorder;
+use App\Support\Pfm\GoalProjection;
 use App\Support\Pfm\PfmCatalog;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -21,11 +22,18 @@ class PfmToolController extends Controller
 
     private const HISTORY_TIMEZONE = 'Asia/Kolkata';
 
-    public function hub()
+    public function hub(PfmDraft $draft)
     {
+        $openTools = $this->openSlugs();
+
         return view('frontend.sections.pfm.hub', [
             'tools' => collect(PfmCatalog::TOOLS)->values(),
-            'openTools' => $this->openSlugs(),
+            'openTools' => $openTools,
+            // Tools that have a recent, unsaved result in this session (so the hub can offer a shortcut back to it).
+            'resumable' => array_values(array_filter(
+                $openTools,
+                fn (string $slug) => $draft->result($slug) !== null
+            )),
         ]);
     }
 
@@ -34,7 +42,11 @@ class PfmToolController extends Controller
         $toolKey = $this->routeToolKey();
         $meta = $this->requireTool($toolKey);
 
-        return view('frontend.sections.pfm.form', [
+        $view = $toolKey === 'financial-goal-calculator'
+            ? 'frontend.sections.pfm.goal-form'
+            : 'frontend.sections.pfm.form';
+
+        return view($view, [
             'tool' => $meta,
             'toolKey' => $toolKey,
             'open' => $this->isOpen($toolKey),
@@ -78,13 +90,23 @@ class PfmToolController extends Controller
             return redirect()->route($meta['route']);
         }
 
-        return view('frontend.sections.pfm.results', [
+        $inputs = $draft->normalized($toolKey) ?? [];
+        $data = [
             'tool' => $meta,
             'toolKey' => $toolKey,
             'result' => $result,
-            'inputs' => $draft->normalized($toolKey) ?? [],
+            'inputs' => $inputs,
             'authenticated' => Auth::guard('user')->check(),
-        ]);
+        ];
+
+        if ($toolKey === 'financial-goal-calculator') {
+            return view('frontend.sections.pfm.goal-results', $data + [
+                'projection' => GoalProjection::build($inputs, $result),
+                'goalTypes' => PfmCatalog::GOAL_TYPES,
+            ]);
+        }
+
+        return view('frontend.sections.pfm.results', $data);
     }
 
     public function save(Request $request, PfmDraft $draft, PfmRecorder $recorder)

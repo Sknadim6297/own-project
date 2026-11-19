@@ -246,6 +246,10 @@
 		<link href="{{ asset('frontend/assets/css/yuktione-pfm.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-pfm.css')) }}" rel="stylesheet">
 		<script src="{{ asset('frontend/assets/js/yuktione-pfm.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-pfm.js')) }}" defer></script>
 	@endif
+	@if (request()->routeIs('tools.ps', 'tools.ps.*'))
+		<link href="{{ asset('frontend/assets/css/yuktione-ps.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-ps.css')) }}" rel="stylesheet">
+		<script src="{{ asset('frontend/assets/js/yuktione-ps.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-ps.js')) }}" defer></script>
+	@endif
 	@if (request()->routeIs('tools.water-intake*'))
 		<link href="{{ asset('frontend/assets/css/yuktione-water-intake.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-water-intake.css')) }}" rel="stylesheet">
 		<script src="{{ asset('frontend/assets/js/yuktione-water-intake.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-water-intake.js')) }}" defer></script>

@@ -200,6 +200,7 @@ class DigitalJournal
         return [
             'id' => $entry->id,
             'title' => $title,
+            'prompt_key' => $entry->prompt_key,
             'prompt' => $prompt,
             'preview' => mb_strlen($preview) > self::HISTORY_PREVIEW
                 ? mb_substr($preview, 0, self::HISTORY_PREVIEW - 1).'…'

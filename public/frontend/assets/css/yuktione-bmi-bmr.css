@@ -1,64 +1,89 @@
 /**
- * Phase 4D — BMI & BMR Calculator (scoped). Navy / teal / cream / gold. No lavender.
+ * BMI, BMR & TDEE Calculator (scoped). YuktiOne plum / magenta / violet on a soft pink canvas.
+ * Tokens live on .yk-bmi[data-yk-bmi] so they win over yuktione-tools-ds.css (loaded later).
  */
-.yk-bmi {
-    --yk-navy: #0b2048;
-    --yk-navy-soft: #142b4d;
-    --yk-teal: #316d61;
-    --yk-teal-deep: #24554c;
-    --yk-mint: #eaf6f2;
+.yk-bmi[data-yk-bmi] {
+    --yk-navy: #2b1230;
+    --yk-navy-soft: #4a0a30;
+    --yk-teal: #c3196b;
+    --yk-teal-deep: #7a12a0;
+    --yk-mint: #f9ecf6;
     --yk-gold: #c4a35a;
-    --yk-gold-soft: rgba(196, 163, 90, 0.18);
-    --yk-cream: #fff6ed;
-    --yk-cream-2: #f7f1e8;
-    --yk-line: #e6ebf2;
-    --yk-muted: #5b6b7c;
+    --yk-gold-soft: rgba(196, 163, 90, 0.2);
+    --yk-cream: #fff8fb;
+    --yk-cream-2: #f6eaf6;
+    --yk-line: #ecd9ea;
+    --yk-muted: #6b5a68;
     --yk-surface: #ffffff;
-    --yk-shadow-sm: 0 6px 18px rgba(11, 32, 72, 0.06);
+    --yk-shadow-sm: 0 8px 22px rgba(138, 15, 77, 0.08);
     --yk-ease: 180ms ease;
     --yk-touch: 44px;
+    --bm-blue: #2cc5e6;
+    --bm-green: #69cf70;
+    --bm-amber: #f6a93b;
+    --bm-red: #f0307f;
+    --bm-violet: #7a12a0;
+    --bm-grad: linear-gradient(90deg, #c3196b 0%, #a2188f 52%, #6f14a6 100%);
+    position: relative;
     font-family: "DM Sans", sans-serif;
     color: var(--yk-navy);
     background:
-        radial-gradient(900px 380px at 8% -12%, rgba(49, 109, 97, 0.12), transparent 55%),
-        radial-gradient(700px 300px at 100% 0%, rgba(196, 163, 90, 0.12), transparent 52%),
-        linear-gradient(180deg, #fbfcfe 0%, var(--yk-cream-2) 100%);
+        radial-gradient(900px 440px at 82% 0%, rgba(216, 180, 226, 0.5), transparent 62%),
+        radial-gradient(720px 420px at 0% 12%, rgba(252, 220, 238, 0.85), transparent 62%),
+        linear-gradient(180deg, #fdf3fa 0%, #f7ebf8 55%, #fcf0f6 100%);
     min-height: 70vh;
     padding: max(1.25rem, env(safe-area-inset-top, 0px)) 0 max(3rem, env(safe-area-inset-bottom, 0px));
     overflow-x: clip;
 }
 
 .yk-bmi__wrap {
+    position: relative;
+    z-index: 1;
     width: min(720px, calc(100% - 2rem));
     margin-inline: auto;
 }
 
-.yk-bmi__wrap--wide {
-    width: min(1040px, calc(100% - 2rem));
+.yk-bmi__wrap--wide { width: min(1120px, calc(100% - 2rem)); }
+
+/* Decorative leaves */
+.yk-bmi__leaf {
+    position: absolute;
+    z-index: 0;
+    fill: rgba(216, 180, 226, 0.34);
+    pointer-events: none;
 }
 
+.yk-bmi__leaf--bl { left: -26px; bottom: 6%; width: 190px; transform: rotate(8deg); }
+.yk-bmi__leaf--tr { right: -40px; top: 14%; width: 150px; transform: scaleX(-1) rotate(10deg); fill: rgba(195, 25, 107, 0.07); }
+
+/* —— Shared: cards, badge, headings —— */
 .yk-bmi__card {
-    background: rgba(255, 255, 255, 0.94);
-    border: 1px solid var(--yk-line);
-    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #f1dff0;
+    border-radius: 26px;
     padding: 1.35rem 1.25rem 1.5rem;
-    box-shadow: var(--yk-shadow-sm);
-    backdrop-filter: blur(6px);
+    box-shadow: 0 22px 50px rgba(138, 15, 77, 0.1), 0 3px 10px rgba(138, 15, 77, 0.04);
 }
 
 .yk-bmi__badge {
     display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     margin: 0 0 0.7rem;
-    padding: 0.28rem 0.7rem;
+    padding: 0.32rem 0.8rem;
     border-radius: 999px;
-    background: var(--yk-mint);
-    color: var(--yk-teal);
-    font-size: 0.78rem;
-    font-weight: 700;
+    background: #f1dcf5;
+    color: var(--yk-teal-deep);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
 }
+
+.yk-bmi__badge svg { color: #4aa04f; }
 
 .yk-bmi h1 {
     margin: 0 0 0.45rem;
+    color: var(--yk-navy-soft);
     font-size: clamp(1.4rem, 3.6vw, 1.9rem);
     line-height: 1.15;
     letter-spacing: -0.03em;
@@ -78,110 +103,546 @@
     padding: 0.65rem 0.85rem;
     border-radius: 12px;
     background: var(--yk-mint);
-    color: var(--yk-teal);
+    color: var(--yk-teal-deep);
     font-weight: 600;
     font-size: 0.92rem;
 }
 
 .yk-bmi__error {
     margin: 0 0 0.85rem;
-    color: #9b1c1c;
+    padding: 0.7rem 0.9rem;
+    border-radius: 12px;
+    background: #fdecea;
+    color: #a3281c;
     font-weight: 600;
 }
 
-/* —— Metrics row: Gender | Age | Weight | Height —— */
+.yk-bmi__card h2 {
+    margin: 1.3rem 0 0.4rem;
+    color: var(--yk-teal-deep);
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+
+/* ==========================================================================
+   Header: title + illustration + feature pills
+   ========================================================================== */
+.yk-bmi__hero {
+    display: grid;
+    gap: 0.9rem 1.2rem;
+    align-items: center;
+    margin: 0.7rem 0 1.2rem;
+}
+
+.yk-bmi .yk-bmi__hero h1 {
+    margin: 0 0 0.7rem;
+    color: #2a0b2c;
+    font-size: clamp(1.85rem, 5.4vw, 2.7rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+}
+
+.yk-bmi__hero .yk-bmi__lead {
+    max-width: 30rem;
+    margin: 0;
+    color: #4e3b4c;
+    font-size: 0.98rem;
+}
+
+.yk-bmi__hero-art {
+    position: relative;
+    max-width: 420px;
+    margin-inline: auto;
+}
+
+.yk-bmi__hero-art img {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 18px 20px rgba(110, 20, 120, 0.14));
+}
+
+.yk-bmi__hero-blob {
+    position: absolute;
+    right: 4%;
+    top: 4%;
+    width: 78%;
+    height: 88%;
+    border-radius: 58% 42% 52% 48% / 54% 50% 50% 46%;
+    background: linear-gradient(160deg, #f1daf6 0%, #f9e6f3 100%);
+}
+
+.yk-bmi__heart {
+    position: absolute;
+    z-index: 2;
+    color: #e0489a;
+}
+
+.yk-bmi__heart--a { left: 12%; top: 16%; transform: rotate(-12deg); }
+.yk-bmi__heart--b { right: 7%; top: 2%; transform: rotate(10deg); }
+
+.yk-bmi__pills {
+    display: grid;
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.yk-bmi__pills li {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.7rem 0.95rem;
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: 0 10px 26px rgba(138, 15, 77, 0.09);
+    backdrop-filter: blur(6px);
+}
+
+.yk-bmi__pill-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    background: #f3e0f7;
+    color: #8a1aa6;
+}
+
+.yk-bmi__pills strong {
+    display: block;
+    color: #2a0b2c;
+    font-size: 0.92rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.yk-bmi__pills small {
+    display: block;
+    margin-top: 0.1rem;
+    color: var(--yk-muted);
+    font-size: 0.76rem;
+    line-height: 1.3;
+}
+
+/* ==========================================================================
+   Layout + live preview panel
+   ========================================================================== */
+.yk-bmi__layout {
+    display: grid;
+    gap: 1.1rem;
+}
+
+.yk-bmi__aside {
+    position: relative;
+    overflow: hidden;
+    padding: 1.4rem 1.2rem 1.25rem;
+    border-radius: 26px;
+    background:
+        radial-gradient(280px 220px at 105% -8%, rgba(255, 255, 255, 0.14), transparent 62%),
+        linear-gradient(172deg, #5b1790 0%, #7b1f98 36%, #a3207f 78%, #b6226f 100%);
+    box-shadow: 0 26px 54px rgba(100, 20, 120, 0.3);
+    color: #fff;
+}
+
+.yk-bmi__aside-leaf {
+    position: absolute;
+    left: -26px;
+    bottom: -34px;
+    width: 150px;
+    fill: rgba(255, 255, 255, 0.1);
+    transform: rotate(8deg);
+    pointer-events: none;
+}
+
+.yk-bmi__aside > *:not(.yk-bmi__aside-leaf) { position: relative; z-index: 1; }
+
+.yk-bmi .yk-bmi__aside-title {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin: 0;
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.yk-bmi__aside-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #ff6aa8, #d81b78);
+    color: #fff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Gauge */
+.yk-bmi__gauge {
+    position: relative;
+    width: min(100%, 300px);
+    margin: 1.4rem auto 0;
+}
+
+.yk-bmi__gauge svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+.yk-bmi__arc { transition: opacity 300ms ease; }
+.yk-bmi__arc--under { stroke: var(--bm-blue); }
+.yk-bmi__arc--healthy { stroke: var(--bm-green); }
+.yk-bmi__arc--over { stroke: var(--bm-amber); }
+.yk-bmi__arc--obese { stroke: var(--bm-red); }
+
+.yk-bmi__needle {
+    transform-origin: 100px 100px;
+    transition: transform 650ms cubic-bezier(0.3, 1.35, 0.5, 1), opacity 250ms ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.yk-bmi__aside[data-state="empty"] .yk-bmi__needle { opacity: 0; }
+
+.yk-bmi__gauge-read {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 6%;
+    text-align: center;
+}
+
+.yk-bmi__gauge-read em {
+    display: block;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.88rem;
+    font-style: normal;
+    font-weight: 600;
+}
+
+.yk-bmi__gauge-read strong {
+    display: block;
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+}
+
+.yk-bmi__gauge-read span {
+    display: inline-block;
+    max-width: 78%;
+    margin-top: 0.4rem;
+    padding: 0.26rem 0.95rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.yk-bmi__aside[data-state="under"] .yk-bmi__gauge-read span { background: #9fe7f7; color: #0b5468; }
+.yk-bmi__aside[data-state="healthy"] .yk-bmi__gauge-read span { background: #8fe8b1; color: #0f5a34; }
+.yk-bmi__aside[data-state="over"] .yk-bmi__gauge-read span { background: #fdd18e; color: #7a4a05; }
+.yk-bmi__aside[data-state="obese"] .yk-bmi__gauge-read span { background: #ffb7d4; color: #8a0f4d; }
+
+/* KPI tiles */
+.yk-bmi__kpis {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin: 1.3rem 0 0;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.yk-bmi__kpi {
+    min-width: 0;
+    padding: 0.7rem 0.3rem 0.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.yk-bmi__kpi-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 0.3rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffd4ec;
+}
+
+.yk-bmi__kpi dt {
+    color: #fff;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.yk-bmi__kpi dd {
+    margin: 0.1rem 0 0;
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+}
+
+.yk-bmi__kpi small {
+    display: block;
+    margin-top: 0.1rem;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.66rem;
+    font-weight: 600;
+}
+
+.yk-bmi__aside-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin: 1.1rem 0 0;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.78rem;
+    line-height: 1.45;
+}
+
+.yk-bmi__aside-note svg { flex: 0 0 auto; margin-top: 0.08rem; }
+
+/* ==========================================================================
+   Form
+   ========================================================================== */
+.yk-bmi__card--form { padding: 1.4rem 1.15rem 1.5rem; }
+
+.yk-bmi input[type="number"] {
+    width: 100%;
+    min-height: 50px;
+    padding: 0.6rem 0.9rem;
+    border: 1.5px solid var(--yk-line);
+    border-radius: 14px;
+    background: #fff;
+    color: var(--yk-navy);
+    font: inherit;
+    font-weight: 600;
+    transition: border-color var(--yk-ease), box-shadow var(--yk-ease);
+}
+
+.yk-bmi input[type="number"]::placeholder { color: #b7a3b4; font-weight: 500; }
+
+.yk-bmi input[type="number"]:focus {
+    outline: none;
+    border-color: #a21fa6;
+    box-shadow: 0 0 0 4px rgba(162, 31, 166, 0.14);
+}
+
+.yk-bmi input:invalid:not(:placeholder-shown):not(:focus) { border-color: #d9605a; }
+
+.yk-bmi [data-bmi-weight-kg][hidden],
+.yk-bmi [data-bmi-weight-lb][hidden],
+.yk-bmi [data-bmi-height-cm][hidden],
+.yk-bmi [data-bmi-height-ft][hidden] { display: none !important; }
+
+/* Section headings */
+.yk-bmi .yk-bmi__section {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 1.55rem 0 0.8rem;
+    color: #2a0b2c;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+}
+
+.yk-bmi .yk-bmi__card--form form > .yk-bmi__section:first-of-type { margin-top: 0; }
+
+.yk-bmi__section-icon,
+.yk-bmi__tile-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    font-style: normal;
+}
+
+.yk-bmi__section-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+    background: #fde6d8;
+    color: #e2702f;
+}
+
+.yk-bmi__section-icon--body { background: #fff0c9; color: #d58d0b; }
+.yk-bmi__section-icon--run { background: #fde0d4; color: #e2562f; }
+
+.yk-bmi__row-about,
 .yk-bmi__metrics {
     display: grid;
-    gap: 0.85rem;
-    margin: 0 0 1.15rem;
-}
-
-@media (min-width: 640px) {
-    .yk-bmi__metrics {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (min-width: 1024px) {
-    .yk-bmi__metrics {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 1rem;
-        align-items: start;
-    }
+    gap: 0.9rem;
 }
 
 .yk-bmi__metric {
+    min-width: 0;
     margin: 0;
     padding: 0;
     border: 0;
-    min-width: 0;
 }
 
 .yk-bmi__metric > label,
 .yk-bmi__metric > legend {
     display: block;
-    margin: 0 0 0.4rem;
+    margin: 0 0 0.5rem;
+    padding: 0;
+    color: #2a0b2c;
+    font-size: 0.86rem;
     font-weight: 700;
-    font-size: 0.88rem;
-    color: var(--yk-navy);
 }
 
 .yk-bmi__hint {
-    margin: 0.35rem 0 0;
-    font-size: 0.72rem;
-    line-height: 1.35;
+    margin: 0.5rem 0 0;
     color: var(--yk-muted);
+    font-size: 0.74rem;
+    line-height: 1.35;
 }
 
-.yk-bmi__input-unit {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: 0.4rem;
-}
+.yk-bmi__input-unit { position: relative; }
+.yk-bmi__input-unit input { padding-right: 3rem; }
 
 .yk-bmi__input-unit span {
+    position: absolute;
+    top: 50%;
+    right: 0.95rem;
+    color: var(--yk-muted);
     font-size: 0.82rem;
     font-weight: 700;
-    color: var(--yk-muted);
+    transform: translateY(-50%);
+    pointer-events: none;
 }
 
-.yk-bmi input[type="number"],
-.yk-bmi select {
-    width: 100%;
+/* Gender pills */
+.yk-bmi__seg {
+    display: grid;
+    gap: 0.6rem;
+}
+
+.yk-bmi__seg--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.yk-bmi__seg-option { position: relative; display: block; cursor: pointer; }
+
+.yk-bmi__seg-option input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.yk-bmi__seg-option > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
     min-height: 46px;
-    border: 1px solid var(--yk-line);
-    border-radius: 12px;
-    padding: 0.55rem 0.75rem;
-    font: inherit;
-    color: var(--yk-navy);
+    padding: 0.35rem 0.7rem;
+    border: 1.5px solid var(--yk-line);
+    border-radius: 999px;
     background: #fff;
-    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    box-shadow: 0 5px 12px rgba(138, 15, 77, 0.06);
+    color: #3a2238;
+    font-size: 0.84rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    transition: background var(--yk-ease), border-color var(--yk-ease), color var(--yk-ease), box-shadow var(--yk-ease);
 }
 
-.yk-bmi input:focus,
-.yk-bmi select:focus {
-    outline: 2px solid var(--yk-gold);
-    outline-offset: 1px;
-    border-color: var(--yk-teal);
-    box-shadow: 0 0 0 4px var(--yk-gold-soft);
+.yk-bmi__seg-option > span svg { flex: 0 0 auto; color: #8a1aa6; }
+
+.yk-bmi__seg-option:hover > span { border-color: #d9b3dc; }
+
+.yk-bmi__seg-option:has(input:checked) > span {
+    border-color: #9a22a8;
+    background: #f8e8fb;
+    color: #6f14a6;
+    box-shadow: 0 8px 18px rgba(122, 18, 160, 0.14);
 }
 
-.yk-bmi [data-bmi-weight-kg][hidden],
-.yk-bmi [data-bmi-weight-lb][hidden],
-.yk-bmi [data-bmi-height-cm][hidden],
-.yk-bmi [data-bmi-height-ft][hidden] {
-    display: none !important;
+.yk-bmi__seg-option:has(input:focus-visible) > span,
+.yk-bmi__activity-card:has(input:focus-visible) {
+    outline: 2px solid #8a1aa6;
+    outline-offset: 2px;
 }
 
-.yk-bmi input:invalid:not(:placeholder-shown):not(:focus) {
-    border-color: #c45c5c;
+/* Check badge shared by gender + activity */
+.yk-bmi__tick {
+    position: absolute;
+    top: -7px;
+    right: -4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 21px;
+    height: 21px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #9a22b8, #6a14a0);
+    color: #fff;
+    box-shadow: 0 4px 9px rgba(106, 20, 160, 0.35);
+    opacity: 0;
+    transform: scale(0.4);
+    transition: opacity var(--yk-ease), transform 220ms cubic-bezier(0.3, 1.5, 0.5, 1);
+    pointer-events: none;
 }
+
+.yk-bmi__seg-option:has(input:checked) .yk-bmi__tick,
+.yk-bmi__activity-card:has(input:checked) .yk-bmi__tick {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Weight / height */
+.yk-bmi__metric--tile { min-width: 0; }
+
+.yk-bmi__metric--tile > legend {
+    float: left;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    margin: 0 0 0.6rem;
+}
+
+.yk-bmi__tile-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+    background: #eee2fa;
+    color: #7a12a0;
+}
+
+.yk-bmi__tile-icon--warm { background: #fde6dc; color: #e2562f; }
 
 .yk-bmi__unit-toggle {
+    clear: both;
     display: inline-flex;
-    gap: 0.3rem;
-    margin-bottom: 0.4rem;
+    gap: 2px;
+    padding: 3px;
+    margin-bottom: 0.65rem;
+    border-radius: 999px;
+    background: #f5eaf7;
 }
 
 .yk-bmi__unit-toggle label,
@@ -189,150 +650,163 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.28rem;
-    min-height: var(--yk-touch);
-    min-width: 3.25rem;
-    padding: 0 0.85rem;
-    border: 1px solid var(--yk-line);
+    min-width: 3rem;
+    min-height: 30px;
+    padding: 0 0.9rem;
+    border: 0;
     border-radius: 999px;
-    font-size: 0.82rem;
-    font-weight: 700;
+    color: var(--yk-muted);
+    font-size: 0.8rem;
+    font-weight: 800;
     cursor: pointer;
-    transition: background var(--yk-ease), border-color var(--yk-ease), color var(--yk-ease), transform var(--yk-ease);
+    transition: background var(--yk-ease), color var(--yk-ease), box-shadow var(--yk-ease);
 }
 
 .yk-bmi__unit-toggle label:has(input:checked),
 .yk-bmi__unit-option:has(input:checked) {
-    background: var(--yk-mint);
-    border-color: var(--yk-teal);
-    color: var(--yk-teal-deep);
+    background: linear-gradient(135deg, #9a22b8, #6a14a0);
+    color: #fff;
+    box-shadow: 0 5px 12px rgba(106, 20, 160, 0.3);
 }
 
 .yk-bmi__unit-toggle input {
     position: absolute;
-    opacity: 0;
     width: 1px;
     height: 1px;
+    opacity: 0;
     pointer-events: none;
 }
 
 .yk-bmi__unit-toggle label:focus-within,
 .yk-bmi__unit-option:focus-within {
-    outline: 2px solid var(--yk-gold);
+    outline: 2px solid #8a1aa6;
     outline-offset: 2px;
+}
+
+.yk-bmi__bigfield { position: relative; }
+
+.yk-bmi__bigfield input {
+    min-height: 52px;
+    padding: 0.5rem 3rem 0.5rem 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    -moz-appearance: textfield;
+}
+
+.yk-bmi__bigfield input::-webkit-outer-spin-button,
+.yk-bmi__bigfield input::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+}
+
+.yk-bmi__bigfield > span {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    color: var(--yk-muted);
+    font-size: 0.88rem;
+    font-weight: 800;
+    transform: translateY(-50%);
+    pointer-events: none;
 }
 
 .yk-bmi__ftin {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.4rem;
+    gap: 0.5rem;
 }
 
-/* —— Emoji activity cards —— */
+.yk-bmi__ftin .yk-bmi__bigfield input { padding-right: 2.6rem; }
+
+/* Activity: horizontal cards */
 .yk-bmi__activity {
-    margin: 0 0 1rem;
+    margin: 0;
     padding: 0;
     border: 0;
 }
 
-.yk-bmi__activity > legend {
-    margin: 0 0 0.55rem;
-    font-weight: 700;
-    font-size: 0.92rem;
-}
-
 .yk-bmi__activity-grid {
     display: grid;
-    gap: 0.55rem;
-    grid-template-columns: 1fr;
-}
-
-@media (min-width: 480px) {
-    .yk-bmi__activity-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (min-width: 900px) {
-    .yk-bmi__activity-grid {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
+    gap: 0.6rem;
+    grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
 }
 
 .yk-bmi__activity-card {
     position: relative;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
-    text-align: center;
-    gap: 0.2rem;
-    min-height: 108px;
-    padding: 0.85rem 0.55rem 0.75rem;
+    gap: 0.5rem;
+    min-height: 72px;
+    padding: 0.7rem 0.7rem 0.7rem 0.65rem;
     border: 1.5px solid var(--yk-line);
     border-radius: 16px;
     background: #fff;
+    box-shadow: 0 6px 14px rgba(138, 15, 77, 0.05);
     cursor: pointer;
-    transition: border-color 0.18s ease, background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+    transition: border-color var(--yk-ease), background var(--yk-ease), box-shadow var(--yk-ease), transform var(--yk-ease);
 }
 
 .yk-bmi__activity-card:hover {
-    border-color: rgba(49, 109, 97, 0.45);
-    background: rgba(234, 246, 242, 0.45);
+    border-color: #d9b3dc;
+    transform: translateY(-2px);
 }
 
 .yk-bmi__activity-card:has(input:checked) {
-    border-color: var(--yk-teal);
-    background: var(--yk-mint);
-    box-shadow: 0 0 0 3px rgba(49, 109, 97, 0.16);
-}
-
-.yk-bmi__activity-card:has(input:focus-visible) {
-    outline: 2px solid var(--yk-teal);
-    outline-offset: 2px;
+    border-color: #9a22a8;
+    background: #f8e8fb;
+    box-shadow: 0 10px 20px rgba(122, 18, 160, 0.14);
 }
 
 .yk-bmi__activity-card input {
     position: absolute;
-    opacity: 0;
     width: 1px;
     height: 1px;
     margin: 0;
+    opacity: 0;
 }
 
 .yk-bmi__activity-emoji {
-    font-size: 1.55rem;
+    font-size: 1.5rem;
     line-height: 1;
-    margin-bottom: 0.15rem;
 }
 
+.yk-bmi__activity-text { display: grid; gap: 0.12rem; min-width: 0; }
+
 .yk-bmi__activity-label {
-    font-weight: 700;
-    font-size: 0.82rem;
-    color: var(--yk-navy);
-    line-height: 1.25;
+    color: #2a0b2c;
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1.2;
 }
 
 .yk-bmi__activity-desc {
-    font-size: 0.68rem;
-    line-height: 1.3;
     color: var(--yk-muted);
+    font-size: 0.7rem;
+    line-height: 1.25;
 }
 
 .yk-bmi__check {
     display: flex;
-    gap: 0.55rem;
-    align-items: flex-start;
-    font-size: 0.88rem;
-    color: var(--yk-muted);
-    margin: 0.25rem 0 0;
+    align-items: center;
+    gap: 0.7rem;
+    margin: 1.1rem 0 0;
+    padding: 0.8rem 1rem;
+    border: 1px solid #eddcee;
+    border-radius: 14px;
+    background: #f7edf7;
+    color: #4e3b4c;
+    font-size: 0.84rem;
+    line-height: 1.4;
+    cursor: pointer;
 }
 
 .yk-bmi__check input {
-    margin-top: 0.2rem;
-    accent-color: var(--yk-teal);
-    width: 1.05rem;
-    height: 1.05rem;
     flex-shrink: 0;
+    width: 1.2rem;
+    height: 1.2rem;
+    margin: 0;
+    accent-color: #7a12a0;
 }
 
 .yk-bmi__actions {
@@ -343,33 +817,44 @@
     align-items: center;
 }
 
+/* Buttons */
 .yk-bmi__btn,
 .yk-bmi__btn-secondary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-height: 44px;
-    padding: 0 1.15rem;
+    padding: 0 1.3rem;
     border-radius: 999px;
     font: inherit;
     font-weight: 700;
     text-decoration: none;
     border: 1px solid transparent;
     cursor: pointer;
-    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
 }
 
 .yk-bmi__btn {
-    background: linear-gradient(135deg, var(--yk-teal), var(--yk-teal-deep));
+    background: var(--bm-grad);
     color: #fff;
-    box-shadow: 0 8px 18px rgba(36, 85, 76, 0.2);
+    box-shadow: 0 10px 22px rgba(150, 25, 130, 0.3);
 }
 
-.yk-bmi__btn:hover { transform: translateY(-1px); }
-.yk-bmi__btn:hover { background: #28584e; color: #fff; }
+.yk-bmi__btn:hover {
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(150, 25, 130, 0.38);
+}
+
 .yk-bmi__btn:active,
-.yk-bmi__btn-secondary:active {
-    transform: scale(0.98);
+.yk-bmi__btn-secondary:active { transform: scale(0.98); }
+
+.yk-bmi__btn--lg {
+    flex: 1 1 100%;
+    gap: 0.7rem;
+    min-height: 58px;
+    font-size: 1.06rem;
+    letter-spacing: 0.01em;
 }
 
 .yk-bmi__btn-secondary {
@@ -377,34 +862,52 @@
     color: var(--yk-navy);
     border-color: var(--yk-line);
 }
+
 .yk-bmi__btn-secondary:hover {
     border-color: var(--yk-teal);
     color: var(--yk-teal);
 }
 
-/* —— Result cards —— */
+.yk-bmi__btn:focus-visible,
+.yk-bmi__btn-secondary:focus-visible {
+    outline: 3px solid rgba(162, 31, 166, 0.4);
+    outline-offset: 3px;
+}
+
+/* ==========================================================================
+   Results / understand / guidance / history (shared pieces)
+   ========================================================================== */
 .yk-bmi__result-grid {
     display: grid;
     gap: 0.75rem;
     margin: 0 0 1rem;
 }
 
-@media (min-width: 768px) {
-    .yk-bmi__result-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+.yk-bmi__result-card {
+    position: relative;
+    overflow: hidden;
+    padding: 1.35rem 1.1rem 1.2rem;
+    border-radius: 22px;
+    border: 1px solid var(--yk-line);
+    background: #fff;
+    box-shadow: 0 10px 24px rgba(138, 15, 77, 0.07);
+    animation: yk-bmi-reveal 0.35s ease both;
 }
 
-.yk-bmi__result-card {
-    padding: 1.05rem 1rem 1.1rem;
-    border-radius: 18px;
-    border: 1px solid var(--yk-line);
-    background: linear-gradient(180deg, #fff 0%, var(--yk-mint) 160%);
-    animation: yk-bmi-reveal 0.35s ease both;
+.yk-bmi__result-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--yk-teal), var(--yk-teal-deep));
 }
 
 .yk-bmi__result-card:nth-child(2) { animation-delay: 0.06s; }
 .yk-bmi__result-card:nth-child(3) { animation-delay: 0.12s; }
+.yk-bmi__result-card:nth-child(2)::before { background: linear-gradient(90deg, var(--bm-amber), #e58a1f); }
+.yk-bmi__result-card:nth-child(3)::before { background: linear-gradient(90deg, var(--bm-blue), #2f84c0); }
+.yk-bmi__result-card:nth-child(2) .yk-bmi__result-kicker { color: #b86f0f; }
+.yk-bmi__result-card:nth-child(3) .yk-bmi__result-kicker { color: #226fa5; }
 
 .yk-bmi__result-kicker {
     margin: 0 0 0.35rem;
@@ -434,7 +937,7 @@
     margin: 0 0 0.55rem;
     padding: 0.22rem 0.55rem;
     border-radius: 999px;
-    background: rgba(49, 109, 97, 0.12);
+    background: rgba(195, 25, 107, 0.1);
     color: var(--yk-teal);
     font-size: 0.75rem;
     font-weight: 700;
@@ -452,10 +955,7 @@
     to { opacity: 1; transform: none; }
 }
 
-/* Legacy helpers kept for understand/guidance */
-.yk-bmi__field {
-    margin: 0 0 1rem;
-}
+.yk-bmi__field { margin: 0 0 1rem; }
 
 .yk-bmi__field > label,
 .yk-bmi__field legend {
@@ -468,11 +968,6 @@
 .yk-bmi__row {
     display: grid;
     gap: 0.65rem;
-}
-
-@media (min-width: 640px) {
-    .yk-bmi__row.is-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .yk-bmi__row.is-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 .yk-bmi__units {
@@ -534,10 +1029,6 @@
     margin: 0 0 1rem;
 }
 
-@media (min-width: 640px) {
-    .yk-bmi__stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
 .yk-bmi__stat {
     padding: 0.95rem 0.9rem;
     border-radius: 16px;
@@ -561,18 +1052,18 @@
 .yk-bmi__scale-track {
     position: relative;
     display: grid;
-    grid-template-columns: 18.5% 6.5% 5% 70%;
+    grid-template-columns: 14% 26% 20% 40%;
     height: 14px;
     border-radius: 999px;
     overflow: hidden;
-    background: #edf1f6;
+    background: #f1e6f1;
 }
 
-/* Underweight → healthy → overweight → obese (navy/teal/gold; no lavender). */
-.yk-bmi__scale-track span:nth-child(1) { background: #5b8f9e; }
-.yk-bmi__scale-track span:nth-child(2) { background: #316d61; }
-.yk-bmi__scale-track span:nth-child(3) { background: #c4a35a; }
-.yk-bmi__scale-track span:nth-child(4) { background: #0b2048; }
+/* Underweight (blue) → healthy (green) → overweight (amber) → obesity (pink). */
+.yk-bmi__scale-track span:nth-child(1) { background: var(--bm-blue); }
+.yk-bmi__scale-track span:nth-child(2) { background: var(--bm-green); }
+.yk-bmi__scale-track span:nth-child(3) { background: var(--bm-amber); }
+.yk-bmi__scale-track span:nth-child(4) { background: var(--bm-red); }
 
 .yk-bmi__scale-marker {
     position: absolute;
@@ -586,8 +1077,9 @@
 }
 
 .yk-bmi__scale-labels {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 14% 26% 20% 40%;
+    text-align: center;
     margin-top: 0.45rem;
     color: var(--yk-muted);
     font-size: 0.75rem;
@@ -613,7 +1105,7 @@
     border: 1px solid var(--yk-line);
 }
 
-/* —— History —— */
+/* History */
 .yk-bmi__history {
     display: grid;
     gap: 0.65rem;
@@ -634,7 +1126,7 @@
 
 .yk-bmi__history-card:hover {
     border-color: var(--yk-teal);
-    background: rgba(234, 246, 242, 0.55);
+    background: rgba(249, 236, 246, 0.6);
 }
 
 .yk-bmi__history-meta {
@@ -653,9 +1145,7 @@
     gap: 0.45rem;
 }
 
-.yk-bmi__history-metric {
-    min-width: 0;
-}
+.yk-bmi__history-metric { min-width: 0; }
 
 .yk-bmi__history-metric strong {
     display: block;
@@ -722,14 +1212,84 @@
     align-items: center;
 }
 
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (min-width: 560px) {
+    .yk-bmi__row-about { grid-template-columns: minmax(0, 2.6fr) minmax(0, 1fr); gap: 1.4rem; align-items: start; }
+    .yk-bmi__metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
+    .yk-bmi__metric--tile { padding-right: 1.3rem; }
+    .yk-bmi__metric--tile + .yk-bmi__metric--tile { padding: 0 0 0 1.5rem; border-left: 1px solid #efdff0; }
+}
+
+@media (min-width: 640px) {
+    .yk-bmi__row.is-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .yk-bmi__row.is-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .yk-bmi__stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (min-width: 640px) and (max-width: 979px) {
+    .yk-bmi__hero { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); }
+    .yk-bmi__pills { grid-column: 1 / -1; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .yk-bmi__pills li { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+}
+
+@media (min-width: 768px) {
+    .yk-bmi__result-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (min-width: 900px) {
+    .yk-bmi__layout {
+        grid-template-columns: minmax(300px, 330px) minmax(0, 1fr);
+        align-items: start;
+        gap: 1.4rem;
+    }
+
+    .yk-bmi__aside {
+        position: sticky;
+        top: 1rem;
+        padding: 1.5rem 1.4rem 1.3rem;
+    }
+
+    .yk-bmi__card--form { padding: 1.6rem 1.6rem 1.7rem; }
+}
+
+@media (min-width: 980px) {
+    .yk-bmi__hero {
+        grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.95fr) minmax(235px, 0.78fr);
+        gap: 0.5rem 1.2rem;
+        margin: 0.4rem 0 1.5rem;
+    }
+}
+
+@media (min-width: 1080px) {
+    .yk-bmi__activity-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}
+
 @media (max-width: 639px) {
-    .yk-bmi__btn,
     .yk-bmi__btn-secondary { width: 100%; }
-    .yk-bmi__actions form { width: 100%; }
-    .yk-bmi__actions form .yk-bmi__btn,
-    .yk-bmi__actions form .yk-bmi__btn-secondary { width: 100%; }
-    .yk-bmi__scale-track { grid-template-columns: 1fr 1fr 1fr 1fr; }
-    .yk-bmi__history-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .yk-bmi__hero-art { max-width: 330px; }
+    .yk-bmi__leaf { display: none; }
+}
+
+@media (max-width: 559px) {
+    .yk-bmi__metric--tile + .yk-bmi__metric--tile {
+        margin-top: 1.1rem;
+        padding-top: 1.1rem;
+        border-top: 1px solid #efdff0;
+    }
+
+    .yk-bmi__gauge { width: min(100%, 250px); }
+    .yk-bmi__aside-note { display: none; }
+}
+
+@media (max-width: 479px) {
+    .yk-bmi__aside { border-radius: 22px; padding: 1.2rem 1rem 1.1rem; }
+    .yk-bmi__seg--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .yk-bmi__seg--3 .yk-bmi__seg-option:last-child { grid-column: 1 / -1; }
+    .yk-bmi__activity-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .yk-bmi__activity-card:last-child { grid-column: 1 / -1; }
+    .yk-bmi__kpi dd { font-size: 1.1rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -738,6 +1298,10 @@
     .yk-bmi__btn,
     .yk-bmi__btn-secondary,
     .yk-bmi__history-card,
+    .yk-bmi__needle,
+    .yk-bmi__arc,
+    .yk-bmi__tick,
+    .yk-bmi__seg-option > span,
     .yk-bmi input,
     .yk-bmi select {
         animation: none !important;

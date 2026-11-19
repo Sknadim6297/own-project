@@ -104,6 +104,118 @@ class PfmToolsTest extends TestCase
             ->assertSee('Retirement Calculator');
     }
 
+    public function test_pfm_hub_groups_every_catalog_tool_with_a_link(): void
+    {
+        $this->storage();
+
+        $response = $this->get(route('tools.pfm'))
+            ->assertOk()
+            ->assertSee('Everyday Money')
+            ->assertSee('Goals &amp; Growth', false)
+            ->assertSee('Debt &amp; Prices', false)
+            ->assertSee('<b>8</b> calculators', false);
+
+        foreach (PfmCatalog::TOOLS as $tool) {
+            $response->assertSee($tool['name']);
+            $response->assertSee('href="'.route($tool['route']).'"', false);
+        }
+    }
+
+    public function test_pfm_hub_shows_closed_tools_as_unavailable_without_a_link(): void
+    {
+        $this->storage();
+        Tool::query()->where('slug', 'inflation-calculator')->update(['status' => 'draft']);
+
+        $response = $this->get(route('tools.pfm'))->assertOk();
+
+        $response->assertSee('Unavailable');
+        $response->assertDontSee('href="'.route('tools.pfm.inflation').'"', false);
+        $response->assertSee('href="'.route('tools.pfm.money-planner').'"', false);
+        $response->assertSee('<b>7</b> calculators', false);
+    }
+
+    public function test_pfm_hub_offers_a_shortcut_to_a_recent_result(): void
+    {
+        $this->storage();
+
+        $this->get(route('tools.pfm'))->assertDontSee('View Result');
+
+        $this->post(route('tools.pfm.inflation.calculate'), [
+            'current_amount' => 10000,
+            'inflation_percent' => 6,
+            'years' => 10,
+        ])->assertRedirect(route('tools.pfm.inflation.results'));
+
+        $this->get(route('tools.pfm'))
+            ->assertOk()
+            ->assertSee('View Result')
+            ->assertSee('href="'.route('tools.pfm.inflation.results').'"', false);
+    }
+
+    /**
+     * @return array<string, array{0: string, 1: string, 2: array<string, int|string>}>
+     */
+    public static function everyToolProvider(): array
+    {
+        return [
+            'money planner' => ['monthly-money-planner', 'tools.pfm.money-planner', ['monthly_income' => 80000, 'essential_expenses' => 50000, 'lifestyle_expenses' => 10000, 'emis' => 5000, 'other_recurring' => 0, 'investments' => 15000]],
+            'net worth' => ['net-worth-calculator', 'tools.pfm.net-worth', ['cash' => 50000, 'bank' => 200000, 'fd' => 100000, 'mf' => 150000, 'stocks' => 80000, 'gold' => 60000, 'property' => 3000000, 'epf_nps' => 400000, 'loans' => 1500000, 'credit_cards' => 20000, 'other_debt' => 0]],
+            'emergency fund' => ['emergency-fund-calculator', 'tools.pfm.emergency-fund', ['monthly_expenses' => 45000, 'coverage_months' => 6, 'current_savings' => 150000, 'monthly_saving_capacity' => 10000]],
+            'financial goal' => ['financial-goal-calculator', 'tools.pfm.financial-goal', ['goal_type' => 'home', 'goal_name' => 'Dream flat', 'current_cost' => 2500000, 'years' => 10, 'inflation_percent' => 6, 'expected_return_percent' => 10, 'existing_savings' => 300000]],
+            'debt emi' => ['debt-emi-calculator', 'tools.pfm.debt-emi', ['principal' => 2000000, 'annual_rate_percent' => 9, 'tenure_years' => 15, 'extra_payment' => 5000]],
+            'retirement' => ['retirement-calculator', 'tools.pfm.retirement', ['current_age' => 30, 'retirement_age' => 60, 'life_expectancy' => 85, 'current_monthly_expenses' => 50000, 'current_assets' => 500000, 'inflation_percent' => 6, 'pre_retirement_return_percent' => 10, 'post_retirement_return_percent' => 7]],
+            'inflation' => ['inflation-calculator', 'tools.pfm.inflation', ['current_amount' => 10000, 'inflation_percent' => 6, 'years' => 10]],
+            'savings investment' => ['savings-investment-calculator', 'tools.pfm.savings-investment', ['initial_amount' => 100000, 'monthly_contribution' => 5000, 'expected_return_percent' => 10, 'years' => 15]],
+        ];
+    }
+
+    /**
+     * @dataProvider everyToolProvider
+     *
+     * @param  array<string, int|string>  $input
+     */
+    public function test_every_tool_runs_the_full_signed_in_flow(string $toolKey, string $route, array $input): void
+    {
+        $this->storage();
+        $user = $this->member('pfm-flow-'.$toolKey.'@example.com');
+
+        $this->actingAs($user, 'user')->get(route($route))->assertOk();
+
+        $this->actingAs($user, 'user')
+            ->post(route($route.'.calculate'), $input)
+            ->assertRedirect(route($route.'.results'));
+
+        $this->actingAs($user, 'user')
+            ->get(route($route.'.results'))
+            ->assertOk()
+            ->assertSee('Save result')
+            ->assertSee('Save as draft')
+            ->assertSee('View history')
+            ->assertDontSee('NaN');
+
+        $this->actingAs($user, 'user')->post(route($route.'.save'))->assertRedirect();
+
+        $record = PfmCalculation::query()->where('user_id', $user->id)->where('tool_key', $toolKey)->first();
+        $this->assertNotNull($record);
+
+        $this->actingAs($user, 'user')->get(route($route.'.history'))->assertOk();
+        $this->actingAs($user, 'user')->get(route($route.'.history.show', $record))->assertOk();
+
+        $this->actingAs($user, 'user')
+            ->delete(route($route.'.history.destroy', $record))
+            ->assertRedirect(route($route.'.history'));
+        $this->assertDatabaseMissing('pfm_calculations', ['id' => $record->id]);
+    }
+
+    public function test_pfm_stylesheet_keeps_its_own_colour_tokens_over_the_design_system(): void
+    {
+        $css = file_get_contents(public_path('frontend/assets/css/yuktione-pfm.css'));
+
+        // yuktione-tools-ds.css repoints these tokens at brand variables that are not loaded on PFM routes.
+        $this->assertStringContainsString('.yk-pfm.yk-tools-ds', $css);
+        $this->assertMatchesRegularExpression('/--yk-teal:\s*#[0-9a-f]{6};/i', $css);
+    }
+
     public function test_edit_and_recalculate_clears_draft(): void
     {
         $this->storage();

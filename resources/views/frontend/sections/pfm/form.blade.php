@@ -22,14 +22,16 @@
     $wizard = $steps !== [];
 @endphp
 <main class="yk-pfm yk-tools-ds" data-yk-tools-ds data-yk-pfm>
-    <div class="yk-pfm__wrap yk-pfm__wrap--wide">
-        @include('frontend.sections.partials.tool-back-to-tools')
-        <p class="yk-pfm__crumb"><a href="{{ route('tools.pfm') }}">Money &amp; Finance</a> / {{ $tool['name'] }}</p>
-        <section class="yk-pfm__card" aria-labelledby="pfm-form-heading">
-            <p class="yk-pfm__badge">Money &amp; Finance tool</p>
-            <h1 id="pfm-form-heading">{{ $tool['name'] }}</h1>
-            <p class="yk-pfm__lead">{{ $tool['description'] }} Educational estimates only—not financial advice.</p>
+    @include('frontend.sections.pfm.partials.page-hero', [
+        'crumbs' => [['Money & Finance', route('tools.pfm')], [$tool['name'], null]],
+        'eyebrow' => $wizard ? 'Calculator · '.count($steps).' quick steps' : 'Calculator',
+        'title' => $tool['name'],
+        'titleId' => 'pfm-form-heading',
+        'lead' => $tool['description'].' Educational estimates only—not financial advice.',
+    ])
 
+    <div class="yk-pfm__wrap yk-pfm__wrap--wide yk-pfm__sheet">
+        <section class="yk-pfm__card" aria-labelledby="pfm-form-heading">
             @if (! $open)
                 <p class="yk-pfm__error" role="alert">This calculator is unavailable right now.</p>
             @else

@@ -6,17 +6,24 @@
 
 @section('content')
 <main class="yk-pfm yk-tools-ds" data-yk-tools-ds data-yk-pfm>
-    <div class="yk-pfm__wrap yk-pfm__wrap--wide">
-        @include('frontend.sections.partials.tool-back-to-tools')
-        <p class="yk-pfm__crumb"><a href="{{ route('tools.pfm') }}">Money &amp; Finance</a> / {{ $tool['name'] }} history</p>
+    @include('frontend.sections.pfm.partials.page-hero', [
+        'crumbs' => [['Money & Finance', route('tools.pfm')], [$tool['name'], route($tool['route'])], ['History', null]],
+        'eyebrow' => 'Private history',
+        'title' => $tool['name'].' history',
+        'titleId' => 'pfm-history-heading',
+        'lead' => 'Only you can see these saved calculations on your YuktiOne account.',
+    ])
 
+    <div class="yk-pfm__wrap yk-pfm__wrap--wide yk-pfm__sheet">
         <section class="yk-pfm__card" aria-labelledby="pfm-history-heading">
             <div class="yk-pfm__history-header">
-                <div>
-                    <p class="yk-pfm__badge">Private history</p>
-                    <h1 id="pfm-history-heading">{{ $tool['name'] }} history</h1>
-                    <p class="yk-pfm__lead">Only you can see these saved calculations on your YuktiOne account.</p>
-                </div>
+                <p class="yk-pfm__history-count">
+                    @if ($items->isEmpty())
+                        Nothing saved yet
+                    @else
+                        {{ $items->total() }} saved {{ $items->total() === 1 ? 'calculation' : 'calculations' }}
+                    @endif
+                </p>
                 <a class="yk-pfm__btn" href="{{ route($tool['route']) }}">New calculation</a>
             </div>
 

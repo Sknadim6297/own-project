@@ -7,6 +7,9 @@ use InvalidArgumentException;
 
 class PfmCalculator
 {
+    /** Largest single amount accepted (₹10,000 crore); keeps results finite and readable. */
+    private const MAX_AMOUNT = 100_000_000_000;
+
     /**
      * @param  array<string, mixed>  $input
      * @return array{normalized: array<string, mixed>, result: array<string, mixed>}
@@ -69,8 +72,9 @@ class PfmCalculator
             'health_label' => $health['label'],
             'health_tone' => $health['tone'],
             'summary' => sprintf(
-                'Free cash ₹%s · Savings rate %s%% · %s',
-                number_format(PfmMath::roundMoney($freeCash), 2),
+                'Free cash %s₹%s · Savings rate %s%% · %s',
+                $freeCash < 0 ? '−' : '',
+                number_format(abs(PfmMath::roundMoney($freeCash)), 2),
                 number_format(round($savingsRate * 100, 2), 2),
                 $health['label']
             ),
@@ -430,6 +434,9 @@ class PfmCalculator
             throw new InvalidArgumentException($label.' must be a number.');
         }
         $n = (float) $value;
+        if (! is_finite($n) || $n > self::MAX_AMOUNT) {
+            throw new InvalidArgumentException($label.' is too large. Enter an amount up to ₹'.number_format(self::MAX_AMOUNT).'.');
+        }
         if ($n < 0) {
             throw new InvalidArgumentException($label.' cannot be negative.');
         }
