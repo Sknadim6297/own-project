@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use App\Models\Admin;
 use App\Models\Professional;
 use App\Models\User;
+use App\Services\TarotDraft;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,7 +18,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // One draft per request so Cache-backed API mode and nested draw/interpretation
+        // services share the same TarotDraft instance (website session mode unchanged).
+        $this->app->singleton(TarotDraft::class);
     }
 
     /**

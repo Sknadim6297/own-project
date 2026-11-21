@@ -12,6 +12,8 @@ use App\Http\Controllers\Api\V1\PasswordResetController;
 use App\Http\Controllers\Api\V1\ProgrammeEventController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RegistrationController;
+use App\Http\Controllers\Api\V1\DebtEmiController;
+use App\Http\Controllers\Api\V1\TarotReflectionController;
 use App\Http\Controllers\Api\V1\ToolController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -84,6 +86,28 @@ Route::prefix('v1')->group(function () {
                 Route::post('/journal-entries', [MyPsychologyController::class, 'storeJournal']);
                 Route::post('/gratitude-entries', [MyPsychologyController::class, 'storeGratitude']);
             });
+
+            // Tarot Reflection — same draw/interpretation/save services as the website.
+            Route::prefix('tarot')->middleware('throttle:60,1')->group(function () {
+                Route::post('/start', [TarotReflectionController::class, 'start']);
+                Route::post('/category', [TarotReflectionController::class, 'storeCategory']);
+                Route::post('/question', [TarotReflectionController::class, 'storeQuestion']);
+                Route::post('/spread', [TarotReflectionController::class, 'storeSpread']);
+                Route::post('/fan', [TarotReflectionController::class, 'fan']);
+                Route::post('/pick', [TarotReflectionController::class, 'pick']);
+                Route::post('/reveal', [TarotReflectionController::class, 'reveal']);
+                Route::post('/save', [TarotReflectionController::class, 'save']);
+                Route::get('/history', [TarotReflectionController::class, 'history']);
+                Route::get('/readings/{id}', [TarotReflectionController::class, 'show'])->whereNumber('id');
+            });
+
+            // Debt & EMI — save/history/delete (calculate is public below).
+            Route::prefix('pfm/debt-emi')->middleware('throttle:60,1')->group(function () {
+                Route::post('/save', [DebtEmiController::class, 'save']);
+                Route::get('/history', [DebtEmiController::class, 'history']);
+                Route::get('/calculations/{id}', [DebtEmiController::class, 'show'])->whereNumber('id');
+                Route::delete('/calculations/{id}', [DebtEmiController::class, 'destroy'])->whereNumber('id');
+            });
         });
 
         // Expert consultation booking — website flow, priced and verified on the server.
@@ -105,4 +129,12 @@ Route::prefix('v1')->group(function () {
     Route::get('/experts/{id}', [ExpertController::class, 'show'])->whereNumber('id');
     Route::get('/experts/{id}/availability', [ExpertController::class, 'availability'])->whereNumber('id');
     Route::get('/programme-events', [ProgrammeEventController::class, 'index']);
+
+    // Public Tarot options (login still required to draw / save).
+    Route::get('/tarot/options', [TarotReflectionController::class, 'options']);
+
+    // Debt & EMI — guests may calculate; save needs auth (website parity).
+    Route::get('/pfm/debt-emi/options', [DebtEmiController::class, 'options']);
+    Route::post('/pfm/debt-emi/calculate', [DebtEmiController::class, 'calculate'])
+        ->middleware('throttle:60,1');
 });

@@ -33,6 +33,7 @@ class ToolController extends Controller
         'weight-journey',
         'calorie-nutrition-tracker',
         'tarot-reflection',
+        'debt-emi-calculator',
     ];
 
     /** Card copy shown by resources/views/frontend/sections/partials/tool-card.blade.php; keep in sync. */

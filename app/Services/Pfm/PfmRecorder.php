@@ -23,11 +23,30 @@ class PfmRecorder
             throw new InvalidArgumentException('The calculation draft is incomplete.');
         }
 
+        return $this->storePayload((int) $userId, $toolKey, $key, $result, $normalized, $asDraft);
+    }
+
+    /**
+     * Persist a server-computed payload (used by the mobile Sanctum API).
+     * Never trusts client-authored EMI / interest figures — callers must pass
+     * outputs from PfmCalculator::calculate.
+     *
+     * @param  array<string, mixed>  $result
+     * @param  array<string, mixed>  $normalized
+     */
+    public function storePayload(
+        int $userId,
+        string $toolKey,
+        string $completionKey,
+        array $result,
+        array $normalized,
+        bool $asDraft = false
+    ): PfmCalculation {
         try {
-            return $this->persist((int) $userId, $toolKey, $key, $result, $normalized, $asDraft);
+            return $this->persist($userId, $toolKey, $completionKey, $result, $normalized, $asDraft);
         } catch (QueryException $exception) {
             if (str_contains(strtolower($exception->getMessage()), 'unique')) {
-                return $this->existingForUser($key, (int) $userId);
+                return $this->existingForUser($completionKey, $userId);
             }
             throw $exception;
         }

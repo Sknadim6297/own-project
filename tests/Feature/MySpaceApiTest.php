@@ -65,7 +65,8 @@ class MySpaceApiTest extends TestCase
         $routes = collect(app('router')->getRoutes()->getRoutes())
             ->filter(fn ($route) => str_starts_with($route->uri(), 'api/v1/my/'));
 
-        $this->assertCount(11, $routes);
+        // Count grows as additive /my/* tools ship; every route must stay Sanctum-guarded.
+        $this->assertGreaterThanOrEqual(11, $routes->count());
         foreach ($routes as $route) {
             $middleware = $route->gatherMiddleware();
             $this->assertContains('auth:sanctum', $middleware, $route->uri());

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Support\Tarot\TarotCatalog;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use RuntimeException;
 
@@ -13,9 +14,25 @@ class TarotDraft
 
     public const STEPS = ['intro', 'category', 'question', 'spread', 'draw', 'reveal', 'reading'];
 
+    /**
+     * When set, drafts are stored in Cache (Sanctum mobile API) instead of the web session.
+     * Website flow leaves this null and keeps using session(self::KEY).
+     */
+    private ?int $apiOwnerId = null;
+
+    /**
+     * Bind this draft instance to a Sanctum-authenticated customer for Cache-backed storage.
+     */
+    public function useApiCache(int $userId): self
+    {
+        $this->apiOwnerId = $userId;
+
+        return $this;
+    }
+
     public function readable(): ?array
     {
-        $draft = session(self::KEY);
+        $draft = $this->loadRaw();
         if (! is_array($draft)) {
             return null;
         }
@@ -47,13 +64,17 @@ class TarotDraft
         return $draft;
     }
 
-    public function startFresh(): array
+    public function startFresh(?string $completionKey = null): array
     {
         $owner = $this->requireUserOwner();
 
+        $key = is_string($completionKey) && Str::isUuid($completionKey)
+            ? strtolower($completionKey)
+            : (string) Str::uuid();
+
         $draft = [
             'step' => 'intro',
-            'completion_key' => (string) Str::uuid(),
+            'completion_key' => $key,
             'category' => null,
             'question' => null,
             'spread_type' => null,
@@ -68,13 +89,19 @@ class TarotDraft
             'expires_at' => now()->addMinutes(TarotCatalog::DRAFT_TTL_MINUTES)->getTimestamp(),
         ];
 
-        session([self::KEY => $draft]);
+        $this->put($draft);
 
         return $draft;
     }
 
     public function forget(): void
     {
+        if ($this->apiOwnerId !== null) {
+            Cache::forget($this->cacheKey());
+
+            return;
+        }
+
         session()->forget(self::KEY);
     }
 
@@ -278,7 +305,38 @@ class TarotDraft
 
     private function put(array $draft): void
     {
+        if ($this->apiOwnerId !== null) {
+            Cache::put(
+                $this->cacheKey(),
+                $draft,
+                now()->addMinutes(TarotCatalog::DRAFT_TTL_MINUTES + 5)
+            );
+
+            return;
+        }
+
         session([self::KEY => $draft]);
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function loadRaw(): ?array
+    {
+        if ($this->apiOwnerId !== null) {
+            $draft = Cache::get($this->cacheKey());
+
+            return is_array($draft) ? $draft : null;
+        }
+
+        $draft = session(self::KEY);
+
+        return is_array($draft) ? $draft : null;
+    }
+
+    private function cacheKey(): string
+    {
+        return 'tarot.api.draft.'.$this->apiOwnerId;
     }
 
     private function requireUserOwner(): string
@@ -293,6 +351,10 @@ class TarotDraft
 
     private function ownerOrNull(): ?string
     {
+        if ($this->apiOwnerId !== null) {
+            return 'user:'.$this->apiOwnerId;
+        }
+
         $id = Auth::guard('user')->id();
 
         return $id ? 'user:'.$id : null;
