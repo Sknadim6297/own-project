@@ -2,7 +2,7 @@
    Keeps existing markup hooks; restyles colours/typography to customer-panel tokens. */
 [data-yuktione-panel="customer"] {
     --yk-primary: #8A0F4D;
-    --yk-primary-hover: #6E0B3C;
+    --yk-primary-hover: #c3196b;
     --yk-heading: #1F1F1F;
     --yk-body: #6B6B7A;
     --yk-muted: #6B6B7A;

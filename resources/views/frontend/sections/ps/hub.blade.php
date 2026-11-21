@@ -21,7 +21,7 @@
         <header class="yk-ps__hero" aria-labelledby="ps-hub-heading">
             <div class="yk-ps__hero-copy">
                 <p class="yk-ps__badge">@include('frontend.sections.ps.partials.icon', ['name' => 'leaf', 'size' => 14]) Parenting &amp; Spirituality</p>
-                <h1 id="ps-hub-heading">Parenting &amp; Spirituality Tools</h1>
+                <h1 id="ps-hub-heading"><x-yuktione.two-tone text="Parenting & Spirituality Tools" /></h1>
                 <p class="yk-ps__lead">Practical, educational tools for family life and calm reflection. Saved results stay private when you are signed in.</p>
                 <ul class="yk-ps__trust">
                     <li>@include('frontend.sections.ps.partials.icon', ['name' => 'lock', 'size' => 16]) Private by default</li>

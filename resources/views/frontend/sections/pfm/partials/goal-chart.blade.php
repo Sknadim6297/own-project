@@ -98,5 +98,5 @@
     <path d="{{ $savingsLine }}" fill="none" stroke="#14705f" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
 
     <circle cx="{{ $X($lastPoint['month']) }}" cy="{{ $Y($lastPoint['cost']) }}" r="5" fill="#fff" stroke="#d69a2d" stroke-width="3"/>
-    <circle cx="{{ $X($lastPoint['month']) }}" cy="{{ $Y($lastPoint['savings']) }}" r="4" fill="#0b3d36"/>
+    <circle cx="{{ $X($lastPoint['month']) }}" cy="{{ $Y($lastPoint['savings']) }}" r="4" fill="#6e0b3c"/>
 </svg>

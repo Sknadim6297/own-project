@@ -1,21 +1,21 @@
 .yk-psych {
-    --yk-navy: #0b2048;
-    --yk-teal: #316d61;
-    --yk-mint: #eaf6f2;
+    --yk-navy: #1f1f1f;
+    --yk-teal: #8a0f4d;
+    --yk-mint: #f3ebe6;
     --yk-gold: #c4a35a;
     --yk-line: #e6ebf2;
     --yk-ink: #1c2b28;
     --yk-eucalyptus: var(--yk-teal);
-    --yk-eucalyptus-deep: #24554c;
-    --yk-warm: #fbf8f3;
+    --yk-eucalyptus-deep: #6e0b3c;
+    --yk-warm: #f8f3f1;
     --yk-sage: var(--yk-mint);
     --yk-yellow: #f6efd4;
-    --yk-blush: #f6e7e3;
+    --yk-blush: #f6efe9;
     box-sizing: border-box;
     margin: 0;
     padding: 0.75rem 0 2.25rem;
     overflow-x: clip;
-    background: var(--yk-warm);
+    background: transparent;
     color: var(--yk-ink);
     font-family: "DM Sans", sans-serif;
 }
@@ -267,9 +267,9 @@
     max-width: 100%;
     min-height: 44px;
     padding: 0.65rem 1.1rem;
-    border: 1px solid var(--yk-eucalyptus, #316d61);
+    border: 1px solid var(--yk-eucalyptus, #8a0f4d);
     border-radius: 12px;
-    background: var(--yk-eucalyptus, #316d61);
+    background: var(--yk-eucalyptus, #8a0f4d);
     color: #fff;
     font-size: 0.9375rem;
     font-weight: 700;
@@ -285,10 +285,10 @@
 
 .yk-psych-connect__cta:hover,
 .yk-psych-connect__cta:focus-visible {
-    border-color: var(--yk-eucalyptus-deep, #27574e);
-    background: var(--yk-eucalyptus-deep, #27574e);
+    border-color: var(--yk-eucalyptus-deep, #6e0b3c);
+    background: var(--yk-eucalyptus-deep, #6e0b3c);
     color: #fff;
-    box-shadow: 0 0 0 3px rgb(49 109 97 / 16%);
+    box-shadow: 0 0 0 3px rgb(138 15 77 / 16%);
 }
 
 .yk-psych-connect__cta:active {

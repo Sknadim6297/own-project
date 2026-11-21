@@ -54,14 +54,14 @@
 @endphp
 <main class="yk-hub" data-yk-hub>
     <svg class="yk-hub__leaf yk-hub__leaf--left" viewBox="0 0 160 300" aria-hidden="true" focusable="false">
-        <g fill="#d9bdf0" opacity=".55">
+        <g fill="#e0b0c4" opacity=".45">
             <path d="M-10 300C-6 240 10 190 50 150c8 50-8 110-60 150Z"/>
             <path d="M40 300c-4-50 10-100 50-140 10 50-6 100-50 140Z" opacity=".7"/>
             <path d="M-10 190c10-40 36-70 70-86-2 40-26 72-70 86Z" opacity=".8"/>
         </g>
     </svg>
     <svg class="yk-hub__leaf yk-hub__leaf--right" viewBox="0 0 160 300" aria-hidden="true" focusable="false">
-        <g fill="#d9bdf0" opacity=".55">
+        <g fill="#e0b0c4" opacity=".45">
             <path d="M170 300c-4-60-20-110-60-150-8 50 8 110 60 150Z"/>
             <path d="M120 300c4-50-10-100-50-140-10 50 6 100 50 140Z" opacity=".7"/>
             <path d="M170 190c-10-40-36-70-70-86 2 40 26 72 70 86Z" opacity=".8"/>
@@ -78,7 +78,7 @@
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">{!! $groupIcons['wallet'] !!}</svg>
                     Money &amp; Finance
                 </p>
-                <h1 id="pfm-hub-heading">Personal Finance Tools</h1>
+                <h1 id="pfm-hub-heading"><x-yuktione.two-tone text="Personal Finance Tools" /></h1>
                 <p class="yk-hub__lead">Plan cash flow, goals, debt and investments with educational calculators. Save results when you are signed in.</p>
                 <ul class="yk-hub__facts">
                     <li>
@@ -99,15 +99,15 @@
             <svg class="yk-hub__hero-art" viewBox="0 0 440 260" aria-hidden="true" focusable="false">
                 <defs>
                     <linearGradient id="hubBar" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0" stop-color="#c58be6"/>
-                        <stop offset="1" stop-color="#9a4fc7"/>
+                        <stop offset="0" stop-color="#c3196b"/>
+                        <stop offset="1" stop-color="#8a0f4d"/>
                     </linearGradient>
                     <linearGradient id="hubArrow" x1="0" y1="1" x2="1" y2="0">
-                        <stop offset="0" stop-color="#b56ddb"/>
-                        <stop offset="1" stop-color="#7a2fb0"/>
+                        <stop offset="0" stop-color="#c3196b"/>
+                        <stop offset="1" stop-color="#6e0b3c"/>
                     </linearGradient>
                 </defs>
-                <path d="M30 150c-8-60 36-118 110-124 74-6 112 20 170 8 60-12 104 30 100 86-4 56-52 92-128 98-62 5-86-12-138-10-60 2-106-10-114-58Z" fill="#f0e0fb"/>
+                <path d="M30 150c-8-60 36-118 110-124 74-6 112 20 170 8 60-12 104 30 100 86-4 56-52 92-128 98-62 5-86-12-138-10-60 2-106-10-114-58Z" fill="#f8eaf1"/>
                 <g fill="url(#hubBar)">
                     <rect x="268" y="150" width="34" height="62" rx="6" opacity=".7"/>
                     <rect x="312" y="116" width="34" height="96" rx="6" opacity=".85"/>
@@ -115,10 +115,10 @@
                 </g>
                 <path d="M250 150 316 96l36 22 62-58" fill="none" stroke="url(#hubArrow)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M386 56h32v32" fill="none" stroke="url(#hubArrow)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
-                <g fill="#fff" stroke="#c9a2e6" stroke-width="3">
+                <g fill="#fff" stroke="#e0b0c4" stroke-width="3">
                     <circle cx="316" cy="96" r="7"/><circle cx="352" cy="118" r="7"/>
                 </g>
-                <path d="M80 214h300" stroke="#d9bdf0" stroke-width="4" stroke-linecap="round"/>
+                <path d="M80 214h300" stroke="#efe0e8" stroke-width="4" stroke-linecap="round"/>
                 <g fill="none" stroke="#e58bb8" stroke-width="5" stroke-linecap="round">
                     <path d="M70 70l-10-10M90 56l-3-13M108 70l10-9"/>
                 </g>

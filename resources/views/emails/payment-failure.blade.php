@@ -56,7 +56,7 @@
             ])
         @endif
         <p style="margin:0;text-align:center;">
-            <a href="mailto:{{ $userDetails['email'] }}" style="color:#316D61;text-decoration:none;font-weight:700;">Email customer</a>
+            <a href="mailto:{{ $userDetails['email'] }}" style="color:#8a0f4d;text-decoration:none;font-weight:700;">Email customer</a>
         </p>
     @else
         <p style="margin:0 0 8px;font-weight:700;color:#142B4D;">Admin review required</p>

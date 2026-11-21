@@ -40,7 +40,7 @@
         @if (!$open)
             <section class="yk-mood__closed" aria-labelledby="emotion-closed-heading">
                 <p class="yk-mood__badge">Free tool</p>
-                <h1 id="emotion-closed-heading">What emotions are you feeling?</h1>
+                <h1 id="emotion-closed-heading"><x-yuktione.two-tone text="What emotions are you feeling?" /></h1>
                 <p>This check-in is unavailable right now.</p>
             </section>
         @else
@@ -68,7 +68,7 @@
                                 <svg viewBox="0 0 36 36"><path d="M18 30.4S6.4 23.6 6.4 15.4A6.1 6.1 0 0 1 18 12.2a6.1 6.1 0 0 1 11.6 3.2C29.6 23.6 18 30.4 18 30.4Z"/><path class="yk-emotion__heading-spark" d="M27.6 4.6v4.2M25.5 6.7h4.2M8 5.6v3M6.5 7.1h3"/></svg>
                             </span>
                             <div>
-                                <h1>What emotions are you feeling?</h1>
+                                <h1><x-yuktione.two-tone text="What emotions are you feeling?" /></h1>
                                 <p class="yk-mood__lead">Choose up to 6 emotions that describe how you feel right now.</p>
                                 <p class="yk-mood__hint">Optional — pick what fits. You can continue with none selected.</p>
                             </div>
@@ -125,7 +125,7 @@
                         <div class="yk-emotion__art" aria-hidden="true">
                             <img src="{{ asset('frontend/assets/img/' . rawurlencode('Cozy Lavender Portrait with Mug and Plant.png')) }}" alt="" width="1278" height="1230" decoding="async">
                         </div>
-                        <h2>Name it to tame it</h2>
+                        <h2><x-yuktione.two-tone text="Name it to tame it" /></h2>
                         <p class="yk-mood__side-lead">Putting feelings into words can make them feel lighter and easier to understand.</p>
                     </section>
 
@@ -135,7 +135,7 @@
                                 <svg viewBox="0 0 28 28"><rect x="5" y="14" width="4.4" height="8.5" rx="1.2"/><rect x="11.8" y="9.5" width="4.4" height="13" rx="1.2"/><rect x="18.6" y="5.5" width="4.4" height="17" rx="1.2"/></svg>
                             </span>
                             <div>
-                                <h2>Your Mood Journey</h2>
+                                <h2><x-yuktione.two-tone text="Your Mood Journey" /></h2>
                                 <p class="yk-mood__side-lead">Build a healthier and happier you.</p>
                             </div>
                         </header>

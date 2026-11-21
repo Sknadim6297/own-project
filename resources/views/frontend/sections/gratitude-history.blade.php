@@ -14,7 +14,7 @@
 
         <div class="yk-gratitude__panel">
         <p class="yk-gratitude__badge">Private journal</p>
-        <h1>My Gratitude History</h1>
+        <h1><x-yuktione.two-tone text="My Gratitude History" /></h1>
         <p class="yk-gratitude__lead">Your little moments of gratitude</p>
 
         @if (session('status'))
@@ -73,7 +73,7 @@
             </section>
 
             <section class="yk-gratitude-history__recent" aria-labelledby="recent-entries-heading">
-                <h2 id="recent-entries-heading">Recent Entries</h2>
+                <h2 id="recent-entries-heading"><x-yuktione.two-tone text="Recent Entries" /></h2>
 
                 @if ($items === [])
                     <p class="yk-gratitude-history__empty-page">No entries on this page.</p>

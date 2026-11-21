@@ -39,7 +39,7 @@
             <div class="yk-home-why__content">
                 <header class="yk-home-why__heading" data-home-reveal>
                     <p class="yk-home-why__eyebrow">Why Choose {{ $brand }}</p>
-                    <h2 id="yk-home-why-title">{{ $brandize($whychoose->section_heading) }}</h2>
+                    <h2 id="yk-home-why-title"><x-yuktione.two-tone :text="$brandize($whychoose->section_heading)" /></h2>
                     <p>{{ $brandize($whychoose->section_sub_heading) }}</p>
                 </header>
 

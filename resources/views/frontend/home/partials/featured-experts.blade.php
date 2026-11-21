@@ -3,7 +3,7 @@
         <div class="yk-featured-experts__topline">
             <header class="yk-featured-experts__heading" data-reveal>
                 <p class="yk-featured-experts__eyebrow">Expert guidance, made personal</p>
-                <h2 id="yk-featured-experts-title">Meet Our Trusted Experts</h2>
+                <h2 id="yk-featured-experts-title"><x-yuktione.two-tone text="Meet Our Trusted Experts" /></h2>
                 <p class="yk-featured-experts__description">Discover professionals who can guide you towards your next step.</p>
             </header>
 

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Support\BrandHeading;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use App\Models\Admin;
@@ -37,5 +39,10 @@ class AppServiceProvider extends ServiceProvider
             'user' => User::class,
             'customer' => User::class, // Add customer as alias for User
         ]);
+
+        // Home-style two-tone headings: @ykTwoTone('Daily Mood Check')
+        Blade::directive('ykTwoTone', function ($expression) {
+            return "<?php echo \\App\\Support\\BrandHeading::twoTone({$expression}); ?>";
+        });
     }
 }

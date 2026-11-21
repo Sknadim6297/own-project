@@ -22,7 +22,7 @@
         @endif
 
         <p class="yk-journal__badge">Private entry</p>
-        <h1>{{ $title }}</h1>
+        <h1><x-yuktione.two-tone :text="$title" /></h1>
         <p class="yk-journal-entry__meta">
             <span class="yk-journal-entry__chip">{{ $prompt }}</span>
             <time>{{ $when }}</time>

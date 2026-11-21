@@ -49,7 +49,7 @@
         @if (!$open)
             <section class="yk-journal__closed yk-journal__panel" aria-labelledby="journal-closed-heading">
                 <p class="yk-journal__badge">{{ $editing ? 'Private entry' : 'Free tool' }}</p>
-                <h1 id="journal-closed-heading">{{ $heading }}</h1>
+                <h1 id="journal-closed-heading"><x-yuktione.two-tone :text="$heading" /></h1>
                 <p>{{ $editing ? 'Editing is unavailable right now.' : 'This journal is unavailable right now.' }}</p>
             </section>
         @else
@@ -79,7 +79,7 @@
                         </span>
                         <div class="yk-journal__hero-text">
                             <p class="yk-journal__badge">{{ $editing ? 'Private entry' : 'Free tool' }}</p>
-                            <h1>{{ $heading }}</h1>
+                            <h1><x-yuktione.two-tone :text="$heading" /></h1>
                             <p class="yk-journal__lead">{{ $lead }}</p>
                         </div>
                     </div>

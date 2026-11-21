@@ -48,19 +48,19 @@
                                 <circle cx="22" cy="34" r="4" fill="#f7b84b"/>
                                 <circle cx="140" cy="28" r="3.5" fill="#7cc576"/>
                                 <circle cx="132" cy="92" r="4" fill="#f28aa8"/>
-                                <circle cx="30" cy="96" r="3" fill="#a77be0"/>
-                                <rect x="40" y="12" width="9" height="4" rx="2" fill="#a77be0" transform="rotate(-30 44 14)"/>
+                                <circle cx="30" cy="96" r="3" fill="#c3196b"/>
+                                <rect x="40" y="12" width="9" height="4" rx="2" fill="#c3196b" transform="rotate(-30 44 14)"/>
                                 <rect x="112" y="10" width="9" height="4" rx="2" fill="#f28aa8" transform="rotate(35 116 12)"/>
                                 <rect x="10" y="62" width="9" height="4" rx="2" fill="#7cc576" transform="rotate(20 14 64)"/>
                                 <rect x="142" y="60" width="9" height="4" rx="2" fill="#f7b84b" transform="rotate(-25 146 62)"/>
-                                <path d="M118 46l2.2 4.6 4.6 2.2-4.6 2.2-2.2 4.6-2.2-4.6-4.6-2.2 4.6-2.2Z" fill="#d88be8"/>
+                                <path d="M118 46l2.2 4.6 4.6 2.2-4.6 2.2-2.2 4.6-2.2-4.6-4.6-2.2 4.6-2.2Z" fill="#e0b0c4"/>
                                 <path d="M40 44l1.8 3.6 3.6 1.8-3.6 1.8-1.8 3.6-1.8-3.6-3.6-1.8 3.6-1.8Z" fill="#f7b84b"/>
                             </svg>
                             <span class="yk-complete__badge">
                                 <svg viewBox="0 0 48 48" focusable="false"><path d="M14.5 24.8 21 31.2 34 17.4"/></svg>
                             </span>
                         </div>
-                        <h1>Check-in complete!</h1>
+                        <h1><x-yuktione.two-tone text="Check-in complete!" /></h1>
                         <p class="yk-mood__lead">Thank you for taking a moment for yourself.</p>
                         @if ($checkedAt)
                             <p class="yk-complete__when">
@@ -73,7 +73,7 @@
                     <section class="yk-complete__summary" aria-label="Your check-in">
                         <div class="yk-complete__grid">
                             <div class="yk-complete__block">
-                                <h2>Your mood today</h2>
+                                <h2><x-yuktione.two-tone text="Your mood today" /></h2>
                                 <div class="yk-complete__mood-row">
                                     <span class="yk-complete__mood-face" aria-hidden="true">@include('frontend.sections.partials.mood-face', ['mood' => $moodKey])</span>
                                     <p class="yk-complete__mood">{{ $mood }}</p>
@@ -81,7 +81,7 @@
                             </div>
 
                             <div class="yk-complete__block">
-                                <h2>Your emotions</h2>
+                                <h2><x-yuktione.two-tone text="Your emotions" /></h2>
                                 @if ($emotions === [])
                                     <p class="yk-complete__empty">No emotions selected.</p>
                                 @else
@@ -98,7 +98,7 @@
                         </div>
 
                         <div class="yk-complete__block yk-complete__block--note">
-                            <h2>Your reflection</h2>
+                            <h2><x-yuktione.two-tone text="Your reflection" /></h2>
                             @if (filled($reflection))
                                 <div class="yk-complete__quote">
                                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9.6 6.4C6.4 7.6 4.6 10 4.6 13.4v4.2h5.6v-5.4H7.4c.2-1.9 1.2-3.2 3-3.9ZM19 6.4c-3.2 1.2-5 3.6-5 7v4.2h5.6v-5.4h-2.8c.2-1.9 1.2-3.2 3-3.9Z"/></svg>
@@ -147,7 +147,7 @@
                             <svg viewBox="0 0 28 28"><rect x="5" y="14" width="4.4" height="8.5" rx="1.2"/><rect x="11.8" y="9.5" width="4.4" height="13" rx="1.2"/><rect x="18.6" y="5.5" width="4.4" height="17" rx="1.2"/></svg>
                         </span>
                         <div>
-                            <h2>Your Mood Journey</h2>
+                            <h2><x-yuktione.two-tone text="Your Mood Journey" /></h2>
                             <p class="yk-mood__side-lead">All four steps done today.</p>
                         </div>
                     </header>

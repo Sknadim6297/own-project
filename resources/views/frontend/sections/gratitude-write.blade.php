@@ -14,7 +14,7 @@
         @if (!$open)
             <section class="yk-gratitude__closed yk-gratitude__panel" aria-labelledby="gratitude-closed-heading">
                 <p class="yk-gratitude__badge">{{ $editing ? 'Private entry' : 'Free tool' }}</p>
-                <h1 id="gratitude-closed-heading">{{ $heading }}</h1>
+                <h1 id="gratitude-closed-heading"><x-yuktione.two-tone :text="$heading" /></h1>
                 <p>{{ $editing ? 'Editing is unavailable right now.' : 'This journal is unavailable right now.' }}</p>
             </section>
         @else
@@ -31,11 +31,11 @@
                     @method('PUT')
                 @endif
                 <p class="yk-gratitude__badge">{{ $editing ? 'Private entry' : 'Free tool' }}</p>
-                <h1>{{ $heading }}</h1>
+                <h1><x-yuktione.two-tone :text="$heading" /></h1>
                 <p class="yk-gratitude__lead">{{ $lead }}</p>
                 @if ($showDate)
                     <p class="yk-gratitude__date"><time datetime="{{ now(\App\Services\GratitudeJournal::TIMEZONE)->toDateString() }}">{{ $today }}</time></p>
-                    <h2 class="yk-gratitude__prompt">What are you grateful for today?</h2>
+                    <h2 class="yk-gratitude__prompt"><x-yuktione.two-tone text="What are you grateful for today?" /></h2>
                     <p class="yk-gratitude__support">Fill in whichever cards you like. Skip the rest.</p>
                 @endif
                 <p class="yk-gratitude__private" role="status">Private · Only you can see this entry</p>

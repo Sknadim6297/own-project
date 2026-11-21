@@ -39,7 +39,7 @@
                         <path d="M10.5 18h.01M16 18h.01M21.5 18h.01M10.5 23h.01M16 23h.01M21.5 23h.01" stroke-width="2.4"/>
                     </svg>
                 </span>
-                <h2 class="yk-prog-show__title" id="yk-prog-show-title">Programmes</h2>
+                <h2 class="yk-prog-show__title" id="yk-prog-show-title"><x-yuktione.two-tone text="Programmes" :words="1" /></h2>
                 <p class="yk-prog-show__lead">Structured guidance, practical learning and long-term transformation.</p>
                 <a class="yk-prog-show__all" href="{{ $showcaseUrl }}">
                     View All Programmes

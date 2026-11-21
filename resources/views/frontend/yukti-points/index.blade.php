@@ -54,7 +54,7 @@
 
             <div class="yk-rewards__hero-side">
                 <div class="yk-rewards__panel">
-                    <h2>This week</h2>
+                    <h2><x-yuktione.two-tone text="This week" :words="1" /></h2>
                     <p class="yk-rewards__muted">{{ $hub['weekly']['week_id'] ?? '—' }} · {{ $hub['weekly']['timezone'] ?? 'Asia/Kolkata' }}</p>
                     <div class="yk-rewards__actions">
                         <a class="yk-rewards__btn yk-rewards__btn--ghost" href="{{ $hub['routes']['tools'] ?? route('tools.index') }}">Explore tools</a>
@@ -62,7 +62,7 @@
                     </div>
                 </div>
                 <div class="yk-rewards__panel">
-                    <h2>Referral snapshot</h2>
+                    <h2><x-yuktione.two-tone text="Referral snapshot" /></h2>
                     <p class="yk-rewards__muted">
                         Activated estimate:
                         <strong>{{ number_format((int) ($referrals['activated_estimate_points'] ?? 0)) }}</strong>
@@ -76,7 +76,7 @@
             </div>
         </div>
 
-        <h2 class="yk-rewards__section-title">Weekly activities</h2>
+        <h2 class="yk-rewards__section-title"><x-yuktione.two-tone text="Weekly activities" /></h2>
         <div class="yk-rewards__grid">
             @forelse ($weeklyCards as $card)
                 @php
@@ -117,7 +117,7 @@
 
         <div class="yk-rewards__share" id="yk-share">
             <div class="yk-rewards__panel">
-                <h2>General invite</h2>
+                <h2><x-yuktione.two-tone text="General invite" /></h2>
                 <p class="yk-rewards__muted">Share your personal YuktiOne link. Friends who join are attributed to you.</p>
                 <div class="yk-rewards__linkbox">
                     <input type="text" readonly value="{{ $share['general_url'] ?? '' }}" aria-label="General referral link" data-yk-url-field>
@@ -132,7 +132,7 @@
             </div>
 
             <div class="yk-rewards__panel">
-                <h2>Refer a tool or expert</h2>
+                <h2><x-yuktione.two-tone text="Refer a tool or expert" /></h2>
                 <p class="yk-rewards__muted">Selectors only include eligible, publicly available records.</p>
 
                 <div id="yk-share-tool" data-yk-share-group>
@@ -175,7 +175,7 @@
 
         <div class="yk-rewards__panel" style="margin-bottom:1.25rem">
             <div style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:center">
-                <h2 style="margin:0">Recent activity</h2>
+                <h2 style="margin:0"><x-yuktione.two-tone text="Recent activity" /></h2>
                 <a class="yk-rewards__btn yk-rewards__btn--ghost" href="{{ route('user.yukti-points.wallet') }}">Full history</a>
             </div>
             <div class="yk-rewards__table-wrap" style="margin-top:.75rem">

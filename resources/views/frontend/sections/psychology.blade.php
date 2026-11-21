@@ -14,14 +14,14 @@
         </nav>
 
         <header class="yk-psych__intro">
-            <h1>Psychology</h1>
+            <h1><x-yuktione.two-tone text="Psychology" :words="1" /></h1>
             <p class="yk-psych__subtitle">Take a moment for yourself</p>
             <p class="yk-psych__lead">Small steps towards understanding yourself and feeling better.</p>
         </header>
 
         <section class="yk-psych__mood" aria-labelledby="mood-heading">
             <div class="yk-psych__mood-copy">
-                <h2 id="mood-heading">How are you feeling today?</h2>
+                <h2 id="mood-heading"><x-yuktione.two-tone text="How are you feeling today?" /></h2>
                 <p>Take a quick moment to check in with yourself.</p>
                 @unless ($mood['href'])
                     <p class="yk-psych__state">{{ $mood['action'] }}</p>
@@ -38,7 +38,7 @@
         </section>
 
         <section class="yk-psych__tools" aria-labelledby="tools-heading">
-            <h2 id="tools-heading">Your self-care tools</h2>
+            <h2 id="tools-heading"><x-yuktione.two-tone text="Your self-care tools" /></h2>
             <ul>
                 @foreach ($cards as $card)
                     <li class="yk-psych__card is-{{ $card['tone'] }}">

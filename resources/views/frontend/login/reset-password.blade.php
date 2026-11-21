@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#316D61">
+    <meta name="theme-color" content="#8a0f4d">
     <title>Reset Password | YuktiOne</title>
     @include('partials.dm-sans')
     <link rel="icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
@@ -15,7 +15,7 @@
         .password-strength-meter { height: 100%; width: 0; transition: width .2s ease, background-color .2s ease; }
         .strength-weak { width: 33.333%; background: #dc2626; }
         .strength-medium { width: 66.666%; background: #d97706; }
-        .strength-strong { width: 100%; background: #316D61; }
+        .strength-strong { width: 100%; background: #8a0f4d; }
     </style>
 </head>
 <body class="yuktione-auth-page min-h-screen bg-background px-4 py-8 font-sans text-text-primary sm:px-6">

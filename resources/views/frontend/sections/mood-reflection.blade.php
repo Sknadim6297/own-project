@@ -33,7 +33,7 @@
         @if (!$open)
             <section class="yk-mood__closed" aria-labelledby="reflection-closed-heading">
                 <p class="yk-mood__badge">Free tool</p>
-                <h1 id="reflection-closed-heading">Would you like to share more?</h1>
+                <h1 id="reflection-closed-heading"><x-yuktione.two-tone text="Would you like to share more?" /></h1>
                 <p>This check-in is unavailable right now.</p>
             </section>
         @else
@@ -61,7 +61,7 @@
                                 <svg viewBox="0 0 40 40" focusable="false"><rect x="7" y="6" width="20" height="28" rx="4"/><path d="M12.5 14h9M12.5 19.5h9M12.5 25h5"/><path class="yk-reflect__heading-pen" d="M34.6 15.6 25 25.2l-1.2 4.6 4.6-1.2 9.6-9.6a2.4 2.4 0 0 0-3.4-3.4Z"/></svg>
                             </span>
                             <div>
-                                <h1>Would you like to share more?</h1>
+                                <h1><x-yuktione.two-tone text="Would you like to share more?" /></h1>
                                 <p class="yk-mood__lead">Sometimes writing down what's on your mind can help.</p>
                                 <p class="yk-mood__hint">There are no right or wrong answers — write as much or as little as you like.</p>
                             </div>
@@ -105,7 +105,7 @@
                                                 <svg viewBox="0 0 24 24" focusable="false"><path d="M7 18h10.4a4 4 0 0 0 .5-8A6 6 0 0 0 6.5 9a4.5 4.5 0 0 0 .5 9Z" fill="#c7cfe0"/><path d="M9 21.2l.6-1.4M12.4 21.2l.6-1.4M15.8 21.2l.6-1.4" stroke="#6f95d6" stroke-width="1.5" stroke-linecap="round"/></svg>
                                                 @break
                                             @default
-                                                <svg viewBox="0 0 24 24" focusable="false"><path d="M12 3.2l2.3 5.6 6 .5-4.6 3.9 1.4 5.9L12 16l-5.1 3.1 1.4-5.9-4.6-3.9 6-.5Z" fill="#b57ad9"/></svg>
+                                                <svg viewBox="0 0 24 24" focusable="false"><path d="M12 3.2l2.3 5.6 6 .5-4.6 3.9 1.4 5.9L12 16l-5.1 3.1 1.4-5.9-4.6-3.9 6-.5Z" fill="#c3196b"/></svg>
                                         @endswitch
                                     </span>
                                     <span class="yk-reflect__prompt-text">{{ $prompt }}</span>
@@ -135,7 +135,7 @@
                                 <svg viewBox="0 0 28 28"><path d="M14 23.4s-8.6-5.1-8.6-11.4a4.6 4.6 0 0 1 8.6-2.4 4.6 4.6 0 0 1 8.6 2.4c0 6.3-8.6 11.4-8.6 11.4Z"/></svg>
                             </span>
                             <div>
-                                <h2>Your check-in so far</h2>
+                                <h2><x-yuktione.two-tone text="Your check-in so far" /></h2>
                                 <p class="yk-mood__side-lead">A quick look at what you picked.</p>
                             </div>
                         </header>
@@ -177,7 +177,7 @@
                                 <svg viewBox="0 0 28 28"><rect x="5" y="14" width="4.4" height="8.5" rx="1.2"/><rect x="11.8" y="9.5" width="4.4" height="13" rx="1.2"/><rect x="18.6" y="5.5" width="4.4" height="17" rx="1.2"/></svg>
                             </span>
                             <div>
-                                <h2>Your Mood Journey</h2>
+                                <h2><x-yuktione.two-tone text="Your Mood Journey" /></h2>
                                 <p class="yk-mood__side-lead">Build a healthier and happier you.</p>
                             </div>
                         </header>

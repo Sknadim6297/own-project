@@ -49,7 +49,7 @@
                             <svg viewBox="0 0 40 40" focusable="false"><rect x="6" y="8.5" width="28" height="25" rx="5"/><path d="M6 16h28M13.5 5.5v6M26.5 5.5v6"/><circle cx="14" cy="23" r="1.8"/><circle cx="20" cy="23" r="1.8"/><circle cx="26" cy="23" r="1.8"/><circle cx="14" cy="28.4" r="1.8"/></svg>
                         </span>
                         <div>
-                            <h1 id="mood-history-heading">Mood history</h1>
+                            <h1 id="mood-history-heading"><x-yuktione.two-tone text="Mood history" /></h1>
                             <p class="yk-mood__lead">A private record of the moments you checked in.</p>
                             @if ($items !== [])
                                 <p class="yk-mood__hint">Newest first · {{ $entries->total() }} {{ \Illuminate\Support\Str::plural('check-in', $entries->total()) }} saved</p>
@@ -131,7 +131,7 @@
                                 <svg viewBox="0 0 28 28"><rect x="5" y="14" width="4.4" height="8.5" rx="1.2"/><rect x="11.8" y="9.5" width="4.4" height="13" rx="1.2"/><rect x="18.6" y="5.5" width="4.4" height="17" rx="1.2"/></svg>
                             </span>
                             <div>
-                                <h2>At a glance</h2>
+                                <h2><x-yuktione.two-tone text="At a glance" /></h2>
                                 <p class="yk-mood__side-lead">Based on all your saved check-ins.</p>
                             </div>
                         </header>
@@ -180,7 +180,7 @@
                     <span class="yk-mood__side-icon" aria-hidden="true">
                         <svg viewBox="0 0 28 28"><path d="M14 23.4s-8.6-5.1-8.6-11.4a4.6 4.6 0 0 1 8.6-2.4 4.6 4.6 0 0 1 8.6 2.4c0 6.3-8.6 11.4-8.6 11.4Z"/></svg>
                     </span>
-                    <h2>How are you feeling today?</h2>
+                    <h2><x-yuktione.two-tone text="How are you feeling today?" /></h2>
                     <p class="yk-mood__side-lead">Pick a mood, name your emotions and add a note if you like.</p>
                     <a class="yk-mood__continue" href="{{ route('tools.psychology.mood') }}">New check-in <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 12h14.5M13.6 6.4 19.2 12l-5.6 5.6"/></svg></a>
                 </section>

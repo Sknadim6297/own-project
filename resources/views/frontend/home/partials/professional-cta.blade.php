@@ -11,7 +11,7 @@
             </div>
             <div class="yk-home-professional__copy">
                 <p class="yk-home-professional__eyebrow">For professionals</p>
-                <h2 id="yk-home-professional-title">Join as a Professional</h2>
+                <h2 id="yk-home-professional-title"><x-yuktione.two-tone text="Join as a Professional" /></h2>
                 <p>Showcase your skills, reach more clients, and grow your practice on a trusted marketplace.</p>
                 <ul class="yk-home-professional__points">
                     <li>Verified profile that builds trust</li>

@@ -98,7 +98,7 @@ a.yk-tool-back.yk-ssa__btn-secondary {
     border-color: var(--yk-teal-deep, var(--y1-magenta));
     background: var(--yk-teal-deep, var(--y1-magenta));
     color: #fff;
-    box-shadow: 0 0 0 3px rgb(49 109 97 / 16%);
+    box-shadow: 0 0 0 3px rgb(138 15 77 / 16%);
 }
 
 .yk-psych-connect__cta:focus-visible {

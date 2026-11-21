@@ -251,13 +251,13 @@ body.yk-home-bright .yk-navbar {
 
 body.yk-home-bright .yk-navbar__signup {
     border-color: transparent !important;
-    background: linear-gradient(135deg, #d81b60 0%, #9b1458 48%, #6a0dad 100%) !important;
+    background: linear-gradient(135deg, #d81b60 0%, #9b1458 48%, #6e0b3c 100%) !important;
     box-shadow: 0 10px 22px rgba(154, 20, 88, 0.22);
 }
 
 body.yk-home-bright .yk-navbar__signup:hover,
 body.yk-home-bright .yk-navbar__signup:focus-visible {
-    background: linear-gradient(135deg, #e0246a 0%, #ad1a66 48%, #7a18c4 100%) !important;
+    background: linear-gradient(135deg, #e0246a 0%, #ad1a66 48%, #c3196b 100%) !important;
 }
 
 body.yk-home-bright .yk-navbar__login {
@@ -310,7 +310,7 @@ body.yk-home-bright .yk-home-professional .yk-home-button {
 }
 
 .yk-help-tab:focus-visible {
-    outline: 3px solid #d8b4e2;
+    outline: 3px solid #e0b0c4;
     outline-offset: 2px;
 }
 

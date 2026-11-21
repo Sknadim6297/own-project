@@ -7,7 +7,7 @@
 
 <section class="yk-psych-connect" aria-labelledby="{{ $headingId ?? 'psych-connect-heading' }}">
     <div class="yk-psych-connect__copy">
-        <h2 id="{{ $headingId ?? 'psych-connect-heading' }}">{{ $heading }}</h2>
+        <h2 id="{{ $headingId ?? 'psych-connect-heading' }}"><x-yuktione.two-tone :text="$heading" /></h2>
         <p>{{ $copy }}</p>
     </div>
     <a class="yk-psych-connect__cta" href="{{ $url }}">

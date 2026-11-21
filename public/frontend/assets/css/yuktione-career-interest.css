@@ -5,8 +5,8 @@
  */
 .yk-cit[data-yk-cit] {
     --yk-navy: #2b1230;
-    --yk-teal: #c3196b;
-    --yk-teal-deep: #7a12a0;
+    --yk-teal: #8a0f4d;
+    --yk-teal-deep: #c3196b;
     --yk-gold: #c4a35a;
     --yk-gold-soft: rgba(196, 163, 90, 0.2);
     --yk-line: #ecd9ea;
@@ -16,22 +16,19 @@
     --cit-muted: #6b5a68;
     --cit-line: #ecd9ea;
     --cit-magenta: #c3196b;
-    --cit-violet: #7a12a0;
-    --cit-soft: #f9ecf6;
-    --cit-lilac: #f1dcf5;
+    --cit-violet: #c3196b;
+    --cit-soft: #f3ebe6;
+    --cit-lilac: #f3ebe6;
     --cit-good: #2fa56a;
     --cit-danger: #b4233c;
-    --cit-grad: linear-gradient(90deg, #c3196b 0%, #a2188f 52%, #6f14a6 100%);
-    --cit-grad-dot: linear-gradient(135deg, #b81c7e, #6f14a6);
+    --cit-grad: linear-gradient(90deg, #8a0f4d 0%, #c3196b 100%);
+    --cit-grad-dot: linear-gradient(135deg, #8a0f4d, #c3196b);
     --cit-shadow: 0 22px 50px rgba(138, 15, 77, 0.1), 0 3px 10px rgba(138, 15, 77, 0.04);
     --cit-ease: 180ms ease;
     position: relative;
     font-family: "DM Sans", system-ui, sans-serif;
     color: var(--cit-ink);
-    background:
-        radial-gradient(900px 440px at 82% 0%, rgba(216, 180, 226, 0.5), transparent 62%),
-        radial-gradient(720px 420px at 0% 12%, rgba(252, 220, 238, 0.85), transparent 62%),
-        linear-gradient(180deg, #fdf3fa 0%, #f7ebf8 55%, #fcf0f6 100%);
+    background: transparent;
     min-height: 70vh;
     padding: max(1.25rem, env(safe-area-inset-top, 0px)) 0 max(3rem, env(safe-area-inset-bottom, 0px));
     overflow-x: clip;
@@ -267,7 +264,7 @@
     color: #fff;
     font-weight: 800;
     font-size: 0.9rem;
-    box-shadow: 0 8px 16px rgba(150, 25, 130, 0.25);
+    box-shadow: 0 8px 16px rgba(138, 15, 77, 0.25);
 }
 
 .yk-cit .yk-cit__how strong {
@@ -384,14 +381,14 @@
 .yk-cit .yk-cit__btn {
     background: var(--cit-grad);
     color: #fff;
-    box-shadow: 0 14px 28px rgba(150, 25, 130, 0.28);
+    box-shadow: 0 14px 28px rgba(138, 15, 77, 0.28);
 }
 
 .yk-cit .yk-cit__btn:hover {
     background: var(--cit-grad);
     color: #fff;
     transform: translateY(-1px);
-    box-shadow: 0 18px 32px rgba(150, 25, 130, 0.34);
+    box-shadow: 0 18px 32px rgba(138, 15, 77, 0.34);
 }
 
 .yk-cit .yk-cit__btn:disabled {
@@ -490,7 +487,7 @@
     border-color: transparent;
     background: var(--cit-grad);
     color: #fff;
-    box-shadow: 0 10px 20px rgba(150, 25, 130, 0.25);
+    box-shadow: 0 10px 20px rgba(138, 15, 77, 0.25);
 }
 
 .yk-cit .yk-cit__chips label:has(input:focus-visible) {
@@ -591,7 +588,7 @@
     border-color: transparent;
     background: var(--cit-grad-dot);
     color: #fff;
-    box-shadow: 0 10px 20px rgba(150, 25, 130, 0.28);
+    box-shadow: 0 10px 20px rgba(138, 15, 77, 0.28);
 }
 
 .yk-cit .yk-cit__cat-head {
@@ -601,7 +598,7 @@
     margin: 0 0 1rem;
     padding: 1rem 1.05rem;
     border-radius: 20px;
-    background: linear-gradient(135deg, #fdecf6 0%, #f1dcf5 100%);
+    background: linear-gradient(135deg, #f6efe9 0%, #f5f1eb 100%);
 }
 
 .yk-cit .yk-cit__cat-icon {
@@ -613,7 +610,7 @@
     border-radius: 16px;
     background: #fff;
     color: var(--cit-magenta);
-    box-shadow: 0 8px 18px rgba(150, 25, 130, 0.14);
+    box-shadow: 0 8px 18px rgba(138, 15, 77, 0.14);
 }
 
 .yk-cit .yk-cit__kicker {
@@ -770,7 +767,7 @@
 .yk-cit .yk-cit__option:has(input:checked) {
     border-color: transparent;
     background: var(--cit-grad-dot);
-    box-shadow: 0 12px 22px rgba(150, 25, 130, 0.28);
+    box-shadow: 0 12px 22px rgba(138, 15, 77, 0.28);
     transform: translateY(-2px);
 }
 
@@ -819,11 +816,11 @@
     border-radius: 22px;
     background: var(--cit-grad);
     color: #fff;
-    box-shadow: 0 18px 36px rgba(150, 25, 130, 0.26);
+    box-shadow: 0 18px 36px rgba(138, 15, 77, 0.26);
 }
 
 .yk-cit .yk-cit__top--2 {
-    background: linear-gradient(90deg, #a2188f 0%, #6f14a6 100%);
+    background: linear-gradient(90deg, #a0145c 0%, #6e0b3c 100%);
 }
 
 .yk-cit .yk-cit__top--3 {

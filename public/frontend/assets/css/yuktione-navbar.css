@@ -2,7 +2,7 @@
     --yk-nav-text: #111111;
     --yk-nav-navy: var(--y1-plum, #8a0f4d);
     --yk-nav-navy-hover: var(--y1-magenta, #c3196b);
-    --yk-nav-lavender: var(--y1-lilac, #d8b4e2);
+    --yk-nav-lavender: var(--y1-lilac, #e0b0c4);
     --yk-nav-lavender-soft: var(--y1-lilac-soft, #f6eef9);
     --yk-nav-bg: #ffffff;
     --yk-nav-border: #e8e8ec;
@@ -10,8 +10,8 @@
     --yk-nav-placeholder: #6b6b7a;
     --yk-nav-soft: #faf6f8;
     --yk-nav-font: "DM Sans", sans-serif;
-    --yk-nav-gradient: linear-gradient(135deg, #d81b60 0%, #9b1458 48%, #6a0dad 100%);
-    --yk-nav-gradient-hover: linear-gradient(135deg, #e0246a 0%, #ad1a66 48%, #7a18c4 100%);
+    --yk-nav-gradient: linear-gradient(135deg, #8a0f4d 0%, #c3196b 100%);
+    --yk-nav-gradient-hover: linear-gradient(135deg, #c3196b 0%, #8a0f4d 100%);
     /* legacy aliases kept for older rules */
     --yk-nav-green: var(--yk-nav-navy);
     --yk-nav-green-hover: var(--yk-nav-navy-hover);
@@ -806,7 +806,7 @@
     width: 100%;
     padding: 0;
     border: 0;
-    background: rgb(11 32 72 / 32%);
+    background: rgb(31 31 31 / 32%);
     cursor: pointer;
 }
 
@@ -1089,7 +1089,7 @@
         min-width: 220px;
         max-width: min(280px, calc(100vw - 2rem));
         margin-top: 0;
-        box-shadow: 0 10px 28px rgb(11 32 72 / 10%);
+        box-shadow: 0 10px 28px rgb(31 31 31 / 10%);
     }
 }
 

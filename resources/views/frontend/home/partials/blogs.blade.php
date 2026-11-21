@@ -2,7 +2,7 @@
     <div class="yk-home-container">
         <header class="yk-home-section-heading">
             <p class="yk-home-eyebrow">Insights &amp; Stories</p>
-            <h2 id="yk-home-blogs-title">Explore Our Latest Blogs</h2>
+            <h2 id="yk-home-blogs-title"><x-yuktione.two-tone text="Explore Our Latest Blogs" /></h2>
             <p>Ideas, perspectives and practical guidance from the {{ config('yuktione.name', 'YuktiOne') }} community.</p>
         </header>
 

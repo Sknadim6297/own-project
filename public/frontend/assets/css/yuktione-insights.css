@@ -101,17 +101,17 @@
     padding: 1.15rem 0.55rem 1.05rem 1.1rem;
     overflow: hidden;
     border-radius: 20px;
-    box-shadow: 0 8px 22px rgba(11, 32, 72, 0.045);
+    box-shadow: 0 8px 22px rgba(31, 31, 31, 0.045);
     transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .yk-insight__card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 14px 28px rgba(11, 32, 72, 0.08);
+    box-shadow: 0 14px 28px rgba(31, 31, 31, 0.08);
 }
 
 .yk-insight__card--lavender {
-    background: #f4f0ff;
+    background: #f6eef9;
 }
 
 .yk-insight__card--mint {
@@ -145,7 +145,7 @@
 }
 
 .yk-insight__badge--purple {
-    color: #6e52c0;
+    color: #8a0f4d;
 }
 
 .yk-insight__badge--teal {
@@ -207,7 +207,7 @@ a.yk-insight__cta:focus-visible {
 }
 
 .yk-insight__cta--purple {
-    color: #6e52c0;
+    color: #8a0f4d;
 }
 
 .yk-insight__cta--teal {
@@ -243,7 +243,7 @@ a.yk-insight__cta:focus-visible {
     height: 5rem;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.72);
-    box-shadow: 0 6px 18px rgba(11, 32, 72, 0.06);
+    box-shadow: 0 6px 18px rgba(31, 31, 31, 0.06);
     font-size: 2.35rem;
     line-height: 1;
 }

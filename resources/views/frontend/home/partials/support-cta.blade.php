@@ -3,7 +3,7 @@
         <div class="yk-home-support__panel">
             <div class="yk-home-support__copy">
                 <p class="yk-home-support__eyebrow">Need Assistance?</p>
-                <h2 id="yk-home-support-title">Need Help Finding the Right Service?</h2>
+                <h2 id="yk-home-support-title"><x-yuktione.two-tone text="Need Help Finding the Right Service?" /></h2>
                 <p>Our team is here to help you explore services and find the support you're looking for.</p>
             </div>
 

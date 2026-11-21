@@ -82,7 +82,7 @@
     .category-icon-option.is-selected {
         border-color: #168a80 !important;
         background: #eaf8f5;
-        color: #0f625b;
+        color: #8a0f4d;
     }
 </style>
 

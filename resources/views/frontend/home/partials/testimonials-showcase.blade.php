@@ -27,7 +27,7 @@
         <header class="yk-voices__head">
             <div class="yk-voices__heading">
                 <span class="yk-voices__rule" aria-hidden="true"></span>
-                <h2 id="yk-voices-title">Testimonials</h2>
+                <h2 id="yk-voices-title"><x-yuktione.two-tone text="Testimonials" :words="1" /></h2>
                 <span class="yk-voices__rule" aria-hidden="true"></span>
             </div>
             <p>Real stories from our growing community</p>

@@ -2,7 +2,7 @@
     <div class="yk-home-container yk-home-faq__layout">
         <header class="yk-home-section-heading">
             <p class="yk-home-eyebrow">Have Questions?</p>
-            <h2 id="yk-home-faq-title">Frequently Asked Questions</h2>
+            <h2 id="yk-home-faq-title"><x-yuktione.two-tone text="Frequently Asked Questions" /></h2>
             <p>Find answers to common questions about getting started with {{ config('yuktione.name', 'YuktiOne') }}.</p>
             <a class="yk-home-faq__more-link" href="{{ route('help.index') }}">More FAQs</a>
         </header>

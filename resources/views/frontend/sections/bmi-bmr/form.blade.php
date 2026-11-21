@@ -63,7 +63,7 @@
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14"/><path d="M5 19c3-5 6-8 10-10"/></svg>
                     Nutrition Tool
                 </p>
-                <h1 id="bmi-form-heading">BMI, BMR &amp; TDEE Calculator</h1>
+                <h1 id="bmi-form-heading"><x-yuktione.two-tone text="BMI, BMR & TDEE Calculator" /></h1>
                 <p class="yk-bmi__lead">Educational screening estimates from your measurements—not medical advice.</p>
             </div>
 
@@ -115,7 +115,7 @@
                             <path class="yk-bmi__arc yk-bmi__arc--obese" d="M20 100 A80 80 0 0 1 180 100" pathLength="100" stroke-dasharray="25.400 100" stroke-dashoffset="-70.650"/>
                         </g>
                         <g class="yk-bmi__needle" data-bmi-needle style="transform: rotate(-90deg)">
-                            <circle cx="100" cy="20" r="7" fill="#fff" stroke="#7a12a0" stroke-width="3"/>
+                            <circle cx="100" cy="20" r="7" fill="#fff" stroke="#6e0b3c" stroke-width="3"/>
                         </g>
                     </svg>
                     <div class="yk-bmi__gauge-read" aria-live="polite">

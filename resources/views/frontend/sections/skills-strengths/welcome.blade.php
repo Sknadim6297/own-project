@@ -13,7 +13,7 @@
             <div class="yk-ssa__hero-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" focusable="false"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="4"/><path d="m7.5 7.5 2 2M14.5 14.5l2 2M7.5 16.5l2-2M14.5 9.5l2-2"/></svg>
             </div>
-            <h1 id="ssa-welcome-heading">Skills &amp; Strengths Assessment</h1>
+            <h1 id="ssa-welcome-heading"><x-yuktione.two-tone text="Skills & Strengths Assessment" /></h1>
             <p class="yk-ssa__lead">A clear self-rating snapshot of your current strengths across eight skill areas — not a measure of proven ability or hiring fitness.</p>
 
             <div class="yk-ssa__stats" role="list">

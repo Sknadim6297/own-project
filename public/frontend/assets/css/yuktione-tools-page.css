@@ -538,7 +538,7 @@
 .yk-tool-card--weight,
 .yk-tool-card--water,
 .yk-tool-card--nutrition { background: linear-gradient(165deg, #fffcfc, #eefaf4 70%); }
-.yk-tool-card--tarot { background: linear-gradient(165deg, #fffcfc, #f8f0ff 70%); }
+.yk-tool-card--tarot { background: linear-gradient(165deg, #fffcfc, #fff1f6 70%); }
 .yk-tool-card--finance,
 .yk-tool-card--coins,
 .yk-tool-card--goal { background: linear-gradient(165deg, #fffcfc, #fff4ea 70%); }
@@ -546,7 +546,7 @@
 .yk-tool-card--family { background: linear-gradient(165deg, #fffcfc, #fff0f5 70%); }
 .yk-tool-card--lotus,
 .yk-tool-card--gratitude { background: linear-gradient(165deg, #fffcfc, #eefaf6 70%); }
-.yk-tool-card--journal { background: linear-gradient(165deg, #fffcfc, #f6eef8 70%); }
+.yk-tool-card--journal { background: linear-gradient(165deg, #fffcfc, #f8eaf1 70%); }
 
 @media (prefers-reduced-motion: reduce) {
     .yk-tools .yk-tool-card,

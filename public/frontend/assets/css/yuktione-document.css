@@ -1,17 +1,14 @@
 .yk-doc {
     --yk-navy: var(--y1-charcoal, #1f1f1f);
     --yk-teal: var(--y1-plum, #8a0f4d);
-    --yk-lavender: var(--y1-lilac, #d8b4e2);
-    --yk-mint: var(--y1-plum-soft, #f8eaf1);
+    --yk-lavender: var(--y1-lilac, #e0b0c4);
+    --yk-mint: var(--y1-plum-soft, #f3ebe6);
     --yk-line: var(--y1-silver, #d9d9de);
     --yk-muted: var(--y1-grey, #6b6b7a);
     box-sizing: border-box;
     margin: 0;
     padding: 0 0 3rem;
-    background:
-        radial-gradient(circle at 8% 0%, rgba(216, 180, 226, 0.28), transparent 28%),
-        radial-gradient(circle at 92% 8%, rgba(138, 15, 77, 0.08), transparent 26%),
-        var(--y1-pearl, #fff8fb);
+    background: transparent;
     color: var(--yk-navy);
     font-family: "DM Sans", sans-serif;
 }
@@ -33,11 +30,11 @@
     gap: 0.35rem;
     align-items: center;
     margin: 0 0 0.55rem;
-    color: #7c88a3;
+    color: var(--yk-muted, #6b6b7a);
     font-size: 0.78rem;
 }
 
-.yk-doc__crumb a { color: #52627e; text-decoration: none; }
+.yk-doc__crumb a { color: var(--yk-muted, #6b6b7a); text-decoration: none; }
 .yk-doc__crumb a:hover { color: var(--yk-teal); }
 
 .yk-doc h1,
@@ -84,12 +81,17 @@
 }
 
 .yk-doc__button {
-    border: 1px solid var(--yk-teal);
-    background: var(--yk-teal);
+    border: 1px solid transparent;
+    background: var(--site-cta-grad, linear-gradient(90deg, #8d1f52 0%, #6f143f 55%, #5c1035 100%));
+    background-color: var(--yk-teal);
     color: #fff;
+    box-shadow: 0 12px 26px rgba(92, 16, 53, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-.yk-doc__button:hover { background: #28584e; color: #fff; }
+.yk-doc__button:hover {
+    background: linear-gradient(90deg, #c3196b 0%, #8a0f4d 100%);
+    color: #fff;
+}
 
 .yk-doc__button-secondary {
     border: 1px solid var(--yk-line);
@@ -106,7 +108,7 @@
 .yk-doc__share a:focus-visible,
 .yk-doc__share button:focus-visible,
 .yk-doc__faq summary:focus-visible {
-    outline: 3px solid rgba(49, 109, 97, 0.35);
+    outline: 3px solid rgba(138, 15, 77, 0.35);
     outline-offset: 2px;
 }
 
@@ -197,11 +199,11 @@
 .yk-doc__form textarea:focus,
 .yk-doc__form textarea:focus-visible {
     border-color: var(--yk-teal);
-    outline: 3px solid rgba(49, 109, 97, 0.16);
+    outline: 3px solid rgba(138, 15, 77, 0.16);
 }
 
 .yk-doc__search button:focus-visible {
-    outline: 3px solid rgba(49, 109, 97, 0.35);
+    outline: 3px solid rgba(138, 15, 77, 0.35);
     outline-offset: 2px;
 }
 
@@ -234,7 +236,7 @@ a.yk-doc__card {
 }
 
 a.yk-doc__card:hover {
-    border-color: rgba(49, 109, 97, 0.35);
+    border-color: rgba(138, 15, 77, 0.35);
     box-shadow: 0 8px 22px rgba(20, 43, 77, 0.06);
 }
 .yk-doc__faq details p { margin: 0.65rem 0 0; color: var(--yk-muted); line-height: 1.65; }
@@ -373,7 +375,7 @@ a.yk-doc__card:hover {
     width: 16rem;
     height: 16rem;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(49, 109, 97, 0.14), transparent 68%);
+    background: radial-gradient(circle, rgba(138, 15, 77, 0.14), transparent 68%);
     pointer-events: none;
 }
 
@@ -419,7 +421,7 @@ a.yk-doc__card:hover {
 
 .yk-contact__card:hover {
     border-color: #d5e4df;
-    box-shadow: 0 10px 24px rgb(11 32 72 / 6%);
+    box-shadow: 0 10px 24px rgb(31 31 31 / 6%);
     transform: translateY(-3px);
 }
 
@@ -511,7 +513,7 @@ a.yk-doc__card:hover {
 .yk-contact__form textarea:focus-visible {
     border-color: var(--yk-teal);
     outline: none;
-    box-shadow: 0 0 0 4px rgba(49, 109, 97, 0.14);
+    box-shadow: 0 0 0 4px rgba(138, 15, 77, 0.14);
 }
 
 .yk-contact__form input[aria-invalid="true"],
@@ -669,7 +671,7 @@ a.yk-doc__card:hover {
 .yk-about__service:hover,
 .yk-about__quote:hover {
     border-color: #d5e4df;
-    box-shadow: 0 10px 24px rgb(11 32 72 / 6%);
+    box-shadow: 0 10px 24px rgb(31 31 31 / 6%);
     transform: translateY(-3px);
 }
 
@@ -912,7 +914,7 @@ a.yk-doc__card:hover {
     border: 1px solid var(--yk-line);
     border-radius: 18px;
     padding: 1rem 1.05rem 1.1rem;
-    box-shadow: 0 10px 28px rgba(11, 32, 72, 0.05);
+    box-shadow: 0 10px 28px rgba(31, 31, 31, 0.05);
 }
 
 .yk-blog__panel h2 {
@@ -1012,7 +1014,7 @@ a.yk-doc__card:hover {
     border: 1px solid var(--yk-line);
     border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 10px 28px rgba(11, 32, 72, 0.05);
+    box-shadow: 0 10px 28px rgba(31, 31, 31, 0.05);
 }
 
 .yk-blog__card-media {
@@ -1279,7 +1281,7 @@ a.yk-doc__card:hover {
     border: 1px solid var(--yk-line);
     border-radius: 18px;
     padding: 1.1rem 1.15rem 1.2rem;
-    box-shadow: 0 10px 28px rgba(11, 32, 72, 0.05);
+    box-shadow: 0 10px 28px rgba(31, 31, 31, 0.05);
 }
 
 .yk-career__jobs h2 {
@@ -1381,7 +1383,7 @@ a.yk-doc__card:hover {
     background: #fff;
     border: 1px solid var(--yk-line);
     border-radius: 14px;
-    box-shadow: 0 12px 30px rgba(11, 32, 72, 0.12);
+    box-shadow: 0 12px 30px rgba(31, 31, 31, 0.12);
     padding: 0.35rem 0;
 }
 
@@ -1407,8 +1409,8 @@ a.yk-doc__card:hover {
     border-color: var(--yk-teal);
 }
 .yk-job-modal .btn-primary:hover {
-    background: #28584e;
-    border-color: #28584e;
+    background: var(--yk-primary-hover, #c3196b);
+    border-color: var(--yk-primary-hover, #c3196b);
 }
 
 @media (min-width: 900px) {
