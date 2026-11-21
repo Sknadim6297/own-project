@@ -18,7 +18,7 @@
             <div class="yk-cit__hero-grid">
                 <div class="yk-cit__hero-copy">
                     <p class="yk-cit__badge">{!! $icon('compass', 14) !!} Career tool</p>
-                    <h1 id="cit-welcome-heading">Career Interest Test</h1>
+                    <h1 id="cit-welcome-heading"><x-yuktione.two-tone text="Career Interest Test" /></h1>
                     <p class="yk-cit__lead">Discover which activities you naturally enjoy across six interest areas — a self-rating of preferences, not aptitude or guaranteed career fit.</p>
 
                     <div class="yk-cit__stats" role="list">

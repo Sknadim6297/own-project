@@ -211,7 +211,7 @@
 
 .yk-expert-card:nth-child(4n + 2) .yk-expert-card__image-link,
 .yk-expert-card:nth-child(4n + 2) .yk-expert-card__initials {
-    background-color: #E7F0FB;
+    background-color: #fff1f6;
     color: #37658F;
 }
 

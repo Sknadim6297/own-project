@@ -5,31 +5,28 @@
 .yk-journal[data-yk-journal] {
     --yk-navy: #1f1f1f;
     --yk-teal: #8a0f4d;
-    --yk-mint: #f8eaf1;
+    --yk-mint: #f3ebe6;
     --yk-gold: #c4a35a;
     --yk-gold-soft: rgba(196, 163, 90, 0.18);
-    --yk-cream: #fff8fb;
-    --yk-cream-2: #fdf1f7;
-    --yk-line: #eadbe4;
+    --yk-cream: #f8f3f1;
+    --yk-cream-2: #f5f1eb;
+    --yk-line: #e8e4de;
     --yk-ink: #1f1f1f;
     --yk-muted: #6b6b7a;
     --yk-eucalyptus: var(--yk-teal);
     --yk-eucalyptus-deep: #6e0b3c;
-    --yk-warm: #fbf8f3;
+    --yk-warm: #f8f3f1;
     --yk-sage: var(--yk-mint);
-    --yk-yellow: #fdeef5;
-    --yk-blush: #fce8f1;
-    --yk-shadow-sm: 0 6px 18px rgba(138, 15, 77, 0.06);
+    --yk-yellow: #f6efd4;
+    --yk-blush: #f6efe9;
+    --yk-shadow-sm: 0 6px 18px rgba(31, 31, 31, 0.06);
     --yk-ease: 180ms ease;
     --yk-touch: 44px;
     box-sizing: border-box;
     margin: 0;
     padding: max(0.85rem, env(safe-area-inset-top, 0px)) 0 max(2rem, env(safe-area-inset-bottom, 0px));
     overflow-x: clip;
-    background:
-        radial-gradient(900px 380px at 8% -12%, rgba(138, 15, 77, 0.12), transparent 55%),
-        radial-gradient(700px 300px at 100% 0%, rgba(196, 163, 90, 0.12), transparent 52%),
-        linear-gradient(180deg, #fbfcfe 0%, var(--yk-cream-2) 100%);
+    background: transparent;
     color: var(--yk-ink);
     font-family: "DM Sans", sans-serif;
 }
@@ -189,7 +186,7 @@
 
 .yk-journal__optional,
 .yk-journal__required {
-    color: #80728a;
+    color: #6b6b7a;
     font-size: 0.75rem;
     font-weight: 600;
 }
@@ -239,7 +236,7 @@
     justify-content: space-between;
     gap: 0.75rem;
     margin-top: 0.4rem;
-    color: #80728a;
+    color: #6b6b7a;
     font-size: 0.78rem;
 }
 
@@ -427,7 +424,7 @@
 }
 
 .yk-journal-history__card-top time {
-    color: #80728a;
+    color: #6b6b7a;
     font-size: 0.8rem;
     font-weight: 600;
 }
@@ -646,18 +643,18 @@ body.yk-journal-dialog-open { overflow: hidden; }
     --jr-plum: #8a0f4d;
     --jr-plum-deep: #6e0b3c;
     --jr-magenta: #c3196b;
-    --jr-violet: #7a12a0;
-    --jr-lilac: #d8b4e2;
-    --jr-lilac-soft: #f6eef9;
-    --jr-pink-soft: #fce8f1;
+    --jr-violet: #6e0b3c;
+    --jr-lilac: #e0b0c4;
+    --jr-lilac-soft: #f3ebe6;
+    --jr-pink-soft: #f6efe9;
     --jr-title: #4a0a30;
     position: relative;
     min-height: 70vh;
     background:
-        radial-gradient(620px 360px at 0% 0%, rgba(216, 180, 226, 0.45), transparent 62%),
-        radial-gradient(560px 340px at 100% 8%, rgba(252, 232, 241, 0.95), transparent 60%),
-        radial-gradient(640px 360px at 70% 100%, rgba(216, 180, 226, 0.35), transparent 60%),
-        linear-gradient(180deg, #fff8fb 0%, #fbeaf5 100%);
+        radial-gradient(620px 360px at 0% 0%, rgba(232, 224, 214, 0.45), transparent 62%),
+        radial-gradient(560px 340px at 100% 8%, rgba(245, 236, 226, 0.95), transparent 60%),
+        radial-gradient(640px 360px at 70% 100%, rgba(232, 224, 214, 0.35), transparent 60%),
+        linear-gradient(180deg, #f8f3f1 0%, #fbeaf5 100%);
 }
 
 /* Decorative leaves */
@@ -769,9 +766,9 @@ body.yk-journal-dialog-open { overflow: hidden; }
     width: 58px;
     height: 58px;
     border-radius: 18px;
-    background: linear-gradient(145deg, #a2178f, var(--jr-violet));
+    background: linear-gradient(145deg, #c3196b, var(--jr-violet));
     color: #fff;
-    box-shadow: 0 10px 22px rgba(122, 18, 160, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 22px rgba(110, 11, 60, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .yk-journal__hero-text { min-width: 0; }
@@ -803,7 +800,7 @@ body.yk-journal-dialog-open { overflow: hidden; }
     position: absolute;
     inset: 6% -6% -2% 4%;
     border-radius: 46% 54% 52% 48% / 52% 46% 54% 48%;
-    background: linear-gradient(145deg, rgba(216, 180, 226, 0.6), rgba(252, 232, 241, 0.9));
+    background: linear-gradient(145deg, rgba(232, 224, 214, 0.6), rgba(245, 236, 226, 0.9));
 }
 
 .yk-journal__hero-art img {
@@ -967,7 +964,7 @@ body.yk-journal-dialog-open { overflow: hidden; }
 
 .yk-journal__optional {
     background: var(--jr-lilac-soft);
-    color: #7b5a8a;
+    color: #8a0f4d;
 }
 
 .yk-journal__required {
@@ -1066,7 +1063,7 @@ body.yk-journal-dialog-open { overflow: hidden; }
 
 .yk-journal__meta {
     margin-top: 0.5rem;
-    color: #7b7086;
+    color: #6b6b7a;
     font-size: 0.8rem;
 }
 
@@ -1101,7 +1098,7 @@ body.yk-journal-dialog-open { overflow: hidden; }
     justify-content: center;
     gap: 0.45rem;
     margin: 0.9rem 0 0;
-    color: #7b7086;
+    color: #6b6b7a;
     font-size: 0.8rem;
     line-height: 1.4;
     text-align: center;
@@ -1206,7 +1203,7 @@ body.yk-journal-dialog-open { overflow: hidden; }
     position: absolute;
     top: 50%;
     left: 0.9rem;
-    color: #a08aa0;
+    color: #6b6b7a;
     transform: translateY(-50%);
     pointer-events: none;
 }
@@ -1296,7 +1293,7 @@ body.yk-journal-dialog-open { overflow: hidden; }
 
 .yk-journal-history__count {
     margin: 1.1rem 0 0;
-    color: #7b7086;
+    color: #6b6b7a;
     font-size: 0.86rem;
     font-weight: 600;
 }
@@ -1327,7 +1324,7 @@ body.yk-journal-dialog-open { overflow: hidden; }
     padding: 0.1rem 0.6rem;
     border-radius: 999px;
     background: var(--jr-lilac-soft);
-    color: #7b5a8a;
+    color: #8a0f4d;
     font-size: 0.74rem;
     font-weight: 700;
 }
@@ -1394,7 +1391,7 @@ body.yk-journal-dialog-open { overflow: hidden; }
 
 .yk-journal-history__card-top time {
     flex: 0 0 auto;
-    color: #8a7d92;
+    color: #6b6b7a;
     font-size: 0.8rem;
     font-weight: 600;
 }
@@ -1482,7 +1479,7 @@ body.yk-journal-dialog-open { overflow: hidden; }
     justify-content: space-between;
     gap: 0.75rem;
     margin-top: 1.4rem;
-    color: #7b7086;
+    color: #6b6b7a;
     font-size: 0.86rem;
     font-weight: 600;
 }
@@ -1521,7 +1518,7 @@ body.yk-journal-dialog-open { overflow: hidden; }
     align-items: center;
     gap: 0.5rem 0.8rem;
     margin: 0.65rem 0 0;
-    color: #8a7d92;
+    color: #6b6b7a;
     font-size: 0.88rem;
     font-weight: 600;
 }

@@ -83,18 +83,18 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
     -moz-border-radius: 3px;
     -ms-border-radius: 3px;
     border-radius: 3px;
-        background: linear-gradient(135deg, #152a70, #c51010, #f39c12);
+        background: linear-gradient(135deg, #8a0f4d, #c3196b);
     margin-right: -1px;
 }
 .unique-btn:hover{
     color: #fff;
-    background-color: #039d99;
+    background-color: #c3196b;
 }
 .event-information .row hr {
     width: 100%;
     border: none;                /* Removes the default border */
     height: 3px;                 /* Increases thickness for a bold look */
-    background-color: #039d99;   /* Sets the color to dark gray */
+    background-color: #8a0f4d;
     margin: 0;                   /* Ensures no extra space around the line */
 }
 .event-information .container {
@@ -168,7 +168,7 @@ margin-top:8px ;
     font-weight: 600;
 }
 .share-description-map .col-lg-6 .second-portion .note-content{
-    background: linear-gradient(to right, #152a70, #c51010);
+    background: linear-gradient(to right, #8a0f4d, #c3196b);
     color: #fff;
     padding: 20px;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;

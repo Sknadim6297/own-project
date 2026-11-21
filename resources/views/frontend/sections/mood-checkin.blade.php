@@ -33,7 +33,7 @@
         @if (!$open)
             <section class="yk-mood__closed" aria-labelledby="mood-closed-heading">
                 <p class="yk-mood__badge">Free tool</p>
-                <h1 id="mood-closed-heading">How are you feeling today?</h1>
+                <h1 id="mood-closed-heading"><x-yuktione.two-tone text="How are you feeling today?" /></h1>
                 <p>This check-in is unavailable right now.</p>
             </section>
         @else
@@ -49,7 +49,7 @@
                             Psychology &amp; Wellness
                         </span>
                     </div>
-                    <h1>Daily Mood Check</h1>
+                    <h1><x-yuktione.two-tone text="Daily Mood Check" /></h1>
                     <p class="yk-mood__intro">A simple 4-step check-in to understand your current mood, identify your emotions, and create a short reflection for a healthier, more balanced you.</p>
                     <ul class="yk-mood__perks">
                         <li>
@@ -76,9 +76,9 @@
                     <svg class="yk-mood__hero-blob" viewBox="0 0 540 230" preserveAspectRatio="none" focusable="false">
                         <defs>
                             <linearGradient id="yk-mood-hero-blob" x1="0" x2="1" y1="0" y2="1">
-                                <stop offset="0" stop-color="#f4e6fd"/>
-                                <stop offset="0.55" stop-color="#f1dbfc"/>
-                                <stop offset="1" stop-color="#f6e3fb"/>
+                                <stop offset="0" stop-color="#f3ebe6"/>
+                                <stop offset="0.55" stop-color="#f6efe9"/>
+                                <stop offset="1" stop-color="#f5f1eb"/>
                             </linearGradient>
                         </defs>
                         <path d="M22 132C6 92 30 52 86 40c52-11 92 6 142-14 50-20 96-34 166-22 72 12 112 44 108 96-3 36 22 54 30 82 4 18-6 34-26 46H72C34 222 38 172 22 132Z" fill="url(#yk-mood-hero-blob)"/>
@@ -109,7 +109,7 @@
                                 <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="8.6"/><path d="M18 2.2v3.2M18 30.6v3.2M2.2 18h3.2M30.6 18h3.2M6.8 6.8l2.2 2.2M27 27l2.2 2.2M6.8 29.2 9 27M27 9l2.2-2.2"/></svg>
                             </span>
                             <div>
-                                <h2>How are you feeling today?</h2>
+                                <h2><x-yuktione.two-tone text="How are you feeling today?" /></h2>
                                 <p class="yk-mood__lead">Choose the option that best describes how you feel right now.</p>
                             </div>
                         </div>
@@ -150,7 +150,7 @@
                                 <svg viewBox="0 0 28 28"><rect x="5" y="14" width="4.4" height="8.5" rx="1.2"/><rect x="11.8" y="9.5" width="4.4" height="13" rx="1.2"/><rect x="18.6" y="5.5" width="4.4" height="17" rx="1.2"/></svg>
                             </span>
                             <div>
-                                <h2>Your Mood Journey</h2>
+                                <h2><x-yuktione.two-tone text="Your Mood Journey" /></h2>
                                 <p class="yk-mood__side-lead">Build a healthier and happier you.</p>
                             </div>
                         </header>
@@ -192,19 +192,19 @@
                                 <svg viewBox="0 0 28 28"><rect x="4.5" y="6.5" width="19" height="17" rx="3.2" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M4.5 9.7a3.2 3.2 0 0 1 3.2-3.2h12.6a3.2 3.2 0 0 1 3.2 3.2v2.3h-19Z"/><path d="M9.5 3.8v4.6M18.5 3.8v4.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
                             </span>
                             <div>
-                                <h2>Track Your Progress</h2>
+                                <h2><x-yuktione.two-tone text="Track Your Progress" /></h2>
                                 <p class="yk-mood__side-lead">Log your mood daily and see patterns over time.</p>
                             </div>
                         </header>
                         <svg class="yk-mood__spark" viewBox="0 0 330 80" aria-hidden="true" focusable="false">
                             <defs>
                                 <linearGradient id="yk-mood-spark-fill" x1="0" x2="0" y1="0" y2="1">
-                                    <stop offset="0%" stop-color="#d996e8" stop-opacity="0.6"/>
-                                    <stop offset="100%" stop-color="#ead2f5" stop-opacity="0"/>
+                                    <stop offset="0%" stop-color="#e8e0d6" stop-opacity="0.65"/>
+                                    <stop offset="100%" stop-color="#f5f1eb" stop-opacity="0"/>
                                 </linearGradient>
                                 <linearGradient id="yk-mood-spark-line" x1="0" x2="1" y1="0" y2="0">
-                                    <stop offset="0%" stop-color="#d27fe0"/>
-                                    <stop offset="100%" stop-color="#b456d0"/>
+                                    <stop offset="0%" stop-color="#8d1f52"/>
+                                    <stop offset="100%" stop-color="#5c1035"/>
                                 </linearGradient>
                             </defs>
                             <path class="yk-mood__spark-area" d="M4 73 C11.7 69.7 35 55.2 50 53 C65 50.8 78.7 63 94 60 C109.3 57 126.2 37.2 142 35 C157.8 32.8 173.2 49.3 189 47 C204.8 44.7 221.7 24.3 237 21 C252.3 17.7 266.2 29.8 281 27 C295.8 24.2 318.5 7.8 326 4 L326 80 L4 80 Z"/>

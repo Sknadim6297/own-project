@@ -10,7 +10,7 @@
         @include('frontend.sections.partials.tool-back-to-tools')
         <section class="yk-water__card yk-water__card--welcome" aria-labelledby="water-welcome-heading">
             <p class="yk-water__badge">Nutrition tool</p>
-            <h1 id="water-welcome-heading">Water Intake Tracker</h1>
+            <h1 id="water-welcome-heading"><x-yuktione.two-tone text="Water Intake Tracker" /></h1>
             <p class="yk-water__lead">Log drinks against a personal daily goal and review your week. Goals are tracking preferences—not medical prescriptions.</p>
 
             <div class="yk-water__welcome-preview" aria-hidden="true">

@@ -1,0 +1,10 @@
+---
+description: Code in English; chat with the user in Bangla
+alwaysApply: true
+---
+
+# Language Preferences
+
+- All code must be in English: identifiers, comments, commit messages, UI strings in source (unless the user explicitly asks for Bangla UI copy), file names, and docs written as code/docs in the repo.
+- Speak with the user in Bangla (বাংলা) in chat replies.
+- Do not mix Bangla into code unless the user specifically requests Bangla content for end-user-facing text.

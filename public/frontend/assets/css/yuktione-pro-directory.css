@@ -10,7 +10,7 @@ body.yk-experts-page {
     --pro-accent: #7b0c47;
     --pro-accent-deep: #5a0733;
     --pro-ink: #0b0b12;
-    --pro-blue: #3a5f9e;
+    --pro-blue: #8a0f4d;
     --pro-line: #f0dfe8;
     padding: 0 0 3.5rem;
     color: var(--pro-ink);
@@ -730,7 +730,7 @@ body.yk-experts-page {
 
 .yk-pcard[data-tone="peach"] { --pcard-tint: #fff0e6; --pcard-wave: rgba(255, 205, 175, 0.42); }
 .yk-pcard[data-tone="pink"] { --pcard-tint: #fdeaf3; --pcard-wave: rgba(248, 178, 208, 0.40); }
-.yk-pcard[data-tone="lavender"] { --pcard-tint: #f3eefc; --pcard-wave: rgba(204, 188, 245, 0.42); }
+.yk-pcard[data-tone="lavender"] { --pcard-tint: #f8eaf1; --pcard-wave: rgba(195, 25, 107, 0.14); }
 .yk-pcard[data-tone="mint"] { --pcard-tint: #eaf8ee; --pcard-wave: rgba(176, 226, 190, 0.45); }
 .yk-pcard[data-tone="rose"] { --pcard-tint: #fdebf0; --pcard-wave: rgba(250, 178, 198, 0.40); }
 .yk-pcard[data-tone="cream"] { --pcard-tint: #fff8e6; --pcard-wave: rgba(250, 224, 150, 0.45); }

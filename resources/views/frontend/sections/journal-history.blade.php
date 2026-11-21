@@ -43,7 +43,7 @@
                     </span>
                     <div class="yk-journal__hero-text">
                         <p class="yk-journal__badge">Free tool</p>
-                        <h1>My Journal History</h1>
+                        <h1><x-yuktione.two-tone text="My Journal History" /></h1>
                         <p class="yk-journal__lead">Your private entries, saved only for you.</p>
                     </div>
                 </div>

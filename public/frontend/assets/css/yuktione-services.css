@@ -182,7 +182,7 @@
 .yk-services__card:hover,
 .yk-services__card:focus-visible {
     transform: translateY(-2px);
-    box-shadow: 0 14px 28px rgba(11, 32, 72, 0.1);
+    box-shadow: 0 14px 28px rgba(31, 31, 31, 0.1);
     outline: none;
 }
 
@@ -227,7 +227,7 @@
     font-weight: 650;
 }
 
-.yk-services__card--lavender { background: #f2eeff; }
+.yk-services__card--lavender { background: #f8eaf1; }
 .yk-services__card--mint { background: #eaf5f0; }
 .yk-services__card--blush { background: #fff0f1; }
 .yk-services__card--cream { background: #fff5e9; }

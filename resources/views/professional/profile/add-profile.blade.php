@@ -50,7 +50,7 @@
     }
     .aspect-btn.active,
     .aspect-btn:hover {
-        border-color: #36877F;
+        border-color: #8a0f4d;
         background: #EAF6F2;
         color: #245E59;
     }
@@ -83,7 +83,7 @@
     }
     .btn-crop-cancel { background: #fff; border: 1px solid #E2E9EE; color: #475569; }
     .btn-crop-cancel:hover { background: #F7FAFB; }
-    .btn-crop-save { background: #36877F; color: #fff; }
+    .btn-crop-save { background: #8a0f4d; color: #fff; }
     .btn-crop-save:hover { background: #245E59; }
     .form-section-title {
         margin: 0 0 .25rem;

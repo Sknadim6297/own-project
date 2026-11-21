@@ -25,7 +25,7 @@
 
         .invoice-header {
             padding: 14px 16px;
-            border-bottom: 2px solid #36877F;
+            border-bottom: 2px solid #8a0f4d;
             background: #ffffff;
         }
 
@@ -254,7 +254,7 @@
         }
 
         .total-section {
-            background: #36877F;
+            background: #8a0f4d;
             color: #ffffff;
             padding: 10px 16px;
             text-align: right;
@@ -314,7 +314,7 @@
         }
 
         .support-email {
-            color: #36877F;
+            color: #8a0f4d;
             font-weight: bold;
         }
 

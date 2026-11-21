@@ -12,7 +12,7 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 6 9 12l6 6"/></svg>
                 <span>All Categories</span>
             </a>
-            <h1>{{ $category['label'] }}</h1>
+            <h1><x-yuktione.two-tone :text="$category['label']" /></h1>
             @if ($category['tagline'] !== '')
                 <p class="yk-cat-detail__lead">{{ $category['tagline'] }}</p>
             @endif

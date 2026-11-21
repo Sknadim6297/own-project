@@ -10,14 +10,14 @@
     --yk-ds-navy-deep: var(--y1-charcoal);
     --yk-ds-teal: var(--y1-plum);
     --yk-ds-teal-deep: var(--y1-magenta);
-    --yk-ds-cream: #fff6ed;
-    --yk-ds-cream-2: #f7f1e8;
+    --yk-ds-cream: #f8f3f1;
+    --yk-ds-cream-2: #f5f1eb;
     --yk-ds-gold: #c4a35a;
     --yk-ds-gold-soft: rgba(196, 163, 90, 0.16);
     --yk-ds-mint: var(--y1-plum-soft);
     --yk-ds-line: var(--y1-silver);
-    --yk-ds-muted: #5b6b7c;
-    --yk-ds-ink: #1c2b28;
+    --yk-ds-muted: #6b6b7a;
+    --yk-ds-ink: #1f1f1f;
     --yk-ds-surface: #ffffff;
     --yk-ds-danger: #8d5d56;
     --yk-ds-success: #065f46;
@@ -38,8 +38,8 @@
     --yk-ds-radius: 16px;
     --yk-ds-radius-lg: 22px;
     --yk-ds-radius-pill: 999px;
-    --yk-ds-shadow: 0 14px 36px rgba(11, 32, 72, 0.08);
-    --yk-ds-shadow-sm: 0 6px 18px rgba(11, 32, 72, 0.06);
+    --yk-ds-shadow: 0 14px 36px rgba(31, 31, 31, 0.08);
+    --yk-ds-shadow-sm: 0 6px 18px rgba(31, 31, 31, 0.06);
     --yk-ds-ease: 180ms ease;
     --yk-ds-touch: 44px;
 
@@ -65,10 +65,7 @@
     color: var(--yk-ds-ink);
     font-family: var(--yk-ds-font);
     line-height: var(--yk-ds-leading);
-    background:
-        radial-gradient(900px 380px at 6% -10%, rgba(49, 109, 97, 0.1), transparent 55%),
-        radial-gradient(700px 300px at 100% 0%, rgba(196, 163, 90, 0.1), transparent 50%),
-        linear-gradient(180deg, var(--y1-pearl) 0%, var(--yk-ds-cream-2) 100%);
+    background: transparent;
 }
 
 .yk-tools-ds *,
@@ -132,7 +129,7 @@
 
 .yk-ds-card--hero {
     background:
-        linear-gradient(145deg, rgba(20, 43, 77, 0.96), rgba(49, 109, 97, 0.9)),
+        linear-gradient(145deg, rgba(20, 43, 77, 0.96), rgba(138, 15, 77, 0.9)),
         var(--yk-ds-navy);
     border: 0;
     color: #fff;
@@ -192,9 +189,9 @@
 }
 
 .yk-ds-btn--primary {
-    background: linear-gradient(135deg, var(--yk-ds-teal), var(--yk-ds-teal-deep));
+    background: var(--site-cta-grad, linear-gradient(90deg, #8d1f52 0%, #6f143f 55%, #5c1035 100%));
     color: #fff;
-    box-shadow: 0 8px 18px rgba(36, 85, 76, 0.2);
+    box-shadow: 0 12px 26px rgba(92, 16, 53, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .yk-ds-btn--primary:hover { transform: translateY(-1px); }
@@ -306,12 +303,12 @@
     transition: border-color var(--yk-ds-ease), box-shadow var(--yk-ds-ease), background var(--yk-ds-ease);
 }
 
-.yk-ds-choice:hover { border-color: rgba(49, 109, 97, 0.45); }
+.yk-ds-choice:hover { border-color: rgba(138, 15, 77, 0.45); }
 .yk-ds-choice:has(:checked),
 .yk-ds-choice.is-selected {
     border-color: var(--yk-ds-teal);
     background: var(--yk-ds-mint);
-    box-shadow: 0 0 0 3px rgba(49, 109, 97, 0.12);
+    box-shadow: 0 0 0 3px rgba(138, 15, 77, 0.12);
 }
 
 .yk-ds-choice:focus-within {

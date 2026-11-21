@@ -84,10 +84,10 @@
                 <svg viewBox="0 0 420 320">
                     <ellipse cx="250" cy="170" rx="120" ry="130" fill="#e7f6ef"/>
                     <path d="M40 250c40-80 90-120 150-110-30 50-70 80-150 110Z" fill="#7ea36a"/>
-                    <path d="M70 80c50-20 90 10 100 50-40 10-80 0-100-50Z" fill="#9d81db" opacity=".85"/>
+                    <path d="M70 80c50-20 90 10 100 50-40 10-80 0-100-50Z" fill="#c3196b" opacity=".85"/>
                     <path d="M300 40c30 50 20 100-20 130-10-50-10-90 20-130Z" fill="#8fb67c"/>
-                    <path d="M330 180c40 10 70 40 70 80-50-10-80-30-70-80Z" fill="#b7a4e4"/>
-                    <path d="M20 200c30-10 50 10 55 40-30 5-50-10-55-40Z" fill="#316d61" opacity=".75"/>
+                    <path d="M330 180c40 10 70 40 70 80-50-10-80-30-70-80Z" fill="#e0b0c4"/>
+                    <path d="M20 200c30-10 50 10 55 40-30 5-50-10-55-40Z" fill="#8a0f4d" opacity=".75"/>
                     <path d="M360 90c20-30 50-30 70-10-30 8-50 16-70 10Z" fill="#a9d0c0"/>
                 </svg>
             </div>
@@ -309,7 +309,7 @@
     <section class="yk-explore__featured" aria-labelledby="explore-featured">
         <div class="yk-explore__wrap">
             <div class="yk-explore__featured-head">
-                <h2 id="explore-featured">Featured for You</h2>
+                <h2 id="explore-featured"><x-yuktione.two-tone text="Featured for You" /></h2>
                 <a href="{{ route('gridlisting') }}">View All</a>
             </div>
             <ul>

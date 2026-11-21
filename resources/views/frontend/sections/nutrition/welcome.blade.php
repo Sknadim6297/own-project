@@ -11,7 +11,7 @@
         @include('frontend.sections.partials.tool-back-to-tools')
         <section class="yk-nut__card yk-nut__card--welcome" aria-labelledby="nut-welcome-heading">
             <p class="yk-nut__badge">{{ $catalogueReady ? 'Nutrition tool' : 'Food Catalogue Pending' }}</p>
-            <h1 id="nut-welcome-heading">Calorie &amp; Nutrition Tracker</h1>
+            <h1 id="nut-welcome-heading"><x-yuktione.two-tone text="Calorie & Nutrition Tracker" /></h1>
             <p class="yk-nut__lead">Search published foods, set portions from source-backed servings, and log breakfast, lunch, dinner, or snacks.</p>
 
             <div class="yk-nut__welcome-preview" aria-hidden="true">

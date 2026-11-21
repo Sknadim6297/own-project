@@ -17,7 +17,7 @@
                     <span aria-hidden="true">›</span>
                     <span aria-current="page">About Us</span>
                 </nav>
-                <h1>Empowering Growth Through Expert Guidance</h1>
+                <h1><x-yuktione.two-tone text="Empowering Growth Through Expert Guidance" /></h1>
                 <p class="yk-doc__lead">YuktiOne connects individuals and businesses with professionals across career, wellness, lifestyle, and other specialized services.</p>
                 <div class="yk-doc__actions">
                     <a class="yk-doc__button" href="{{ route('professionals') }}">Explore Experts</a>
@@ -34,7 +34,7 @@
     <section class="yk-about__section" aria-labelledby="about-why">
         <div class="yk-doc__wrap">
             <header class="yk-about__intro" data-reveal>
-                <h2 id="about-why">Why Choose YuktiOne?</h2>
+                <h2 id="about-why"><x-yuktione.two-tone text="Why Choose YuktiOne?" /></h2>
                 <p>A clearer way to find a professional, see what they offer, and book a time that is actually open.</p>
             </header>
             <div class="yk-about__cards">
@@ -80,7 +80,7 @@
                 </figure>
             @endif
             <div data-reveal style="--reveal-delay: 100ms">
-                <h2 id="about-story">About YuktiOne</h2>
+                <h2 id="about-story"><x-yuktione.two-tone text="About YuktiOne" /></h2>
                 <p>YuktiOne is a place to find a professional for a specific question, then book time with that person. The aim is practical guidance that is easier to reach than hunting for separate specialists on your own.</p>
                 <p>The platform is built around choice and access: browse the services that are currently published, open a profile, and book an available consultation when you are ready.</p>
                 <ul class="yk-about__points">
@@ -99,7 +99,7 @@
     <section class="yk-about__section" aria-labelledby="about-highlights">
         <div class="yk-doc__wrap">
             <header class="yk-about__intro" data-reveal>
-                <h2 id="about-highlights">On the platform today</h2>
+                <h2 id="about-highlights"><x-yuktione.two-tone text="On the platform today" /></h2>
                 <p>These figures come from the profiles and services currently published. They are not satisfaction scores.</p>
             </header>
             <div class="yk-about__stats">
@@ -134,7 +134,7 @@
     <section class="yk-about__section" aria-labelledby="about-steps">
         <div class="yk-doc__wrap">
             <header class="yk-about__intro" data-reveal>
-                <h2 id="about-steps">How YuktiOne Works</h2>
+                <h2 id="about-steps"><x-yuktione.two-tone text="How YuktiOne Works" /></h2>
                 <p>The path from looking around to a confirmed consultation.</p>
             </header>
             <ol class="yk-about__steps">
@@ -166,7 +166,7 @@
         <section class="yk-about__section" aria-labelledby="about-expertise">
             <div class="yk-doc__wrap">
                 <header class="yk-about__intro" data-reveal>
-                    <h2 id="about-expertise">Our Expertise</h2>
+                    <h2 id="about-expertise"><x-yuktione.two-tone text="Our Expertise" /></h2>
                     <p>Services that are active on YuktiOne now.</p>
                 </header>
                 <div class="yk-about__services">
@@ -192,7 +192,7 @@
         <section class="yk-about__section" aria-labelledby="about-stories">
             <div class="yk-doc__wrap">
                 <header class="yk-about__intro" data-reveal>
-                    <h2 id="about-stories">What clients have shared</h2>
+                    <h2 id="about-stories"><x-yuktione.two-tone text="What clients have shared" /></h2>
                     <p>Comments published on YuktiOne. Names appear only when they were included in the original comment.</p>
                 </header>
                 <div class="yk-about__quotes">
@@ -219,7 +219,7 @@
     <section class="yk-about__section" aria-labelledby="about-faq">
         <div class="yk-doc__wrap yk-about__faq-wrap">
             <header class="yk-about__intro" data-reveal>
-                <h2 id="about-faq">Frequently Asked Questions</h2>
+                <h2 id="about-faq"><x-yuktione.two-tone text="Frequently Asked Questions" /></h2>
                 <p>How browsing, booking, payment, and your account work today.</p>
             </header>
             <div class="yk-about__faq" data-reveal>
@@ -249,7 +249,7 @@
 
     <section class="yk-about__close" aria-labelledby="about-next" data-reveal>
         <div class="yk-doc__wrap">
-            <h2 id="about-next">Ready to Take the Next Step?</h2>
+            <h2 id="about-next"><x-yuktione.two-tone text="Ready to Take the Next Step?" /></h2>
             <p>Explore professionals and find guidance suited to your goals.</p>
             <a class="yk-doc__button" href="{{ route('professionals') }}">Explore Professionals</a>
         </div>

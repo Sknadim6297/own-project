@@ -2,7 +2,7 @@
     <div class="yk-home-container">
         <header class="yk-home-testimonials__heading">
             <p class="yk-home-testimonials__eyebrow">Testimonials</p>
-            <h2 id="yk-home-testimonials-title">What Our Clients Say</h2>
+            <h2 id="yk-home-testimonials-title"><x-yuktione.two-tone text="What Our Clients Say" /></h2>
             <p>Real experiences and feedback from our community.</p>
         </header>
 

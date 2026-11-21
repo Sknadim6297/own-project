@@ -8,7 +8,7 @@
         <header class="yk-home-events__heading" data-programme-reveal>
             <div class="yk-home-events__heading-copy">
                 <p class="yk-home-events__eyebrow">Learn, Grow &amp; Connect</p>
-                <h2 id="yk-home-events-title">Discover Programmes Designed for You</h2>
+                <h2 id="yk-home-events-title"><x-yuktione.two-tone text="Discover Programmes Designed for You" /></h2>
                 <p>Explore expert-led sessions, workshops and learning experiences designed to support your personal and professional growth.</p>
             </div>
             <a class="yk-home-events__all-link" href="{{ route('programmes.index') }}">

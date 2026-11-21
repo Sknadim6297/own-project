@@ -16,7 +16,7 @@
     </form>
 
     <section class="yk-doc__topics" aria-labelledby="help-topics">
-        <h2 id="help-topics">Select a topic</h2>
+        <h2 id="help-topics"><x-yuktione.two-tone text="Select a topic" /></h2>
         <div class="yk-doc__grid cols-topics">
             @foreach (App\Models\Help::CATEGORIES as $category)
                 <a class="yk-doc__card" href="{{ route('help.index', ['category' => $category]) }}" data-help-topic>
@@ -28,7 +28,7 @@
     </section>
 
     <section class="yk-doc__topics" aria-labelledby="help-faqs">
-        <h2 id="help-faqs">{{ request('category') ? (request('category') === 'Events' ? 'Programmes' : request('category')).' FAQs' : 'All FAQs' }}</h2>
+        <h2 id="help-faqs"><x-yuktione.two-tone :text="request('category') ? (request('category') === 'Events' ? 'Programmes' : request('category')).' FAQs' : 'All FAQs'" /></h2>
         @if ($helps->isEmpty())
             <p class="yk-doc__empty">No FAQs found{{ request('search') ? ' for “'.request('search').'”' : '' }}.</p>
         @else

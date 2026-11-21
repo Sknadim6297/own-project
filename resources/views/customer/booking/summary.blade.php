@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     contact: "{{ $bookingData['phone'] ?? '' }}"
                 },
                 theme: {
-                    color: "#0a58ca"
+                    color: "#8a0f4d"
                 }
             };
 

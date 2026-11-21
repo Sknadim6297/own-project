@@ -10,7 +10,7 @@
         @include('frontend.sections.partials.tool-back-to-tools')
         <section class="yk-wj__card yk-wj__card--welcome" aria-labelledby="wj-welcome-heading">
             <p class="yk-wj__badge">Nutrition tool</p>
-            <h1 id="wj-welcome-heading">Weight Journey</h1>
+            <h1 id="wj-welcome-heading"><x-yuktione.two-tone text="Weight Journey" /></h1>
             <p class="yk-wj__lead">Log measurements, optionally set a personal goal, and review progress over time—without judgmental labels.</p>
 
             <div class="yk-wj__welcome-preview" aria-hidden="true">

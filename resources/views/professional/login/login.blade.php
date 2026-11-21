@@ -14,25 +14,25 @@
 
     <style>
         .invalid-feedback { display: none; color: #b42318; font-size: .875rem; margin-top: .5rem; }
-        body.professional-login-page { min-height: 100vh; background: #eaf8f5; }
+        body.professional-login-page { min-height: 100vh; background: #fff8fb; }
         #login { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); width: min(100% - 2rem, 62rem); min-height: 34rem; margin: 3rem auto; overflow: hidden; border: 1px solid #e0e9f0; border-radius: 1.5rem; background: #fff; box-shadow: 0 18px 55px -28px rgb(38 50 56 / .2); }
-        #login > figure { display: flex; align-items: center; justify-content: center; margin: 0; padding: 2.5rem; background: #eaf8f5; }
+        #login > figure { display: flex; align-items: center; justify-content: center; margin: 0; padding: 2.5rem; background: #f8eaf1; }
         #login .logo_sticky { width: min(100%, 17rem); height: auto; object-fit: contain; }
         #login > aside { display: flex; flex-direction: column; justify-content: center; padding: clamp(1.5rem, 5vw, 3.5rem); }
         #login h1 { margin: 0 0 2rem; color: #263238; font-size: clamp(1.6rem, 4vw, 2.1rem); font-weight: 700; }
         #login .form-group { position: relative; margin-bottom: 1.25rem; }
         #login .form-control { display: block; width: 100%; min-height: 3.1rem; padding: .8rem 1rem; border: 1px solid #e0e9f0; border-radius: .65rem; background: #fff; color: #263238; font: inherit; outline: none; transition: border-color .18s, box-shadow .18s; }
-        #login .form-control:focus { border-color: #168a80; box-shadow: 0 0 0 4px rgb(22 138 128 / .12); }
+        #login .form-control:focus { border-color: #8a0f4d; box-shadow: 0 0 0 4px rgb(138 15 77 / .14); }
         #login .form-control.is-invalid { border-color: #b42318; }
-        #login .icon_mail_alt, #login .icon_lock_alt { position: absolute; top: 1rem; right: 1rem; color: #168a80; }
+        #login .icon_mail_alt, #login .icon_lock_alt { position: absolute; top: 1rem; right: 1rem; color: #8a0f4d; }
         #login .clearfix { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: .25rem 0 1.5rem; }
         #login .container_check { display: inline-flex; align-items: center; gap: .5rem; color: #475569; font-size: .88rem; }
-        #login .container_check input { accent-color: #168a80; }
-        #login a { color: #168a80; font-weight: 600; text-decoration: none; }
-        #login a:hover { color: #11776f; text-decoration: underline; }
+        #login .container_check input { accent-color: #8a0f4d; }
+        #login a { color: #8a0f4d; font-weight: 600; text-decoration: none; }
+        #login a:hover { color: #c3196b; text-decoration: underline; }
         #login .text-muted { display: block; margin-top: .5rem; color: #64748b; font-size: .8rem; line-height: 1.5; }
-        #login .btn_1 { display: inline-flex; min-height: 3rem; align-items: center; justify-content: center; width: 100%; margin-top: .5rem; padding: .75rem 1.2rem; border: 0; border-radius: .65rem; background: #168a80; color: #fff; font: inherit; font-weight: 650; cursor: pointer; transition: background .18s, transform .18s; }
-        #login .btn_1:hover:not(:disabled) { background: #11776f; transform: translateY(-1px); }
+        #login .btn_1 { display: inline-flex; min-height: 3rem; align-items: center; justify-content: center; width: 100%; margin-top: .5rem; padding: .75rem 1.2rem; border: 0; border-radius: .65rem; background: #8a0f4d; color: #fff; font: inherit; font-weight: 650; cursor: pointer; transition: background .18s, transform .18s; }
+        #login .btn_1:hover:not(:disabled) { background: #c3196b; transform: translateY(-1px); }
         #login .btn_1:disabled { opacity: .6; cursor: wait; }
         #login .add_top_10 { margin-top: 1.25rem; color: #475569; font-size: .9rem; }
         #login .copy { margin-top: 1.5rem; color: #64748b; font-size: .8rem; }
@@ -45,8 +45,8 @@
         .yt-modal-header h2 { margin: 0; color: #263238; font-size: 1.2rem; font-weight: 650; }
         .yt-modal-close { display: inline-flex; width: 2.25rem; height: 2.25rem; align-items: center; justify-content: center; border: 0; border-radius: 9999px; background: #f5fbf9; color: #475569; font-size: 1.25rem; cursor: pointer; }
         .yt-modal-body { overflow-y: auto; padding: 1.25rem; color: #475569; }
-        .yt-modal-footer button, .yt-modal-footer a { display: inline-flex; min-height: 2.6rem; align-items: center; justify-content: center; padding: .6rem 1rem; border: 1px solid #e0e9f0; border-radius: .6rem; background: #fff; color: #168a80; font: inherit; font-size: .9rem; font-weight: 600; text-decoration: none; cursor: pointer; }
-        .yt-modal-footer .primary { border-color: #168a80; background: #168a80; color: #fff; }
+        .yt-modal-footer button, .yt-modal-footer a { display: inline-flex; min-height: 2.6rem; align-items: center; justify-content: center; padding: .6rem 1rem; border: 1px solid #e0e9f0; border-radius: .6rem; background: #fff; color: #8a0f4d; font: inherit; font-size: .9rem; font-weight: 600; text-decoration: none; cursor: pointer; }
+        .yt-modal-footer .primary { border-color: #8a0f4d; background: #8a0f4d; color: #fff; }
         .yt-modal-footer button:disabled { opacity: .5; cursor: not-allowed; }
         @media (max-width: 700px) { #login { display: flex; flex-direction: column; min-height: auto; margin: 1rem auto; } #login > figure { padding: 1.25rem; } #login .logo_sticky { width: 11rem; max-height: 4rem; } }
     </style>

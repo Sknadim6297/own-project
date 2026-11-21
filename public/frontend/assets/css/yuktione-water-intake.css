@@ -3,10 +3,10 @@
  */
 .yk-water-body,
 .yk-water {
-    --yk-navy: #0b2048;
-    --yk-teal: #316d61;
-    --yk-teal-deep: #24554c;
-    --yk-mint: #eaf6f2;
+    --yk-navy: #1f1f1f;
+    --yk-teal: #8a0f4d;
+    --yk-teal-deep: #6e0b3c;
+    --yk-mint: #f3ebe6;
     --yk-gold: #c4a35a;
     --yk-gold-soft: rgba(196, 163, 90, 0.18);
     --yk-cream: #fff6ed;
@@ -23,7 +23,7 @@
     font-family: "DM Sans", sans-serif;
     color: var(--yk-navy);
     background:
-        radial-gradient(900px 380px at 8% -12%, rgba(49, 109, 97, 0.14), transparent 55%),
+        radial-gradient(900px 380px at 8% -12%, rgba(138, 15, 77, 0.14), transparent 55%),
         radial-gradient(700px 300px at 100% 0%, rgba(196, 163, 90, 0.12), transparent 52%),
         linear-gradient(180deg, #fbfcfe 0%, var(--yk-cream-2) 100%);
     min-height: 70vh;
@@ -45,7 +45,7 @@
     border: 1px solid var(--yk-line);
     border-radius: 22px;
     padding: 1.35rem 1.25rem 1.5rem;
-    box-shadow: 0 14px 34px rgba(11, 32, 72, 0.06);
+    box-shadow: 0 14px 34px rgba(31, 31, 31, 0.06);
     backdrop-filter: blur(6px);
 }
 
@@ -219,9 +219,9 @@
 }
 
 .yk-water__quick-card:hover {
-    border-color: rgba(49, 109, 97, 0.45);
+    border-color: rgba(138, 15, 77, 0.45);
     background: var(--yk-mint);
-    box-shadow: 0 8px 18px rgba(11, 32, 72, 0.06);
+    box-shadow: 0 8px 18px rgba(31, 31, 31, 0.06);
 }
 
 .yk-water__quick-card:focus-visible {
@@ -321,7 +321,7 @@
 .yk-water select:focus {
     outline: 2px solid transparent;
     border-color: var(--yk-teal);
-    box-shadow: 0 0 0 3px rgba(49, 109, 97, 0.18);
+    box-shadow: 0 0 0 3px rgba(138, 15, 77, 0.18);
 }
 
 .yk-water__btn,
@@ -345,7 +345,7 @@
     color: #fff;
 }
 
-.yk-water__btn:hover { background: #28584e; color: #fff; }
+.yk-water__btn:hover { background: #c3196b; color: #fff; }
 
 .yk-water__btn-secondary {
     background: #fff;
@@ -438,7 +438,7 @@
 }
 
 .yk-water__list li:hover {
-    border-color: rgba(49, 109, 97, 0.35);
+    border-color: rgba(138, 15, 77, 0.35);
     background: rgba(234, 246, 242, 0.35);
 }
 
@@ -510,7 +510,7 @@
     width: 100%;
     max-width: 36px;
     border-radius: 10px 10px 4px 4px;
-    background: linear-gradient(180deg, #6f9b8f, var(--yk-teal));
+    background: linear-gradient(180deg, #c3196b, var(--yk-teal));
     min-height: 4px;
     transition: height 0.35s ease;
 }
@@ -549,7 +549,7 @@
 }
 
 .yk-water__history-card:hover {
-    border-color: rgba(49, 109, 97, 0.4);
+    border-color: rgba(138, 15, 77, 0.4);
     background: rgba(234, 246, 242, 0.4);
 }
 

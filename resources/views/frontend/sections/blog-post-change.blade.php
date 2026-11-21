@@ -147,7 +147,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xl-12 col-lg-12">
-                        <h1>Blogs That Help You Find Information and Interest</h1>
+                        <h1><x-yuktione.two-tone text="Blogs That Help You Find Information and Interest" /></h1>
                         <p>Our Recent Blogs Posts</p>
                         
                     </div>
@@ -224,7 +224,7 @@
             <div class="col-lg-9">
                 <div class="singlepost">
                     <figure><img alt="" class="img-fluid" src="{{ asset('storage/' . $blogPost->image) }}"></figure>
-                    <h1>{{ $relatedBlog->title }}</h1>
+                    <h1><x-yuktione.two-tone :text="$relatedBlog->title" /></h1>
                     <div class="postmeta">
                         <ul>
                             <li><a href="#"><i class="icon_folder-alt"></i> {{ $blogPost->category }}</a></li>

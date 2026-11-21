@@ -12,7 +12,7 @@
                 <span aria-hidden="true">›</span>
                 <span aria-current="page">{{ $crumb ?? $title }}</span>
             </nav>
-            <h1>{{ $title }}</h1>
+            <h1><x-yuktione.two-tone :text="$title" /></h1>
             @if ($lead)
                 <p class="yk-doc__lead">{{ $lead }}</p>
             @endif

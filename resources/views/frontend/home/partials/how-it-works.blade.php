@@ -27,7 +27,7 @@
     <div class="yk-home-container">
         <header class="yk-home-how__heading">
             <p class="yk-home-how__eyebrow">How {{ $brandName }} Works</p>
-            <h2 id="yk-home-how-title">Expert Guidance in Three Simple Steps</h2>
+            <h2 id="yk-home-how-title"><x-yuktione.two-tone text="Expert Guidance in Three Simple Steps" /></h2>
             <p>Discover professionals, explore their expertise and connect in a way that works for you.</p>
         </header>
 

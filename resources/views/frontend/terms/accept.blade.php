@@ -20,7 +20,7 @@
         }
 
         .yuktione-terms-accept #termsScrollRegion:focus-visible {
-            outline: 2px solid #316D61;
+            outline: 2px solid #8a0f4d;
             outline-offset: 2px;
         }
     </style>

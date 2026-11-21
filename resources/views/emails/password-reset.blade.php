@@ -29,6 +29,6 @@
 
     <p style="margin:20px 0 0;font-size:12px;line-height:1.55;color:#64748b;word-break:break-all;">
         If the button does not work, copy and paste this link into your browser:<br>
-        <a href="{{ $actionUrl }}" style="color:#316D61;">{{ $actionUrl }}</a>
+        <a href="{{ $actionUrl }}" style="color:#8a0f4d;">{{ $actionUrl }}</a>
     </p>
 @endsection

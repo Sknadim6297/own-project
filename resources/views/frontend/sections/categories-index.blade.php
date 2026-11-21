@@ -13,7 +13,7 @@
                 <span aria-hidden="true">›</span>
                 <span aria-current="page">All Categories</span>
             </nav>
-            <h1>All Categories</h1>
+            <h1><x-yuktione.two-tone text="All Categories" /></h1>
             <p class="yk-cat-hub__lead">Find tools, experts{{ config('yuktione.programmes_enabled') ? ', and programmes' : '' }} organised around what matters most to you.</p>
             <form class="yk-cat-hub__search" action="{{ route('categories.index') }}" method="get" role="search">
                 <label class="visually-hidden" for="category-search">Search categories</label>

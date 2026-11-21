@@ -2,33 +2,30 @@
  * Phase 4C — Gratitude Journal (scoped). Navy / teal / cream / gold. No lavender.
  */
 .yk-gratitude {
-    --yk-navy: #0b2048;
-    --yk-teal: #316d61;
-    --yk-mint: #eaf6f2;
+    --yk-navy: #1f1f1f;
+    --yk-teal: #8a0f4d;
+    --yk-mint: #f3ebe6;
     --yk-gold: #c4a35a;
     --yk-gold-soft: rgba(196, 163, 90, 0.18);
-    --yk-cream: #fff6ed;
-    --yk-cream-2: #f7f1e8;
-    --yk-line: #e6ebf2;
-    --yk-ink: #1c2b28;
-    --yk-muted: #5b6b7c;
+    --yk-cream: #f8f3f1;
+    --yk-cream-2: #f5f1eb;
+    --yk-line: #e8e4de;
+    --yk-ink: #1a1a1a;
+    --yk-muted: #6b6b7a;
     --yk-eucalyptus: var(--yk-teal);
-    --yk-eucalyptus-deep: #24554c;
-    --yk-warm: #fbf8f3;
+    --yk-eucalyptus-deep: #6e0b3c;
+    --yk-warm: #f8f3f1;
     --yk-sage: var(--yk-mint);
     --yk-yellow: #f6efd4;
-    --yk-blush: #f6e7e3;
-    --yk-shadow-sm: 0 6px 18px rgba(11, 32, 72, 0.06);
+    --yk-blush: #f6efe9;
+    --yk-shadow-sm: 0 6px 18px rgba(31, 31, 31, 0.06);
     --yk-ease: 180ms ease;
     --yk-touch: 44px;
     box-sizing: border-box;
     margin: 0;
     padding: max(0.85rem, env(safe-area-inset-top, 0px)) 0 max(2rem, env(safe-area-inset-bottom, 0px));
     overflow-x: clip;
-    background:
-        radial-gradient(900px 380px at 8% -12%, rgba(49, 109, 97, 0.12), transparent 55%),
-        radial-gradient(700px 300px at 100% 0%, rgba(196, 163, 90, 0.12), transparent 52%),
-        linear-gradient(180deg, #fbfcfe 0%, var(--yk-cream-2) 100%);
+    background: transparent;
     color: var(--yk-ink);
     font-family: "DM Sans", sans-serif;
 }
@@ -153,7 +150,7 @@
     height: 6px;
     margin: 0 0 0.85rem;
     border-radius: 999px;
-    background: rgba(11, 32, 72, 0.08);
+    background: rgba(31, 31, 31, 0.08);
     overflow: hidden;
 }
 
@@ -373,7 +370,7 @@
     margin: 0.15rem auto 0;
     border-radius: 999px;
     background: linear-gradient(145deg, var(--yk-mint), #dff3ec);
-    box-shadow: 0 0 0 6px rgba(49, 109, 97, 0.08);
+    box-shadow: 0 0 0 6px rgba(138, 15, 77, 0.08);
 }
 
 .yk-gratitude-complete__mark svg {

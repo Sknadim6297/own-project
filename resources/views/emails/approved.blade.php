@@ -12,7 +12,7 @@
     @if (!empty($approvalMessage))
         <p style="margin:0 0 14px;">{{ $approvalMessage }}</p>
     @endif
-    <p style="margin:0 0 14px;">If you need help getting started, reply is not required — contact us at <a href="mailto:{{ config('yuktione.email', 'info@yuktione.in') }}" style="color:#316D61;text-decoration:none;">{{ config('yuktione.email', 'info@yuktione.in') }}</a>.</p>
+    <p style="margin:0 0 14px;">If you need help getting started, reply is not required — contact us at <a href="mailto:{{ config('yuktione.email', 'info@yuktione.in') }}" style="color:#8a0f4d;text-decoration:none;">{{ config('yuktione.email', 'info@yuktione.in') }}</a>.</p>
 
     @include('emails.partials.button', [
         'url' => route('professional.login'),

@@ -57,9 +57,9 @@
             </div>
             <svg class="yk-insight__leaves" viewBox="0 0 180 150" aria-hidden="true" focusable="false">
                 <path d="M92 146c10-48 26-86 52-122" fill="none" stroke="#7d9a68" stroke-width="2.2" stroke-linecap="round"></path>
-                <path d="M136 16c18 16 18 40 4 58-22-6-38-30-34-54 10-2 20-4 30-4Z" fill="#b7a4e4"></path>
+                <path d="M136 16c18 16 18 40 4 58-22-6-38-30-34-54 10-2 20-4 30-4Z" fill="#e0b0c4"></path>
                 <path d="M126 56c24 4 42 22 46 46-28 2-46-12-58-30 2-6 6-12 12-16Z" fill="#8aaf74"></path>
-                <path d="M116 98c20 10 28 32 20 54-24-2-40-20-42-42 6-6 14-10 22-12Z" fill="#9d81db" opacity=".8"></path>
+                <path d="M116 98c20 10 28 32 20 54-24-2-40-20-42-42 6-6 14-10 22-12Z" fill="#c3196b" opacity=".8"></path>
                 <path d="M104 128c14 8 16 24 6 40-18-6-28-22-22-38 4-2 10-2 16-2Z" fill="#7ea36a"></path>
             </svg>
         </header>

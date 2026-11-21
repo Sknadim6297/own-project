@@ -19,6 +19,6 @@
 
     <p style="margin:0;color:#5b6b7c;font-size:14px;">
         If you have questions about this message, contact
-        <a href="mailto:{{ config('yuktione.email', 'info@yuktione.in') }}" style="color:#316D61;text-decoration:none;">{{ config('yuktione.email', 'info@yuktione.in') }}</a>.
+        <a href="mailto:{{ config('yuktione.email', 'info@yuktione.in') }}" style="color:#8a0f4d;text-decoration:none;">{{ config('yuktione.email', 'info@yuktione.in') }}</a>.
     </p>
 @endsection

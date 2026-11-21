@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="user-type" content="professional">
     <meta name="user-id" content="{{ Auth::guard('professional')->id() }}">
-    <meta name="theme-color" content="#36877F">
+    <meta name="theme-color" content="#8a0f4d">
     <title>@yield('title', 'Professional workspace | YuktiOne')</title>
 
     @include('partials.dm-sans')

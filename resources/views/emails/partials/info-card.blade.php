@@ -6,7 +6,7 @@
     <tr>
         <td style="padding:16px 18px;">
             @if ($title)
-                <p style="margin:0 0 12px;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#316D61;">{{ $title }}</p>
+                <p style="margin:0 0 12px;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#8a0f4d;">{{ $title }}</p>
             @endif
             @foreach ($rows as $row)
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 {{ $loop->last ? '0' : '10px' }};">

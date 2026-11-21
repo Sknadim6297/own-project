@@ -1,6 +1,6 @@
 [data-yuktione-panel="customer"] {
     --yk-primary: #8A0F4D;
-    --yk-primary-hover: #6E0B3C;
+    --yk-primary-hover: #C3196B;
     --yk-primary-light: #F8EAF1;
     --yk-heading: #1F1F1F;
     --yk-body: #6B6B7A;
@@ -23,7 +23,7 @@
     --color-brand-500: var(--yk-primary);
     --color-brand-600: #C3196B;
     --color-brand-700: var(--yk-primary);
-    --color-brand-800: var(--yk-primary-hover);
+    --color-brand-800: #6E0B3C;
     --color-brand-900: #5A0932;
     --color-brand-950: var(--yk-heading);
     --color-brand-primary: var(--yk-primary);
@@ -684,7 +684,7 @@ body[data-yuktione-panel="customer"]#customer-auth-page {
 
 [data-yuktione-panel="customer"].customer-registration-page {
     --yk-primary: #8A0F4D;
-    --yk-primary-hover: #6E0B3C;
+    --yk-primary-hover: #C3196B;
     --yk-primary-light: #F8EAF1;
     --yk-heading: #1F1F1F;
     --yk-body: #6B6B7A;
@@ -707,7 +707,7 @@ body[data-yuktione-panel="customer"]#customer-auth-page {
     --color-brand-300: #D8B4E2;
     --color-brand-400: #C3196B;
     --color-brand-500: #8A0F4D;
-    --color-brand-600: #6E0B3C;
+    --color-brand-600: #C3196B;
     --color-brand-700: #6E0B3C;
     --color-brand-800: #5A0932;
     --color-brand-900: #1F1F1F;

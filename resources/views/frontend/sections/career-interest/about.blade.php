@@ -16,7 +16,7 @@
         <form class="yk-cit__card" method="post" action="{{ route('tools.career-interest.about.store') }}">
             @csrf
             <p class="yk-cit__badge">{!! $icon('user', 14) !!} Before you begin</p>
-            <h1>Tell us a little about yourself</h1>
+            <h1><x-yuktione.two-tone text="Tell us a little about yourself" /></h1>
             <p class="yk-cit__lead">This helps us show career information relevant to your current stage.</p>
 
             @if ($errors->any())

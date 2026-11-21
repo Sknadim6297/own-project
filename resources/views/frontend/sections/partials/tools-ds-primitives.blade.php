@@ -14,7 +14,7 @@
             <p class="yk-ds-eyebrow">{{ $eyebrow }}</p>
         @endif
         @if ($title)
-            <h1 class="yk-ds-title">{{ $title }}</h1>
+            <h1 class="yk-ds-title"><x-yuktione.two-tone :text="$title" /></h1>
         @endif
         @if ($lead)
             <p class="yk-ds-lead">{{ $lead }}</p>

@@ -55,6 +55,7 @@
 	@stack('head')
 
 	@if ($isAuthenticationRoute)
+		<link href="{{ asset('frontend/assets/css/yuktione-brand.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-brand.css')) }}" rel="stylesheet">
 		@vite([
 			'resources/css/tazen.css',
 			'resources/css/auth-theme.css',
@@ -170,7 +171,7 @@
 	<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
 	<link rel="shortcut icon" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
 	<meta name="msapplication-TileImage" content="{{ asset('frontend/assets/Yuktione_logo.png') }}">
-	<meta name="theme-color" content="#316d61">
+	<meta name="theme-color" content="#8a0f4d">
 	
 	<!-- Schema Markup -->
 	@yield('schema')
@@ -179,10 +180,10 @@
 		@vite('resources/css/customer-panel.css')
 		<link href="{{ asset('frontend/assets/css/yuktione-booking.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-booking.css')) }}" rel="stylesheet">
 	@endif
+	<link href="{{ asset('frontend/assets/css/yuktione-brand.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-brand.css')) }}" rel="stylesheet">
 	<link href="{{ asset('frontend/assets/css/tazen-public-chrome.css') }}?v={{ filemtime(public_path('frontend/assets/css/tazen-public-chrome.css')) }}" rel="stylesheet">
 	<link href="{{ asset('frontend/assets/css/yuktione-footer.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-footer.css')) }}" rel="stylesheet">
 	@if (request()->routeIs('home'))
-		<link href="{{ asset('frontend/assets/css/yuktione-brand.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-brand.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-home.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-home.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-hero.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-hero.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-categories.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-categories.css')) }}" rel="stylesheet">
@@ -217,7 +218,6 @@
 		<script src="{{ asset('frontend/assets/js/yuktione-experts.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-experts.js')) }}" defer></script>
 	@endif
 	@if (request()->routeIs('tools.index'))
-		<link href="{{ asset('frontend/assets/css/yuktione-brand.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-brand.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-tools.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-tools-page.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools-page.css')) }}" rel="stylesheet">
 	@endif

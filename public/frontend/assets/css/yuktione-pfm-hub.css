@@ -3,17 +3,17 @@
  * Self-contained (hard-coded tokens): it does not depend on the shared PFM or brand variables.
  */
 .yk-hub {
-    --h-ink: #2a0d4a;
+    --h-ink: #1f1f1f;
     --h-text: #4a3a5e;
-    --h-muted: #6f6283;
-    --h-plum: #6a2396;
-    --h-plum-2: #8a34a8;
-    --h-plum-deep: #4c1a73;
-    --h-lilac: #f1e4fb;
-    --h-lilac-2: #f8f1fd;
-    --h-lilac-3: #fcf9fe;
-    --h-line: #e7d9f4;
-    --h-line-2: #efe3f8;
+    --h-muted: #6b6b7a;
+    --h-plum: #8a0f4d;
+    --h-plum-2: #c3196b;
+    --h-plum-deep: #6e0b3c;
+    --h-lilac: #f3ebe6;
+    --h-lilac-2: #f5f1eb;
+    --h-lilac-3: #f8f3f1;
+    --h-line: #e8e4de;
+    --h-line-2: #f3e6ee;
     --h-gold-soft: #fbefc9;
     --h-gold-ink: #8a5a0b;
     --h-ease: 180ms ease;
@@ -24,10 +24,7 @@
     color: var(--h-ink);
     font-family: "DM Sans", system-ui, sans-serif;
     line-height: 1.45;
-    background:
-        radial-gradient(760px 420px at 12% -6%, rgba(216, 180, 240, 0.45), transparent 62%),
-        radial-gradient(640px 380px at 96% 8%, rgba(236, 200, 250, 0.5), transparent 60%),
-        linear-gradient(180deg, #f6edfc 0%, #fbf6fe 46%, #f8f1fd 100%);
+    background: transparent;
     overflow-x: clip;
 }
 
@@ -159,7 +156,7 @@
     border: 1px solid var(--h-line);
     border-radius: 999px;
     background: #fff;
-    box-shadow: 0 8px 18px -12px rgba(106, 35, 150, 0.4);
+    box-shadow: 0 8px 18px -12px rgba(138, 15, 77, 0.4);
     color: var(--h-ink);
     font-size: 0.88rem;
     font-weight: 600;
@@ -204,7 +201,7 @@
     border: 1px solid var(--h-line);
     border-radius: 24px;
     background: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 22px 44px -30px rgba(106, 35, 150, 0.45);
+    box-shadow: 0 22px 44px -30px rgba(138, 15, 77, 0.45);
 }
 
 .yk-hub__group-head {
@@ -300,7 +297,7 @@
     transform: translateY(-2px);
     border-color: #cfaee9;
     background: #fff;
-    box-shadow: 0 16px 28px -18px rgba(106, 35, 150, 0.5);
+    box-shadow: 0 16px 28px -18px rgba(138, 15, 77, 0.5);
 }
 
 .yk-hub__icon {
@@ -465,7 +462,7 @@
 }
 
 .yk-hub__badge--off {
-    background: #ece6f2;
+    background: #f3ebe6;
     color: #6a5f78;
 }
 

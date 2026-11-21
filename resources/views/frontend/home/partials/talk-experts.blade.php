@@ -69,9 +69,9 @@
             </div>
             <svg class="yk-talk__leaves" viewBox="0 0 180 150" aria-hidden="true" focusable="false">
                 <path d="M96 146c8-46 24-86 50-122" fill="none" stroke="#7d9a68" stroke-width="2.2" stroke-linecap="round"></path>
-                <path d="M140 18c16 18 16 42 2 58-22-8-36-30-32-54 10-2 20-4 30-4Z" fill="#9d81db" opacity=".8"></path>
+                <path d="M140 18c16 18 16 42 2 58-22-8-36-30-32-54 10-2 20-4 30-4Z" fill="#c3196b" opacity=".8"></path>
                 <path d="M128 58c22 6 40 22 44 46-26 2-44-12-56-30 2-8 6-14 12-16Z" fill="#8aaf74"></path>
-                <path d="M116 100c18 12 24 32 16 52-22-4-36-20-38-40 6-6 14-10 22-12Z" fill="#b7a4e4"></path>
+                <path d="M116 100c18 12 24 32 16 52-22-4-36-20-38-40 6-6 14-10 22-12Z" fill="#e0b0c4"></path>
             </svg>
         </header>
 

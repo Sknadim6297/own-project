@@ -126,7 +126,7 @@
                     <div class="tab-content" id="applicationTabContent">
                         <!-- My Information Tab -->
                         <div class="tab-pane fade show active" id="info" role="tabpanel">
-                            <h6 class="mb-3" style="color: #0b2048; font-size: 1.15rem; font-weight: 700;">My information</h6>
+                            <h6 class="mb-3" style="color: #1f1f1f; font-size: 1.15rem; font-weight: 700;">My information</h6>
                             <p class="mb-4" style="color: #636e72;">Fill out the information below</p>
 
                             <div class="mb-3">
@@ -159,16 +159,16 @@
 
                         <!-- Questions Tab -->
                         <div class="tab-pane fade" id="questions" role="tabpanel">
-                            <h6 class="mb-3" style="color: #0b2048; font-size: 1.15rem; font-weight: 700;">Questions</h6>
+                            <h6 class="mb-3" style="color: #1f1f1f; font-size: 1.15rem; font-weight: 700;">Questions</h6>
                             <p class="mb-4" style="color: #636e72;">Please fill in additional questions</p>
 
                             <div class="mb-3">
-                                <label for="compensation_expectation" class="form-label" style="color: #316d61;">What is your compensation expectation for this role? (GBP/gross) <span class="text-danger">*</span></label>
+                                <label for="compensation_expectation" class="form-label" style="color: #8a0f4d;">What is your compensation expectation for this role? (GBP/gross) <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="compensation_expectation" name="compensation_expectation" required placeholder="e.g., £30,000 - £40,000">
                             </div>
 
                             <div class="mb-3">
-                                <label for="why_perfect_fit" class="form-label" style="color: #316d61;">What makes you the perfect fit for this role? <span class="text-danger">*</span></label>
+                                <label for="why_perfect_fit" class="form-label" style="color: #8a0f4d;">What makes you the perfect fit for this role? <span class="text-danger">*</span></label>
                                 <textarea class="form-control" id="why_perfect_fit" name="why_perfect_fit" rows="5" required placeholder="Tell us why you're the perfect fit..."></textarea>
                             </div>
 
@@ -177,14 +177,14 @@
 
                         <!-- Documents Tab -->
                         <div class="tab-pane fade" id="documents" role="tabpanel">
-                            <h6 class="mb-3" style="color: #0b2048; font-size: 1.15rem; font-weight: 700;">Documents</h6>
+                            <h6 class="mb-3" style="color: #1f1f1f; font-size: 1.15rem; font-weight: 700;">Documents</h6>
 
                             <div class="mb-4">
-                                <label for="cv_resume" class="form-label" style="color: #316d61;">CV or resume <span class="text-danger">*</span></label>
+                                <label for="cv_resume" class="form-label" style="color: #8a0f4d;">CV or resume <span class="text-danger">*</span></label>
                                 <p class="small text-muted mb-2">Upload your CV or resume file</p>
                                 <div class="upload-box border rounded p-4 text-center" style="border-color: #e9ecef; background: #f8f9fa; cursor: pointer;" onclick="document.getElementById('cv_resume').click();">
                                     <input type="file" class="form-control d-none" id="cv_resume" name="cv_resume" accept=".pdf,.doc,.docx,.jpeg,.jpg,.png" required>
-                                    <span style="color: #316d61; text-decoration: underline; cursor: pointer;">Upload a file</span> or drag and drop here
+                                    <span style="color: #8a0f4d; text-decoration: underline; cursor: pointer;">Upload a file</span> or drag and drop here
                                     <p class="small text-muted mt-2 mb-0">Accepted files: PDF, DOC, DOCX, JPEG and PNG</p>
                                     <p class="small text-muted">up to 50MB.</p>
                                     <div id="cv_file_name" class="mt-2 text-success"></div>
@@ -192,22 +192,22 @@
                             </div>
 
                             <div class="mb-4">
-                                <label for="cover_letter_file" class="form-label" style="color: #316d61;">Cover letter</label>
+                                <label for="cover_letter_file" class="form-label" style="color: #8a0f4d;">Cover letter</label>
                                 <p class="small text-muted mb-2">Upload your cover letter</p>
                                 <div class="upload-box border rounded p-4 text-center" style="border-color: #e9ecef; background: #f8f9fa; cursor: pointer;" onclick="document.getElementById('cover_letter_file').click();">
                                     <input type="file" class="form-control d-none" id="cover_letter_file" name="cover_letter_file" accept=".pdf,.doc,.docx,.jpeg,.jpg,.png">
-                                    <span style="color: #316d61; text-decoration: underline; cursor: pointer;">Upload a file</span> or drag and drop here
+                                    <span style="color: #8a0f4d; text-decoration: underline; cursor: pointer;">Upload a file</span> or drag and drop here
                                     <p class="small text-muted mt-2 mb-0">Accepted files: PDF, DOC, DOCX, JPEG and PNG</p>
                                     <p class="small text-muted">up to 50MB.</p>
                                     <div id="cover_file_name" class="mt-2 text-success"></div>
                                 </div>
-                                <a href="#" class="text-decoration-none" style="color: #316d61;" id="writeCoverLetterToggle">
+                                <a href="#" class="text-decoration-none" style="color: #8a0f4d;" id="writeCoverLetterToggle">
                                     <i class="fas fa-edit"></i> Write it here instead
                                 </a>
                             </div>
 
                             <div class="mb-3" id="coverLetterTextArea" style="display: none;">
-                                <label for="cover_letter_text" class="form-label" style="color: #316d61;">Cover Letter Text</label>
+                                <label for="cover_letter_text" class="form-label" style="color: #8a0f4d;">Cover Letter Text</label>
                                 <textarea class="form-control" id="cover_letter_text" name="cover_letter_text" rows="6" placeholder="Write your cover letter here..."></textarea>
                             </div>
                         </div>
@@ -218,7 +218,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary" style="background: #316d61; border-color: #316d61;">Send</button>
+                    <button type="submit" class="btn btn-primary">Send</button>
                 </div>
             </form>
         </div>

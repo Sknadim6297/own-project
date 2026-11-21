@@ -158,7 +158,7 @@
     
     .dt-button:hover {
         background-color: #0b5ed7;
-        border-color: #0a58ca;
+        border-color: #8a0f4d;
         color: white;
     }
     

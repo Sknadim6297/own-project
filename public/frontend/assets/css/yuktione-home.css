@@ -21,8 +21,8 @@
     padding: clamp(2.75rem, 5vw, 4.6rem) 2rem;
     isolation: isolate;
     background:
-        radial-gradient(ellipse at 2% 95%, rgb(172 224 215 / 46%), transparent 23rem),
-        radial-gradient(ellipse at 53% 4%, rgb(234 248 245 / 90%), transparent 27rem),
+        radial-gradient(ellipse at 2% 95%, rgb(240 212 226 / 46%), transparent 23rem),
+        radial-gradient(ellipse at 53% 4%, rgb(248 234 241 / 90%), transparent 27rem),
         var(--y1-pearl);
 }
 
@@ -446,7 +446,7 @@
         min-height: 0;
         padding: 2.6rem 1.25rem 0;
         background:
-            radial-gradient(ellipse at 3% 22%, rgb(172 224 215 / 45%), transparent 19rem),
+            radial-gradient(ellipse at 3% 22%, rgb(240 212 226 / 45%), transparent 19rem),
             var(--y1-pearl);
     }
 
@@ -583,7 +583,7 @@
 .homepage-category-slider {
     padding: 66px 0 62px;
     background:
-        radial-gradient(ellipse at 11% 42%, rgb(234 248 245 / 82%), transparent 24rem),
+        radial-gradient(ellipse at 11% 42%, rgb(248 234 241 / 82%), transparent 24rem),
         linear-gradient(180deg, #fff 0%, #f8fcfb 100%);
     color: #263238;
     font-family: "DM Sans", sans-serif;
@@ -664,7 +664,7 @@
 .homepage-category-slider__arrow:focus-visible {
     border-color: var(--y1-plum);
     background: #eaf8f5;
-    color: #0f625b;
+    color: #8a0f4d;
 }
 
 .homepage-category-slider__arrow:disabled {
@@ -734,7 +734,7 @@
 .homepage-category-card:focus-visible {
     transform: translateY(-4px);
     box-shadow: 0 14px 28px rgb(38 50 56 / 10%);
-    color: #0f625b;
+    color: #8a0f4d;
 }
 
 .homepage-category-card__art {
@@ -1023,7 +1023,7 @@
     background:
         radial-gradient(circle at 15% 20%, rgb(22 138 128 / 11%), transparent 38%),
         linear-gradient(135deg, #f1faf8, #e4f4f0);
-    color: #0f625b;
+    color: #8a0f4d;
     font-size: .76rem;
     font-weight: 600;
     letter-spacing: .04em;
@@ -1275,7 +1275,7 @@
 
 .yk-home-faq__toggle:hover,
 .yk-home-faq__toggle[aria-expanded="true"] {
-    color: #0f625b;
+    color: #8a0f4d;
 }
 
 .yk-home-faq__toggle:focus-visible {
@@ -1356,7 +1356,7 @@
     border-radius: 26px;
     background:
         radial-gradient(ellipse at 8% 100%, rgb(119 209 195 / 18%), transparent 32%),
-        linear-gradient(125deg, #0f625b, var(--y1-magenta) 60%, var(--y1-plum));
+        linear-gradient(125deg, #8a0f4d, var(--y1-magenta) 60%, var(--y1-plum));
     isolation: isolate;
 }
 
@@ -1364,7 +1364,7 @@
 .yk-home-professional__panel::after {
     position: absolute;
     z-index: -1;
-    border: 1px solid rgb(234 248 245 / 17%);
+    border: 1px solid rgb(248 234 241 / 17%);
     border-radius: 50%;
     content: "";
     pointer-events: none;
@@ -1414,13 +1414,13 @@
 
 .yk-home-button--light {
     background: #fff;
-    color: #0f625b;
+    color: #8a0f4d;
 }
 
 .yk-home-button--light:hover,
 .yk-home-button--light:focus-visible {
     background: #eaf8f5;
-    color: #0f625b;
+    color: #8a0f4d;
 }
 
 .yk-home-professional__media {
@@ -1448,7 +1448,7 @@
     bottom: -70px;
     width: 180px;
     height: 180px;
-    border: 22px solid rgb(234 248 245 / 30%);
+    border: 22px solid rgb(248 234 241 / 30%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -1612,7 +1612,7 @@
 
 .yk-home-testimonials {
     background:
-        radial-gradient(ellipse at 7% 10%, rgb(234 248 245 / 84%), transparent 24rem),
+        radial-gradient(ellipse at 7% 10%, rgb(248 234 241 / 84%), transparent 24rem),
         #f8fbfa;
 }
 
@@ -2215,7 +2215,7 @@
 }
 
 .yk-home-event-card__price {
-    color: #0f625b;
+    color: #8a0f4d;
     font-size: 1.05rem;
     font-weight: 700;
     line-height: 1.35;
@@ -2276,15 +2276,15 @@
     border-radius: 24px;
     background:
         radial-gradient(ellipse at 92% 10%, rgb(67 177 165 / 35%), transparent 20rem),
-        linear-gradient(120deg, #0f625b, var(--y1-magenta));
-    box-shadow: 0 16px 40px rgb(15 98 91 / 18%);
+        linear-gradient(120deg, #8a0f4d, var(--y1-magenta));
+    box-shadow: 0 16px 40px rgb(138 15 77 / 18%);
 }
 
 .yk-home-support__panel::before,
 .yk-home-support__panel::after {
     position: absolute;
     z-index: -1;
-    border: 1px solid rgb(234 248 245 / 13%);
+    border: 1px solid rgb(248 234 241 / 13%);
     border-radius: 50%;
     content: "";
     pointer-events: none;
@@ -2348,9 +2348,9 @@
     width: 98px;
     height: 98px;
     place-items: center;
-    border: 1px solid rgb(234 248 245 / 35%);
+    border: 1px solid rgb(248 234 241 / 35%);
     border-radius: 28px;
-    background: rgb(234 248 245 / 12%);
+    background: rgb(248 234 241 / 12%);
     color: #d6efec;
     transform: rotate(3deg);
 }
@@ -2375,7 +2375,7 @@
     border: 1px solid #fff;
     border-radius: 11px;
     background: #fff;
-    color: #0f625b;
+    color: #8a0f4d;
     font-size: .88rem;
     font-weight: 700;
     text-decoration: none;
@@ -2385,7 +2385,7 @@
 .yk-home-support__button:hover {
     transform: translateY(-2px);
     background: #eaf8f5;
-    color: #0f625b;
+    color: #8a0f4d;
     text-decoration: none;
 }
 
@@ -2826,7 +2826,7 @@
 .yk-home-experience__cta:hover {
     transform: translateY(-2px);
     background: var(--y1-magenta);
-    box-shadow: 0 12px 24px rgb(15 98 91 / 18%);
+    box-shadow: 0 12px 24px rgb(138 15 77 / 18%);
     color: #fff;
 }
 

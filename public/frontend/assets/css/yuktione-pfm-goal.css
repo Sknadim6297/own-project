@@ -4,7 +4,7 @@
  */
 .yk-goal {
     --g-ink: #0f1f1c;
-    --g-deep: #0b3d36;
+    --g-deep: #6e0b3c;
     --g-green: #14705f;
     --g-green-2: #1d8a74;
     --g-mint: #e4f2ec;
@@ -47,7 +47,7 @@
     color: #fff;
     background:
         radial-gradient(520px 260px at 90% 0%, rgba(240, 196, 106, 0.22), transparent 70%),
-        linear-gradient(135deg, #0b3d36 0%, #0f4f45 55%, #0b3d36 100%);
+        linear-gradient(135deg, #6e0b3c 0%, #0f4f45 55%, #6e0b3c 100%);
     overflow: hidden;
 }
 
@@ -767,7 +767,7 @@
     border-radius: 24px;
     background:
         radial-gradient(300px 160px at 100% 0%, rgba(240, 196, 106, 0.22), transparent 70%),
-        linear-gradient(160deg, #0f4f45, #0b3d36 70%);
+        linear-gradient(160deg, #0f4f45, #6e0b3c 70%);
     color: #fff;
     box-shadow: 0 24px 40px -24px rgba(11, 61, 54, 0.75);
 }

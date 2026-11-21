@@ -114,7 +114,7 @@
                     </div>
                     <div class="yk-profile__identity">
                         <div class="yk-profile__name-row">
-                            <h1 id="professional_name">{{ $expertName }}</h1>
+                            <h1 id="professional_name"><x-yuktione.two-tone :text="$expertName" /></h1>
                             @if ($isVerified)
                                 <span class="yk-profile__verified" title="Approved expert">
                                     <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M6.4 11.2 3.7 8.5l1.1-1.1 1.6 1.6 4.8-4.8 1.1 1.1z"></path></svg>
@@ -165,7 +165,7 @@
                         <svg viewBox="0 0 180 140">
                             <path d="M70 130c10-40 28-74 58-104" fill="none" stroke="#8eae78" stroke-width="2" stroke-linecap="round"></path>
                             <path d="M122 22c18 16 20 40 4 56-24-6-40-28-36-52 10-2 22-4 32-4Z" fill="#b7d39a"></path>
-                            <path d="M108 58c20 4 36 20 40 42-24 4-42-10-52-28 2-6 6-12 12-14Z" fill="#9d81db" opacity=".8"></path>
+                            <path d="M108 58c20 4 36 20 40 42-24 4-42-10-52-28 2-6 6-12 12-14Z" fill="#c3196b" opacity=".8"></path>
                         </svg>
                     </div>
                 </article>
@@ -356,7 +356,7 @@
                         <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2zm12 8H5v10h14V10z"></path></svg>
                     </span>
                     <div>
-                        <h2 id="yk-book-title">Book a Session</h2>
+                        <h2 id="yk-book-title"><x-yuktione.two-tone text="Book a Session" /></h2>
                         <p>Choose a date and time that works for you.</p>
                     </div>
                 </div>

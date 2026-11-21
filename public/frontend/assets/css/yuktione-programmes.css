@@ -200,7 +200,7 @@
 }
 
 .yk-home-event-card__image-fallback {
-    background: linear-gradient(135deg, var(--y1-plum-soft), #E7F0FB);
+    background: linear-gradient(135deg, var(--y1-plum-soft), #fff1f6);
     color: var(--y1-plum);
 }
 
@@ -528,7 +528,7 @@
     width: 100%;
     height: 100%;
     place-items: center;
-    background: linear-gradient(135deg, var(--y1-plum-soft), #E7F0FB);
+    background: linear-gradient(135deg, var(--y1-plum-soft), #fff1f6);
     color: #718096;
     font-size: .8rem;
 }
@@ -678,7 +678,7 @@
     height: 100%;
     place-items: center;
     padding: 1rem;
-    background: linear-gradient(135deg, var(--y1-plum-soft), #E7F0FB);
+    background: linear-gradient(135deg, var(--y1-plum-soft), #fff1f6);
     color: #718096;
     font-size: .85rem;
     text-align: center;

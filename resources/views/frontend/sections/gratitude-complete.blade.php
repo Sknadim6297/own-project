@@ -15,12 +15,12 @@
             </svg>
         </div>
 
-        <h1>Beautifully done!</h1>
+        <h1><x-yuktione.two-tone text="Beautifully done!" /></h1>
         <p class="yk-gratitude__lead">You took a moment to appreciate the good in your day.</p>
         </div>
 
         <section class="yk-gratitude-complete__summary yk-gratitude__panel" aria-labelledby="todays-gratitude-heading">
-            <h2 id="todays-gratitude-heading">Today's Gratitude</h2>
+            <h2 id="todays-gratitude-heading"><x-yuktione.two-tone text="Today's Gratitude" /></h2>
             <p class="yk-gratitude-complete__date">
                 <time datetime="{{ $datetime }}">{{ $when }}</time>
             </p>
@@ -40,7 +40,7 @@
         </section>
 
         <section class="yk-gratitude-complete__encourage" aria-label="Encouragement">
-            <h2>Keep growing, one day at a time.</h2>
+            <h2><x-yuktione.two-tone text="Keep growing, one day at a time." /></h2>
             <p>Every little moment of gratitude counts.</p>
         </section>
 

@@ -24,7 +24,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
             </span>
             <div>
-                <h2>Email Us</h2>
+                <h2><x-yuktione.two-tone text="Email Us" :words="1" /></h2>
                 <a href="mailto:{{ config('yuktione.email') }}">{{ config('yuktione.email') }}</a>
             </div>
         </article>
@@ -33,7 +33,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.5-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2Z"/></svg>
             </span>
             <div>
-                <h2>Call Us</h2>
+                <h2><x-yuktione.two-tone text="Call Us" :words="1" /></h2>
                 <a href="tel:{{ config('yuktione.phone_tel') }}">{{ config('yuktione.phone_display') }}</a>
                 <p>{{ config('yuktione.hours') }}</p>
             </div>
@@ -43,7 +43,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
             </span>
             <div>
-                <h2>Visit Us</h2>
+                <h2><x-yuktione.two-tone text="Visit Us" :words="1" /></h2>
                 <p>A street address is not published yet. The map below shows Kolkata, not a confirmed office pin.</p>
             </div>
         </article>
@@ -52,7 +52,7 @@
     <div class="yk-contact__layout">
         <form class="yk-contact__form" method="post" action="{{ route('contact.store') }}" data-reveal data-contact-form novalidate>
             @csrf
-            <h2>Send a message</h2>
+            <h2><x-yuktione.two-tone text="Send a message" /></h2>
             <div class="yk-contact__field">
                 <label for="name_contact"><span>Full name <abbr title="required">*</abbr></span></label>
                 <input id="name_contact" name="name_contact" type="text" value="{{ old('name_contact') }}" autocomplete="name" maxlength="255" required aria-invalid="{{ $errors->has('name_contact') ? 'true' : 'false' }}" @if($errors->has('name_contact')) aria-describedby="name_contact-error" @endif>
@@ -89,7 +89,7 @@
         </form>
 
         <section class="yk-contact__location" aria-labelledby="contact-map" data-reveal style="--reveal-delay: 120ms">
-            <h2 id="contact-map">Kolkata area</h2>
+            <h2 id="contact-map"><x-yuktione.two-tone text="Kolkata area" :words="1" /></h2>
             <p class="yk-contact__hint">This map shows Kolkata. It is not pinned to a confirmed YuktiOne office.</p>
             <div class="yk-contact__map">
                 <iframe title="Map of Kolkata" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117925.2168964497!2d88.26495015954832!3d22.535564937570197!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f882db4908f667%3A0x43e330e68f6c2cbc!2sKolkata%2C%20West%20Bengal!5e0!3m2!1sen!2sin!4v1729928348060!5m2!1sen!2sin" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>

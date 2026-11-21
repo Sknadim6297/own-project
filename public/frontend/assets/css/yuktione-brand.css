@@ -1,37 +1,61 @@
 /**
  * YuktiOne Brand Template — global design tokens
- * Source: docs/client-requirements/YuktiOne_Website_Brand_Template_Developer_Guide.pdf
+ * Authority: rendered Home Page (/) + logo. Home cream surfaces override older pink “pearl” atmospheres.
  */
 :root {
-    /* Approved brand palette */
+    /* Brand accents (logo + Home CTAs) */
     --y1-plum: #8a0f4d;
     --y1-magenta: #c3196b;
-    --y1-pearl: #fff8fb;
     --y1-silver: #d9d9de;
-    --y1-lilac: #d8b4e2;
+    --y1-lilac: #e0b0c4;
     --y1-copper: #b87333;
     --y1-charcoal: #1f1f1f;
     --y1-grey: #6b6b7a;
-
-    /* Soft supporting surfaces */
     --y1-white: #ffffff;
-    --y1-plum-soft: #f8eaf1;
-    --y1-magenta-soft: #fce8f1;
-    --y1-lilac-soft: #f6eef9;
-    --y1-pearl-deep: #fff1f6;
+
+    /* Home Page surface contract (computed from body.yk-home-bright) */
+    --site-bg: #f8f3f1;
+    --site-bg-deep: #f5f1eb;
+    --site-bg-alt: #f7f2ec;
+    --site-bg-warm: #f2ede4;
+    --site-bg-image:
+        radial-gradient(ellipse 70% 48% at 0% 8%, rgba(255, 250, 246, 0.9), transparent 58%),
+        radial-gradient(ellipse 55% 40% at 100% 12%, rgba(232, 224, 214, 0.45), transparent 52%),
+        radial-gradient(ellipse 70% 40% at 50% 45%, rgba(248, 243, 241, 0.95), transparent 65%),
+        linear-gradient(180deg, #f8f3f1 0%, #f5f1eb 28%, #f7f2ec 62%, #f2ede4 100%);
+    --site-card-bg: #ffffff;
+    --site-card-border: #e8e4de;
+    --site-primary: #8a0f4d;
+    --site-primary-hover: #c3196b;
+    --site-primary-active: #5c1035;
+    --site-primary-text: #ffffff;
+    --site-cta-grad: linear-gradient(90deg, #8d1f52 0%, #6f143f 55%, #5c1035 100%);
+    --site-heading: #111111;
+    --site-text: #1a1a1a;
+    --site-muted: #6b6b7a;
+    --site-shadow: 0 8px 22px rgba(31, 31, 31, 0.06);
+    --site-focus: #8a0f4d;
+
+    /* Soft brand chips (small accents only — not page backgrounds) */
+    --y1-plum-soft: #f3ebe6;
+    --y1-magenta-soft: #f6efe9;
+    --y1-lilac-soft: #f3ebe6;
+    /* Pearl aliases now map to Home cream (not pink #fff8fb) */
+    --y1-pearl: var(--site-bg);
+    --y1-pearl-deep: var(--site-bg-deep);
 
     /* Semantic aliases (migrate legacy --yk-* / chrome tokens) */
     --yk-primary: var(--y1-plum);
     --yk-primary-hover: var(--y1-magenta);
     --yk-primary-dark: #6e0b3c;
-    --yk-bg: var(--y1-pearl);
+    --yk-bg: var(--site-bg);
     --yk-surface: var(--y1-white);
-    --yk-surface-soft: var(--y1-pearl-deep);
-    --yk-text: var(--y1-charcoal);
-    --yk-heading: var(--y1-charcoal);
-    --yk-muted: var(--y1-grey);
-    --yk-border: var(--y1-silver);
-    --yk-focus: var(--y1-plum);
+    --yk-surface-soft: var(--site-bg-deep);
+    --yk-text: var(--site-text);
+    --yk-heading: var(--site-heading);
+    --yk-muted: var(--site-muted);
+    --yk-border: var(--site-card-border);
+    --yk-focus: var(--site-focus);
     --yk-accent: var(--y1-lilac);
     --yk-accent-soft: var(--y1-lilac-soft);
     --yk-navy: var(--y1-charcoal);
@@ -40,13 +64,13 @@
     --yk-teal-deep: var(--y1-magenta);
     --yk-lavender: var(--y1-lilac);
     --yk-mint: var(--y1-plum-soft);
-    --yk-cream: var(--y1-pearl);
+    --yk-cream: var(--site-bg);
     --yk-blush: var(--y1-magenta-soft);
     --yk-lilac: var(--y1-lilac-soft);
-    --yk-line: var(--y1-silver);
-    --yk-card: var(--y1-white);
-    --yk-shadow-sm: 0 8px 22px rgba(31, 31, 31, 0.06);
-    --yk-shadow-hover: 0 14px 32px rgba(138, 15, 77, 0.12);
+    --yk-line: var(--site-card-border);
+    --yk-card: var(--site-card-bg);
+    --yk-shadow-sm: var(--site-shadow);
+    --yk-shadow-hover: 0 14px 32px rgba(92, 16, 53, 0.12);
     --yk-radius: 16px;
     --yk-ease: 180ms ease;
 
@@ -55,18 +79,113 @@
     --tazen-chrome-teal: var(--y1-plum);
     --tazen-chrome-white: var(--y1-white);
     --tazen-chrome-soft: var(--y1-plum-soft);
-    --tazen-chrome-border: var(--y1-silver);
+    --tazen-chrome-border: var(--site-card-border);
     --tazen-chrome-muted: var(--y1-grey);
     --tazen-chrome-shadow: var(--yk-shadow-sm);
 
-    /* Tools DS aliases */
+    /* Tools DS aliases — same Home cream atmosphere */
     --yk-ds-navy: var(--y1-charcoal);
     --yk-ds-navy-deep: var(--y1-charcoal);
     --yk-ds-teal: var(--y1-plum);
-    --yk-ds-cream: var(--y1-pearl);
+    --yk-ds-cream: var(--site-bg);
+    --yk-ds-cream-2: var(--site-bg-deep);
     --yk-ds-mint: var(--y1-plum-soft);
-    --yk-ds-line: var(--y1-silver);
+    --yk-ds-line: var(--site-card-border);
     --yk-ds-muted: var(--y1-grey);
+
+    /* Semantic UI states */
+    --y1-success: #2f9e6b;
+    --y1-warning: #c48a1a;
+    --y1-danger: #c85b65;
+    --y1-info: var(--y1-plum);
+    --y1-disabled-bg: #ebe6e1;
+    --y1-disabled-text: #9a8f96;
+    --y1-focus-ring: rgba(138, 15, 77, 0.28);
+    --y1-link: var(--y1-plum);
+    --y1-link-hover: var(--y1-magenta);
+    --y1-input-bg: var(--y1-white);
+    --y1-input-border: var(--site-card-border);
+    --y1-input-focus: var(--y1-plum);
+    --y1-header-bg: var(--y1-white);
+    --y1-footer-bg: var(--site-bg);
+    --y1-section-alt: var(--site-bg-deep);
+    --y1-elevated: var(--y1-white);
+}
+
+/* Public pages inherit Home cream atmosphere (Home keeps its own brighter polish) */
+body:not(.yk-home-bright):not(.yuktione-auth-page) {
+    background: var(--site-bg-image);
+    color: var(--site-text);
+    min-height: 100%;
+}
+
+/*
+ * Home-style two-tone headings (index authority):
+ * base charcoal/ink + plum accent on the last phrase — e.g. Explore by Need / Try Our Tools.
+ */
+.yk-heading-accent,
+main h1 .yk-heading-accent,
+main h2 .yk-heading-accent,
+main h3 .yk-heading-accent,
+.yk-doc h1 .yk-heading-accent,
+.yk-doc h2 .yk-heading-accent,
+.yk-mood h1 .yk-heading-accent,
+.yk-mood h2 .yk-heading-accent,
+.yk-journal h1 .yk-heading-accent,
+.yk-journal h2 .yk-heading-accent,
+.yk-gratitude h1 .yk-heading-accent,
+.yk-gratitude h2 .yk-heading-accent,
+.yk-tools-ds h1 .yk-heading-accent,
+.yk-tools-ds h2 .yk-heading-accent,
+.yk-pfm h1 .yk-heading-accent,
+.yk-pfm h2 .yk-heading-accent,
+.yk-ps h1 .yk-heading-accent,
+.yk-ps h2 .yk-heading-accent,
+.yk-cit h1 .yk-heading-accent,
+.yk-cit h2 .yk-heading-accent {
+    color: var(--y1-plum, #8a0f4d);
+}
+
+/* Naked accent spans used by Home + Experts + Tools catalog */
+main h1 > span:not([class]),
+.yk-pro__title > span:not([class]),
+.yk-pro__hero-copy h1 > span:not([class]),
+.yk-tools-strip__title > span:not([class]),
+.yk-home-cats__head h2 > span:not([class]),
+.yk-home-professional__copy h2 > span:not([class]),
+.yk-home-experience__intro h2 > span:not([class]) {
+    color: var(--y1-plum, #8a0f4d);
+}
+
+/* Unify Home two-line heading accents to the same plum (not lilac/magenta drift) */
+.yk-services__heading-lavender,
+.yk-talk__heading-lavender,
+.yk-insight__heading-lavender {
+    color: var(--y1-plum, #8a0f4d);
+}
+
+.yk-hero__title-accent {
+    color: var(--y1-plum, #8a0f4d);
+}
+
+/* Page/section titles stay on the Home heading ink */
+.yk-doc h1,
+.yk-doc h2,
+.yk-mood h1,
+.yk-mood h2,
+.yk-journal h1,
+.yk-journal h2,
+.yk-gratitude h1,
+.yk-gratitude h2,
+.yk-tools-ds h1,
+.yk-tools-ds h2,
+.yk-pfm h1,
+.yk-pfm h2,
+.yk-ps h1,
+.yk-ps h2,
+.yk-cit h1,
+.yk-cit h2 {
+    color: var(--site-heading, #111111);
 }
 
 /* Shared button primitives */
@@ -79,23 +198,25 @@
     padding: 0.7rem 1.25rem;
     border: 1.5px solid transparent;
     border-radius: 999px;
-    background: var(--y1-plum);
-    color: var(--y1-white);
+    background: var(--site-cta-grad);
+    background-color: var(--site-primary);
+    color: var(--site-primary-text);
     font-family: "DM Sans", sans-serif;
     font-size: 0.95rem;
     font-weight: 650;
     line-height: 1.2;
     text-decoration: none;
     cursor: pointer;
+    box-shadow: 0 12px 26px rgba(92, 16, 53, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.22);
     transition: background var(--yk-ease), border-color var(--yk-ease), color var(--yk-ease), transform var(--yk-ease), box-shadow var(--yk-ease);
 }
 
 .y1-btn:hover,
 .y1-btn:focus-visible {
-    background: var(--y1-magenta);
-    color: var(--y1-white);
+    background: linear-gradient(90deg, #c3196b 0%, #8a0f4d 100%);
+    color: var(--site-primary-text);
     outline: none;
-    box-shadow: 0 8px 20px rgba(195, 25, 107, 0.22);
+    box-shadow: 0 14px 28px rgba(92, 16, 53, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .y1-btn--secondary {
@@ -113,6 +234,36 @@
     box-shadow: none;
 }
 
+.y1-btn--outline {
+    background: var(--y1-white);
+    border-color: var(--y1-plum);
+    color: var(--y1-plum);
+    box-shadow: none;
+}
+
+.y1-btn--outline:hover,
+.y1-btn--outline:focus-visible {
+    background: var(--y1-plum-soft);
+    border-color: var(--y1-magenta);
+    color: var(--y1-magenta);
+    box-shadow: none;
+}
+
+.y1-btn--ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--y1-plum);
+    box-shadow: none;
+}
+
+.y1-btn--ghost:hover,
+.y1-btn--ghost:focus-visible {
+    background: var(--y1-plum-soft);
+    border-color: transparent;
+    color: var(--y1-magenta);
+    box-shadow: none;
+}
+
 .y1-card {
     background: var(--y1-white);
     border: 1px solid var(--y1-silver);
@@ -122,6 +273,78 @@
 
 .y1-card:hover {
     box-shadow: var(--yk-shadow-hover);
+}
+
+.y1-btn:disabled,
+.y1-btn[aria-disabled="true"],
+.y1-btn.is-disabled {
+    background: var(--y1-disabled-bg);
+    border-color: transparent;
+    color: var(--y1-disabled-text);
+    box-shadow: none;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Bridge legacy Bootstrap / theme primary CTAs to brand plum */
+.btn-primary,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+    --bs-btn-bg: var(--y1-plum);
+    --bs-btn-border-color: var(--y1-plum);
+    --bs-btn-hover-bg: var(--y1-magenta);
+    --bs-btn-hover-border-color: var(--y1-magenta);
+    --bs-btn-active-bg: var(--yk-primary-dark);
+    --bs-btn-active-border-color: var(--yk-primary-dark);
+    --bs-btn-disabled-bg: var(--y1-disabled-bg);
+    --bs-btn-disabled-border-color: var(--y1-disabled-bg);
+    background-color: var(--y1-plum) !important;
+    border-color: var(--y1-plum) !important;
+    color: var(--y1-white) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+    background-color: var(--y1-magenta) !important;
+    border-color: var(--y1-magenta) !important;
+    color: var(--y1-white) !important;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--y1-plum);
+    --bs-btn-border-color: var(--y1-plum);
+    --bs-btn-hover-bg: var(--y1-plum);
+    --bs-btn-hover-border-color: var(--y1-plum);
+    --bs-btn-hover-color: var(--y1-white);
+    color: var(--y1-plum) !important;
+    border-color: var(--y1-plum) !important;
+    background: transparent !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus-visible {
+    background-color: var(--y1-plum) !important;
+    border-color: var(--y1-plum) !important;
+    color: var(--y1-white) !important;
+}
+
+.text-primary {
+    color: var(--y1-plum) !important;
+}
+
+.bg-primary {
+    background-color: var(--y1-plum) !important;
+}
+
+.border-primary {
+    border-color: var(--y1-plum) !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--y1-input-focus);
+    box-shadow: 0 0 0 0.2rem var(--y1-focus-ring);
 }
 
 @media (prefers-reduced-motion: reduce) {
