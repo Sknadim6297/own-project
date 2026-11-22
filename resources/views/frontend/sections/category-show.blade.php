@@ -53,9 +53,16 @@
                         <a href="{{ route('tools.index') }}">Browse all tools</a>
                     </div>
                 @else
-                    <ul class="yk-rows yk-rows--tools">
+                    <ul class="yk-tools__tiles yk-tools__tiles--catalog">
                         @foreach ($tools as $tool)
-                            <li>@include('frontend.sections.partials.catalog-tool-row', ['tool' => $tool])</li>
+                            <li>
+                                @include('frontend.sections.partials.tool-tile', [
+                                    'label' => $tool['name'] ?? '',
+                                    'url' => $tool['url'] ?? '#',
+                                    'icon' => $tool['icon'] ?? 'leaf',
+                                    'slug' => $tool['slug'] ?? '',
+                                ])
+                            </li>
                         @endforeach
                     </ul>
                 @endif
@@ -76,9 +83,10 @@
                         <a href="{{ route('professionals') }}">Browse all experts</a>
                     </div>
                 @else
-                    <ul class="yk-rows yk-rows--experts">
+                    @php $decorMap = \App\Support\ExpertDecoration::assign($experts); @endphp
+                    <ul class="yk-pro__grid">
                         @foreach ($experts as $expert)
-                            <li>@include('frontend.sections.partials.catalog-expert-row', ['expert' => $expert])</li>
+                            <li>@include('frontend.sections.partials.pro-expert-card', ['expert' => $expert, 'decor' => $decorMap[$expert['id'] ?? null] ?? null])</li>
                         @endforeach
                     </ul>
                 @endif

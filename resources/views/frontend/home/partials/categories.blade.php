@@ -1,17 +1,15 @@
 @php
-    $categoryCards = [
-        ['label' => 'Career', 'key' => 'career-business', 'tone' => 'blue', 'img' => 'cat-lotus.jpg', 'blurb' => 'Clarity for work & growth'],
-        ['label' => 'Mental Wellbeing', 'key' => 'mental-health', 'tone' => 'violet', 'img' => 'cat-stones.jpg', 'blurb' => 'Calm mind, steady support'],
-        ['label' => 'Nutrition & Fitness', 'key' => 'nutrition-fitness', 'tone' => 'green', 'img' => 'cat-fruit.jpg', 'blurb' => 'Eat well, feel stronger'],
-        ['label' => 'Spirituality', 'key' => 'spirituality', 'tone' => 'violet', 'img' => 'cat-meditate.jpg', 'blurb' => 'Find quiet & meaning'],
-        ['label' => 'Relationships', 'key' => 'relationships', 'tone' => 'magenta', 'img' => 'cat-heart.jpg', 'blurb' => 'Connect with care'],
-        ['label' => 'Finance', 'key' => 'money-finance', 'tone' => 'magenta', 'img' => 'cat-growth.jpg', 'blurb' => 'Grow money with clarity'],
-        ['label' => 'Lifestyle & More', 'key' => 'lifestyle', 'tone' => 'amber', 'img' => 'cat-lifestyle.jpg', 'blurb' => 'Everyday better living'],
-        ['label' => 'Astrology & Tarot', 'key' => 'astrology-tarot', 'tone' => 'violet', 'img' => 'cat-moon.jpg', 'blurb' => 'Insight for your path'],
-        ['label' => 'Health & Wellness', 'key' => 'health-wellness', 'tone' => 'green', 'img' => 'cat-health.jpg', 'blurb' => 'Body care that lasts'],
-        ['label' => 'Parenting', 'key' => 'parenting', 'tone' => 'amber', 'img' => 'cat-parent.jpg', 'blurb' => 'Support for family life'],
-        ['label' => 'Creativity', 'key' => 'creativity', 'tone' => 'blue', 'img' => 'cat-create.jpg', 'blurb' => 'Unlock your ideas'],
-    ];
+    $categoryCards = [];
+    foreach (array_keys(\App\Services\ExploreCatalog::CATEGORIES) as $key) {
+        $categoryCards[] = [
+            'label' => \App\Services\CategoryHub::DISPLAY_LABELS[$key]
+                ?? (\App\Services\ExploreCatalog::CATEGORIES[$key]['label'] ?? $key),
+            'key' => $key,
+            'tone' => \App\Services\CategoryHub::PHOTO_TONES[$key] ?? 'magenta',
+            'img' => \App\Services\CategoryHub::IMAGES[$key] ?? 'cat-lotus.jpg',
+            'blurb' => \App\Services\CategoryHub::SHORT_BLURBS[$key] ?? '',
+        ];
+    }
 @endphp
 
 <section class="yk-home-cats yk-home-cats--rich" aria-labelledby="yk-home-cats-title" data-categories-carousel>

@@ -34,26 +34,39 @@
                     <p>Try another search, or <a href="{{ route('categories.index') }}">browse all categories</a>.</p>
                 </div>
             @else
-                <ul class="yk-cat-hub__grid">
+                <ul class="yk-cat-hub__grid yk-cat-hub__grid--photo">
                     @foreach ($categories as $category)
                         <li>
-                            <a class="yk-cat-hub__card yk-cat-hub__card--{{ $category['tone'] }}" href="{{ $category['url'] }}">
-                                <span class="yk-cat-hub__icon" aria-hidden="true">
-                                    @include('frontend.sections.partials.explore-icon', ['icon' => $category['icon']])
-                                </span>
-                                <span class="yk-cat-hub__body">
-                                    <span class="yk-cat-hub__name">{{ $category['label'] }}</span>
-                                    @if ($category['tagline'] !== '')
-                                        <span class="yk-cat-hub__tagline">{{ $category['tagline'] }}</span>
+                            <a
+                                class="yk-home-cats__card yk-home-cats__card--photo yk-home-cats__card--{{ $category['photo_tone'] ?? 'magenta' }} yk-cat-hub__photo"
+                                href="{{ $category['url'] }}"
+                            >
+                                <span class="yk-home-cats__media">
+                                    @if (! empty($category['image']))
+                                        <img
+                                            src="{{ asset('frontend/assets/img/home-cats/' . $category['image']) }}"
+                                            alt=""
+                                            loading="lazy"
+                                            decoding="async"
+                                            width="320"
+                                            height="320"
+                                        >
+                                    @else
+                                        <span class="yk-cat-hub__icon" aria-hidden="true">
+                                            @include('frontend.sections.partials.explore-icon', ['icon' => $category['icon']])
+                                        </span>
                                     @endif
-                                    <span class="yk-cat-hub__meta">
-                                        {{ $category['counts']['tools'] }} tools · {{ $category['counts']['experts'] }} experts
-                                        @if (config('yuktione.programmes_enabled'))
-                                            · {{ $category['counts']['programmes'] }} programmes
-                                        @endif
-                                    </span>
                                 </span>
-                                <span class="yk-cat-hub__arrow" aria-hidden="true">→</span>
+                                <span class="yk-home-cats__label">{{ $category['label'] }}</span>
+                                @if (($category['blurb'] ?? $category['tagline'] ?? '') !== '')
+                                    <span class="yk-home-cats__blurb">{{ $category['blurb'] ?: $category['tagline'] }}</span>
+                                @endif
+                                <span class="yk-cat-hub__meta yk-cat-hub__meta--photo">
+                                    {{ $category['counts']['tools'] }} tools · {{ $category['counts']['experts'] }} experts
+                                    @if (config('yuktione.programmes_enabled'))
+                                        · {{ $category['counts']['programmes'] }} programmes
+                                    @endif
+                                </span>
                             </a>
                         </li>
                     @endforeach

@@ -1838,87 +1838,89 @@ html.tazen-public-nav-open body {
     border-left: 1px solid rgb(3 157 153 / 30%);
 }
 
-.whatsapp-float {
+/* Right-edge "Need help?" tab (sitewide; replaces the old WhatsApp float) */
+.yk-help-tab {
     position: fixed;
-    z-index: 1100;
-    right: max(24px, env(safe-area-inset-right));
-    bottom: max(26px, env(safe-area-inset-bottom));
-    display: grid;
-    width: 64px;
-    height: 64px;
-    place-items: center;
-    border-radius: 50%;
-    background: #05c66b !important;
-    box-shadow: 0 8px 25px rgb(5 198 107 / 42%), 0 0 0 7px rgb(5 198 107 / 10%);
-    color: #fff !important;
-    text-decoration: none;
-    transition: transform .2s ease, box-shadow .2s ease;
-}
-
-.whatsapp-float:hover {
-    transform: scale(1.07);
-    box-shadow: 0 11px 30px rgb(5 198 107 / 48%), 0 0 0 8px rgb(5 198 107 / 12%);
-    color: #fff !important;
-}
-
-.whatsapp-float:focus-visible {
-    outline: 3px solid var(--y1-charcoal);
-    outline-offset: 4px;
-}
-
-.whatsapp-float > svg {
-    display: block;
-    width: 38px;
-    height: 38px;
-}
-
-.whatsapp-float > svg path:first-child {
-    fill: none;
-    stroke: currentColor;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 2;
-}
-
-.whatsapp-float > svg path:last-child {
-    fill: currentColor;
-}
-
-.whatsapp-float .tooltip-text {
-    position: absolute;
-    z-index: 2;
+    top: 50%;
     right: 0;
-    bottom: calc(100% + 14px);
-    padding: .55rem .75rem;
-    width: max-content;
-    max-width: min(220px, calc(100vw - 2rem));
-    border-radius: 8px;
-    background: #102c3b;
-    box-shadow: 0 5px 16px rgb(8 27 66 / 18%);
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.05rem 0.68rem 0.85rem;
+    border-radius: 14px 0 0 14px;
+    background: linear-gradient(180deg, #8a0f4d 0%, #c3196b 100%);
+    box-shadow: -6px 10px 28px -10px rgb(110 11 60 / 0.55);
     color: #fff;
-    font-size: .8rem;
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    text-decoration: none;
+    transform: translateY(-50%);
+    transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease, opacity 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.yk-help-tab:hover,
+.yk-help-tab:focus-visible {
+    color: #fff;
+    filter: brightness(1.06);
+    box-shadow: -8px 12px 32px -10px rgb(110 11 60 / 0.65);
+    transform: translateY(-50%) translateX(-4px);
+}
+
+.yk-help-tab:focus-visible {
+    outline: 3px solid #d8b4e2;
+    outline-offset: 2px;
+}
+
+.yk-help-tab:active {
+    transform: translateY(-50%) translateX(-1px) scale(0.98);
+}
+
+.yk-help-tab__text {
+    writing-mode: vertical-rl;
+    white-space: nowrap;
+}
+
+.yk-help-tab__chev {
+    display: block;
+    font-size: 1.4rem;
     font-weight: 600;
-    line-height: 1.4;
-    text-align: center;
-    visibility: hidden;
+    line-height: 0.8;
+    transition: transform 0.22s ease;
+}
+
+.yk-help-tab:hover .yk-help-tab__chev,
+.yk-help-tab:focus-visible .yk-help-tab__chev {
+    transform: translateX(2px);
+}
+
+@media (max-width: 575.98px) {
+    .yk-help-tab {
+        padding: 0.85rem 0.55rem 0.7rem;
+        font-size: 0.8rem;
+        gap: 0.5rem;
+    }
+
+    .yk-help-tab__chev {
+        font-size: 1.25rem;
+    }
+}
+
+/* Stay out of the way of the open mobile menu / avatar menu */
+html.tazen-public-nav-open .yk-help-tab,
+body:has(.yk-navbar__quick-menu.is-open) .yk-help-tab {
     opacity: 0;
     pointer-events: none;
-    transition: opacity .2s ease;
 }
 
-.whatsapp-float .tooltip-text::after {
-    position: absolute;
-    top: 100%;
-    right: 20px;
-    border: 5px solid transparent;
-    border-top-color: #102c3b;
-    content: "";
-}
-
-.whatsapp-float:hover .tooltip-text,
-.whatsapp-float:focus-visible .tooltip-text {
-    visibility: visible;
-    opacity: 1;
+@media print {
+    .yk-help-tab {
+        display: none;
+    }
 }
 
 @media (max-width: 1199px) {
@@ -2049,21 +2051,6 @@ html.tazen-public-nav-open body {
         padding-left: 0;
     }
 
-    .whatsapp-float {
-        right: max(16px, env(safe-area-inset-right));
-        bottom: max(20px, env(safe-area-inset-bottom));
-        width: 54px;
-        height: 54px;
-    }
-
-    .whatsapp-float > svg {
-        width: 33px;
-        height: 33px;
-    }
-
-    .whatsapp-float .tooltip-text {
-        bottom: calc(100% + 10px);
-    }
 }
 
 @media (max-width: 360px) {
@@ -2079,7 +2066,8 @@ html.tazen-public-nav-open body {
     .tazen-footer__social a::after,
     .tazen-footer__social a svg,
     .tazen-footer__column li a::after,
-    .whatsapp-float {
+    .yk-help-tab,
+    .yk-help-tab__chev {
         transition: none;
     }
 

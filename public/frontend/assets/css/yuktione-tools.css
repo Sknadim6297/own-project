@@ -337,6 +337,52 @@
     }
 }
 
+/* Catalog / category Tools grids — same tiles as home, responsive columns */
+.yk-tools__tiles,
+.yk-tools__tiles--catalog {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin: 0;
+    padding: 0.15rem 0 0;
+    list-style: none;
+}
+
+.yk-tools__tiles > li,
+.yk-tools__tiles--catalog > li {
+    min-width: 0;
+}
+
+.yk-tools__tiles .yk-tool-tile,
+.yk-tools__tiles--catalog .yk-tool-tile {
+    min-height: 148px;
+    max-height: none;
+    height: 100%;
+}
+
+@media (min-width: 640px) {
+    .yk-tools__tiles,
+    .yk-tools__tiles--catalog {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+    }
+}
+
+@media (min-width: 900px) {
+    .yk-tools__tiles,
+    .yk-tools__tiles--catalog {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1.1rem;
+    }
+}
+
+@media (min-width: 1100px) {
+    .yk-tools__tiles,
+    .yk-tools__tiles--catalog {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .yk-tool-tile,
     .yk-tools-strip__all span,

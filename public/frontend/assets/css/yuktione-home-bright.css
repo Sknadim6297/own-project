@@ -275,6 +275,7 @@ body.yk-home-bright .yk-home-professional .yk-home-button {
         inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
 }
 
+<<<<<<< HEAD
 
 /* ---------- Home: right-edge "Need help?" tab (replaces the WhatsApp bubble) ---------- */
 .yk-help-tab {
@@ -367,3 +368,5 @@ body:has(.yk-navbar__quick-menu.is-open) .yk-help-tab {
         transition: none;
     }
 }
+=======
+>>>>>>> 6ab04e0 (chnages)

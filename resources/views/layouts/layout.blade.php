@@ -208,17 +208,26 @@
 		<link href="{{ asset('frontend/assets/css/yuktione-explore.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-explore.css')) }}" rel="stylesheet">
 	@endif
 	@if (request()->routeIs('categories.*') || request()->routeIs('tools.index') || request()->routeIs('professionals'))
+		<link href="{{ asset('frontend/assets/css/yuktione-brand.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-brand.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-catalog-rows.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-catalog-rows.css')) }}" rel="stylesheet">
+		<link href="{{ asset('frontend/assets/css/yuktione-tools.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools.css')) }}" rel="stylesheet">
+		<link href="{{ asset('frontend/assets/css/yuktione-pro-directory.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-pro-directory.css')) }}" rel="stylesheet">
+	@endif
+	@if (request()->routeIs('categories.*') || request()->routeIs('tools.index') || request()->routeIs('professionals'))
+		<link href="{{ asset('frontend/assets/css/yuktione-categories-hub.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-categories-hub.css')) }}" rel="stylesheet">
 	@endif
 	@if (request()->routeIs('categories.*'))
-		<link href="{{ asset('frontend/assets/css/yuktione-categories-hub.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-categories-hub.css')) }}" rel="stylesheet">
+		<link href="{{ asset('frontend/assets/css/yuktione-categories.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-categories.css')) }}" rel="stylesheet">
 	@endif
 	@if (request()->routeIs('professionals'))
 		<link href="{{ asset('frontend/assets/css/yuktione-experts.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-experts.css')) }}" rel="stylesheet">
 		<script src="{{ asset('frontend/assets/js/yuktione-experts.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-experts.js')) }}" defer></script>
 	@endif
 	@if (request()->routeIs('tools.index'))
+<<<<<<< HEAD
 		<link href="{{ asset('frontend/assets/css/yuktione-tools.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools.css')) }}" rel="stylesheet">
+=======
+>>>>>>> 6ab04e0 (chnages)
 		<link href="{{ asset('frontend/assets/css/yuktione-tools-page.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools-page.css')) }}" rel="stylesheet">
 	@endif
 	@if (request()->routeIs('tools.psychology', 'tools.psychology.*'))
@@ -304,20 +313,11 @@
 
 	<x-yuktione.feedback />
 
-	<!-- WhatsApp Floating Button -->
-	@if (!$isAuthenticationRoute && request()->routeIs('home'))
-		{{-- Home page: WhatsApp bubble is replaced by a right-edge "Need help?" tab --}}
+	{{-- Right-edge "Need help?" tab (replaces the old WhatsApp float on all public pages) --}}
+	@if (!$isAuthenticationRoute && !request()->routeIs('help.*'))
 		<a href="{{ route('help.index') }}" class="yk-help-tab" aria-label="Need help? Open Help &amp; FAQ">
 			<span class="yk-help-tab__text">Need help?</span>
 			<span class="yk-help-tab__chev" aria-hidden="true">&rsaquo;</span>
-		</a>
-	@elseif (!$isAuthenticationRoute)
-		<a href="https://wa.me/+919147421560?text=Hello%20{{ rawurlencode(config('yuktione.name', 'YuktiOne')) }}!%20I%20need%20assistance%20with%20your%20services." target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Chat with us on WhatsApp">
-			<svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-				<path d="M16 3.4a12.1 12.1 0 0 0-10.4 18.3L4 28l6.5-1.7A12.3 12.3 0 1 0 16 3.4Z"></path>
-				<path d="M12 10.2c.3-.6.6-.6.9-.6h.7c.2 0 .5 0 .7.5l1 2.4c.1.3.1.5-.1.7l-.8 1c-.2.2-.2.4-.1.6.4.8 1.2 1.6 2.1 2.2.8.5 1.5.8 1.8.9.3.1.5 0 .7-.2l1-1.2c.2-.3.5-.3.8-.2l2.3 1.1c.3.2.5.3.5.5 0 .2-.2 1.4-.8 2-.7.7-1.8 1-2.5 1-1.1 0-2.5-.4-4.3-1.4-2.2-1.2-4-3.4-4.6-4.2-.6-.8-1.5-2.1-1.5-3.5s.7-2.1 1-2.5Z"></path>
-			</svg>
-			<span class="tooltip-text">Chat with us on WhatsApp</span>
 		</a>
 	@endif
 

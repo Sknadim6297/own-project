@@ -76,7 +76,7 @@
         ],
         [
             'id' => 'solutions',
-            'label' => 'Solutions',
+            'label' => 'Tools',
             'href' => route('tools.index'),
             'active' => \App\Support\Tools\ToolsSection::isActive(),
             'placeholder' => false,

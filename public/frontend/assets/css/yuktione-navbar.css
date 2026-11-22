@@ -1379,8 +1379,8 @@
         animation: yk-nav-fade-out 0.28s ease both;
     }
 
-    /* Keep the WhatsApp bubble from floating over the open drawer */
-    html.tazen-public-nav-open .whatsapp-float {
+    /* Keep the help tab from floating over the open drawer */
+    html.tazen-public-nav-open .yk-help-tab {
         opacity: 0;
         pointer-events: none;
     }
@@ -1597,9 +1597,9 @@
     }
 }
 
-/* Keep the WhatsApp bubble from overlapping the open avatar menu */
+/* Keep the help tab from overlapping the open avatar menu */
 @media (max-width: 1023.98px) {
-    body:has(.yk-navbar__quick-menu.is-open) .whatsapp-float {
+    body:has(.yk-navbar__quick-menu.is-open) .yk-help-tab {
         opacity: 0;
         pointer-events: none;
     }

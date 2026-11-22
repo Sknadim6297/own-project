@@ -47,6 +47,58 @@ class CategoryHub
         'nutrition-fitness' => 'Fuel and movement for a healthier you',
     ];
 
+    /**
+     * Home + All Categories photo card art (frontend/assets/img/home-cats/).
+     * Keys must match ExploreCatalog::CATEGORIES.
+     */
+    public const IMAGES = [
+        'mental-health' => 'cat-stones.jpg',
+        'astrology-tarot' => 'cat-moon.jpg',
+        'relationships' => 'cat-heart.jpg',
+        'career-business' => 'cat-lotus.jpg',
+        'money-finance' => 'cat-growth.jpg',
+        'health-wellness' => 'cat-health.jpg',
+        'parenting' => 'cat-parent.jpg',
+        'lifestyle' => 'cat-lifestyle.jpg',
+        'spirituality' => 'cat-meditate.jpg',
+        'creativity' => 'cat-create.jpg',
+        'nutrition-fitness' => 'cat-fruit.jpg',
+    ];
+
+    /**
+     * Photo-card accent tones shared with the home "Explore by Need" strip.
+     */
+    public const PHOTO_TONES = [
+        'mental-health' => 'violet',
+        'astrology-tarot' => 'violet',
+        'relationships' => 'magenta',
+        'career-business' => 'blue',
+        'money-finance' => 'magenta',
+        'health-wellness' => 'green',
+        'parenting' => 'amber',
+        'lifestyle' => 'amber',
+        'spirituality' => 'violet',
+        'creativity' => 'blue',
+        'nutrition-fitness' => 'green',
+    ];
+
+    /**
+     * Compact blurbs for photo cards (home + All Categories).
+     */
+    public const SHORT_BLURBS = [
+        'mental-health' => 'Calm mind, steady support',
+        'astrology-tarot' => 'Insight for your path',
+        'relationships' => 'Connect with care',
+        'career-business' => 'Clarity for work & growth',
+        'money-finance' => 'Grow money with clarity',
+        'health-wellness' => 'Body care that lasts',
+        'parenting' => 'Support for family life',
+        'lifestyle' => 'Everyday better living',
+        'spirituality' => 'Find quiet & meaning',
+        'creativity' => 'Unlock your ideas',
+        'nutrition-fitness' => 'Eat well, feel stronger',
+    ];
+
     public function __construct(
         private readonly ExploreCatalog $explore,
         private readonly ToolsCatalog $tools,
@@ -78,7 +130,10 @@ class CategoryHub
                 'slug' => $slug,
                 'label' => $label,
                 'tone' => $meta['tone'] ?? 'mint',
+                'photo_tone' => self::PHOTO_TONES[$slug] ?? 'magenta',
                 'icon' => $meta['icon'] ?? 'leaf',
+                'image' => self::IMAGES[$slug] ?? null,
+                'blurb' => self::SHORT_BLURBS[$slug] ?? '',
                 'tagline' => self::TAGLINES[$slug] ?? '',
                 'url' => route('categories.show', $slug),
                 'counts' => [
