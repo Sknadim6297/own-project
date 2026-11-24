@@ -17,26 +17,29 @@
     $partial = $config['partial'] ?? null;
     $steps = $config['steps'] ?? [];
     $wizard = $steps !== [];
-    $artFile = \App\Support\Tools\ToolIllustration::for($tool['slug'], '');
-    $artUrl = $artFile && file_exists(public_path(\App\Support\Tools\ToolIllustration::DIRECTORY.$artFile))
-        ? asset(\App\Support\Tools\ToolIllustration::DIRECTORY.$artFile)
-        : null;
+    $psHeaderIcons = [
+        'parenting-stress-check' => 'users',
+        'child-routine-planner' => 'users',
+        'parent-child-conversation-guide' => 'users',
+        'daily-mindfulness-calm' => 'leaf',
+        'purpose-values-finder' => 'sparkles',
+    ];
+    $psHeaderIcon = $psHeaderIcons[$toolKey] ?? 'sparkles';
 @endphp
-<main class="yk-ps yk-tools-ds" data-yk-tools-ds data-yk-ps>
+<main class="yk-ps yk-tools-ds yk-tool-shell yk-ps--compact-header" data-yk-tools-ds data-yk-ps data-yk-tool-shell="1">
     <div class="yk-ps__wrap">
         @include('frontend.sections.partials.tool-back-to-tools')
         <nav class="yk-ps__crumb" aria-label="Breadcrumb"><a href="{{ route('tools.ps') }}">{{ $tool['category_label'] }}</a> <span aria-hidden="true">/</span> <span aria-current="page">{{ $tool['name'] }}</span></nav>
 
-        <header class="yk-ps__head" aria-labelledby="ps-form-heading">
-            <span class="yk-ps__tool-icon yk-ps__tool-icon--{{ $tool['category'] }} yk-ps__tool-icon--lg">@include('frontend.sections.ps.partials.icon', ['name' => $tool['glyph'] ?? 'sparkle', 'size' => 30])</span>
+        <header class="yk-ps__head yk-ps__head--compact" aria-labelledby="ps-form-heading" data-yk-tool-compact-header>
+            <span class="yk-ps__tool-icon yk-ps__tool-icon--{{ $tool['category'] }} yk-ps__tool-icon--lg" aria-hidden="true">
+                <x-yk-icon :name="$psHeaderIcon" class="yk-icon--lg" />
+            </span>
             <div class="yk-ps__head-copy">
                 <p class="yk-ps__badge">{{ $tool['category_label'] }} tool</p>
                 <h1 id="ps-form-heading">{{ $tool['name'] }}</h1>
-                <p class="yk-ps__lead">{{ $tool['description'] }}</p>
+                <p class="yk-ps__lead" data-yk-tool-page-lead>{{ \App\Support\Tools\ToolPageLeads::for($tool['slug'] ?? $toolKey) ?? $tool['description'] }}</p>
             </div>
-            @if ($artUrl)
-                <img class="yk-ps__head-art" src="{{ $artUrl }}" alt="" decoding="async">
-            @endif
         </header>
 
         <section class="yk-ps__panel" aria-label="{{ $tool['name'] }} form">

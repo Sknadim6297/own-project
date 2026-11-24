@@ -11,8 +11,8 @@
 
     @if (isset($event->image) && $event->image)
         <img src="{{ asset('storage/'.$event->image) }}" alt="{{ $event->heading }}" width="536" style="display:block;width:100%;max-width:536px;height:auto;border-radius:10px;margin:0 0 18px;">
-    @endif
-
+            @endif
+            
     @include('emails.partials.info-card', [
         'title' => 'Event',
         'rows' => array_values(array_filter([

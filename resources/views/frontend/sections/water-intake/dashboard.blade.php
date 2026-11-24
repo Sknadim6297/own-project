@@ -19,7 +19,7 @@
         <section class="yk-water__card" aria-labelledby="water-dash-heading">
             <p class="yk-water__badge">{{ $isToday ? 'Today' : $dash['date'] }} · Asia/Kolkata</p>
             <h1 id="water-dash-heading">Water Intake Tracker</h1>
-            <p class="yk-water__lead">Personal daily tracking against your goal—not a medical prescription.</p>
+            <p class="yk-water__lead" data-yk-tool-page-lead>{{ \App\Support\Tools\ToolPageLeads::for('water-intake-tracker') }} Tracking preferences only—not medical prescriptions.</p>
 
             @if ($status)
                 <p class="yk-water__ok" role="status">{{ $status }}</p>

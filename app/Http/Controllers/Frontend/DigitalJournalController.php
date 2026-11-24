@@ -54,7 +54,7 @@ class DigitalJournalController extends Controller
                 'formAction' => route('tools.psychology.journal.store'),
                 'backUrl' => route('tools.psychology'),
                 'heading' => 'Digital Journal',
-                'lead' => 'Express your thoughts in your own words.',
+                'lead' => \App\Support\Tools\ToolPageLeads::for('digital-journal') ?? 'Capture your thoughts and reflect on your experiences in a personal digital journal.',
                 'submitLabel' => 'Save Entry',
                 'prompts' => $prompts,
                 'selected' => $selected,

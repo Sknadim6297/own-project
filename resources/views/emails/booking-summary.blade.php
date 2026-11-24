@@ -24,10 +24,10 @@
                 <p style="margin:0 0 12px;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#8a0f4d;">Scheduled sessions</p>
                 @foreach ($bookingTimeDates as $timeDate)
                     <p style="margin:0 0 {{ $loop->last ? '0' : '8px' }};font-size:14px;color:#142B4D;">
-                        <strong>{{ \Carbon\Carbon::parse($timeDate->date)->format('d M, Y') }}</strong>
+                                    <strong>{{ \Carbon\Carbon::parse($timeDate->date)->format('d M, Y') }}</strong>
                         &nbsp;·&nbsp;{{ $timeDate->time_slot }}
                     </p>
-                @endforeach
+                            @endforeach
             </td>
         </tr>
     </table>

@@ -42,7 +42,7 @@
             <div>
                 <h1 id="{{ $titleId }}">{{ $title }}</h1>
                 @if (filled($lead))
-                    <p class="yk-goal__lead">{{ $lead }}</p>
+                    <p class="yk-goal__lead" data-yk-tool-page-lead>{{ $lead }}</p>
                 @endif
             </div>
         </div>

@@ -26,7 +26,7 @@
 @endphp
 
 @section('content')
-<main class="yk-journal yk-tools-ds" data-yk-tools-ds data-yk-journal>
+<main class="yk-journal yk-tools-ds yk-tool-shell" data-yk-tools-ds data-yk-journal data-yk-tool-shell="1">
     <div class="yk-journal__wrap yk-journal__wrap--write">
         <div class="yk-journal__topbar">
             @if ($editing)
@@ -69,27 +69,17 @@
                     <input type="hidden" name="completion_key" value="{{ old('completion_key', $completionKey) }}">
                 @endif
 
-                <header class="yk-journal__hero">
+                <header class="yk-journal__hero yk-journal__hero--compact" data-yk-tool-compact-header>
                     <div class="yk-journal__hero-main">
                         <span class="yk-journal__hero-icon" aria-hidden="true">
-                            <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 8h20a4 4 0 0 1 4 4v28H16a4 4 0 0 1-4-4V8z"/>
-                                <path d="M12 36a4 4 0 0 1 4-4h20"/>
-                                <path d="M20 16h10M20 22h6"/>
-                                <path d="M38 14l4 4-10 10-5 1 1-5 10-10z" fill="currentColor" fill-opacity=".2"/>
-                            </svg>
+                            <x-yk-icon name="book-open" class="yk-icon--lg" />
                         </span>
                         <div class="yk-journal__hero-text">
                             <p class="yk-journal__badge">{{ $editing ? 'Private entry' : 'Free tool' }}</p>
                             <h1><x-yuktione.two-tone :text="$heading" /></h1>
-                            <p class="yk-journal__lead">{{ $lead }}</p>
+                            <p class="yk-journal__lead" data-yk-tool-page-lead>{{ $lead }}</p>
                         </div>
                     </div>
-                    @if ($heroImageExists)
-                        <div class="yk-journal__hero-art" aria-hidden="true">
-                            <img src="{{ asset($heroImage) }}" alt="" width="180" height="180" loading="eager" decoding="async">
-                        </div>
-                    @endif
                 </header>
 
                 <p class="yk-journal__private" role="status">{!! $lockSvg !!} Private · Only you can see this entry</p>

@@ -25,25 +25,39 @@
     $needsFreshConfirm = (bool) ($unsavedWork ?? false) || $isEditing;
     $isMoneyPlanner = $toolKey === 'monthly-money-planner';
     $isEmergency = $toolKey === 'emergency-fund-calculator';
+    $isDebt = $toolKey === 'debt-emi-calculator';
+    $heroIcons = [
+        'monthly-money-planner' => 'wallet',
+        'net-worth-calculator' => 'chart-pie',
+        'emergency-fund-calculator' => 'shield-check',
+        'debt-emi-calculator' => 'calculator',
+        'retirement-calculator' => 'calculator',
+        'inflation-calculator' => 'calculator',
+        'savings-investment-calculator' => 'calculator',
+    ];
+    $heroIcon = $heroIcons[$toolKey] ?? 'calculator';
+    $debtEyebrow = $isEditing
+        ? 'Edit Calculation'.($editingId ? ' #'.$editingId : '')
+        : 'Debt & EMI · loan details then optional extra payment';
 @endphp
-<main class="yk-pfm yk-tools-ds {{ $isEmergency ? 'yk-pfm--ef' : '' }}" data-yk-tools-ds data-yk-pfm @if ($isEditing) data-yk-pfm-editing="1" @endif>
+<main class="yk-pfm yk-tools-ds yk-tool-shell {{ $isEmergency ? 'yk-pfm--ef' : '' }} {{ $isDebt ? 'yk-pfm--debt' : '' }}" data-yk-tools-ds data-yk-pfm data-yk-tool-shell="1" @if ($isDebt) data-yk-tool-shell-ref="debt-emi" @endif @if ($isDebt) data-yk-debt-structure="1" @endif @if ($isEditing) data-yk-pfm-editing="1" @endif>
     @include('frontend.sections.pfm.partials.page-hero', [
         'crumbs' => $isEditing
             ? [['Money & Finance', route('tools.pfm')], [$tool['name'], route($tool['route'])], ['Edit Calculation', null]]
             : [['Money & Finance', route('tools.pfm')], [$tool['name'], null]],
         'eyebrow' => $isEditing
             ? 'Edit Calculation'.($editingId ? ' #'.$editingId : '')
-            : ($isEmergency ? 'Emergency Fund Calculator' : ($wizard ? 'Calculator · '.count($steps).' quick steps' : 'Calculator')),
-        'heroIcon' => $isEmergency ? 'shield-check' : null,
+            : ($isDebt
+                ? $debtEyebrow
+                : ($isEmergency ? 'Emergency Fund Calculator' : ($wizard ? 'Calculator · '.count($steps).' quick steps' : 'Calculator'))),
+        'heroIcon' => $heroIcon,
         'title' => ($isEditing && $isEmergency)
             ? 'Edit Emergency Fund Calculation'
             : $tool['name'],
         'titleId' => 'pfm-form-heading',
         'lead' => $isEditing
-            ? 'Update your saved financial inputs, recalculate, then Save Changes. Educational estimates only—not financial advice.'
-            : ($isEmergency
-                ? 'Estimate a practical emergency fund target from your expenses, coverage, and savings. Educational estimates only—not financial advice.'
-                : $tool['description'].' Educational estimates only—not financial advice.'),
+            ? 'Update your saved financial inputs, recalculate, then Save Changes. '.\App\Support\Tools\ToolPageLeads::PFM_DISCLAIMER
+            : \App\Support\Tools\ToolPageLeads::forPfm($toolKey),
     ])
 
     <div class="yk-pfm__wrap yk-pfm__wrap--wide yk-pfm__sheet">
@@ -115,13 +129,19 @@
                         @include('frontend.sections.pfm.partials.'.$partial, ['old' => $old, 'goalTypes' => $goalTypes ?? []])
                     @endif
 
-                    <div class="yk-pfm__actions">
+                    <div class="yk-pfm__actions {{ $isDebt ? 'yk-debt__actions' : '' }}">
                         @if ($wizard)
-                            <button type="button" class="yk-pfm__btn yk-pfm__btn--ghost" data-pfm-prev hidden>Back</button>
-                            <button type="button" class="yk-pfm__btn" data-pfm-next>Continue</button>
+                            <button type="button" class="yk-pfm__btn yk-pfm__btn--ghost" data-pfm-prev hidden>
+                                @if ($isDebt)<x-yk-icon name="arrow-left" class="yk-icon--sm" />@endif
+                                Back
+                            </button>
+                            <button type="button" class="yk-pfm__btn" data-pfm-next>
+                                Continue
+                                @if ($isDebt)<x-yk-icon name="arrow-right" class="yk-icon--sm" />@endif
+                            </button>
                         @endif
                         <button type="submit" class="yk-pfm__btn" data-pfm-submit @if ($wizard) hidden @endif>
-                            @if ($isEmergency)
+                            @if ($isEmergency || $isDebt)
                                 <x-yk-icon :name="$isEditing ? 'refresh-cw' : 'calculator'" class="yk-icon--sm" />
                             @endif
                             {{ $isEditing ? 'Recalculate' : 'Calculate' }}
@@ -129,7 +149,7 @@
                         @if (! $isEditing)
                             @auth('user')
                                 <a class="yk-pfm__btn yk-pfm__btn--ghost" href="{{ route($tool['route'].'.history') }}">
-                                    @if ($isEmergency)<x-yk-icon name="history" class="yk-icon--sm" />@endif
+                                    @if ($isEmergency || $isDebt)<x-yk-icon name="history" class="yk-icon--sm" />@endif
                                     View History
                                 </a>
                             @endauth

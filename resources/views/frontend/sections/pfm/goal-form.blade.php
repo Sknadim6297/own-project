@@ -13,7 +13,7 @@
     @include('frontend.sections.pfm.partials.goal-compact-header', [
         'title' => 'Financial Goal Calculator',
         'titleId' => 'goal-heading',
-        'lead' => 'Estimate the monthly investment needed to achieve your financial goal.',
+        'lead' => \App\Support\Tools\ToolPageLeads::for('financial-goal-calculator'),
         'eyebrow' => 'Goal planner · all inputs on one page',
         'tool' => $tool,
     ])

@@ -31,8 +31,8 @@ class GratitudeJournalWriteTest extends TestCase
 
         $response->assertOk()
             ->assertSee('Gratitude Journal')
-            ->assertSee('Pause. Reflect. Appreciate.')
-            ->assertSee('What are you grateful for today?')
+            ->assertSee('Reflect on meaningful moments and build a regular gratitude practice.')
+            ->assertSeeText('What are you grateful for today?')
             ->assertSee('Fill in whichever cards you like. Skip the rest.')
             ->assertSee('Private · Only you can see this entry')
             ->assertSee('Something good today')

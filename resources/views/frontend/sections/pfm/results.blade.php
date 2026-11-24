@@ -8,6 +8,7 @@
 @php
     $isEditing = (bool) ($editing ?? false);
     $isEmergency = $toolKey === 'emergency-fund-calculator';
+    $isMoneyPlanner = $toolKey === 'monthly-money-planner';
     $recalculateLabel = $isEmergency
         ? 'Recalculate'
         : ($isEditing ? 'Edit inputs' : 'Edit &amp; recalculate');
@@ -15,8 +16,14 @@
         ? 'Save Calculation'
         : 'Save result';
     $saveGuestLabel = $saveLabel.' (sign in)';
+    $resultHeroIcons = [
+        'monthly-money-planner' => 'wallet',
+        'net-worth-calculator' => 'chart-pie',
+        'emergency-fund-calculator' => 'shield-check',
+    ];
+    $resultHeroIcon = $resultHeroIcons[$toolKey] ?? 'calculator';
 @endphp
-<main class="yk-pfm yk-tools-ds {{ $isEmergency ? 'yk-pfm--ef' : '' }}" data-yk-tools-ds data-yk-pfm @if ($isEditing) data-yk-pfm-editing="1" @endif>
+<main class="yk-pfm yk-tools-ds yk-tool-shell {{ $isEmergency ? 'yk-pfm--ef' : '' }}" data-yk-tools-ds data-yk-pfm data-yk-tool-shell="1" @if ($isEditing) data-yk-pfm-editing="1" @endif>
     @include('frontend.sections.pfm.partials.page-hero', [
         'crumbs' => $isEditing
             ? [['Money & Finance', route('tools.pfm')], [$tool['name'], route($tool['route'])], ['Edit preview', null]]
@@ -24,7 +31,7 @@
         'eyebrow' => $isEditing
             ? 'Edit preview'.($editingId ? ' · #'.$editingId : '')
             : 'Your results',
-        'heroIcon' => $isEmergency ? 'shield-check' : null,
+        'heroIcon' => $resultHeroIcon,
         'title' => $tool['name'],
         'titleId' => 'pfm-results-heading',
         'lead' => $isEmergency ? 'Clear view of your emergency fund target, savings gap, and estimated timeline.' : ($result['summary'] ?? ''),

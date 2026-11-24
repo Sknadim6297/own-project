@@ -5,7 +5,7 @@
 @section('body_class', 'yk-tarot-body')
 
 @section('content')
-<main class="yk-tarot yk-tools-ds" data-yk-tools-ds data-yk-tarot>
+<main class="yk-tarot yk-tools-ds yk-tool-shell" data-yk-tools-ds data-yk-tarot data-yk-tool-shell="1">
     <div class="yk-tarot__wrap">
         <div class="yk-tarot__toolbar">
             @include('frontend.sections.partials.tool-back-to-tools')
@@ -15,14 +15,21 @@
             </a>
         </div>
 
-        <section class="yk-tarot__hero" aria-labelledby="tarot-intro-heading">
+        <section class="yk-tarot__hero yk-tarot__hero--compact" aria-labelledby="tarot-intro-heading" data-yk-tool-compact-header>
             <div class="yk-tarot__hero-copy">
                 <p class="yk-tarot__badge">
-                    @include('frontend.sections.tarot.partials.emoji', ['icon' => 'layers'])
+                    <x-yk-icon name="moon-star" class="yk-icon--sm" />
                     Reflective tool
                 </p>
-                <h1 id="tarot-intro-heading">Tarot Reflection</h1>
-                <p class="yk-tarot__lead">Draw your cards. Explore what they may help you reflect on — gently, without prediction or certainty.</p>
+                <div class="yk-tarot__title-row">
+                    <span class="yk-tarot__title-icon" aria-hidden="true">
+                        <x-yk-icon name="moon-star" class="yk-icon--lg" />
+                    </span>
+                    <div>
+                        <h1 id="tarot-intro-heading">Tarot Reflection</h1>
+                        <p class="yk-tarot__lead" data-yk-tool-page-lead>{{ \App\Support\Tools\ToolPageLeads::for('tarot-reflection') }}</p>
+                    </div>
+                </div>
                 <p class="yk-tarot__spread-note" aria-label="Available spreads">
                     <span>One-card clarity</span>
                     <span>Three-card reflection</span>
@@ -51,12 +58,6 @@
                         </div>
                     </li>
                 </ol>
-            </div>
-
-            <div class="yk-tarot__stack" aria-hidden="true">
-                <span class="yk-tarot__stack-card"></span>
-                <span class="yk-tarot__stack-card"></span>
-                <span class="yk-tarot__stack-card"></span>
             </div>
         </section>
 

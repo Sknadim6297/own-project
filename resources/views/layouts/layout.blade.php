@@ -282,6 +282,7 @@
 	@if (request()->routeIs('tools.*'))
 		<link href="{{ asset('frontend/assets/css/yuktione-tools-ds.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools-ds.css')) }}" rel="stylesheet">
 		<link href="{{ asset('frontend/assets/css/yuktione-tool-chrome.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tool-chrome.css')) }}" rel="stylesheet">
+		<link href="{{ asset('frontend/assets/css/yuktione-tool-shell.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tool-shell.css')) }}" rel="stylesheet">
 	@endif
 
 	<link href="{{ asset('frontend/assets/css/yuktione-document.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-document.css')) }}" rel="stylesheet">

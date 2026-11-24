@@ -902,17 +902,18 @@
     line-height: 1.45;
 }
 
-/* ---- Header ---- */
+/* ---- Header (Task 37 compact — decorative hero art removed) ---- */
 .yk-pfm__hero {
     position: relative;
-    padding: 24px 0 8px;
+    padding: 18px 0 6px;
+}
+
+.yk-pfm__hero--compact {
+    padding: 16px 0 4px;
 }
 
 .yk-pfm__hero-in {
-    display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.5fr);
-    align-items: center;
-    gap: 16px;
+    display: block;
     width: min(1040px, calc(100% - 48px));
     margin-inline: auto;
 }
@@ -921,12 +922,32 @@
     min-width: 0;
 }
 
+.yk-pfm__hero-title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.yk-pfm__hero-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: #f8eaf1;
+    color: #8a0f4d;
+}
+
+.yk-pfm__hero-icon .yk-icon {
+    width: 26px;
+    height: 26px;
+}
+
+/* Legacy decorative art class kept for safety if referenced elsewhere — hidden */
 .yk-pfm__hero-art {
-    display: block;
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    margin-left: auto;
+    display: none !important;
 }
 
 .yk-pfm__crumbs {
@@ -989,22 +1010,22 @@
 }
 
 .yk-pfm__hero h1 {
-    max-width: 24ch;
+    max-width: 28ch;
     margin: 0;
     overflow-wrap: anywhere;
     color: var(--yk-ink);
-    font-size: clamp(2rem, 1.3rem + 2.4vw, 3.1rem);
+    font-size: clamp(1.35rem, 1.1rem + 1.1vw, 1.85rem);
     font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.06;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
 }
 
 .yk-pfm__hero-lead {
     max-width: 58ch;
-    margin: 14px 0 0;
+    margin: 8px 0 0;
     color: #4a3a5e;
-    font-size: 1.05rem;
-    line-height: 1.55;
+    font-size: 0.98rem;
+    line-height: 1.5;
 }
 
 .yk-pfm__hero-meta {
@@ -1735,6 +1756,265 @@
     }
 
     .yk-ef__actions .yk-pfm__btn {
+        width: 100%;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Task 40 � Debt & EMI Calculator structure (scoped; other PFM untouched)     */
+/* -------------------------------------------------------------------------- */
+
+.yk-pfm--debt .yk-pfm__wrap--wide {
+    width: min(920px, calc(100% - var(--yk-tool-shell-gutter, 2rem)));
+}
+
+.yk-pfm--debt .yk-pfm__card {
+    padding: 1.35rem 1.3rem 1.3rem;
+}
+
+.yk-pfm--debt .yk-pfm__hero-lead,
+.yk-pfm--debt [data-yk-tool-page-lead] {
+    max-width: 40rem;
+}
+
+.yk-pfm--debt .yk-pfm__wizard-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 0 1.15rem;
+    padding: 0.35rem;
+    border: 1px solid rgba(138, 15, 77, 0.12);
+    border-radius: 14px;
+    background: #fff8fb;
+}
+
+.yk-pfm--debt .yk-pfm__wizard-step {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0.35rem 0.85rem;
+    border-radius: 10px;
+    color: #6b6b7a;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.yk-pfm--debt .yk-pfm__wizard-step.is-active {
+    background: #8a0f4d;
+    color: #fff;
+    box-shadow: 0 8px 18px -12px rgba(138, 15, 77, 0.55);
+}
+
+.yk-debt__section {
+    margin: 0;
+    padding: 0;
+}
+
+.yk-debt__section-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin: 0 0 1rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid rgba(138, 15, 77, 0.12);
+}
+
+.yk-debt__section-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: #f8eaf1;
+    color: #8a0f4d;
+}
+
+.yk-debt__section-title {
+    margin: 0;
+    color: #1f1f1f;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+}
+
+.yk-debt__section-lead {
+    margin: 0.3rem 0 0;
+    max-width: 46ch;
+    color: #6b6b7a;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.yk-debt__grid {
+    gap: 1rem;
+}
+
+.yk-debt__field--tenure {
+    grid-column: 1 / -1;
+}
+
+@media (min-width: 768px) {
+    .yk-debt__field--tenure {
+        grid-column: span 1;
+    }
+
+    .yk-pfm--debt .yk-debt__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.yk-debt__label-row {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.yk-debt__label-row .yk-icon {
+    color: #8a0f4d;
+}
+
+.yk-debt__req {
+    color: #8a0f4d;
+    font-weight: 800;
+}
+
+.yk-debt__control {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    min-height: var(--yk-touch, 48px);
+    border: 1px solid var(--yk-line, #e8e4de);
+    border-radius: 12px;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.yk-debt__control:focus-within {
+    border-color: rgba(138, 15, 77, 0.55);
+    box-shadow: 0 0 0 3px rgba(138, 15, 77, 0.12);
+}
+
+.yk-debt__affix {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    min-width: 2.6rem;
+    padding: 0 0.75rem;
+    border-right: 1px solid var(--yk-line, #e8e4de);
+    background: #f8eaf1;
+    color: #6e0b3c;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.yk-debt__affix--end {
+    border-right: 0;
+    border-left: 1px solid var(--yk-line, #e8e4de);
+    min-width: 3.4rem;
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.yk-pfm--debt .yk-debt__control input {
+    width: 100%;
+    min-width: 0;
+    min-height: var(--yk-touch, 48px);
+    margin: 0;
+    padding: 0.65rem 0.85rem;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent;
+    box-shadow: none !important;
+    color: var(--yk-navy, #1f1f1f);
+    font: inherit;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.yk-pfm--debt .yk-debt__control input::-webkit-outer-spin-button,
+.yk-pfm--debt .yk-debt__control input::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+}
+
+.yk-pfm--debt .yk-debt__control input::placeholder {
+    color: #9a94a0;
+    font-weight: 500;
+}
+
+.yk-pfm--debt .yk-debt__control input:focus {
+    outline: 0;
+}
+
+.yk-debt__help {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.35rem;
+    margin: 0.4rem 2px 0;
+    color: #6b6b7a;
+    font-size: 0.82rem;
+    line-height: 1.4;
+}
+
+.yk-debt__help .yk-icon {
+    flex: none;
+    margin-top: 0.1rem;
+    color: #8a0f4d;
+}
+
+.yk-pfm--debt .yk-debt__actions {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(138, 15, 77, 0.1);
+}
+
+.yk-pfm--debt .yk-debt__actions .yk-pfm__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.yk-pfm--debt .yk-debt__actions .yk-pfm__btn--ghost {
+    background: #fff;
+}
+
+@media (max-width: 767.98px) {
+    .yk-pfm--debt .yk-pfm__wrap--wide {
+        width: min(920px, calc(100% - 1.5rem));
+    }
+
+    .yk-pfm--debt .yk-pfm__card {
+        padding: 1.1rem 1rem 1.15rem;
+    }
+
+    .yk-debt__section-head {
+        gap: 0.65rem;
+    }
+
+    .yk-debt__actions .yk-pfm__btn {
+        flex: 1 1 auto;
+        min-width: min(100%, 10rem);
+    }
+}
+
+@media (max-width: 430px) {
+    .yk-pfm--debt .yk-pfm__wizard-step {
+        flex: 1 1 auto;
+        justify-content: center;
+        font-size: 0.84rem;
+    }
+
+    .yk-debt__actions .yk-pfm__btn {
         width: 100%;
     }
 }

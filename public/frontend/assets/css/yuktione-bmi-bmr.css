@@ -1305,3 +1305,39 @@
         transition: none !important;
     }
 }
+
+/* Task 37 — compact BMI header */
+.yk-bmi__hero--compact {
+    display: block;
+    margin: 0.5rem 0 1rem;
+}
+.yk-bmi__title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+.yk-bmi__title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: #f8eaf1;
+    color: #8a0f4d;
+}
+.yk-bmi__hero--compact h1 {
+    margin: 0 0 0.35rem !important;
+    font-size: clamp(1.35rem, 1.1rem + 1.1vw, 1.85rem) !important;
+    line-height: 1.2 !important;
+}
+.yk-bmi__hero--compact .yk-bmi__lead {
+    margin: 0;
+    max-width: 58ch;
+}
+.yk-bmi--compact-header .yk-bmi__leaf,
+.yk-bmi--compact-header .yk-bmi__hero-art,
+.yk-bmi--compact-header .yk-bmi__pills {
+    display: none !important;
+}

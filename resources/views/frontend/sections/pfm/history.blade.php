@@ -13,7 +13,7 @@
     @include('frontend.sections.pfm.partials.page-hero', [
         'crumbs' => [['Money & Finance', route('tools.pfm')], [$tool['name'], route($tool['route'])], ['History', null]],
         'eyebrow' => $isMoneyPlanner || $isEmergency ? 'Calculation History' : 'Private history',
-        'heroIcon' => $isEmergency ? 'history' : null,
+        'heroIcon' => $isEmergency ? 'shield-check' : ($isMoneyPlanner ? 'wallet' : 'history'),
         'title' => ($isMoneyPlanner || $isEmergency) ? $tool['name'] : $tool['name'].' history',
         'titleId' => 'pfm-history-heading',
         'lead' => $isMoneyPlanner

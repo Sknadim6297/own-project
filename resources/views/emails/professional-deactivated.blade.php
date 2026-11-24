@@ -14,7 +14,7 @@
         <li style="margin-bottom:6px;">An extended period of inactivity</li>
         <li style="margin-bottom:6px;">An administrative review of your account</li>
         <li>A temporary suspension pending verification</li>
-    </ul>
+                </ul>
     <p style="margin:0 0 14px;">If you believe this was done in error or would like to request reactivation, please contact our support team.</p>
 
     @include('emails.partials.button', [

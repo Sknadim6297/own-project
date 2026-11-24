@@ -804,14 +804,14 @@
 
 		@include('frontend.home.partials.talk-experts')
 		@include('frontend.home.partials.section-divider', ['compact' => true])
-
+        
 		@include('frontend.home.partials.platform-experience')
 		@include('frontend.home.partials.section-divider', ['compact' => true])
 
 		<!-- /bg_gray -->
 
 		@if (config('yuktione.programmes_enabled'))
-			@include('frontend.home.partials.events')
+		@include('frontend.home.partials.events')
 		@else
 			@include('frontend.home.partials.programmes-showcase')
 		@endif

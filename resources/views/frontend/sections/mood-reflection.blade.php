@@ -178,7 +178,7 @@
                             </span>
                             <div>
                                 <h2><x-yuktione.two-tone text="Your Mood Journey" /></h2>
-                                <p class="yk-mood__side-lead">Build a healthier and happier you.</p>
+                                <p class="yk-mood__side-lead">Three short steps for today’s check-in.</p>
                             </div>
                         </header>
                         <ol class="yk-mood__journey">

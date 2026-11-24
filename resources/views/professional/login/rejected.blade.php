@@ -80,15 +80,15 @@
             </div>
         </aside>
 
-        <form id="registerForm" enctype="multipart/form-data" novalidate>
-            @csrf
+            <form id="registerForm" enctype="multipart/form-data" novalidate>
+                @csrf
 
-            {{-- Step 1 - Basic Info --}}
+                {{-- Step 1 - Basic Info --}}
             <div class="form-step step-1 active space-y-3.5 sm:space-y-4">
                 <div>
                     <h2 class="text-[17px] font-semibold text-brand-950">Basic information</h2>
                     <p class="mt-1 text-[13px] leading-5 text-text-muted">Update only the fields that need correction.</p>
-                </div>
+                    </div>
 
                 <div class="space-y-1.5">
                     <label for="name" class="block text-xs font-medium text-text-primary">Name</label>
@@ -103,7 +103,7 @@
                         aria-describedby="name-error"
                     >
                     <p id="name-error" class="hidden text-xs text-error" data-error-for="name"></p>
-                </div>
+                    </div>
 
                 <div class="space-y-1.5">
                     <label for="email" class="block text-xs font-medium text-text-primary">Email</label>
@@ -117,7 +117,7 @@
                         aria-readonly="true"
                     >
                     <p class="text-[11px] text-text-muted">Email address cannot be changed.</p>
-                </div>
+                    </div>
 
                 <div class="space-y-1.5">
                     <label for="phone" class="block text-xs font-medium text-text-primary">Phone number</label>
@@ -128,24 +128,24 @@
                         name="phone"
                         inputmode="numeric"
                         autocomplete="tel"
-                        placeholder="Enter your phone number"
+                            placeholder="Enter your phone number"
                         value="{{ old('phone', $professional->phone ?? '') }}"
                         aria-describedby="phone-error"
                     >
                     <p id="phone-error" class="hidden text-xs text-error" data-error-for="phone"></p>
-                </div>
+                    </div>
 
                 <button type="button" class="next-btn inline-flex min-h-11 w-full items-center justify-center rounded-control bg-brand-primary px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
                     Continue
                 </button>
-            </div>
+                </div>
 
-            {{-- Step 2 - Professional Info --}}
+                {{-- Step 2 - Professional Info --}}
             <div class="form-step step-2 space-y-3.5 sm:space-y-4">
                 <div>
                     <h2 class="text-[17px] font-semibold text-brand-950">Professional details</h2>
                     <p class="mt-1 text-[13px] leading-5 text-text-muted">Update only the fields that need correction.</p>
-                </div>
+                    </div>
 
                 <div class="space-y-1.5">
                     <label for="specialization" class="block text-xs font-medium text-text-primary">Service you offer</label>
@@ -156,12 +156,12 @@
                         aria-describedby="specialization-error"
                     >
                         <option value="">Select service</option>
-                        @foreach($services as $service)
-                            <option value="{{ $service->name }}" {{ $selectedSpecialization == $service->name ? 'selected' : '' }}>{{ $service->name }}</option>
-                        @endforeach
-                    </select>
+                            @foreach($services as $service)
+                                <option value="{{ $service->name }}" {{ $selectedSpecialization == $service->name ? 'selected' : '' }}>{{ $service->name }}</option>
+                            @endforeach
+                        </select>
                     <p id="specialization-error" class="hidden text-xs text-error" data-error-for="specialization"></p>
-                </div>
+                    </div>
 
                 <div class="space-y-1.5">
                     <label for="experience" class="block text-xs font-medium text-text-primary">Professional experience</label>
@@ -173,11 +173,11 @@
                     >
                         <option value="">Select experience</option>
                         @foreach(($experiences ?? ['0-2', '2-4', '4-6', '6-8', '8-10', '10+']) as $exp)
-                            <option value="{{ $exp }}" {{ $selectedExperience == $exp ? 'selected' : '' }}>{{ $exp }} years</option>
-                        @endforeach
-                    </select>
+                                <option value="{{ $exp }}" {{ $selectedExperience == $exp ? 'selected' : '' }}>{{ $exp }} years</option>
+                            @endforeach
+                        </select>
                     <p id="experience-error" class="hidden text-xs text-error" data-error-for="experience"></p>
-                </div>
+                    </div>
 
                 <div class="space-y-1.5">
                     <label for="address" class="block text-xs font-medium text-text-primary">Location</label>
@@ -189,11 +189,11 @@
                     >
                         <option value="">Select location</option>
                         @foreach(($cities ?? ['Mumbai', 'Kolkata', 'Delhi', 'Bangalore', 'Chennai', 'Hyderabad', 'Pune', 'Ahmedabad', 'Surat', 'Jaipur']) as $city)
-                            <option value="{{ $city }}" {{ $selectedAddress == $city ? 'selected' : '' }}>{{ $city }}</option>
-                        @endforeach
-                    </select>
+                                <option value="{{ $city }}" {{ $selectedAddress == $city ? 'selected' : '' }}>{{ $city }}</option>
+                            @endforeach
+                        </select>
                     <p id="address-error" class="hidden text-xs text-error" data-error-for="address"></p>
-                </div>
+                    </div>
 
                 <div class="space-y-1.5">
                     <label for="education" class="block text-xs font-medium text-text-primary">Education or qualification</label>
@@ -207,7 +207,7 @@
                         aria-describedby="education-error"
                     >
                     <p id="education-error" class="hidden text-xs text-error" data-error-for="education"></p>
-                </div>
+                    </div>
 
                 <div class="space-y-1.5">
                     <label for="education2" class="block text-xs font-medium text-text-primary">Additional education <span class="font-normal text-text-muted">(optional)</span></label>
@@ -221,30 +221,30 @@
                         aria-describedby="education2-error"
                     >
                     <p id="education2-error" class="hidden text-xs text-error" data-error-for="education2"></p>
-                </div>
+                    </div>
 
                 <div class="grid grid-cols-2 gap-2 pt-1">
                     <button type="button" class="prev-btn inline-flex min-h-11 items-center justify-center rounded-control border border-border bg-white px-3 text-sm font-medium text-text-primary transition hover:bg-brand-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">Back</button>
                     <button type="button" class="next-btn inline-flex min-h-11 items-center justify-center rounded-control bg-brand-primary px-3 text-sm font-semibold text-white transition hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">Continue</button>
+                    </div>
                 </div>
-            </div>
 
-            {{-- Step 3 - Document Uploads --}}
+                {{-- Step 3 - Document Uploads --}}
             <div class="form-step step-3 space-y-3.5 sm:space-y-4">
                 <div>
                     <h2 class="text-[17px] font-semibold text-brand-950">Documents</h2>
                     <p class="mt-1 text-[13px] leading-5 text-text-muted">Upload new documents only if the existing ones were rejected.</p>
-                </div>
+                    </div>
 
                 <div class="space-y-1.5">
                     <label for="profile_photo" class="block text-xs font-medium text-text-primary">Profile photo <span class="font-normal text-text-muted">(optional)</span></label>
-                    @if($doc && !empty($doc->photo))
+                            @if($doc && !empty($doc->photo))
                         <div class="mb-2 flex items-center gap-3 rounded-control border border-divider bg-surface-muted px-3 py-2.5">
                             <img src="{{ asset('storage/'.$doc->photo) }}" alt="Current profile photo" class="size-12 rounded-full object-cover">
                             <div class="min-w-0">
                                 <p class="text-xs font-medium text-brand-950">Current photo on file</p>
                                 <a href="{{ asset('storage/'.$doc->photo) }}" target="_blank" rel="noopener noreferrer" class="text-[11px] font-medium text-brand-primary hover:underline">View current photo</a>
-                            </div>
+                                </div>
                         </div>
                     @else
                         <p class="mb-2 text-[11px] text-text-muted">No photo uploaded yet.</p>
@@ -256,15 +256,15 @@
                     </label>
                     <div class="file-preview mt-2 hidden space-y-1" id="profile_photo_preview"></div>
                     <p id="profile_photo-error" class="hidden text-xs text-error" data-error-for="profile_photo"></p>
-                </div>
+                    </div>
 
                 <div class="space-y-1.5">
                     <label for="qualification_document" class="block text-xs font-medium text-text-primary">Qualification document</label>
-                    @if($doc && !empty($doc->qualification_document))
+                        @if($doc && !empty($doc->qualification_document))
                         <a href="{{ asset('storage/'.$doc->qualification_document) }}" target="_blank" rel="noopener noreferrer" class="mb-2 inline-flex min-h-9 items-center rounded-control border border-border bg-white px-3 text-xs font-medium text-brand-800 transition hover:bg-brand-50">View current qualification document</a>
-                    @else
+                        @else
                         <p class="mb-2 text-[11px] text-text-muted">No qualification document uploaded.</p>
-                    @endif
+                        @endif
                     <input class="peer sr-only file-upload-input form-control" type="file" name="qualification_document" id="qualification_document" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.bmp,.gif,.tiff,.webp" aria-describedby="qualification_document-error">
                     <label for="qualification_document" class="file-upload-label flex min-h-20 cursor-pointer flex-col items-center justify-center rounded-control border border-dashed border-brand-300 bg-brand-50/70 px-3 py-3 text-center transition hover:border-brand-primary hover:bg-brand-50 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus-ring">
                         <span class="file-upload-text text-xs font-medium text-brand-900">Choose qualification document</span>
@@ -272,20 +272,20 @@
                     </label>
                     <div class="file-preview mt-2 hidden space-y-1" id="qualification_document_preview"></div>
                     <p id="qualification_document-error" class="hidden text-xs text-error" data-error-for="qualification_document"></p>
-                </div>
+                    </div>
 
                 <div class="space-y-1.5">
                     <label for="id_proof_document" class="block text-xs font-medium text-text-primary">Identity proof</label>
                     <p class="text-[11px] text-text-muted">Upload either Aadhaar Card or PAN Card.</p>
-                    @php
-                        $hasIdProof = $doc && !empty($doc->id_proof_document);
-                        $currentIdProof = $doc->id_proof_document ?? null;
-                    @endphp
-                    @if($hasIdProof && $currentIdProof)
+                        @php
+                            $hasIdProof = $doc && !empty($doc->id_proof_document);
+                            $currentIdProof = $doc->id_proof_document ?? null;
+                        @endphp
+                        @if($hasIdProof && $currentIdProof)
                         <a href="{{ asset('storage/'.$currentIdProof) }}" target="_blank" rel="noopener noreferrer" class="mb-2 inline-flex min-h-9 items-center rounded-control border border-border bg-white px-3 text-xs font-medium text-brand-800 transition hover:bg-brand-50">View current ID proof</a>
-                    @else
+                        @else
                         <p class="mb-2 text-[11px] text-text-muted">No ID proof uploaded.</p>
-                    @endif
+                        @endif
                     <input class="peer sr-only file-upload-input form-control" type="file" name="id_proof_document" id="id_proof_document" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.bmp,.gif,.tiff,.webp" aria-describedby="id_proof_document-error">
                     <label for="id_proof_document" class="file-upload-label flex min-h-20 cursor-pointer flex-col items-center justify-center rounded-control border border-dashed border-brand-300 bg-brand-50/70 px-3 py-3 text-center transition hover:border-brand-primary hover:bg-brand-50 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus-ring">
                         <span class="file-upload-text text-xs font-medium text-brand-900">Choose Aadhaar or PAN document</span>
@@ -293,8 +293,8 @@
                     </label>
                     <div class="file-preview mt-2 hidden space-y-1" id="id_proof_document_preview"></div>
                     <p id="id_proof_document-error" class="hidden text-xs text-error" data-error-for="id_proof_document"></p>
-                </div>
-
+                    </div>
+                    
                 <div class="rounded-control border border-divider p-3">
                     <label for="has_gst" class="flex cursor-pointer items-start gap-2.5">
                         <input type="checkbox" class="form-check-input mt-0.5 size-4 rounded border-border text-brand-primary focus:ring-brand-primary" id="has_gst" name="has_gst" {{ $hasGst ? 'checked' : '' }}>
@@ -302,8 +302,8 @@
                             <span class="block text-xs font-medium text-text-primary">I have GST registration</span>
                             <span class="mt-1 block text-[11px] leading-4 text-text-muted">Optional. Select this to add or update your GST details.</span>
                         </span>
-                    </label>
-                </div>
+                            </label>
+                        </div>
 
                 <div id="gst-fields-container" class="{{ $hasGst ? '' : 'hidden' }} space-y-3 rounded-control border border-divider bg-surface-muted p-3">
                     <div class="space-y-1.5">
@@ -321,7 +321,7 @@
                         <p class="text-[11px] text-text-muted">Please enter your GST number (10–15 characters).</p>
                         <p id="gst_number-error" class="hidden text-xs text-error" data-error-for="gst_number"></p>
                     </div>
-
+                    
                     <div class="space-y-1.5">
                         <label for="state_code" class="block text-xs font-medium text-text-primary">GST state</label>
                         <select
@@ -331,48 +331,48 @@
                             aria-describedby="state_code-error"
                         >
                             <option value="">Select GST state code</option>
-                            <option value="01" data-state="Jammu and Kashmir" {{ $selectedStateCode == '01' ? 'selected' : '' }}>01 - Jammu and Kashmir</option>
-                            <option value="02" data-state="Himachal Pradesh" {{ $selectedStateCode == '02' ? 'selected' : '' }}>02 - Himachal Pradesh</option>
-                            <option value="03" data-state="Punjab" {{ $selectedStateCode == '03' ? 'selected' : '' }}>03 - Punjab</option>
-                            <option value="04" data-state="Chandigarh" {{ $selectedStateCode == '04' ? 'selected' : '' }}>04 - Chandigarh</option>
-                            <option value="05" data-state="Uttarakhand" {{ $selectedStateCode == '05' ? 'selected' : '' }}>05 - Uttarakhand</option>
-                            <option value="06" data-state="Haryana" {{ $selectedStateCode == '06' ? 'selected' : '' }}>06 - Haryana</option>
-                            <option value="07" data-state="Delhi" {{ $selectedStateCode == '07' ? 'selected' : '' }}>07 - Delhi</option>
-                            <option value="08" data-state="Rajasthan" {{ $selectedStateCode == '08' ? 'selected' : '' }}>08 - Rajasthan</option>
-                            <option value="09" data-state="Uttar Pradesh" {{ $selectedStateCode == '09' ? 'selected' : '' }}>09 - Uttar Pradesh</option>
-                            <option value="10" data-state="Bihar" {{ $selectedStateCode == '10' ? 'selected' : '' }}>10 - Bihar</option>
-                            <option value="11" data-state="Sikkim" {{ $selectedStateCode == '11' ? 'selected' : '' }}>11 - Sikkim</option>
-                            <option value="12" data-state="Arunachal Pradesh" {{ $selectedStateCode == '12' ? 'selected' : '' }}>12 - Arunachal Pradesh</option>
-                            <option value="13" data-state="Nagaland" {{ $selectedStateCode == '13' ? 'selected' : '' }}>13 - Nagaland</option>
-                            <option value="14" data-state="Manipur" {{ $selectedStateCode == '14' ? 'selected' : '' }}>14 - Manipur</option>
-                            <option value="15" data-state="Mizoram" {{ $selectedStateCode == '15' ? 'selected' : '' }}>15 - Mizoram</option>
-                            <option value="16" data-state="Tripura" {{ $selectedStateCode == '16' ? 'selected' : '' }}>16 - Tripura</option>
-                            <option value="17" data-state="Meghalaya" {{ $selectedStateCode == '17' ? 'selected' : '' }}>17 - Meghalaya</option>
-                            <option value="18" data-state="Assam" {{ $selectedStateCode == '18' ? 'selected' : '' }}>18 - Assam</option>
-                            <option value="19" data-state="West Bengal" {{ $selectedStateCode == '19' ? 'selected' : '' }}>19 - West Bengal</option>
-                            <option value="20" data-state="Jharkhand" {{ $selectedStateCode == '20' ? 'selected' : '' }}>20 - Jharkhand</option>
-                            <option value="21" data-state="Odisha" {{ $selectedStateCode == '21' ? 'selected' : '' }}>21 - Odisha</option>
-                            <option value="22" data-state="Chhattisgarh" {{ $selectedStateCode == '22' ? 'selected' : '' }}>22 - Chhattisgarh</option>
-                            <option value="23" data-state="Madhya Pradesh" {{ $selectedStateCode == '23' ? 'selected' : '' }}>23 - Madhya Pradesh</option>
-                            <option value="24" data-state="Gujarat" {{ $selectedStateCode == '24' ? 'selected' : '' }}>24 - Gujarat</option>
-                            <option value="25" data-state="Daman and Diu" {{ $selectedStateCode == '25' ? 'selected' : '' }}>25 - Daman and Diu</option>
-                            <option value="26" data-state="Dadra and Nagar Haveli" {{ $selectedStateCode == '26' ? 'selected' : '' }}>26 - Dadra and Nagar Haveli</option>
-                            <option value="27" data-state="Maharashtra" {{ $selectedStateCode == '27' ? 'selected' : '' }}>27 - Maharashtra</option>
-                            <option value="28" data-state="Andhra Pradesh" {{ $selectedStateCode == '28' ? 'selected' : '' }}>28 - Andhra Pradesh</option>
-                            <option value="29" data-state="Karnataka" {{ $selectedStateCode == '29' ? 'selected' : '' }}>29 - Karnataka</option>
-                            <option value="30" data-state="Goa" {{ $selectedStateCode == '30' ? 'selected' : '' }}>30 - Goa</option>
-                            <option value="31" data-state="Lakshadweep" {{ $selectedStateCode == '31' ? 'selected' : '' }}>31 - Lakshadweep</option>
-                            <option value="32" data-state="Kerala" {{ $selectedStateCode == '32' ? 'selected' : '' }}>32 - Kerala</option>
-                            <option value="33" data-state="Tamil Nadu" {{ $selectedStateCode == '33' ? 'selected' : '' }}>33 - Tamil Nadu</option>
-                            <option value="34" data-state="Puducherry" {{ $selectedStateCode == '34' ? 'selected' : '' }}>34 - Puducherry</option>
-                            <option value="35" data-state="Andaman and Nicobar Islands" {{ $selectedStateCode == '35' ? 'selected' : '' }}>35 - Andaman and Nicobar Islands</option>
-                            <option value="36" data-state="Telangana" {{ $selectedStateCode == '36' ? 'selected' : '' }}>36 - Telangana</option>
-                            <option value="37" data-state="Andhra Pradesh (New)" {{ $selectedStateCode == '37' ? 'selected' : '' }}>37 - Andhra Pradesh (New)</option>
-                            <option value="38" data-state="Ladakh" {{ $selectedStateCode == '38' ? 'selected' : '' }}>38 - Ladakh</option>
-                        </select>
+                                <option value="01" data-state="Jammu and Kashmir" {{ $selectedStateCode == '01' ? 'selected' : '' }}>01 - Jammu and Kashmir</option>
+                                <option value="02" data-state="Himachal Pradesh" {{ $selectedStateCode == '02' ? 'selected' : '' }}>02 - Himachal Pradesh</option>
+                                <option value="03" data-state="Punjab" {{ $selectedStateCode == '03' ? 'selected' : '' }}>03 - Punjab</option>
+                                <option value="04" data-state="Chandigarh" {{ $selectedStateCode == '04' ? 'selected' : '' }}>04 - Chandigarh</option>
+                                <option value="05" data-state="Uttarakhand" {{ $selectedStateCode == '05' ? 'selected' : '' }}>05 - Uttarakhand</option>
+                                <option value="06" data-state="Haryana" {{ $selectedStateCode == '06' ? 'selected' : '' }}>06 - Haryana</option>
+                                <option value="07" data-state="Delhi" {{ $selectedStateCode == '07' ? 'selected' : '' }}>07 - Delhi</option>
+                                <option value="08" data-state="Rajasthan" {{ $selectedStateCode == '08' ? 'selected' : '' }}>08 - Rajasthan</option>
+                                <option value="09" data-state="Uttar Pradesh" {{ $selectedStateCode == '09' ? 'selected' : '' }}>09 - Uttar Pradesh</option>
+                                <option value="10" data-state="Bihar" {{ $selectedStateCode == '10' ? 'selected' : '' }}>10 - Bihar</option>
+                                <option value="11" data-state="Sikkim" {{ $selectedStateCode == '11' ? 'selected' : '' }}>11 - Sikkim</option>
+                                <option value="12" data-state="Arunachal Pradesh" {{ $selectedStateCode == '12' ? 'selected' : '' }}>12 - Arunachal Pradesh</option>
+                                <option value="13" data-state="Nagaland" {{ $selectedStateCode == '13' ? 'selected' : '' }}>13 - Nagaland</option>
+                                <option value="14" data-state="Manipur" {{ $selectedStateCode == '14' ? 'selected' : '' }}>14 - Manipur</option>
+                                <option value="15" data-state="Mizoram" {{ $selectedStateCode == '15' ? 'selected' : '' }}>15 - Mizoram</option>
+                                <option value="16" data-state="Tripura" {{ $selectedStateCode == '16' ? 'selected' : '' }}>16 - Tripura</option>
+                                <option value="17" data-state="Meghalaya" {{ $selectedStateCode == '17' ? 'selected' : '' }}>17 - Meghalaya</option>
+                                <option value="18" data-state="Assam" {{ $selectedStateCode == '18' ? 'selected' : '' }}>18 - Assam</option>
+                                <option value="19" data-state="West Bengal" {{ $selectedStateCode == '19' ? 'selected' : '' }}>19 - West Bengal</option>
+                                <option value="20" data-state="Jharkhand" {{ $selectedStateCode == '20' ? 'selected' : '' }}>20 - Jharkhand</option>
+                                <option value="21" data-state="Odisha" {{ $selectedStateCode == '21' ? 'selected' : '' }}>21 - Odisha</option>
+                                <option value="22" data-state="Chhattisgarh" {{ $selectedStateCode == '22' ? 'selected' : '' }}>22 - Chhattisgarh</option>
+                                <option value="23" data-state="Madhya Pradesh" {{ $selectedStateCode == '23' ? 'selected' : '' }}>23 - Madhya Pradesh</option>
+                                <option value="24" data-state="Gujarat" {{ $selectedStateCode == '24' ? 'selected' : '' }}>24 - Gujarat</option>
+                                <option value="25" data-state="Daman and Diu" {{ $selectedStateCode == '25' ? 'selected' : '' }}>25 - Daman and Diu</option>
+                                <option value="26" data-state="Dadra and Nagar Haveli" {{ $selectedStateCode == '26' ? 'selected' : '' }}>26 - Dadra and Nagar Haveli</option>
+                                <option value="27" data-state="Maharashtra" {{ $selectedStateCode == '27' ? 'selected' : '' }}>27 - Maharashtra</option>
+                                <option value="28" data-state="Andhra Pradesh" {{ $selectedStateCode == '28' ? 'selected' : '' }}>28 - Andhra Pradesh</option>
+                                <option value="29" data-state="Karnataka" {{ $selectedStateCode == '29' ? 'selected' : '' }}>29 - Karnataka</option>
+                                <option value="30" data-state="Goa" {{ $selectedStateCode == '30' ? 'selected' : '' }}>30 - Goa</option>
+                                <option value="31" data-state="Lakshadweep" {{ $selectedStateCode == '31' ? 'selected' : '' }}>31 - Lakshadweep</option>
+                                <option value="32" data-state="Kerala" {{ $selectedStateCode == '32' ? 'selected' : '' }}>32 - Kerala</option>
+                                <option value="33" data-state="Tamil Nadu" {{ $selectedStateCode == '33' ? 'selected' : '' }}>33 - Tamil Nadu</option>
+                                <option value="34" data-state="Puducherry" {{ $selectedStateCode == '34' ? 'selected' : '' }}>34 - Puducherry</option>
+                                <option value="35" data-state="Andaman and Nicobar Islands" {{ $selectedStateCode == '35' ? 'selected' : '' }}>35 - Andaman and Nicobar Islands</option>
+                                <option value="36" data-state="Telangana" {{ $selectedStateCode == '36' ? 'selected' : '' }}>36 - Telangana</option>
+                                <option value="37" data-state="Andhra Pradesh (New)" {{ $selectedStateCode == '37' ? 'selected' : '' }}>37 - Andhra Pradesh (New)</option>
+                                <option value="38" data-state="Ladakh" {{ $selectedStateCode == '38' ? 'selected' : '' }}>38 - Ladakh</option>
+                            </select>
                         <p id="state_code-error" class="hidden text-xs text-error" data-error-for="state_code"></p>
-                    </div>
-
+                        </div>
+                        
                     <div class="space-y-1.5">
                         <label for="gst_address" class="block text-xs font-medium text-text-primary">GST registered address</label>
                         <textarea
@@ -384,15 +384,15 @@
                             aria-describedby="gst_address-error"
                         >{{ old('gst_address', $profile->gst_address ?? $professional->gst_address ?? '') }}</textarea>
                         <p id="gst_address-error" class="hidden text-xs text-error" data-error-for="gst_address"></p>
-                    </div>
-
+                        </div>
+                        
                     <div class="space-y-1.5">
                         <label for="gst_certificate" class="block text-xs font-medium text-text-primary">GST certificate</label>
-                        @if(!empty($existingGstCertificate))
+                            @if(!empty($existingGstCertificate))
                             <a href="{{ asset('storage/'.$existingGstCertificate) }}" target="_blank" rel="noopener noreferrer" class="mb-2 inline-flex min-h-9 items-center rounded-control border border-border bg-white px-3 text-xs font-medium text-brand-800 transition hover:bg-brand-50">View current GST certificate</a>
-                        @else
+                            @else
                             <p class="mb-2 text-[11px] text-text-muted">No GST certificate uploaded.</p>
-                        @endif
+                            @endif
                         <input class="peer sr-only file-upload-input form-control" type="file" name="gst_certificate" id="gst_certificate" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.bmp,.gif,.tiff,.webp" aria-describedby="gst_certificate-error">
                         <label for="gst_certificate" class="file-upload-label flex min-h-16 cursor-pointer flex-col items-center justify-center rounded-control border border-dashed border-brand-300 bg-white px-3 py-2 text-center transition hover:border-brand-primary hover:bg-brand-50 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus-ring">
                             <span class="file-upload-text text-xs font-medium text-brand-900">Choose GST certificate</span>
@@ -401,7 +401,7 @@
                         <div class="file-preview mt-2 hidden space-y-1" id="gst_certificate_preview"></div>
                         <p id="gst_certificate-error" class="hidden text-xs text-error" data-error-for="gst_certificate"></p>
                     </div>
-                </div>
+                    </div>
 
                 <p class="rounded-control border border-info/20 bg-info-surface px-3 py-2.5 text-[11px] leading-4 text-info">
                     Profile photo and gallery images can also be managed from your professional profile after approval.
@@ -412,9 +412,9 @@
                     <button type="submit" id="resubmit-submit" class="inline-flex min-h-11 items-center justify-center rounded-control bg-brand-primary px-3 text-sm font-semibold text-white transition hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring disabled:cursor-not-allowed disabled:opacity-60">
                         Re-submit application
                     </button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
 
         <div class="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-divider pt-4">
             <a href="{{ route('professional.logout') }}" class="inline-flex min-h-9 items-center text-xs font-medium text-text-secondary underline-offset-4 hover:text-brand-primary hover:underline">Sign out</a>
@@ -451,22 +451,22 @@
         <p class="text-sm font-semibold text-brand-950">Updating your application</p>
         <p class="mt-1 text-xs text-text-muted">Please wait while your details are saved.</p>
     </div>
-</div>
+    </div>
 
 <x-yuktione.feedback />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 @vite('resources/js/yuktione-feedback.js')
 
-<script>
-    function refreshCSRFToken() {
+    <script>
+        function refreshCSRFToken() {
         $.get('/csrf-token', function (data) {
-            $('meta[name="csrf-token"]').attr('content', data.csrf_token);
-            $('input[name="_token"]').val(data.csrf_token);
+                $('meta[name="csrf-token"]').attr('content', data.csrf_token);
+                $('input[name="_token"]').val(data.csrf_token);
         }).fail(function () {
-            console.warn('Failed to refresh CSRF token');
-        });
-    }
+                console.warn('Failed to refresh CSRF token');
+            });
+        }
 
     function notifyError(message) {
         if (window.YuktioneToast?.error) {
@@ -492,10 +492,10 @@
         }
     }
 
-    function showFieldError(fieldName, errorMessage) {
+        function showFieldError(fieldName, errorMessage) {
         const field = $(`[name="${fieldName}"]`).first();
         field.addClass('is-invalid').attr('aria-invalid', 'true');
-
+            
         const errorEl = $(`[data-error-for="${fieldName}"]`);
         if (errorEl.length) {
             errorEl.text(errorMessage).removeClass('hidden');
@@ -505,11 +505,11 @@
         }
     }
 
-    function clearFieldErrors() {
+        function clearFieldErrors() {
         $('.form-control, input, select, textarea').removeClass('is-invalid').removeAttr('aria-invalid');
         $('[data-error-for]').addClass('hidden').text('');
-        $('.invalid-feedback').remove();
-    }
+            $('.invalid-feedback').remove();
+        }
 
     function updateStepChrome(step) {
         const label = document.querySelector('[data-resubmit-step-label]');
@@ -527,46 +527,46 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function validateStep(step) {
-        let isValid = true;
-
-        if (step === 1) {
-            const name = $('[name="name"]').val().trim();
-            const phone = $('[name="phone"]').val().trim();
-
-            if (name && name.length < 2) {
-                showFieldError('name', 'Name must be at least 2 characters');
-                isValid = false;
-            }
-
-            if (phone && (phone.length < 6 || phone.length > 15 || !/^\d+$/.test(phone))) {
-                showFieldError('phone', 'Please enter a valid phone number (6-15 digits)');
-                isValid = false;
-            }
-        } else if (step === 3) {
-            if ($('#has_gst').is(':checked')) {
-                const gstNumber = $('[name="gst_number"]').val().trim();
-                const stateCode = $('[name="state_code"]').val().trim();
-                const gstAddress = $('[name="gst_address"]').val().trim();
-
-                if (gstNumber && (gstNumber.length < 10 || gstNumber.length > 15)) {
-                    showFieldError('gst_number', 'Please enter a valid GST number (10-15 characters)');
+        function validateStep(step) {
+            let isValid = true;
+            
+            if (step === 1) {
+                const name = $('[name="name"]').val().trim();
+                const phone = $('[name="phone"]').val().trim();
+                
+                if (name && name.length < 2) {
+                    showFieldError('name', 'Name must be at least 2 characters');
                     isValid = false;
                 }
-
-                if (!gstNumber) {
-                    showFieldError('gst_number', 'GST number is required when providing GST details');
+                
+                if (phone && (phone.length < 6 || phone.length > 15 || !/^\d+$/.test(phone))) {
+                    showFieldError('phone', 'Please enter a valid phone number (6-15 digits)');
                     isValid = false;
                 }
-
-                if (!stateCode) {
-                    showFieldError('state_code', 'GST state is required when providing GST details');
-                    isValid = false;
-                }
-
-                if (!gstAddress) {
-                    showFieldError('gst_address', 'GST address is required when providing GST details');
-                    isValid = false;
+            } else if (step === 3) {
+                if ($('#has_gst').is(':checked')) {
+                    const gstNumber = $('[name="gst_number"]').val().trim();
+                    const stateCode = $('[name="state_code"]').val().trim();
+                    const gstAddress = $('[name="gst_address"]').val().trim();
+                    
+                    if (gstNumber && (gstNumber.length < 10 || gstNumber.length > 15)) {
+                        showFieldError('gst_number', 'Please enter a valid GST number (10-15 characters)');
+                        isValid = false;
+                    }
+                    
+                    if (!gstNumber) {
+                        showFieldError('gst_number', 'GST number is required when providing GST details');
+                        isValid = false;
+                    }
+                    
+                    if (!stateCode) {
+                        showFieldError('state_code', 'GST state is required when providing GST details');
+                        isValid = false;
+                    }
+                    
+                    if (!gstAddress) {
+                        showFieldError('gst_address', 'GST address is required when providing GST details');
+                        isValid = false;
                 }
             }
         }
@@ -744,14 +744,14 @@
         $('#registerForm').submit(function (e) {
             e.preventDefault();
             clearFieldErrors();
-
+            
             let isFormValid = true;
             for (let step = 1; step <= 3; step++) {
                 if (!validateStep(step)) {
                     isFormValid = false;
                 }
             }
-
+            
             if (!isFormValid) {
                 notifyError('Please fix the validation errors before submitting your updates.');
                 const $firstError = $('.is-invalid').first();
@@ -803,7 +803,7 @@
                     } else if (xhr.responseJSON?.errors) {
                         let errorCount = 0;
                         let firstErrorStep = 1;
-
+                        
                         Object.keys(xhr.responseJSON.errors).forEach((field) => {
                             const errorMessages = xhr.responseJSON.errors[field];
                             errorMessages.forEach((errorMessage) => {
@@ -814,7 +814,7 @@
                                 else if ($field.closest('.step-3').length && firstErrorStep < 3) firstErrorStep = 3;
                             });
                         });
-
+                        
                         currentStep = firstErrorStep;
                         goToStep(firstErrorStep);
                         notifyError(`Please fix ${errorCount} validation error${errorCount > 1 ? 's' : ''} and try again.`);
@@ -842,8 +842,8 @@
         @if (session('warning'))
             toastr.warning(@json(session('warning')));
         @endif
-    });
-</script>
+            });
+        </script>
 </body>
 </html>
 

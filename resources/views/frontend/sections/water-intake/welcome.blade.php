@@ -5,35 +5,20 @@
 @section('body_class', 'yk-water-body')
 
 @section('content')
-<main class="yk-water yk-tools-ds" data-yk-tools-ds data-yk-water>
+<main class="yk-water yk-tools-ds yk-tool-shell" data-yk-tools-ds data-yk-water data-yk-tool-shell="1">
     <div class="yk-water__wrap">
         @include('frontend.sections.partials.tool-back-to-tools')
-        <section class="yk-water__card yk-water__card--welcome" aria-labelledby="water-welcome-heading">
-            <p class="yk-water__badge">Nutrition tool</p>
-            <h1 id="water-welcome-heading"><x-yuktione.two-tone text="Water Intake Tracker" /></h1>
-            <p class="yk-water__lead">Log drinks against a personal daily goal and review your week. Goals are tracking preferences—not medical prescriptions.</p>
-
-            <div class="yk-water__welcome-preview" aria-hidden="true">
-                <div class="yk-water__progress is-demo">
-                    <svg viewBox="0 0 140 140">
-                        <circle class="yk-water__ring-track" cx="70" cy="70" r="54" fill="none" stroke-width="12"></circle>
-                        <circle class="yk-water__ring-fill" cx="70" cy="70" r="54" fill="none" stroke-width="12" stroke-linecap="round"
-                            stroke-dasharray="339.292" stroke-dashoffset="135.717" transform="rotate(-90 70 70)"></circle>
-                    </svg>
-                    <div class="yk-water__progress-center">
-                        <strong>—</strong>
-                        <span>Sign in to track</span>
-                    </div>
+        <section class="yk-water__card yk-water__card--welcome" aria-labelledby="water-welcome-heading" data-yk-tool-compact-header>
+            <p class="yk-water__badge"><x-yk-icon name="droplets" class="yk-icon--sm" /> Nutrition tool</p>
+            <div class="yk-tool-shell__title-row" style="margin:0.35rem 0 0.5rem">
+                <span class="yk-tool-shell__icon" aria-hidden="true"><x-yk-icon name="droplets" class="yk-icon--lg" /></span>
+                <div>
+                    <h1 id="water-welcome-heading"><x-yuktione.two-tone text="Water Intake Tracker" /></h1>
+                    <p class="yk-water__lead" data-yk-tool-page-lead>{{ \App\Support\Tools\ToolPageLeads::for('water-intake-tracker') }} Tracking preferences only—not medical prescriptions.</p>
                 </div>
             </div>
 
-            <ul class="yk-water__welcome-points">
-                <li>Quick-add glasses and bottles</li>
-                <li>Daily progress against your goal</li>
-                <li>Private weekly history</li>
-            </ul>
-
-            <p class="yk-water__note">Guests can preview this introduction only. Nothing is saved until you sign in.</p>
+            <p class="yk-water__note">Sign in to log drinks and save private history.</p>
             <div class="yk-water__actions">
                 <a class="yk-water__btn" href="{{ route('login') }}">Log in to start tracking</a>
                 @include('frontend.sections.partials.tool-back-to-tools', ['class' => 'yk-water__btn-secondary'])

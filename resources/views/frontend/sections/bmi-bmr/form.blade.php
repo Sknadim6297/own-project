@@ -12,11 +12,6 @@
     $activity = old('activity', $old['activity'] ?? '');
     $heightIsCm = $heightUnit === 'cm';
     $weightIsKg = $weightUnit === 'kg';
-    $heroImage = \App\Support\Tools\ToolIllustration::DIRECTORY.'bmi-hero-woman.webp';
-    if (! file_exists(public_path($heroImage))) {
-        $heroImage = \App\Support\Tools\ToolIllustration::DIRECTORY.'bmi-bmr-3d.webp';
-    }
-    $heroImageExists = file_exists(public_path($heroImage));
     $sexOptions = [
         'female' => 'Female',
         'male' => 'Male',
@@ -35,54 +30,26 @@
         'extra-active' => 'Intense exercise & physical job',
     ];
 @endphp
-<main class="yk-bmi yk-tools-ds" data-yk-tools-ds data-yk-bmi>
-    <svg class="yk-bmi__leaf yk-bmi__leaf--bl" viewBox="0 0 200 260" aria-hidden="true" focusable="false">
-        <path d="M100 250C100 160 80 90 20 20c70 20 110 90 80 230z"/>
-        <path d="M105 250c0-80 30-140 90-190-10 80-40 150-90 190z"/>
-        <path d="M100 250c-20-50-60-90-98-100 50-10 90 30 98 100z"/>
-    </svg>
-    <svg class="yk-bmi__leaf yk-bmi__leaf--tr" viewBox="0 0 200 260" aria-hidden="true" focusable="false">
-        <path d="M100 250C100 160 80 90 20 20c70 20 110 90 80 230z"/>
-        <path d="M105 250c0-80 30-140 90-190-10 80-40 150-90 190z"/>
-    </svg>
-
+<main class="yk-bmi yk-tools-ds yk-tool-shell yk-bmi--compact-header" data-yk-tools-ds data-yk-bmi data-yk-tool-shell="1">
     <div class="yk-bmi__wrap yk-bmi__wrap--wide">
         @include('frontend.sections.partials.tool-back-to-tools')
 
-        {{-- Header: title, illustration, feature pills --}}
-        <header class="yk-bmi__hero" aria-labelledby="bmi-form-heading">
+        <header class="yk-bmi__hero yk-bmi__hero--compact" aria-labelledby="bmi-form-heading" data-yk-tool-compact-header>
             <div class="yk-bmi__hero-copy">
                 <p class="yk-bmi__badge">
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14"/><path d="M5 19c3-5 6-8 10-10"/></svg>
-                    Nutrition Tool
+                    <x-yk-icon name="activity" class="yk-icon--sm" />
+                    Fitness Tool
                 </p>
-                <h1 id="bmi-form-heading"><x-yuktione.two-tone text="BMI, BMR & TDEE Calculator" /></h1>
-                <p class="yk-bmi__lead">Educational screening estimates from your measurements—not medical advice.</p>
+                <div class="yk-bmi__title-row">
+                    <span class="yk-bmi__title-icon" aria-hidden="true">
+                        <x-yk-icon name="activity" class="yk-icon--lg" />
+                    </span>
+                    <div>
+                        <h1 id="bmi-form-heading"><x-yuktione.two-tone text="BMI, BMR & TDEE Calculator" /></h1>
+                        <p class="yk-bmi__lead" data-yk-tool-page-lead>{{ \App\Support\Tools\ToolPageLeads::forBmi() }}</p>
+                    </div>
+                </div>
             </div>
-
-            <div class="yk-bmi__hero-art" aria-hidden="true">
-                <span class="yk-bmi__hero-blob"></span>
-                <svg class="yk-bmi__heart yk-bmi__heart--a" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 20.5C5 15 3 11.5 3 8.6A4.6 4.6 0 0 1 7.6 4c1.8 0 3.4 1 4.4 2.6C13 5 14.600 4 16.400 4A4.600 4.600 0 0 1 21 8.600c0 2.900-2 6.400-9 11.900z"/></svg>
-                <svg class="yk-bmi__heart yk-bmi__heart--b" viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 20.5C5 15 3 11.5 3 8.6A4.6 4.6 0 0 1 7.6 4c1.8 0 3.4 1 4.4 2.6C13 5 14.600 4 16.400 4A4.600 4.600 0 0 1 21 8.600c0 2.900-2 6.400-9 11.900z"/></svg>
-                @if ($heroImageExists)
-                    <img src="{{ asset($heroImage) }}" alt="" width="900" height="600" decoding="async" fetchpriority="high">
-                @endif
-            </div>
-
-            <ul class="yk-bmi__pills">
-                <li>
-                    <span class="yk-bmi__pill-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M13 2 4 14h6.500l-1 8L19 10h-6.500z"/></svg></span>
-                    <span><strong>Quick &amp; Easy</strong><small>Get results in seconds</small></span>
-                </li>
-                <li>
-                    <span class="yk-bmi__pill-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4.500 6v5.500c0 4.700 3.100 8 7.500 9.500 4.400-1.500 7.500-4.800 7.500-9.500V6z"/><path d="m9 12 2.200 2.200L15.200 10"/></svg></span>
-                    <span><strong>Private &amp; Secure</strong><small>Your data stays with you</small></span>
-                </li>
-                <li>
-                    <span class="yk-bmi__pill-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><rect x="4" y="12" width="4" height="8" rx="1.200"/><rect x="10" y="7" width="4" height="13" rx="1.200"/><rect x="16" y="3" width="4" height="17" rx="1.200"/></svg></span>
-                    <span><strong>Insightful</strong><small>Understand your health better</small></span>
-                </li>
-            </ul>
         </header>
 
         <div class="yk-bmi__layout">

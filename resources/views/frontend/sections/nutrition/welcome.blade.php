@@ -6,28 +6,18 @@
 
 @section('content')
 @php $catalogueReady = ($catalogueCount ?? 0) > 0; @endphp
-<main class="yk-nut yk-tools-ds" data-yk-tools-ds data-yk-nut>
+<main class="yk-nut yk-tools-ds yk-tool-shell" data-yk-tools-ds data-yk-nut data-yk-tool-shell="1">
     <div class="yk-nut__wrap">
         @include('frontend.sections.partials.tool-back-to-tools')
-        <section class="yk-nut__card yk-nut__card--welcome" aria-labelledby="nut-welcome-heading">
+        <section class="yk-nut__card yk-nut__card--welcome" aria-labelledby="nut-welcome-heading" data-yk-tool-compact-header>
             <p class="yk-nut__badge">{{ $catalogueReady ? 'Nutrition tool' : 'Food Catalogue Pending' }}</p>
-            <h1 id="nut-welcome-heading"><x-yuktione.two-tone text="Calorie & Nutrition Tracker" /></h1>
-            <p class="yk-nut__lead">Search published foods, set portions from source-backed servings, and log breakfast, lunch, dinner, or snacks.</p>
-
-            <div class="yk-nut__welcome-preview" aria-hidden="true">
-                <div class="yk-nut__stats">
-                    <div><strong>—</strong><span>Calories</span></div>
-                    <div><strong>—</strong><span>Protein</span></div>
-                    <div><strong>—</strong><span>Carbs</span></div>
-                    <div><strong>—</strong><span>Fat</span></div>
+            <div class="yk-tool-shell__title-row" style="margin:0.35rem 0 0.5rem">
+                <span class="yk-tool-shell__icon" aria-hidden="true"><x-yk-icon name="leaf" class="yk-icon--lg" /></span>
+                <div>
+                    <h1 id="nut-welcome-heading"><x-yuktione.two-tone text="Calorie & Nutrition Tracker" /></h1>
+                    <p class="yk-nut__lead" data-yk-tool-page-lead>{{ \App\Support\Tools\ToolPageLeads::for('calorie-nutrition-tracker') }}</p>
                 </div>
             </div>
-
-            <ul class="yk-nut__welcome-points">
-                <li>Daily calories and macros from real entries</li>
-                <li>Optional personal goals (never prescriptions)</li>
-                <li>Meal history with nutrition snapshots</li>
-            </ul>
 
             @unless ($catalogueReady)
                 <div class="yk-nut__empty yk-nut__empty--gate" role="status">

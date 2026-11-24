@@ -1302,3 +1302,16 @@
         transition: none !important;
     }
 }
+
+/* Task 37 — compact PS tool head (illustration removed) */
+.yk-ps__head--compact {
+    padding: 1rem 1.1rem;
+    margin-bottom: 0.9rem;
+}
+.yk-ps__head--compact .yk-ps__head-art {
+    display: none !important;
+}
+.yk-ps__head--compact h1 {
+    font-size: clamp(1.3rem, 1.05rem + 1vw, 1.75rem);
+    line-height: 1.2;
+}

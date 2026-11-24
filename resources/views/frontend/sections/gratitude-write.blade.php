@@ -5,7 +5,7 @@
 @section('body_class', 'yk-gratitude-body')
 
 @section('content')
-<main class="yk-gratitude yk-tools-ds" data-yk-tools-ds data-yk-gratitude>
+<main class="yk-gratitude yk-tools-ds yk-tool-shell" data-yk-tools-ds data-yk-gratitude data-yk-tool-shell="1">
     <div class="yk-gratitude__wrap">
         <a class="yk-gratitude__back" href="{{ $backUrl }}">
             <span aria-hidden="true">←</span> Back
@@ -32,7 +32,7 @@
                 @endif
                 <p class="yk-gratitude__badge">{{ $editing ? 'Private entry' : 'Free tool' }}</p>
                 <h1><x-yuktione.two-tone :text="$heading" /></h1>
-                <p class="yk-gratitude__lead">{{ $lead }}</p>
+                <p class="yk-gratitude__lead" data-yk-tool-page-lead>{{ $lead }}</p>
                 @if ($showDate)
                     <p class="yk-gratitude__date"><time datetime="{{ now(\App\Services\GratitudeJournal::TIMEZONE)->toDateString() }}">{{ $today }}</time></p>
                     <h2 class="yk-gratitude__prompt"><x-yuktione.two-tone text="What are you grateful for today?" /></h2>

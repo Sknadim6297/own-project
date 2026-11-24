@@ -1315,3 +1315,36 @@
         transform: none;
     }
 }
+
+/* Task 37 — compact career welcome (3D art removed) */
+.yk-cit__card--compact {
+    padding: 1.25rem 1.25rem 1.35rem !important;
+}
+.yk-cit__hero-grid--compact {
+    grid-template-columns: 1fr !important;
+}
+.yk-cit__title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 0.75rem;
+}
+.yk-cit__title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: #f8eaf1;
+    color: #8a0f4d;
+}
+.yk-cit__card--compact h1 {
+    margin: 0;
+    font-size: clamp(1.35rem, 1.1rem + 1.1vw, 1.85rem) !important;
+    line-height: 1.2;
+}
+.yk-cit__card--compact .yk-cit__hero-art {
+    display: none !important;
+}

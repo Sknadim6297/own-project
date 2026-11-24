@@ -58,16 +58,16 @@
         <p style="margin:0;text-align:center;">
             <a href="mailto:{{ $userDetails['email'] }}" style="color:#8a0f4d;text-decoration:none;font-weight:700;">Email customer</a>
         </p>
-    @else
+            @else
         <p style="margin:0 0 8px;font-weight:700;color:#142B4D;">Admin review required</p>
         <p style="margin:0 0 12px;">This payment failure has been logged and may require follow-up with the customer or payment gateway.</p>
         @include('emails.partials.button', [
             'url' => url('/admin/dashboard'),
             'label' => 'Open admin dashboard',
         ])
-    @endif
+            @endif
 
     <p style="margin:22px 0 0;font-size:12px;color:#64748b;">
-        Notification sent on {{ now()->format('d M Y, h:i A') }}
+                Notification sent on {{ now()->format('d M Y, h:i A') }}
     </p>
 @endsection

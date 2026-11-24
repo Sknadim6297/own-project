@@ -168,6 +168,3 @@
         </aside>
     </div>
 </section>
-
-{{-- Soft silk band between hero and Explore by Need --}}
-@include('frontend.home.partials.section-divider')

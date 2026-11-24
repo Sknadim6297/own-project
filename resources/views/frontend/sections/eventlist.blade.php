@@ -117,12 +117,12 @@
                         <li>
                             <a class="yk-row yk-row--programme" href="{{ $url }}">
                                 <span class="yk-row__media" aria-hidden="true">
-                                    @if ($eventImageUrl)
+                                        @if ($eventImageUrl)
                                         <img src="{{ $eventImageUrl }}" alt="" width="48" height="48" loading="lazy" decoding="async">
-                                    @else
+                                            @else
                                         <span>{{ $initials }}</span>
-                                    @endif
-                                </span>
+                                            @endif
+                                        </span>
                                 <span class="yk-row__body">
                                     <span class="yk-row__title">{{ $title }}</span>
                                     @if ($excerpt !== '')
@@ -147,21 +147,21 @@
 
                 @if (method_exists($events, 'hasPages') && $events->hasPages())
                     <nav class="yk-catalog-pages" aria-label="Programme pages">
-                        @if ($events->onFirstPage())
+                    @if ($events->onFirstPage())
                             <span aria-disabled="true">Previous</span>
                         @else
                             <a href="{{ $events->previousPageUrl() }}">Previous</a>
                         @endif
                         <span>Page {{ $events->currentPage() }} of {{ $events->lastPage() }}</span>
-                        @if ($events->hasMorePages())
+                    @if ($events->hasMorePages())
                             <a href="{{ $events->nextPageUrl() }}">Next</a>
-                        @else
+                    @else
                             <span aria-disabled="true">Next</span>
-                        @endif
+                    @endif
                     </nav>
                 @endif
-            @endif
-        </div>
+                @endif
+            </div>
     </section>
 </main>
 @endsection

@@ -25,7 +25,7 @@ class GratitudeJournalController extends Controller
             'formAction' => route('tools.psychology.gratitude.store'),
             'backUrl' => route('tools.psychology'),
             'heading' => 'Gratitude Journal',
-            'lead' => 'Pause. Reflect. Appreciate.',
+            'lead' => \App\Support\Tools\ToolPageLeads::for('gratitude-journal') ?? 'Reflect on meaningful moments and build a regular gratitude practice.',
             'submitLabel' => 'Finish & Save',
             'showDate' => true,
         ]);

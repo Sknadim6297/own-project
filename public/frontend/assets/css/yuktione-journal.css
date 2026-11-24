@@ -1607,3 +1607,8 @@ body.yk-journal-dialog-open { overflow: hidden; }
     .yk-journal-history__pages { flex-wrap: wrap; justify-content: center; }
     .yk-journal-entry__actions > * { flex: 1 1 140px; }
 }
+
+/* Task 37 — journal compact (side illustration removed) */
+.yk-journal__hero--compact .yk-journal__hero-art {
+    display: none !important;
+}

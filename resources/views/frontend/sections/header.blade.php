@@ -157,7 +157,7 @@
                         @else
                             <span aria-hidden="true">{{ $accountInitials !== '' ? $accountInitials : 'YO' }}</span>
                         @endif
-                    </button>
+        </button>
                     <div class="yk-navbar__quick-menu" id="yk-quick-account-menu" role="menu" aria-label="Account menu" hidden data-quick-account-panel>
                         <a href="{{ $user ? route('user.dashboard') : route('professional.dashboard') }}" role="menuitem">Dashboard</a>
                         @if ($messagesUrl)
@@ -353,7 +353,7 @@
                         @endif
                         @if ($professional && ! $hideDashboardCta)
                             <a class="yk-navbar__dashboard" href="{{ route('professional.dashboard') }}">Go to Dashboard</a>
-                        @endif
+                    @endif
                         <div class="yk-navbar__account" data-account-menu>
                             <button class="yk-navbar__account-toggle" type="button" aria-expanded="false" aria-haspopup="menu" aria-controls="tazen-account-menu" data-account-toggle>
                                 @if ($profilePhoto)
@@ -368,21 +368,21 @@
                                     <span class="yk-navbar__avatar-fallback" aria-hidden="true" hidden>{{ $accountInitials !== '' ? $accountInitials : 'YO' }}</span>
                                 @else
                                     <span class="yk-navbar__avatar-fallback" aria-hidden="true">{{ $accountInitials !== '' ? $accountInitials : 'YO' }}</span>
-                                @endif
+                @endif
                                 <span class="yk-navbar__account-copy">
                                     <span class="yk-navbar__account-name">{{ $account->name }}</span>
                                     <span class="yk-navbar__account-role">{{ $accountRole }}</span>
-                                </span>
+                            </span>
                                 <svg class="yk-navbar__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                    <path d="m6 9 6 6 6-6"></path>
-                                </svg>
-                            </button>
+                                <path d="m6 9 6 6 6-6"></path>
+                            </svg>
+                        </button>
                             <div class="yk-navbar__account-menu" id="tazen-account-menu" role="menu" aria-label="Account menu" hidden data-account-panel>
                                 <span class="yk-navbar__account-label">{{ $accountRole }}</span>
                                 @if ($messagesUrl)
                                     <a href="{{ $messagesUrl }}" role="menuitem">Messages</a>
                                 @endif
-                                @if ($user)
+                            @if ($user)
                                     @unless ($onCustomerHome)
                                         <a href="{{ route('user.dashboard') }}" role="menuitem">Dashboard</a>
                                     @endunless
@@ -397,10 +397,10 @@
                                     <a href="{{ route('professional.profile.index') }}" role="menuitem">My Profile</a>
                                     <a href="{{ route('professional.booking.index') }}" role="menuitem">My Bookings</a>
                                     <a href="{{ route('professional.logout') }}" role="menuitem">Logout</a>
-                                @endif
-                            </div>
+                            @endif
                         </div>
-                    @else
+                    </div>
+                @else
                         <a class="yk-navbar__login" href="{{ route('login') }}">Log In</a>
                         <a class="yk-navbar__signup" href="{{ route('register') }}">Get Started</a>
                     @endif

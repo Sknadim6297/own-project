@@ -14,7 +14,7 @@
     @include('frontend.sections.pfm.partials.page-hero', [
         'crumbs' => [['Money & Finance', route('tools.pfm')], ['History', route($tool['route'].'.history')], ['Show Saved', null]],
         'eyebrow' => $statusLabel,
-        'heroIcon' => $isEmergency ? 'shield-check' : null,
+        'heroIcon' => $isEmergency ? 'shield-check' : 'calculator',
         'title' => $tool['name'],
         'titleId' => 'pfm-show-heading',
         'lead' => $calculation->summary ?: ($result['summary'] ?? 'Your saved financial picture.'),

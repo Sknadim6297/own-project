@@ -32,14 +32,10 @@
         </div>
 
         <div class="yk-journal__panel yk-journal__panel--write">
-            <header class="yk-journal__hero">
+            <header class="yk-journal__hero yk-journal__hero--compact" data-yk-tool-compact-header>
                 <div class="yk-journal__hero-main">
                     <span class="yk-journal__hero-icon" aria-hidden="true">
-                        <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 8h20a4 4 0 0 1 4 4v28H16a4 4 0 0 1-4-4V8z"/>
-                            <path d="M12 36a4 4 0 0 1 4-4h20"/>
-                            <path d="M20 16h10M20 22h6"/>
-                        </svg>
+                        <x-yk-icon name="book-open" class="yk-icon--lg" />
                     </span>
                     <div class="yk-journal__hero-text">
                         <p class="yk-journal__badge">Free tool</p>
@@ -47,11 +43,6 @@
                         <p class="yk-journal__lead">Your private entries, saved only for you.</p>
                     </div>
                 </div>
-                @if ($heroImageExists)
-                    <div class="yk-journal__hero-art yk-journal__hero-art--sm" aria-hidden="true">
-                        <img src="{{ asset($heroImage) }}" alt="" width="120" height="120" decoding="async">
-                    </div>
-                @endif
             </header>
 
             <p class="yk-journal__private" role="status">

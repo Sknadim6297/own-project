@@ -3389,3 +3389,42 @@
         scroll-behavior: auto !important;
     }
 }
+
+/* Task 37 — compact mood header (decorative photo/glows removed) */
+.yk-mood__hero--compact {
+    margin-top: 12px;
+    margin-bottom: 8px;
+}
+.yk-mood__hero--compact .yk-mood__hero-copy {
+    max-width: 42rem;
+}
+.yk-mood__title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+.yk-mood__title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: #f8eaf1;
+    color: #8a0f4d;
+}
+.yk-mood__hero--compact h1 {
+    margin: 0;
+    font-size: clamp(1.35rem, 1.1rem + 1.1vw, 1.85rem) !important;
+    line-height: 1.2;
+}
+.yk-mood__hero--compact .yk-mood__intro {
+    margin: 8px 0 0;
+    max-width: 58ch;
+    font-size: 0.98rem;
+}
+.yk-mood--compact-header .yk-mood__decor,
+.yk-mood--compact-header .yk-mood__hero-visual {
+    display: none !important;
+}

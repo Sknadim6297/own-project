@@ -1,0 +1,352 @@
+/**
+ * Task 38 — Common tools layout shell.
+ * Structural reference: Debt & EMI Calculator (yk-pfm__hero--compact + wrap--wide 1040px).
+ * Brand tokens from homepage / Yuktione design system — not outdated PFM lavender-only hues.
+ */
+
+.yk-tools-ds,
+[data-yk-tools-ds],
+.yk-tool-shell {
+    --yk-tool-shell-max: 1040px;
+    --yk-tool-shell-max-reading: 820px;
+    --yk-tool-shell-gutter: 2rem;
+    --yk-tool-shell-gutter-sm: 1.5rem;
+    --yk-tool-shell-plum: #8a0f4d;
+    --yk-tool-shell-plum-deep: #6e0b3c;
+    --yk-tool-shell-soft: #f8eaf1;
+    --yk-tool-shell-pearl: #fff8fb;
+    --yk-tool-shell-ink: #1f1f1f;
+    --yk-tool-shell-muted: #6b6b7a;
+    --yk-tool-shell-line: #e8e4de;
+    --yk-tool-shell-icon: 48px;
+    --yk-tool-shell-radius: 14px;
+    --yk-tool-shell-gap: 14px;
+    --yk-tool-shell-sheet-mt: 22px;
+}
+
+/* ---- Shared compact header (Debt & EMI structure) ---- */
+.yk-tool-shell__header {
+    position: relative;
+    padding: 16px 0 4px;
+}
+
+.yk-tool-shell__header-in {
+    width: min(var(--yk-tool-shell-max), calc(100% - var(--yk-tool-shell-gutter)));
+    margin-inline: auto;
+}
+
+.yk-tool-shell__nav-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 16px;
+    margin-bottom: 12px;
+}
+
+.yk-tool-shell__crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 10px;
+    color: var(--yk-tool-shell-plum);
+    font-size: 0.88rem;
+}
+
+.yk-tool-shell__crumbs a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    color: var(--yk-tool-shell-plum);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.yk-tool-shell__crumbs a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.yk-tool-shell__crumbs a:focus-visible {
+    outline: 2px solid var(--yk-tool-shell-plum);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+.yk-tool-shell__crumb-now {
+    color: var(--yk-tool-shell-muted);
+    font-weight: 600;
+}
+
+.yk-tool-shell__history {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    color: var(--yk-tool-shell-plum);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.yk-tool-shell__history:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.yk-tool-shell__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 12px;
+    padding: 7px 16px 7px 11px;
+    border-radius: 999px;
+    background: var(--yk-tool-shell-soft);
+    color: var(--yk-tool-shell-plum-deep);
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.yk-tool-shell__title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--yk-tool-shell-gap);
+}
+
+.yk-tool-shell__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: var(--yk-tool-shell-icon);
+    height: var(--yk-tool-shell-icon);
+    border-radius: var(--yk-tool-shell-radius);
+    background: var(--yk-tool-shell-soft);
+    color: var(--yk-tool-shell-plum);
+}
+
+.yk-tool-shell__icon .yk-icon {
+    width: 26px;
+    height: 26px;
+}
+
+.yk-tool-shell__copy {
+    min-width: 0;
+}
+
+.yk-tool-shell__header h1 {
+    margin: 0;
+    max-width: 28ch;
+    overflow-wrap: anywhere;
+    color: var(--yk-tool-shell-ink);
+    font-size: clamp(1.35rem, 1.1rem + 1.1vw, 1.85rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.yk-tool-shell__lead {
+    max-width: 58ch;
+    margin: 8px 0 0;
+    color: #4a3a5e;
+    font-size: 0.98rem;
+    line-height: 1.5;
+}
+
+.yk-tool-shell__rail {
+    width: min(var(--yk-tool-shell-max), calc(100% - var(--yk-tool-shell-gutter)));
+    margin-inline: auto;
+}
+
+.yk-tool-shell__rail--reading {
+    width: min(var(--yk-tool-shell-max-reading), calc(100% - var(--yk-tool-shell-gutter)));
+}
+
+.yk-tool-shell__sheet {
+    margin-top: var(--yk-tool-shell-sheet-mt);
+}
+
+/* ---- Align existing tool chrome to the Debt & EMI reference ---- */
+
+/* PFM: hero rail width matches content wrap gutters */
+.yk-pfm__hero--compact .yk-pfm__hero-in,
+.yk-pfm .yk-pfm__wrap--wide {
+    width: min(var(--yk-tool-shell-max), calc(100% - var(--yk-tool-shell-gutter)));
+}
+
+.yk-pfm__hero-icon {
+    width: var(--yk-tool-shell-icon);
+    height: var(--yk-tool-shell-icon);
+    border-radius: var(--yk-tool-shell-radius);
+    background: var(--yk-tool-shell-soft);
+    color: var(--yk-tool-shell-plum);
+}
+
+.yk-pfm__sheet {
+    margin-top: var(--yk-tool-shell-sheet-mt);
+}
+
+/* Shared title-row icon boxes (Task 37 compact headers) */
+.yk-mood__title-icon,
+.yk-bmi__title-icon,
+.yk-cit__title-icon,
+.yk-tarot__title-icon,
+.yk-journal__hero-icon,
+.yk-ps__tool-icon--lg,
+.yk-ssa__title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: var(--yk-tool-shell-icon);
+    height: var(--yk-tool-shell-icon);
+    border-radius: var(--yk-tool-shell-radius);
+    background: var(--yk-tool-shell-soft);
+    color: var(--yk-tool-shell-plum);
+}
+
+.yk-ssa__title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--yk-tool-shell-gap);
+    margin-bottom: 0.75rem;
+    text-align: left;
+}
+
+.yk-ssa__card--compact {
+    text-align: left;
+}
+
+.yk-mood__hero--compact h1,
+.yk-bmi__hero--compact h1,
+.yk-cit__card--compact h1,
+.yk-tarot__hero--compact h1,
+.yk-ps__head--compact h1,
+.yk-journal__hero--compact h1 {
+    margin: 0;
+    max-width: 28ch;
+    font-size: clamp(1.35rem, 1.1rem + 1.1vw, 1.85rem) !important;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2 !important;
+}
+
+.yk-mood__hero--compact .yk-mood__intro,
+.yk-bmi__hero--compact .yk-bmi__lead,
+.yk-cit__card--compact .yk-cit__lead,
+.yk-tarot__hero--compact .yk-tarot__lead,
+.yk-ps__head--compact .yk-ps__lead,
+.yk-journal__hero--compact .yk-journal__lead,
+.yk-ssa__lead,
+.yk-gratitude__lead,
+.yk-water__lead,
+.yk-nut__lead,
+.yk-wj__lead,
+.yk-pfm__hero-lead,
+[data-yk-tool-page-lead] {
+    max-width: 58ch;
+    margin-top: 8px;
+    margin-bottom: 0;
+    color: #4a3a5e;
+    font-size: 0.98rem;
+    line-height: 1.5;
+}
+
+/* Task 39 — description sits close to the first functional control */
+.yk-ssa__actions,
+.yk-cit__actions--flush,
+.yk-water__actions,
+.yk-nut__actions,
+.yk-wj__actions {
+    margin-top: 14px;
+}
+
+.yk-mood__hero--compact + .yk-mood__progress,
+.yk-bmi__hero--compact + .yk-bmi__layout,
+.yk-ps__head--compact + .yk-ps__panel {
+    margin-top: 14px;
+}
+
+/* Content rails — calculator / form tools → 1040px; reading tools may stay narrower */
+.yk-bmi__wrap--wide,
+.yk-cit__wrap,
+.yk-ps__wrap,
+.yk-ssa__wrap,
+.yk-ssa__wrap--wide,
+.yk-water__wrap,
+.yk-nut__wrap,
+.yk-wj__wrap {
+    width: min(var(--yk-tool-shell-max), calc(100% - var(--yk-tool-shell-gutter))) !important;
+    margin-inline: auto;
+}
+
+.yk-tarot__wrap,
+.yk-gratitude__wrap,
+.yk-journal__wrap,
+.yk-journal__wrap--write {
+    width: min(var(--yk-tool-shell-max-reading), calc(100% - var(--yk-tool-shell-gutter))) !important;
+    margin-inline: auto;
+}
+
+/* Mood keeps a wider functional grid when needed, but share gutters */
+.yk-mood__wrap--home {
+    width: min(1120px, calc(100% - var(--yk-tool-shell-gutter))) !important;
+}
+
+.yk-mood__wrap:not(.yk-mood__wrap--home) {
+    width: min(var(--yk-tool-shell-max-reading), calc(100% - var(--yk-tool-shell-gutter))) !important;
+}
+
+/* Back link rhythm matches Debt & EMI crumbs */
+.yk-tools-ds .yk-tool-back,
+[data-yk-tools-ds] .yk-tool-back {
+    margin-bottom: 0.65rem;
+    color: var(--yk-tool-shell-plum);
+}
+
+/* Compact header → first content spacing */
+.yk-bmi__hero--compact,
+.yk-mood__hero--compact,
+.yk-ps__head--compact,
+.yk-cit__card--compact,
+.yk-tarot__hero--compact,
+.yk-journal__hero--compact {
+    margin-bottom: 0.35rem;
+}
+
+.yk-bmi__layout,
+.yk-ps__panel,
+.yk-cit__card:not(.yk-cit__card--hero),
+.yk-tarot__actions,
+.yk-mood__layout {
+    margin-top: var(--yk-tool-shell-sheet-mt);
+}
+
+@media (max-width: 767.98px) {
+    .yk-tools-ds,
+    [data-yk-tools-ds],
+    .yk-tool-shell {
+        --yk-tool-shell-gutter: 1.5rem;
+    }
+
+    .yk-tool-shell__header-in,
+    .yk-pfm__hero--compact .yk-pfm__hero-in,
+    .yk-pfm .yk-pfm__wrap--wide,
+    .yk-bmi__wrap--wide,
+    .yk-cit__wrap,
+    .yk-ps__wrap,
+    .yk-ssa__wrap,
+    .yk-ssa__wrap--wide,
+    .yk-mood__wrap--home {
+        width: min(var(--yk-tool-shell-max), calc(100% - var(--yk-tool-shell-gutter))) !important;
+    }
+
+    .yk-tool-shell__title-row,
+    .yk-mood__title-row,
+    .yk-bmi__title-row,
+    .yk-cit__title-row,
+    .yk-tarot__title-row {
+        gap: 12px;
+    }
+}
