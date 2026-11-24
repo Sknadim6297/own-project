@@ -40,11 +40,7 @@
     @foreach ($tCategories as $slug => $category)
         <a
             href="{{ $tLink(['category' => $slug]) }}"
-<<<<<<< Updated upstream
-            class="yk-cat-detail__tab{{ $tFilters['category'] === $slug ? ' is-active' : '' }}"
-=======
             class="yk-tools__chip is-{{ $category['tone'] }}{{ $tCategoryActive === $slug || in_array($slug, $tFilters['category_any'] ?? [], true) ? ' is-active' : '' }}"
->>>>>>> Stashed changes
             role="tab"
             aria-selected="{{ $tCategoryActive === $slug || in_array($slug, $tFilters['category_any'] ?? [], true) ? 'true' : 'false' }}"
         >
