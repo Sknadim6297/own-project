@@ -897,7 +897,7 @@ Route::get('/search-services', [HomeController::class, 'searchServices'])->name(
 Route::middleware(['auth:user', 'terms.accepted'])->group(function () {
     // Legacy compatibility URI; mirrors user.event.booking.success ownership checks.
     Route::get('event-booking/success', [\App\Http\Controllers\Customer\EventController::class, 'bookingSuccess'])
-        ->name('event.booking.success');
+    ->name('event.booking.success');
 });
 
 // Help & FAQ Routes

@@ -13,7 +13,6 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -23,7 +22,7 @@ class ExploreCatalog
     /** @var array<string, list<int>>|null */
     private ?array $serviceCategoryMapCache = null;
 
-    public const PER_PAGE = 9;
+    public const PER_PAGE = 8;
 
     /** Explore category that represents Psychology / Psychologist discovery. */
     public const PSYCHOLOGY_CATEGORY = 'mental-health';
@@ -70,14 +69,17 @@ class ExploreCatalog
         'nutrition-fitness' => ['label' => 'Nutrition & Fitness', 'tone' => 'mint', 'icon' => 'fitness', 'needles' => ['nutrition', 'diet', 'fitness', 'workout', 'trainer']],
     ];
 
-    public function browse(Request $request, bool $withFacets = true): array
+    public function browse(Request $request): array
     {
         $filters = $this->filters($request);
         $items = $this->paginate($filters);
         $cards = $this->cards($items);
         $items->setCollection($cards);
 
-        $payload = [
+        $ratingAvailable = Review::query()->where('is_approved', 1)->exists();
+        $availabilityAvailable = Availability::query()->exists();
+
+        return [
             'items' => $items,
             'filters' => $filters,
             'categories' => self::CATEGORIES,
@@ -85,39 +87,17 @@ class ExploreCatalog
             'activeTypes' => $this->activeTypes($filters),
             'tab' => $this->tab($filters),
             'counts' => [
-                'types' => [],
-                'categories' => [],
-                'price' => [],
-                'rating' => [],
-                'availability' => [],
+                'types' => $this->typeCounts($filters),
+                'categories' => $this->categoryCounts($filters),
+                'price' => $this->priceCounts($filters),
+                'rating' => $ratingAvailable ? $this->ratingCounts($filters) : [],
+                'availability' => $availabilityAvailable ? $this->availabilityCounts($filters) : [],
             ],
-            'ratingAvailable' => false,
-            'availabilityAvailable' => false,
+            'ratingAvailable' => $ratingAvailable,
+            'availabilityAvailable' => $availabilityAvailable,
             'toolsAvailable' => false,
-            'featured' => [],
+            'featured' => $this->featured(),
         ];
-
-        // Facet counts are only needed by the multi-type explore UI.
-        // Professionals search/pagination skips them to stay fast.
-        if (! $withFacets) {
-            return $payload;
-        }
-
-        $ratingAvailable = Review::query()->where('is_approved', 1)->exists();
-        $availabilityAvailable = Availability::query()->exists();
-
-        $payload['counts'] = [
-            'types' => $this->typeCounts($filters),
-            'categories' => $this->categoryCounts($filters),
-            'price' => $this->priceCounts($filters),
-            'rating' => $ratingAvailable ? $this->ratingCounts($filters) : [],
-            'availability' => $availabilityAvailable ? $this->availabilityCounts($filters) : [],
-        ];
-        $payload['ratingAvailable'] = $ratingAvailable;
-        $payload['availabilityAvailable'] = $availabilityAvailable;
-        $payload['featured'] = $this->featured();
-
-        return $payload;
     }
 
     private function filters(Request $request): array
@@ -196,35 +176,24 @@ class ExploreCatalog
 
     private function paginate(array $filters): LengthAwarePaginator
     {
-        $kinds = $this->selectedKinds($filters);
-        if ($filters['type'] === 'tools' || $kinds === []) {
+        if ($filters['type'] === 'tools' || $this->selectedKinds($filters) === []) {
             return new Paginator([], 0, self::PER_PAGE, 1, [
                 'path' => request()->url(),
                 'query' => request()->query(),
             ]);
         }
 
-        $rankedQueries = [];
-        foreach ($kinds as $kind) {
-            $rankedQueries[] = match ($kind) {
+        $union = null;
+        foreach ($this->selectedKinds($filters) as $kind) {
+            $ranked = match ($kind) {
                 'experts' => $this->expertRankQuery($filters),
                 'programmes' => $this->programmeRankQuery($filters),
                 default => $this->articleRankQuery($filters),
             };
+            $union = $union ? $union->unionAll($ranked) : $ranked;
         }
 
-        // Single-kind lists (professionals) skip the derived-table wrap for faster COUNT/LIMIT.
-        $sorted = count($rankedQueries) === 1
-            ? $rankedQueries[0]
-            : DB::query()->fromSub(
-                array_reduce(
-                    array_slice($rankedQueries, 1),
-                    fn ($union, $ranked) => $union->unionAll($ranked),
-                    $rankedQueries[0]
-                ),
-                'explore_items'
-            );
-
+        $sorted = DB::query()->fromSub($union, 'explore_items');
         match ($filters['sort']) {
             'newest' => $sorted->orderByDesc('sort_at'),
             'rating' => $sorted->orderByDesc('rating')->orderByDesc('sort_at'),
@@ -233,9 +202,7 @@ class ExploreCatalog
             default => $sorted->orderByDesc('relevance')->orderByDesc('sort_at'),
         };
 
-        return $sorted->paginate(self::PER_PAGE)->appends(
-            collect(request()->query())->except(['partial'])->all()
-        );
+        return $sorted->paginate(self::PER_PAGE)->withQueryString();
     }
 
     private function cards(LengthAwarePaginator $items)
@@ -245,129 +212,41 @@ class ExploreCatalog
         $programmeIds = $rows->where('kind', 'programme')->pluck('item_id')->all();
         $articleIds = $rows->where('kind', 'article')->pluck('item_id')->all();
 
-        $experts = $expertIds === []
-            ? collect()
-            : Professional::query()
-                ->with(['profile', 'professionalServices.service', 'professionalServices.subServices'])
-                ->withAvg(['reviews as average_rating' => fn ($query) => $query->where('is_approved', 1)], 'rating')
-                ->withCount(['reviews as review_count' => fn ($query) => $query->where('is_approved', 1)])
-                ->withMin('rates as min_rate', 'final_rate')
-                ->whereIn('id', $expertIds)
-                ->get()
-                ->keyBy('id');
+        $experts = Professional::query()
+            ->with(['profile', 'professionalServices.service'])
+            ->withAvg(['reviews as average_rating' => fn ($query) => $query->where('is_approved', 1)], 'rating')
+            ->withCount(['reviews as review_count' => fn ($query) => $query->where('is_approved', 1)])
+            ->withMin('rates as min_rate', 'final_rate')
+            ->whereIn('id', $expertIds)
+            ->get()
+            ->keyBy('id');
 
-        $programmes = $programmeIds === []
-            ? collect()
-            : AllEvent::query()
-                ->with('eventDetails')
-                ->whereIn('id', $programmeIds)
-                ->get()
-                ->keyBy('id');
+        $programmes = AllEvent::query()
+            ->with('eventDetails')
+            ->whereIn('id', $programmeIds)
+            ->get()
+            ->keyBy('id');
 
-        $articles = $articleIds === []
-            ? collect()
-            : BlogPost::query()
-                ->with('blog')
-                ->whereIn('id', $articleIds)
-                ->get()
-                ->keyBy('id');
+        $articles = BlogPost::query()
+            ->with('blog')
+            ->whereIn('id', $articleIds)
+            ->get()
+            ->keyBy('id');
 
-        $sessionCounts = $this->sessionCounts($experts->keys()->all());
-
-        return $rows->map(function ($row) use ($experts, $programmes, $articles, $sessionCounts) {
+        return $rows->map(function ($row) use ($experts, $programmes, $articles) {
             return match ($row->kind) {
-                'expert' => $this->expertCard($experts->get($row->item_id), (int) ($sessionCounts[$row->item_id] ?? 0)),
+                'expert' => $this->expertCard($experts->get($row->item_id)),
                 'programme' => $this->programmeCard($programmes->get($row->item_id)),
                 default => $this->articleCard($articles->get($row->item_id)),
             };
         })->filter()->values();
     }
 
-    /**
-     * Headline numbers for the /professionals hero (cached briefly).
-     *
-     * @return array{experts: int, rating: ?string, categories: int}
-     */
-    public function directoryStats(): array
-    {
-        return Cache::remember('yuktione.directory-stats', 300, function () {
-            $experts = Professional::query()
-                ->where('status', 'accepted')
-                ->where('active', true)
-                ->count();
-
-            $average = Review::query()->where('is_approved', 1)->avg('rating');
-
-            return [
-                'experts' => $experts,
-                'rating' => $average !== null ? number_format((float) $average, 1) : null,
-                'categories' => count(self::CATEGORIES),
-            ];
-        });
-    }
-
-    /**
-     * Paid / completed booking totals per professional (shown as "N+ sessions").
-     *
-     * @param  list<int|string>  $professionalIds
-     * @return array<int|string, int>
-     */
-    private function sessionCounts(array $professionalIds): array
-    {
-        if ($professionalIds === []) {
-            return [];
-        }
-
-        try {
-            return \App\Models\Booking::query()
-                ->whereIn('professional_id', $professionalIds)
-                ->where(function ($query) {
-                    $query->where('status', 'completed')
-                        ->orWhere('payment_status', 'paid')
-                        ->orWhere('paid_status', 'paid');
-                })
-                ->selectRaw('professional_id, COUNT(*) as session_count')
-                ->groupBy('professional_id')
-                ->pluck('session_count', 'professional_id')
-                ->map(fn ($count) => (int) $count)
-                ->all();
-        } catch (\Throwable $e) {
-            // Bookings are optional context for the card; never break the directory.
-            return [];
-        }
-    }
-
-    private function expertCard(?Professional $expert, int $sessions = 0): ?array
+    private function expertCard(?Professional $expert): ?array
     {
         if (!$expert) {
             return null;
         }
-
-        $role = $this->plain($expert->profile?->specialization)
-            ?: $this->plain($expert->professionalServices->map(fn ($service) => $service->service?->name ?: $service->service_name)->filter()->first());
-
-        $topicSource = collect();
-        foreach ($expert->professionalServices as $professionalService) {
-            if (filled($professionalService->tags)) {
-                // Tags are typed either comma-separated ("a, b") or as hashtags ("#a #b").
-                $rawTags = (string) $professionalService->tags;
-                $tagParts = str_contains($rawTags, '#')
-                    ? preg_split('/[#,]+/', $rawTags)
-                    : preg_split('/\s*,\s*/', $rawTags);
-                $topicSource = $topicSource->merge($tagParts);
-            }
-            $topicSource = $topicSource->merge($professionalService->subServices->pluck('name'));
-        }
-        $topicSource = $topicSource->merge(
-            $expert->professionalServices->map(fn ($service) => $service->service?->name ?: $service->service_name)
-        );
-        $topics = $topicSource
-            ->map(fn ($chip) => trim((string) $chip))
-            ->filter(fn ($chip) => $chip !== '' && ($role === null || mb_strtolower($chip) !== mb_strtolower($role)))
-            ->unique(fn ($chip) => mb_strtolower($chip))
-            ->take(2)
-            ->values()
-            ->all();
 
         $price = is_numeric($expert->profile?->starting_price)
             ? (float) $expert->profile->starting_price
@@ -382,14 +261,7 @@ class ExploreCatalog
 
         return [
             'kind' => 'expert',
-            'id' => $expert->id,
-            'icon' => self::CATEGORIES[$this->categoryKeyForText(
-                implode(' ', array_filter([$role, ...$expert->professionalServices->map(fn ($service) => $service->service?->name ?: $service->service_name)->all()]))
-            )]['icon'] ?? 'spark',
             'kicker' => 'Expert',
-            'role' => $role,
-            'topics' => $topics,
-            'sessions' => $sessions,
             'title' => $expert->name,
             'subtitle' => $this->plain($expert->profile?->specialization),
             'excerpt' => null,
@@ -483,8 +355,16 @@ class ExploreCatalog
             ->where('active', true);
 
         if ($filters['q'] !== '') {
-            // Prefix match on the primary display name (case-insensitive via DB collation).
-            $query->where('name', 'like', $this->likePrefix($filters['q']));
+            $like = $this->like($filters['q']);
+            $query->where(function (Builder $inner) use ($like) {
+                $inner->where('name', 'like', $like)
+                    ->orWhereHas('profile', fn (Builder $profile) => $profile->where('specialization', 'like', $like))
+                    ->orWhereHas('professionalServices', function (Builder $service) use ($like) {
+                        $service->where('service_name', 'like', $like)
+                            ->orWhere('tags', 'like', $like)
+                            ->orWhereHas('service', fn (Builder $parent) => $parent->where('name', 'like', $like));
+                    });
+            });
         }
 
         if ($filters['category'] !== '') {
@@ -617,24 +497,6 @@ class ExploreCatalog
         return $query;
     }
 
-    /** Public entry for the mobile experts API, using the website's category rules. */
-    public function constrainExpertsToCategory(Builder $query, string $categoryKey): void
-    {
-        $this->whereExpertCategory($query, $categoryKey);
-    }
-
-    /** Public entry for the mobile programme events API, matching the website's programme filter. */
-    public function constrainProgrammesToCategory(Builder $query, string $categoryKey): void
-    {
-        if (! array_key_exists($categoryKey, self::CATEGORIES)) {
-            $query->whereRaw('1 = 0');
-
-            return;
-        }
-
-        $this->whereTextMatches($query, self::CATEGORIES[$categoryKey]['needles'], 'programme');
-    }
-
     /**
      * Restrict experts to a single Explore category.
      *
@@ -758,36 +620,25 @@ class ExploreCatalog
 
     private function expertRankQuery(array $filters)
     {
-        // Resolve matching IDs once so profile/rating aggregates stay scoped and cheap.
-        $ids = $this->expertIdQuery($filters)->pluck('professionals.id');
-        if ($ids->isEmpty()) {
-            return DB::table('professionals')
-                ->whereRaw('1 = 0')
-                ->selectRaw("'expert' as kind, professionals.id as item_id, professionals.created_at as sort_at, NULL as price, 0 as rating, 0 as relevance");
-        }
-
-        $idList = $ids->all();
+        $ids = $this->expertIdQuery($filters)->select('professionals.id')->reorder();
         $profiles = DB::table('profiles')
             ->select('professional_id', DB::raw('MIN(starting_price) as starting_price'))
-            ->whereIn('professional_id', $idList)
             ->groupBy('professional_id');
         $ratings = DB::table('reviews')
             ->select('professional_id', DB::raw('AVG(rating) as rating_avg'))
             ->where('is_approved', 1)
-            ->whereIn('professional_id', $idList)
             ->groupBy('professional_id');
 
         $query = DB::table('professionals')
-            ->whereIn('professionals.id', $idList)
+            ->whereIn('professionals.id', $ids)
             ->leftJoinSub($profiles, 'profile_price', 'profile_price.professional_id', '=', 'professionals.id')
             ->leftJoinSub($ratings, 'rating_stats', 'rating_stats.professional_id', '=', 'professionals.id');
 
         $relevance = '1';
         $bindings = [];
         if ($filters['q'] !== '') {
-            // Name filter is already prefix-based; keep prefix hits ranked highest.
-            $relevance = 'CASE WHEN professionals.name LIKE ? THEN 3 ELSE 1 END';
-            $bindings = [$this->likePrefix($filters['q'])];
+            $relevance = 'CASE WHEN professionals.name LIKE ? THEN 3 WHEN professionals.name LIKE ? THEN 2 ELSE 1 END';
+            $bindings = [$this->likePrefix($filters['q']), $this->like($filters['q'])];
         }
 
         return $query->selectRaw(
