@@ -142,7 +142,7 @@ class Phase2DTarotQaTest extends TestCase
 
         $reading = $this->actingAs($user, 'user')->get(route('tools.tarot.reading'));
         $reading->assertOk()
-            ->assertSee('Talk to an Expert')
+            ->assertSee('Talk to an Astrology & Tarot Expert')
             ->assertSee('Save Reading')
             ->assertDontSee('Start another reading')
             ->assertDontSee('Journal')
@@ -199,27 +199,20 @@ class Phase2DTarotQaTest extends TestCase
         $show = $this->actingAs($user, 'user')->get(route('tools.tarot.history.show', $first));
         $show->assertOk()
             ->assertSee($first->cards->first()->insight_text)
-            ->assertSee('Talk to an Expert')
+            ->assertSee('Talk to an Astrology & Tarot Expert')
             ->assertDontSee('Start another reading');
     }
 
     public function test_all_six_expert_mappings_resolve_to_real_explore_categories(): void
     {
         $discovery = app(ExpertsDiscovery::class);
-        $expected = [
-            'love-relationships' => 'relationships',
-            'career-work' => 'career-business',
-            'money-finances' => 'money-finance',
-            'personal-growth' => 'mental-health',
-            'life-direction' => 'spirituality',
-            'general-guidance' => 'astrology-tarot',
-        ];
 
-        foreach ($expected as $tarot => $explore) {
+        foreach (TarotCatalog::categoryKeys() as $tarot) {
             $result = $discovery->forTarotCategory($tarot);
-            $this->assertSame($explore, $result['category'], $tarot);
-            $this->assertStringContainsString('category='.$explore, $result['url']);
-            $this->assertTrue(array_key_exists($explore, \App\Services\ExploreCatalog::CATEGORIES));
+            $this->assertSame('astrology-tarot', $result['category'], $tarot);
+            $this->assertStringContainsString('category=astrology-tarot', $result['url']);
+            $this->assertTrue(array_key_exists('astrology-tarot', \App\Services\ExploreCatalog::CATEGORIES));
+            $this->assertStringNotContainsString('question=', $result['url']);
         }
     }
 

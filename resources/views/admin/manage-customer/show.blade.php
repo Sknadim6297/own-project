@@ -7,7 +7,7 @@
 <div class="content-wrapper" style="padding-left: 260px; padding-right: 30px; padding-top: 20px;">
     <div class="container-fluid" style="max-width: 1200px; margin: auto;">
         <div class="profile-header d-flex justify-content-between align-items-center shadow-sm p-3 mb-4 rounded bg-white">
-            <h3 class="profile-title">👤 Customer Profile</h3>
+            <h3 class="profile-title">Customer Profile</h3>
             <a href="{{ route('admin.manage-customer.index') }}" class="btn btn-primary">
                 <i class="ri-arrow-left-line"></i> Back to Customers
             </a>

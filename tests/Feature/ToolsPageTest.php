@@ -36,9 +36,9 @@ class ToolsPageTest extends TestCase
             ->assertSee('No tools match these filters')
             ->assertSee('Clear filters');
 
-        $this->get(route('tools.index', ['category' => 'mental-health']))
+        $this->get(route('tools.index', ['category' => 'mental-wellness']))
             ->assertOk()
-            ->assertSee('Mental Health')
+            ->assertSee('Mental Wellness')
             ->assertSee('aria-selected="true"', false)
             ->assertSee('No tools match these filters');
     }

@@ -148,7 +148,7 @@ $(document).ready(function() {
                     const downloadUrl = '{{ route("user.admin-chat.attachment.download", ":id") }}'.replace(':id', attachment.id);
                     messageHtml += `
                         <a href="${downloadUrl}" class="flex min-w-0 items-center gap-2 rounded-control border border-current/15 bg-black/5 px-2 py-1.5 text-xs hover:bg-black/10">
-                            <span class="shrink-0" aria-hidden="true">📎</span>
+                            <span class="shrink-0" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span>
                             <span class="min-w-0 break-all">${escapeHtml(attachment.filename)}</span>
                             <small class="shrink-0 opacity-75">(${escapeHtml(attachment.human_file_size || 'Unknown size')})</small>
                         </a>
@@ -328,7 +328,7 @@ $(document).ready(function() {
             for (let i = 0; i < files.length; i++) {
                 container.append(`
                     <div class="flex min-w-0 items-center gap-2">
-                        <span aria-hidden="true">📎</span>
+                        <span aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></span>
                         <span class="min-w-0 break-all">${escapeHtml(files[i].name)}</span>
                         <small class="shrink-0">(${formatFileSize(files[i].size)})</small>
                     </div>

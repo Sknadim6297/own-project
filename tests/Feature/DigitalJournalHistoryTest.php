@@ -51,11 +51,10 @@ class DigitalJournalHistoryTest extends TestCase
         $this->entry($member, 'relationships', 'Coffee talk', 'We caught up after years.', '2026-09-05 09:00:00');
         $this->entry($other, 'my-thoughts', 'Hidden title', 'Someone else wrote this.', '2026-10-20 12:00:00');
 
-        $this->actingAs($member, 'user')
+        $history = $this->actingAs($member, 'user')
             ->get(route('tools.psychology.journal.history'))
             ->assertOk()
             ->assertSee('Quiet wins')
-            ->assertSee('Personal growth')
             ->assertSee('I felt steady today.')
             ->assertSee('Coffee talk')
             ->assertSee('October 2026')
@@ -64,19 +63,88 @@ class DigitalJournalHistoryTest extends TestCase
             ->assertDontSee('Someone else wrote this')
             ->assertDontSee('Hidden title');
 
+        $this->assertStringNotContainsString('yk-journal-history__prompt', $history->getContent());
+        $this->assertStringNotContainsString('>Personal growth<', $history->getContent());
+
         $owned = PsychologyJournalEntry::query()->where('user_id', $member->id)->first();
         $foreign = PsychologyJournalEntry::query()->where('user_id', $other->id)->first();
 
-        $this->actingAs($member, 'user')
+        $show = $this->actingAs($member, 'user')
             ->get(route('tools.psychology.journal.show', $owned->id))
             ->assertOk()
             ->assertSee('Quiet wins')
             ->assertSee('I felt steady today.')
             ->assertSee('Private · Only you can see this entry');
 
+        $this->assertStringNotContainsString('yk-journal-entry__chip', $show->getContent());
+        $this->assertStringNotContainsString('>Personal growth<', $show->getContent());
+
         $this->actingAs($member, 'user')
             ->get(route('tools.psychology.journal.show', $foreign->id))
             ->assertRedirect(route('tools.psychology.journal.history'));
+    }
+
+    public function test_history_and_show_use_subject_only_with_untitled_fallback(): void
+    {
+        $this->storage();
+        $member = $this->member('history-subject-only@example.com');
+
+        $titled = $this->entry($member, 'personal-growth', 'Morning clarity', 'Subject only heading.', '2026-10-12 10:00:00');
+        $untitled = $this->entry($member, 'relationships', null, 'Missing subject body.', '2026-10-11 09:00:00');
+        $long = $this->entry(
+            $member,
+            'my-thoughts',
+            'A very long journal subject that should remain readable without showing the prompt category beside it',
+            'Long subject body.',
+            '2026-10-10 08:00:00'
+        );
+
+        $history = $this->actingAs($member, 'user')
+            ->get(route('tools.psychology.journal.history'))
+            ->assertOk()
+            ->assertSee('Morning clarity')
+            ->assertSee('Untitled entry')
+            ->assertSee('A very long journal subject that should remain readable without showing the prompt category beside it');
+
+        $historyHtml = $history->getContent();
+        $this->assertStringNotContainsString('yk-journal-history__prompt', $historyHtml);
+        $this->assertStringNotContainsString('>Personal growth<', $historyHtml);
+        $this->assertStringNotContainsString('>My thoughts<', $historyHtml);
+        // Prompt labels must not appear as card subtitles (site nav may still mention Relationships).
+        $this->assertDoesNotMatchRegularExpression(
+            '/yk-journal-history__card[\s\S]*?>Personal growth</',
+            $historyHtml
+        );
+
+        $showTitled = $this->actingAs($member, 'user')
+            ->get(route('tools.psychology.journal.show', $titled->id))
+            ->assertOk()
+            ->assertSee('Morning clarity')
+            ->assertSee('<h1>Morning clarity</h1>', false);
+
+        $this->assertStringNotContainsString('yk-journal-entry__chip', $showTitled->getContent());
+        $this->assertStringNotContainsString('>Personal growth<', $showTitled->getContent());
+
+        $showUntitled = $this->actingAs($member, 'user')
+            ->get(route('tools.psychology.journal.show', $untitled->id))
+            ->assertOk()
+            ->assertSee('<h1>Untitled entry</h1>', false);
+
+        $this->assertStringNotContainsString('yk-journal-entry__chip', $showUntitled->getContent());
+
+        $this->actingAs($member, 'user')
+            ->get(route('tools.psychology.journal.show', $long->id))
+            ->assertOk()
+            ->assertSee('<h1>A very long journal subject that should remain readable without showing the prompt category beside it</h1>', false)
+            ->assertDontSee('>My thoughts<', false);
+
+        // Prompt filter UI still exposes category labels for filtering only.
+        $this->actingAs($member, 'user')
+            ->get(route('tools.psychology.journal.history', ['filter' => 'prompt', 'prompt' => 'personal-growth']))
+            ->assertOk()
+            ->assertSee('Morning clarity')
+            ->assertSee('Personal growth')
+            ->assertDontSee('Untitled entry');
     }
 
     public function test_history_supports_search_month_prompt_filters_and_pagination(): void

@@ -4,7 +4,7 @@ const toastLimit = 4;
 const toastEntries = new Map();
 
 const icons = {
-    success: '✓',
+    success: '+',
     error: '!',
     warning: '!',
     info: 'i',

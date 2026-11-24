@@ -372,7 +372,7 @@ if (form) {
 
     function validateProfessionalDetails() {
         clearErrors();
-        const valid = validateRequired(['specialization', 'experience', 'starting_price', 'address', 'education']);
+        const valid = validateRequired(['specialization', 'experience', 'address', 'education']);
         if (!valid) {
             focusFirstError();
             notify('warning', 'Complete this step', 'Please fill in the required professional details.');

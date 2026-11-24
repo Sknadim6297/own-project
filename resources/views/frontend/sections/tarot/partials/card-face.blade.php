@@ -4,7 +4,7 @@
     $suit = $card['suit'] ?? null;
     $isReversed = !empty($card['is_reversed']);
     $imageUrl = \App\Support\Tarot\TarotUi::imageUrl($card['image_path'] ?? null);
-    $glyph = \App\Support\Tarot\TarotUi::suitGlyph($suit, $arcana);
+    $suitIcon = \App\Support\Tarot\TarotUi::suitIcon($suit, $arcana);
     $suitLabel = \App\Support\Tarot\TarotUi::suitLabel($suit, $arcana);
     $size = $size ?? 'md';
 @endphp
@@ -14,7 +14,9 @@
     @else
         <div class="yk-tarot__face-fallback">
             <span class="yk-tarot__face-ornament" aria-hidden="true"></span>
-            <span class="yk-tarot__face-glyph">{{ $glyph }}</span>
+            <span class="yk-tarot__face-glyph">
+                <x-yk-icon :name="$suitIcon" class="yk-icon--md" :decorative="true" />
+            </span>
             <span class="yk-tarot__face-arcana">{{ $suitLabel }}</span>
             <span class="yk-tarot__face-name">{{ $name }}</span>
             @if ($isReversed)

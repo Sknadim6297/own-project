@@ -3,20 +3,20 @@
 document.addEventListener('DOMContentLoaded', function() {
     const customerOnboardingSteps = [
         {
-            title: "Welcome to Your Customer Dashboard! 🎉",
+            title: "Welcome to Your Customer Dashboard! ",
             message: "Hi there! Welcome to your personal dashboard. Let's take a quick step-by-step tour to help you navigate and use all the features. This will only take a few minutes!",
             target: null,
             position: "center"
         },
         {
-            title: "Step 1: Your Navigation Menu 📋",
+            title: "Step 1: Your Navigation Menu ",
             message: "This is your main navigation sidebar. Here you can access all important sections. Let's explore each section step by step. Click 'Next' to continue.",
             target: ".sidebar, .app-sidebar, nav.sidebar",
             position: "right",
             action: "highlight"
         },
         {
-            title: "Step 2: Dashboard Overview 📊",
+            title: "Step 2: Dashboard Overview ",
             message: "These cards show your quick stats - upcoming appointments, total appointments, events, and payments. Click on any card to go to that section. Try clicking on 'Upcoming Appointments' card!",
             target: ".card-grid, .dashboard-cards",
             position: "center",
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clickTarget: "[href*='upcoming-appointment'], .card:first-child"
         },
         {
-            title: "Step 3: Profile Management 👤",
+            title: "Step 3: Profile Management ",
             message: "Your profile is very important! Click on 'Profile' or 'Add Profile' in the sidebar to manage your personal information, preferences, and account settings.",
             target: "[href*='add-profile'], [href*='profile'], .nav-link:contains('Profile')",
             position: "right",
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
             instruction: "Click here to manage your profile →"
         },
         {
-            title: "Step 4: Booking Services 🔍",
+            title: "Step 4: Booking Services ",
             message: "Ready to book a service? You can book appointments in multiple ways: 1) From the homepage 2) Click 'Book Service' if available 3) Browse professionals. Let's see how!",
             target: "[href*='booking'], .booking-card, .book-service-btn",
             position: "center",
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
             instruction: "This is where you can book new services"
         },
         {
-            title: "Step 5: Your Appointments 📅",
+            title: "Step 5: Your Appointments ",
             message: "Click 'Upcoming Appointments' in the sidebar to view, manage, and track all your scheduled appointments. You can reschedule, cancel, or add notes here.",
             target: "[href*='upcoming-appointment'], .nav-link:contains('Appointment')",
             position: "right",
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
             instruction: "Click here to view your appointments →"
         },
         {
-            title: "Step 6: Appointment History 📋",
+            title: "Step 6: Appointment History ",
             message: "Want to see your past appointments? Click 'All Appointments' or 'Appointment History' to view completed sessions, download reports, and rate your experiences.",
             target: "[href*='all-appointment'], [href*='appointment'], .nav-link:contains('History')",
             position: "right",
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
             instruction: "View your appointment history here"
         },
         {
-            title: "Step 7: Programmes 🎪",
+            title: "Step 7: Programmes ",
             message: "Explore upcoming programmes and workshops! Click 'Programmes' in the sidebar to browse, register, and manage your programme bookings.",
             target: "[href*='event'], .nav-link:contains('Event')",
             position: "right",
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
             instruction: "Click here to explore events →"
         },
         {
-            title: "Step 8: Billing & Payments 💳",
+            title: "Step 8: Billing & Payments ",
             message: "Track your payments and manage billing information. Click 'Billing' in the sidebar to view invoices, payment history, and download receipts.",
             target: "[href*='billing'], .nav-link:contains('Billing')",
             position: "right",
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
             instruction: "Manage your payments and billing here"
         },
         {
-            title: "Perfect! You're Ready to Go! 🚀",
+            title: "Perfect! You're Ready to Go! ",
             message: "Congratulations! You now know how to use your dashboard effectively. Remember: \n\n• Complete your profile first\n• Browse and book services\n• Check appointments regularly\n• Explore events and workshops\n\nThe help button (?) is always available if you need this tour again!",
             target: null,
             position: "center"
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .onboarding-interactive::after {
-    content: '👆 Click me!';
+    content: ' Click me!';
     position: absolute;
     top: -30px;
     left: 50%;

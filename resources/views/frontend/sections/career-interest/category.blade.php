@@ -9,7 +9,8 @@
     $scaleOptions = $scaleOptions ?? collect($scale)->map(fn ($label, $value) => [
         'value' => (int) $value,
         'label' => $label,
-        'emoji' => \App\Support\CareerInterest\CareerInterestCatalog::SCALE_EMOJI[$value] ?? '',
+        'emoji' => '',
+        'icon' => \App\Support\CareerInterest\CareerInterestCatalog::SCALE_ICON[$value] ?? 'meh',
     ])->all();
     $progress = $progress ?? (int) round(($step / max(1, $totalSteps)) * 100);
     $questionCount = $questionCount ?? 18;
@@ -95,7 +96,7 @@
                                     required
                                 >
                                 <span class="yk-cit__option-value" aria-hidden="true">{{ $option['value'] }}</span>
-                                <span class="yk-cit__emoji" aria-hidden="true">{{ $option['emoji'] }}</span>
+                                <span class="yk-cit__emoji" aria-hidden="true"><x-yk-icon :name="$option['icon'] ?? 'meh'" class="yk-icon--md" :decorative="true" /></span>
                                 <span class="yk-cit__option-label">{{ $option['label'] }}</span>
                             </label>
                         @endforeach

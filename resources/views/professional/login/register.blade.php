@@ -50,6 +50,7 @@
             color: #ffffff;
         }
     </style>
+    @include('professional.login.partials.onboarding-spacing')
 </head>
 <body class="yuktione-auth-page professional-registration-page min-h-screen bg-background font-sans text-text-primary antialiased">
     <main class="flex min-h-screen items-center justify-center bg-linear-to-br from-brand-50 via-background to-white px-3 py-5 sm:px-5">
@@ -207,13 +208,6 @@
                             <option value="10+">10+ years</option>
                         </select>
                         <p id="experience-error" class="hidden text-xs text-error" data-error-for="experience"></p>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label for="starting_price" class="block text-xs font-medium">Starting price</label>
-                        <input id="starting_price" name="starting_price" type="text" placeholder="e.g. 1500 or 1000-2000" class="w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted/70 focus:border-brand-primary focus:outline-none focus:ring-4 focus:ring-brand-100 aria-[invalid=true]:border-error" aria-describedby="starting_price-help starting_price-error">
-                        <p id="starting_price-help" class="text-[11px] text-text-muted">Enter a fixed price or a price range per session.</p>
-                        <p id="starting_price-error" class="hidden text-xs text-error" data-error-for="starting_price"></p>
                     </div>
 
                     <div class="space-y-1.5">

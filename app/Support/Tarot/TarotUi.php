@@ -9,60 +9,79 @@ namespace App\Support\Tarot;
 final class TarotUi
 {
     /**
-     * @return array{emoji: string, blurb: string}
+     * @return array{icon: string, emoji: string, blurb: string}
      */
     public static function categoryPresentation(string $key): array
     {
         return match ($key) {
             'love-relationships' => [
-                'emoji' => '❤️',
+                'icon' => 'heart',
+                'emoji' => '',
                 'blurb' => 'Connection, communication, and emotional clarity.',
             ],
             'career-work' => [
-                'emoji' => '💼',
+                'icon' => 'briefcase',
+                'emoji' => '',
                 'blurb' => 'Direction, confidence, and practical work choices.',
             ],
             'money-finances' => [
-                'emoji' => '💰',
+                'icon' => 'wallet',
+                'emoji' => '',
                 'blurb' => 'Security, habits, and thoughtful money decisions.',
             ],
             'personal-growth' => [
-                'emoji' => '🌱',
+                'icon' => 'sprout',
+                'emoji' => '',
                 'blurb' => 'Self-awareness, habits, and healthier boundaries.',
             ],
             'life-direction' => [
-                'emoji' => '🧭',
+                'icon' => 'compass',
+                'emoji' => '',
                 'blurb' => 'Values, priorities, and steady next steps.',
             ],
             'general-guidance' => [
-                'emoji' => '✨',
+                'icon' => 'sparkles',
+                'emoji' => '',
                 'blurb' => 'A broader lens on what may be useful to notice.',
             ],
             default => [
-                'emoji' => '🔮',
+                'icon' => 'sparkles',
+                'emoji' => '',
                 'blurb' => 'Reflective guidance for your question.',
             ],
         };
     }
 
+    public static function categoryIcon(string $key): string
+    {
+        return self::categoryPresentation($key)['icon'];
+    }
+
+    /** @deprecated Use categoryIcon(); retained for API shape compatibility. */
     public static function categoryEmoji(string $key): string
     {
         return self::categoryPresentation($key)['emoji'];
     }
 
-    public static function suitGlyph(?string $suit, string $arcana = 'minor'): string
+    public static function suitIcon(?string $suit, string $arcana = 'minor'): string
     {
         if ($arcana === 'major') {
-            return '✦';
+            return 'sparkles';
         }
 
         return match ($suit) {
-            'wands' => '✶',
-            'cups' => '♡',
-            'swords' => '⚔',
-            'pentacles' => '◉',
-            default => '✦',
+            'wands' => 'asterisk',
+            'cups' => 'heart',
+            'swords' => 'swords',
+            'pentacles' => 'circle-dot',
+            default => 'sparkles',
         };
+    }
+
+    /** @deprecated Use suitIcon(); retained for API glyph consumers. */
+    public static function suitGlyph(?string $suit, string $arcana = 'minor'): string
+    {
+        return '';
     }
 
     public static function suitLabel(?string $suit, string $arcana = 'minor'): string

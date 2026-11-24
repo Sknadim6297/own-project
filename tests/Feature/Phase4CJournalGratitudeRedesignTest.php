@@ -73,6 +73,7 @@ class Phase4CJournalGratitudeRedesignTest extends TestCase
         $this->journalStorage();
 
         $this->post(route('tools.psychology.journal.store'), [
+            'completion_key' => (string) \Illuminate\Support\Str::uuid(),
             'prompt_key' => 'my-thoughts',
             'title' => 'Phase 4C note',
             'body' => 'Private journal writing for redesign QA.',
@@ -157,6 +158,7 @@ class Phase4CJournalGratitudeRedesignTest extends TestCase
     public function test_validation_and_mood_regression_remain_intact(): void
     {
         $this->post(route('tools.psychology.journal.store'), [
+            'completion_key' => (string) \Illuminate\Support\Str::uuid(),
             'prompt_key' => 'my-thoughts',
             'body' => '',
         ])->assertSessionHasErrors('body');

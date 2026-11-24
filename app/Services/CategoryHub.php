@@ -111,7 +111,7 @@ class CategoryHub
     public function list(?string $search = null): array
     {
         $search = Str::lower(trim(strip_tags((string) $search)));
-        $toolCounts = $this->tools->categoryCounts();
+        $toolCounts = $this->tools->hubCategoryCounts();
         $expertCounts = $this->expertCountsByCategory();
         $programmeCounts = $this->programmeCountsByCategory();
 

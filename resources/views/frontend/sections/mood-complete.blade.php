@@ -62,6 +62,9 @@
                         </div>
                         <h1><x-yuktione.two-tone text="Check-in complete!" /></h1>
                         <p class="yk-mood__lead">Thank you for taking a moment for yourself.</p>
+                        @if (filled($tip ?? null))
+                            <p class="yk-complete__tip">{{ $tip }}</p>
+                        @endif
                         @if ($checkedAt)
                             <p class="yk-complete__when">
                                 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.6V12l3 2"/></svg>

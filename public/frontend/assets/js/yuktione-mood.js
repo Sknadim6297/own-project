@@ -10,6 +10,8 @@
         var form = document.querySelector('[data-mood-form]');
         if (!form) return;
         var button = form.querySelector('[data-mood-continue]');
+        var initial = form.getAttribute('data-mood-initial') || '';
+        var hasFollowUp = form.getAttribute('data-mood-has-followup') === '1';
         var sync = function () {
             var chosen = form.querySelector('input[name="mood"]:checked');
             if (button) button.disabled = !chosen;
@@ -22,6 +24,22 @@
             });
         };
         form.addEventListener('change', sync);
+        form.addEventListener('submit', function (event) {
+            if (!hasFollowUp) return;
+            var chosen = form.querySelector('input[name="mood"]:checked');
+            if (!chosen || !initial || chosen.value === initial) return;
+            var ok = window.confirm(
+                'Changing your mood will clear the emotions and reflection you already entered for this check-in. Continue?'
+            );
+            if (!ok) {
+                event.preventDefault();
+                var previous = form.querySelector('input[name="mood"][value="' + initial + '"]');
+                if (previous) {
+                    previous.checked = true;
+                    sync();
+                }
+            }
+        });
         sync();
     }
 

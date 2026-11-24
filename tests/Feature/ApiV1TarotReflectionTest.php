@@ -166,7 +166,7 @@ class ApiV1TarotReflectionTest extends TestCase
         $completionKey = (string) Str::uuid();
 
         $this->postJson('/api/v1/my/tarot/start', ['completion_key' => $completionKey])
-            ->assertOk()
+            ->assertCreated()
             ->assertJsonPath('completion_key', strtolower($completionKey));
 
         $this->postJson('/api/v1/my/tarot/category', [
@@ -269,7 +269,7 @@ class ApiV1TarotReflectionTest extends TestCase
         Sanctum::actingAs($user);
         $key = (string) Str::uuid();
 
-        $this->postJson('/api/v1/my/tarot/start', ['completion_key' => $key])->assertOk();
+        $this->postJson('/api/v1/my/tarot/start', ['completion_key' => $key])->assertCreated();
         $this->postJson('/api/v1/my/tarot/category', [
             'completion_key' => $key,
             'category' => 'general-guidance',

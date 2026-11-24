@@ -121,7 +121,7 @@
             ],
             'professionals' => [
                 'provider' => 'professionals',
-                'table' => 'password_reset_tokens',
+                'table' => 'professional_password_reset_tokens',
                 'expire' => 60,
                 'throttle' => 60,
             ],

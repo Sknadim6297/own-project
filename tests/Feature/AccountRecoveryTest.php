@@ -33,12 +33,50 @@ class AccountRecoveryTest extends TestCase
         $this->get('/forgot-password')
             ->assertOk()
             ->assertSee('Forgot password?', false)
+            ->assertSee('CUSTOMER ACCOUNT', false)
             ->assertSee('Email Address', false)
             ->assertSee('Enter your registered email address', false)
             ->assertSee('Send Password Reset Link', false)
             ->assertSee('Back to Login', false)
+            ->assertSee(route('login'), false)
             ->assertDontSee('Mobile number', false)
-            ->assertDontSee('name="phone"', false);
+            ->assertDontSee('name="phone"', false)
+            ->assertDontSee(route('professional.login'), false);
+    }
+
+    public function test_professional_forgot_password_page_uses_email_field_and_role_chrome(): void
+    {
+        $this->get('/professional/forgot-password')
+            ->assertOk()
+            ->assertSee('Forgot password?', false)
+            ->assertSee('PROFESSIONAL ACCOUNT', false)
+            ->assertSee('Email address', false)
+            ->assertSee('Enter your registered email address', false)
+            ->assertSee('Enter your email address', false)
+            ->assertSee('name="email"', false)
+            ->assertSee('type="email"', false)
+            ->assertSee('Send Password Reset Link', false)
+            ->assertSee('Back to Login', false)
+            ->assertSee(route('professional.login'), false)
+            ->assertDontSee('Mobile number', false)
+            ->assertDontSee('name="phone"', false)
+            ->assertDontSee('CUSTOMER ACCOUNT', false)
+            ->assertDontSee('Verify OTP', false)
+            ->assertDontSee('Resend OTP', false)
+            ->assertDontSee(route('login'), false);
+    }
+
+    public function test_login_pages_link_to_role_specific_forgot_password_flows(): void
+    {
+        $customerLogin = $this->get(route('login'));
+        $customerLogin->assertOk();
+        $customerLogin->assertSee(route('forgot.form'), false);
+        $customerLogin->assertSee('Forgot password?', false);
+
+        $professionalLogin = $this->get(route('professional.login'));
+        $professionalLogin->assertOk();
+        $professionalLogin->assertSee(route('professional.forgot.form'), false);
+        $professionalLogin->assertSee('Forgot password?', false);
     }
 
     public function test_empty_email_shows_validation_error(): void
@@ -173,7 +211,7 @@ class AccountRecoveryTest extends TestCase
             ->assertSessionHasErrors('password');
     }
 
-    public function test_registered_professional_continues_to_the_professional_reset(): void
+    public function test_registered_professional_receives_reset_by_email(): void
     {
         Notification::fake();
 
@@ -186,20 +224,15 @@ class AccountRecoveryTest extends TestCase
         ]);
 
         $this->from('/professional/forgot-password')
-            ->post('/professional/forgot-password', ['phone' => '+91 91234 56789'])
+            ->post('/professional/forgot-password', ['email' => '  Registered-Professional@example.test '])
             ->assertRedirect('/professional/forgot-password')
-            ->assertSessionHas('status', AccountRecovery::SENT_MESSAGE)
+            ->assertSessionHas('status', AccountRecovery::PROFESSIONAL_SENT_MESSAGE)
             ->assertSessionMissing('recovery_unregistered');
 
         Notification::assertSentTo($professional, ProfessionalResetPassword::class);
-
-        session()->flash('recovery_unregistered', true);
-        $html = view('professional.login.forgot-password')->render();
-        $this->assertStringContainsString(route('professional.register'), $html);
-        $this->assertStringContainsString('Register Now', $html);
     }
 
-    public function test_unknown_professional_mobile_does_not_use_a_customer_account(): void
+    public function test_unknown_professional_email_gets_generic_confirmation_and_does_not_send(): void
     {
         Notification::fake();
 
@@ -212,10 +245,25 @@ class AccountRecoveryTest extends TestCase
         ]);
 
         $this->from('/professional/forgot-password')
-            ->post('/professional/forgot-password', ['phone' => '9000011111'])
-            ->assertSessionHas('recovery_unregistered', true);
+            ->post('/professional/forgot-password', ['email' => 'customer-only@example.test'])
+            ->assertRedirect('/professional/forgot-password')
+            ->assertSessionHas('status', AccountRecovery::PROFESSIONAL_SENT_MESSAGE)
+            ->assertSessionMissing('recovery_unregistered');
 
         Notification::assertNothingSent();
+    }
+
+    public function test_empty_and_invalid_professional_email_are_rejected(): void
+    {
+        $this->from('/professional/forgot-password')
+            ->post('/professional/forgot-password', [])
+            ->assertRedirect('/professional/forgot-password')
+            ->assertSessionHasErrors('email');
+
+        $this->from('/professional/forgot-password')
+            ->post('/professional/forgot-password', ['email' => 'not-an-email'])
+            ->assertRedirect('/professional/forgot-password')
+            ->assertSessionHasErrors('email');
     }
 
     public function test_password_reset_endpoint_does_not_reveal_registration_result(): void
@@ -226,6 +274,102 @@ class AccountRecoveryTest extends TestCase
             'password' => 'replacement-password',
             'password_confirmation' => 'replacement-password',
         ])->assertSessionMissing('recovery_unregistered');
+    }
+
+    public function test_professional_reset_cannot_change_customer_password_and_redirects_to_professional_login(): void
+    {
+        Notification::fake();
+        Event::fake([PasswordReset::class]);
+
+        $customer = User::query()->create([
+            'name' => 'Shared Email Customer',
+            'email' => 'shared-recovery@example.test',
+            'phone' => '9111100001',
+            'password' => 'customer-old-password',
+            'registration_completed' => true,
+        ]);
+
+        $professional = Professional::query()->create([
+            'name' => 'Shared Email Professional',
+            'email' => 'shared-recovery@example.test',
+            'phone' => '9111100002',
+            'password' => Hash::make('professional-old-password'),
+            'status' => 'accepted',
+        ]);
+
+        $this->post('/professional/forgot-password', ['email' => $professional->email])
+            ->assertSessionHas('status', AccountRecovery::PROFESSIONAL_SENT_MESSAGE);
+
+        $token = null;
+        Notification::assertSentTo($professional, ProfessionalResetPassword::class, function ($notification) use (&$token) {
+            $token = $notification->token;
+
+            return true;
+        });
+
+        $this->assertNotEmpty($token);
+
+        $this->post('/professional/reset-password', [
+            'token' => $token,
+            'email' => $professional->email,
+            'password' => 'professional-new-password',
+            'password_confirmation' => 'professional-new-password',
+        ])->assertRedirect(route('professional.login'));
+
+        $professional->refresh();
+        $customer->refresh();
+
+        $this->assertTrue(Hash::check('professional-new-password', $professional->password));
+        $this->assertTrue(Hash::check('customer-old-password', $customer->password));
+        Event::assertDispatched(PasswordReset::class);
+    }
+
+    public function test_customer_reset_cannot_change_professional_password_and_redirects_to_customer_login(): void
+    {
+        Notification::fake();
+        Event::fake([PasswordReset::class]);
+
+        $customer = User::query()->create([
+            'name' => 'Isolated Customer',
+            'email' => 'isolated-customer@example.test',
+            'phone' => '9222200001',
+            'password' => 'customer-old-password',
+            'registration_completed' => true,
+        ]);
+
+        $professional = Professional::query()->create([
+            'name' => 'Isolated Professional',
+            'email' => 'isolated-professional@example.test',
+            'phone' => '9222200002',
+            'password' => Hash::make('professional-old-password'),
+            'status' => 'accepted',
+        ]);
+
+        $this->post('/forgot-password', ['email' => $customer->email])
+            ->assertSessionHas('status', AccountRecovery::SENT_MESSAGE);
+
+        $token = null;
+        Notification::assertSentTo($customer, CustomerResetPassword::class, function ($notification) use (&$token) {
+            $token = $notification->token;
+
+            return true;
+        });
+
+        $this->assertNotEmpty($token);
+
+        $this->post('/reset-password', [
+            'token' => $token,
+            'email' => $customer->email,
+            'password' => 'customer-new-password',
+            'password_confirmation' => 'customer-new-password',
+        ])->assertRedirect(route('login'));
+
+        $customer->refresh();
+        $professional->refresh();
+
+        $this->assertTrue(Hash::check('customer-new-password', $customer->password));
+        $this->assertTrue(Hash::check('professional-old-password', $professional->password));
+        Event::assertDispatched(PasswordReset::class);
     }
 
     public function test_recovery_posts_are_rate_limited(): void
@@ -247,6 +391,7 @@ class AccountRecoveryTest extends TestCase
     private function storage(): void
     {
         Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('professional_password_reset_tokens');
         Schema::dropIfExists('users');
         Schema::dropIfExists('professionals');
 
@@ -273,6 +418,12 @@ class AccountRecoveryTest extends TestCase
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('professional_password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();

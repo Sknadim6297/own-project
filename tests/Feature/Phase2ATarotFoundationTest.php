@@ -130,6 +130,9 @@ class Phase2ATarotFoundationTest extends TestCase
         foreach ($cards as $card) {
             $this->assertNotSame('', trim((string) $card['upright_meaning']), $card['card_id']);
             $this->assertNotSame('', trim((string) $card['reversed_meaning']), $card['card_id']);
+            $this->assertNotSame('', trim((string) ($card['upright_keywords'] ?? '')), $card['card_id']);
+            $this->assertNotSame('', trim((string) ($card['reversed_keywords'] ?? '')), $card['card_id']);
+            $this->assertGreaterThanOrEqual(60, mb_strlen($card['upright_meaning']), $card['card_id']);
         }
 
         $meanings = collect($cards)->map(
@@ -154,10 +157,12 @@ class Phase2ATarotFoundationTest extends TestCase
 
         $star = TarotCard::query()->where('card_id', 'major_17')->firstOrFail();
         $this->assertSame('The Star', $star->card_name);
-        $this->assertSame('Hope, renewal, inspiration, healing, faith', $star->upright_meaning);
-        $this->assertSame('Discouragement, doubt, loss of direction', $star->reversed_meaning);
-        $this->assertNull($star->upright_keywords);
-        $this->assertNull($star->reversed_keywords);
+        $this->assertStringContainsString('hope', mb_strtolower($star->upright_meaning));
+        $this->assertStringContainsString('discouragement', mb_strtolower($star->reversed_meaning));
+        $this->assertNotNull($star->upright_keywords);
+        $this->assertStringContainsString('Hope', $star->upright_keywords);
+        $this->assertNotNull($star->reversed_keywords);
+        $this->assertStringContainsString('Discouragement', $star->reversed_keywords);
         $this->assertNull($star->image_path);
 
         TarotCard::query()->each(function (TarotCard $card) {

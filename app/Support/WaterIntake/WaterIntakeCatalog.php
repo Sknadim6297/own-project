@@ -21,13 +21,13 @@ class WaterIntakeCatalog
      * UI presets only — not medical recommendations.
      * Amounts preserved; emoji/labels are presentation metadata.
      *
-     * @var list<array{ml: int, emoji: string, label: string}>
+     * @var list<array{ml: int, icon: string, label: string}>
      */
     public const QUICK_ADDS = [
-        ['ml' => 150, 'emoji' => '🥛', 'label' => 'Small glass'],
-        ['ml' => 250, 'emoji' => '💧', 'label' => 'Regular glass'],
-        ['ml' => 500, 'emoji' => '🚰', 'label' => 'Water bottle'],
-        ['ml' => 750, 'emoji' => '🧴', 'label' => 'Large bottle'],
+        ['ml' => 150, 'icon' => 'cup-soda', 'label' => 'Small glass'],
+        ['ml' => 250, 'icon' => 'droplet', 'label' => 'Regular glass'],
+        ['ml' => 500, 'icon' => 'droplets', 'label' => 'Water bottle'],
+        ['ml' => 750, 'icon' => 'package', 'label' => 'Large bottle'],
     ];
 
     /** @deprecated Prefer QUICK_ADDS; kept for callers that expect bare ml list. */

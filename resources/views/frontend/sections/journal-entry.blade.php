@@ -24,11 +24,10 @@
         <p class="yk-journal__badge">Private entry</p>
         <h1><x-yuktione.two-tone :text="$title" /></h1>
         <p class="yk-journal-entry__meta">
-            <span class="yk-journal-entry__chip">{{ $prompt }}</span>
             <time>{{ $when }}</time>
         </p>
         @if ($question)
-            <p class="yk-journal-entry__question"><span aria-hidden="true">💡</span> {{ $question }}</p>
+            <p class="yk-journal-entry__question"><span aria-hidden="true"><x-yk-icon name="lightbulb" class="yk-icon--md" :decorative="true" /></span> {{ $question }}</p>
         @endif
         <p class="yk-journal__private" role="status">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-7-2a2 2 0 0 1 4 0v2h-4V7z"/></svg>

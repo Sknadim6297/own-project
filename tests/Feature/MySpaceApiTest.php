@@ -55,6 +55,44 @@ class MySpaceApiTest extends TestCase
             ['POST', '/api/v1/my/mood-checkins'],
             ['POST', '/api/v1/my/journal-entries'],
             ['POST', '/api/v1/my/gratitude-entries'],
+            ['GET', '/api/v1/my/water-intake/dashboard'],
+            ['GET', '/api/v1/my/water-intake/week'],
+            ['POST', '/api/v1/my/water-intake/entries'],
+            ['PATCH', '/api/v1/my/water-intake/settings'],
+            ['DELETE', '/api/v1/my/water-intake/entries/1'],
+            ['GET', '/api/v1/my/weight-journey/summary'],
+            ['GET', '/api/v1/my/weight-journey/chart'],
+            ['GET', '/api/v1/my/weight-journey/measurements'],
+            ['POST', '/api/v1/my/weight-journey/measurements'],
+            ['DELETE', '/api/v1/my/weight-journey/measurements/1'],
+            ['POST', '/api/v1/my/weight-journey/goal'],
+            ['POST', '/api/v1/my/weight-journey/goal/archive'],
+            ['GET', '/api/v1/my/nutrition/dashboard'],
+            ['GET', '/api/v1/my/nutrition/insights'],
+            ['GET', '/api/v1/my/nutrition/search'],
+            ['GET', '/api/v1/my/nutrition/foods/1/portion'],
+            ['POST', '/api/v1/my/nutrition/entries'],
+            ['PUT', '/api/v1/my/nutrition/entries/1'],
+            ['DELETE', '/api/v1/my/nutrition/entries/1'],
+            ['POST', '/api/v1/my/nutrition/goals'],
+            ['GET', '/api/v1/my/career-interest/history'],
+            ['GET', '/api/v1/my/career-interest/attempts/1'],
+            ['POST', '/api/v1/my/career-interest/complete'],
+            ['DELETE', '/api/v1/my/career-interest/attempts/1'],
+            ['GET', '/api/v1/my/skills-strengths/history'],
+            ['GET', '/api/v1/my/skills-strengths/attempts/1'],
+            ['POST', '/api/v1/my/skills-strengths/complete'],
+            ['DELETE', '/api/v1/my/skills-strengths/attempts/1'],
+            ['GET', '/api/v1/my/tarot/history'],
+            ['GET', '/api/v1/my/tarot/readings/1'],
+            ['POST', '/api/v1/my/tarot/start'],
+            ['POST', '/api/v1/my/tarot/category'],
+            ['POST', '/api/v1/my/tarot/question'],
+            ['POST', '/api/v1/my/tarot/spread'],
+            ['POST', '/api/v1/my/tarot/fan'],
+            ['POST', '/api/v1/my/tarot/pick'],
+            ['POST', '/api/v1/my/tarot/reveal'],
+            ['POST', '/api/v1/my/tarot/save'],
         ] as [$method, $uri]) {
             $this->json($method, $uri)->assertUnauthorized();
         }
@@ -66,7 +104,7 @@ class MySpaceApiTest extends TestCase
             ->filter(fn ($route) => str_starts_with($route->uri(), 'api/v1/my/'));
 
         // Count grows as additive /my/* tools ship; every route must stay Sanctum-guarded.
-        $this->assertGreaterThanOrEqual(11, $routes->count());
+        $this->assertGreaterThanOrEqual(49, $routes->count());
         foreach ($routes as $route) {
             $middleware = $route->gatherMiddleware();
             $this->assertContains('auth:sanctum', $middleware, $route->uri());

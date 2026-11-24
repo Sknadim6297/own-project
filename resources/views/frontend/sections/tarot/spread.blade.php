@@ -26,7 +26,7 @@
                             <input type="radio" name="spread_type" value="{{ $key }}" @checked($selected === $key) required>
                             <span class="yk-tarot__option-copy">
                                 <span class="yk-tarot__option-label">
-                                    @include('frontend.sections.tarot.partials.emoji', ['emoji' => $key === 'one' ? '🃏' : '🔮'])
+                                    @include('frontend.sections.tarot.partials.emoji', ['icon' => $key === 'one' ? 'layers' : 'sparkles'])
                                     {{ $spread['label'] }} · {{ $spread['subtitle'] }}
                                 </span>
                                 <div class="yk-tarot__spread-preview" aria-hidden="true">

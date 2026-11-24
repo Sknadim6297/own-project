@@ -1,4 +1,52 @@
 (function () {
+    var DIRTY_KEY = 'pfm.unsaved.monthly-money-planner';
+    var CONFIRM_MSG = 'Start a new calculation? Your unsaved changes will be discarded. Previously saved calculations will not be affected.';
+
+    function markMoneyPlannerDirty() {
+        try {
+            sessionStorage.setItem(DIRTY_KEY, '1');
+        } catch (e) {
+            /* ignore */
+        }
+    }
+
+    function clearMoneyPlannerDirty() {
+        try {
+            sessionStorage.removeItem(DIRTY_KEY);
+        } catch (e) {
+            /* ignore */
+        }
+    }
+
+    window.ykPfmClearFreshDirty = clearMoneyPlannerDirty;
+
+    window.ykPfmConfirmFreshStart = function (message) {
+        try {
+            if (sessionStorage.getItem(DIRTY_KEY) === '1') {
+                if (!window.confirm(message || CONFIRM_MSG)) {
+                    return false;
+                }
+            }
+        } catch (e) {
+            /* ignore */
+        }
+
+        clearMoneyPlannerDirty();
+
+        return true;
+    };
+
+    function initDirtyTracking(form) {
+        if (!form || !form.closest('[data-yk-pfm]')) {
+            return;
+        }
+
+        // Track typed values even before a server-side draft exists (Task 26).
+        form.addEventListener('input', markMoneyPlannerDirty);
+        form.addEventListener('change', markMoneyPlannerDirty);
+        form.addEventListener('submit', clearMoneyPlannerDirty);
+    }
+
     function initWizard(form) {
         if (!form || form.getAttribute('data-pfm-wizard') !== '1') {
             return;
@@ -90,6 +138,19 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('form[data-pfm-form]').forEach(initWizard);
+        document.querySelectorAll('form[data-pfm-form]').forEach(function (form) {
+            initWizard(form);
+            if (document.body.querySelector('[data-yk-pfm-editing], form[data-pfm-form][action*="money-planner"]')
+                || (form.getAttribute('action') || '').indexOf('money-planner') !== -1) {
+                initDirtyTracking(form);
+            }
+        });
+
+        // Successful fresh start / save landing clears client dirty flag.
+        var status = document.querySelector('.yk-pfm__status');
+        if (status && /Started a new calculation|Calculation saved|Changes saved/i.test(status.textContent || '')) {
+            clearMoneyPlannerDirty();
+        }
+
     });
 })();

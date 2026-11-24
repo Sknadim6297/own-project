@@ -141,8 +141,9 @@ public function register(Request $request)
         }
         
         // Verify that the email being registered matches the verified email from session
-        $verifiedEmail = Session::get('registration_email');
-        if ($verifiedEmail !== $request->email) {
+        $verifiedEmail = \App\Services\AccountRecovery::normalizeEmail(Session::get('registration_email'));
+        $requestEmail = \App\Services\AccountRecovery::normalizeEmail($request->email);
+        if ($verifiedEmail === '' || $verifiedEmail !== $requestEmail) {
             return response()->json([
                 'status'  => 'error',
                 'message' => 'Email address does not match the verified email.',
@@ -150,8 +151,7 @@ public function register(Request $request)
         }
         
         // Check if email already exists in database (this should not happen if OTP verification worked correctly)
-        $existingProfessional = Professional::where('email', $verifiedEmail)->first();
-        if ($existingProfessional) {
+        if (app(\App\Services\AccountRecovery::class)->professionalEmailTaken($verifiedEmail)) {
             // Clear the session since this email is already registered
             Session::forget(['registration_otp', 'otp_expiry', 'email_verified', 'registration_email']);
             
@@ -169,7 +169,6 @@ public function register(Request $request)
             'phone'                 => 'required|string|max:20',
             'specialization'        => 'required|string|max:255',
             'experience'            => 'required|string|in:0-2,2-4,4-6,6-8,8-10,10+',
-            'starting_price'        => 'required|string|max:100', // Allow range values like "1000-2000"
             'address'               => 'required|string|max:500',
             'education'             => 'required|string|max:255',
             'education2'            => 'nullable|string|max:255',
@@ -205,7 +204,7 @@ public function register(Request $request)
         try {
             $professional = Professional::create([
                 'name'     => $request->first_name . ' ' . $request->last_name,
-                'email'    => $request->email,
+                'email'    => $verifiedEmail,
                 'phone'    => $request->phone,
                 'password' => Hash::make($request->password),
                 'status'   => 'pending',
@@ -229,10 +228,11 @@ public function register(Request $request)
                 'professional_id'       => $professional->id,
                 'name'                  => $request->first_name . ' ' . $request->last_name,
                 'phone'                 => $request->phone,
-                'email'                 => $request->email,
+                'email'                 => $verifiedEmail,
                 'specialization'        => $request->specialization,
                 'experience'            => $request->experience,
-                'starting_price'        => $request->starting_price,
+                // Pricing is set later via professional rates/profile — not collected during onboarding.
+                'starting_price'        => null,
                 'address'               => $request->address,
                 'education'             => $request->education,
                 'education2'            => $request->education2,
@@ -303,7 +303,6 @@ public function rejectedPage()
             'phone'                  => 'nullable|string|min:6|max:15|regex:/^\d+$/',
             'specialization'         => 'nullable|string|max:255',
             'experience'             => 'nullable|string|max:255',
-            'starting_price'         => 'nullable|string|max:100',
             'address'                => 'nullable|string|max:500',
             'education'              => 'nullable|string|max:255',
             'education2'             => 'nullable|string|max:255',
@@ -317,7 +316,6 @@ public function rejectedPage()
             'phone.min' => 'Phone number must be at least 6 digits.',
             'phone.max' => 'Phone number cannot exceed 15 digits.',
             'phone.regex' => 'Phone number can only contain digits.',
-            'starting_price.max' => 'Starting price cannot exceed 100 characters.',
             'qualification_document.max' => 'Qualification document file size should not exceed 10MB.',
             'id_proof_document.max' => 'ID proof document file size should not exceed 10MB.',
             'profile_photo.max' => 'Profile photo file size should not exceed 5MB.',
@@ -404,7 +402,8 @@ public function rejectedPage()
             'gallery'                => $galleryPath,
             'gst_certificate'        => $gstCertificatePath,
         ];
-        $textFields = ['name', 'specialization', 'experience', 'starting_price', 'address', 'education', 'education2', 'gst_number', 'gst_address', 'state_code', 'state_name'];
+        // starting_price intentionally omitted — resubmit must not clear existing pricing.
+        $textFields = ['name', 'specialization', 'experience', 'address', 'education', 'education2', 'gst_number', 'gst_address', 'state_code', 'state_name'];
         
         foreach ($textFields as $field) {
             if ($request->filled($field)) {
@@ -437,9 +436,10 @@ public function rejectedPage()
             'email' => 'required|email',
         ]);
         
-        // Check if email already exists in professionals table
-        $existingProfessional = Professional::where('email', $request->email)->first();
-        if ($existingProfessional) {
+        $email = \App\Services\AccountRecovery::normalizeEmail($request->email);
+
+        // Case-insensitive uniqueness within professionals only (cross-role sharing allowed)
+        if (app(\App\Services\AccountRecovery::class)->professionalEmailTaken($email)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'This email address is already registered. Please login instead.'
@@ -448,11 +448,11 @@ public function rejectedPage()
 
         $otp = $this->generateOTP();
         Session::put('registration_otp', $otp);
-        Session::put('registration_email', $request->email);
+        Session::put('registration_email', $email);
         Session::put('otp_expiry', now()->addMinutes(10));
         
         try {
-            Mail::to($request->email)->send(new OtpVerificationMail($otp));
+            Mail::to($email)->send(new OtpVerificationMail($otp));
             return response()->json([
                 'status' => 'success',
                 'message' => 'Verification code sent to your email address.'

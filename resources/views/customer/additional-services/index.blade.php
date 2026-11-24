@@ -397,11 +397,11 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if (response.success) {
-                    toastr.success('✅ ' + response.message + ' Professional can now start consulting!');
+                    toastr.success(' ' + response.message + ' Professional can now start consulting!');
                     
                     // Show success animation and reload
                     setTimeout(() => {
-                        toastr.info('🔄 Refreshing page to show updated status...');
+                        toastr.info(' Refreshing page to show updated status...');
                         location.reload();
                     }, 2000);
                 } else {
@@ -431,7 +431,7 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success) {
                     closeModal('confirmCompletionModal');
-                    toastr.success('✅ ' + response.message);
+                    toastr.success(' ' + response.message);
                     setTimeout(() => location.reload(), 2000);
                 } else {
                     toastr.error(response.message);

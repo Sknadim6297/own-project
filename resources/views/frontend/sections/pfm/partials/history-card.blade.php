@@ -4,19 +4,35 @@
     $money = fn ($value) => '₹'.number_format((float) $value, 2);
     $moneySigned = function ($value) use ($money) {
         $n = (float) $value;
+
         return ($n < 0 ? '−' : '').$money(abs($n));
     };
-    $when = optional($item->updated_at)->timezone($timezone)?->format('d M Y, h:i A');
+    $createdAt = optional($item->created_at)->timezone($timezone)?->format('d M Y, h:i A');
+    $updatedAt = optional($item->updated_at)->timezone($timezone)?->format('d M Y, h:i A');
+    $showUpdated = $createdAt
+        && $updatedAt
+        && $item->created_at
+        && $item->updated_at
+        && $item->updated_at->getTimestamp() !== $item->created_at->getTimestamp();
+    $when = $updatedAt ?: $createdAt;
     $statusLabel = $item->is_draft ? 'Draft' : 'Saved';
     $statusTone = $item->is_draft ? 'warn' : 'good';
     $metrics = [];
+    $isMoneyPlanner = $toolKey === 'monthly-money-planner';
+    $isEmergency = $toolKey === 'emergency-fund-calculator';
+    $supportsEditInPlace = in_array($toolKey, ['monthly-money-planner', 'emergency-fund-calculator'], true);
+    $showDetailedDates = $isMoneyPlanner || $isEmergency;
 
-    if ($toolKey === 'monthly-money-planner') {
+    if ($isMoneyPlanner) {
         $metrics = [
-            ['label' => 'Income', 'value' => isset($inputs['monthly_income']) ? $money($inputs['monthly_income']) : '—'],
-            ['label' => 'Expenses', 'value' => isset($outputs['total_expenses']) ? $money($outputs['total_expenses']) : '—'],
-            ['label' => 'Free cash', 'value' => isset($outputs['free_cash']) ? $moneySigned($outputs['free_cash']) : '—', 'tone' => ((float) ($outputs['free_cash'] ?? 0)) < 0 ? 'bad' : null],
-            ['label' => 'Savings rate', 'value' => isset($outputs['savings_rate_percent']) ? number_format((float) $outputs['savings_rate_percent'], 2).'%' : '—'],
+            ['label' => 'Monthly income', 'value' => isset($inputs['monthly_income']) ? $money($inputs['monthly_income']) : '—'],
+            ['label' => 'Expenses & EMI', 'value' => isset($outputs['total_expenses']) ? $money($outputs['total_expenses']) : '—'],
+            ['label' => 'Investments', 'value' => isset($inputs['investments']) ? $money($inputs['investments']) : '—'],
+            [
+                'label' => 'Available cash',
+                'value' => isset($outputs['free_cash']) ? $moneySigned($outputs['free_cash']) : '—',
+                'tone' => ((float) ($outputs['free_cash'] ?? 0)) < 0 ? 'bad' : null,
+            ],
             ['label' => 'Status', 'value' => $outputs['health_label'] ?? '—', 'tone' => $outputs['health_tone'] ?? null],
         ];
     } elseif ($toolKey === 'net-worth-calculator') {
@@ -28,8 +44,14 @@
     } elseif ($toolKey === 'emergency-fund-calculator') {
         $metrics = [
             ['label' => 'Target', 'value' => isset($outputs['target_amount']) ? $money($outputs['target_amount']) : '—'],
-            ['label' => 'Shortfall', 'value' => isset($outputs['shortfall']) ? $money($outputs['shortfall']) : '—'],
+            ['label' => 'Current savings', 'value' => isset($inputs['current_savings']) ? $money($inputs['current_savings']) : '—'],
+            ['label' => 'Remaining', 'value' => isset($outputs['shortfall']) ? $money($outputs['shortfall']) : '—'],
             ['label' => 'Coverage', 'value' => isset($outputs['coverage_months_actual']) ? number_format((float) $outputs['coverage_months_actual'], 1).' mo' : '—'],
+            [
+                'label' => 'Status',
+                'value' => ((float) ($outputs['shortfall'] ?? 0)) <= 0 ? 'Target achieved' : 'Building fund',
+                'tone' => ((float) ($outputs['shortfall'] ?? 0)) <= 0 ? 'good' : 'warn',
+            ],
         ];
     } elseif ($toolKey === 'financial-goal-calculator') {
         $metrics = [
@@ -66,15 +88,34 @@
     $viewUrl = route($tool['route'].'.history.show', $item);
     $continueUrl = route($tool['route'].'.continue', $item);
     $deleteUrl = route($tool['route'].'.history.destroy', $item);
+    $cardTitle = $isMoneyPlanner
+        ? 'Monthly Money Plan'
+        : ($isEmergency
+            ? ($item->title ?: 'Emergency Fund Plan')
+            : ($item->title ?: ($tool['name'] ?? 'Saved calculation')));
 @endphp
 
-<li class="yk-pfm__history-card">
+<li class="yk-pfm__history-card {{ $isEmergency ? 'yk-ef__history-card' : '' }}">
     <div class="yk-pfm__history-top">
         <div>
             <h2 class="yk-pfm__history-title">
-                <a href="{{ $viewUrl }}">{{ $item->title ?: ($tool['name'] ?? 'Saved calculation') }}</a>
+                <a href="{{ $viewUrl }}">
+                    @if ($isEmergency)<x-yk-icon name="shield-check" class="yk-icon--sm" />@endif
+                    {{ $cardTitle }}
+                </a>
             </h2>
             <p class="yk-pfm__history-summary">{{ $item->summary }}</p>
+            @if ($showDetailedDates)
+                <p class="yk-pfm__history-dates">
+                    @if ($createdAt)
+                        <span>Saved {{ $createdAt }}</span>
+                    @endif
+                    @if ($showUpdated)
+                        <span aria-hidden="true">·</span>
+                        <span>Updated {{ $updatedAt }}</span>
+                    @endif
+                </p>
+            @endif
         </div>
         <span class="yk-pfm__pill yk-pfm__pill--{{ $statusTone }}">{{ $statusLabel }}</span>
     </div>
@@ -92,11 +133,20 @@
     @endif
 
     <div class="yk-pfm__history-foot">
-        <p class="yk-pfm__meta">{{ $when ?: 'Saved recently' }}</p>
-        <div class="yk-pfm__history-actions">
-            <a class="yk-pfm__chip-btn" href="{{ $viewUrl }}">View results</a>
-            <a class="yk-pfm__chip-btn" href="{{ $continueUrl }}">Continue</a>
-            <a class="yk-pfm__chip-btn" href="{{ $continueUrl }}">Edit &amp; recalculate</a>
+        @unless ($showDetailedDates)
+            <p class="yk-pfm__meta">{{ $when ?: 'Saved recently' }}</p>
+        @endunless
+        <div class="yk-pfm__history-actions @if ($supportsEditInPlace) yk-pfm__history-actions--solo @endif">
+            <a class="yk-pfm__chip-btn" href="{{ $viewUrl }}">Show Saved</a>
+            @if ($supportsEditInPlace)
+                <a class="yk-pfm__chip-btn" href="{{ $continueUrl }}">
+                    @if ($isEmergency)<x-yk-icon name="pencil" class="yk-icon--sm" />@endif
+                    Edit Calculation
+                </a>
+            @else
+                <a class="yk-pfm__chip-btn" href="{{ $continueUrl }}">Continue</a>
+                <a class="yk-pfm__chip-btn" href="{{ $continueUrl }}">Edit &amp; recalculate</a>
+            @endif
             <form method="post" action="{{ $deleteUrl }}" onsubmit="return confirm('Delete this saved calculation? This cannot be undone.');">
                 @csrf
                 @method('DELETE')

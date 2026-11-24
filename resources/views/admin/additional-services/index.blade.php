@@ -344,9 +344,9 @@
                                     @endif
                                     
                                     @if($service->negotiation_status === 'user_negotiated')
-                                        <br><span class="badge bg-warning blink">⚠️ Negotiation Pending</span>
+                                        <br><span class="badge bg-warning blink"> Negotiation Pending</span>
                                     @elseif($service->negotiation_status === 'admin_responded')
-                                        <br><span class="badge bg-primary">✅ Responded</span>
+                                        <br><span class="badge bg-primary"> Responded</span>
                                     @endif
                                 </td>
                                 <td>

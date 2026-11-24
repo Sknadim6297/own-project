@@ -1,22 +1,34 @@
 /**
- * Financial Goal Calculator — its own look: deep emerald, warm gold and paper.
- * Self-contained (hard-coded tokens), so it does not depend on the shared PFM or brand variables.
+ * Financial Goal Calculator — Yuktione brand (Task 32).
+ * Scoped to `.yk-goal` so other PFM tools stay on `yuktione-pfm.css`.
+ * Tokens mirror shared PFM / homepage plum + pearl (Task 31 compact header preserved).
+ * Task 34: compact controls, section hierarchy, currency/% affix polish.
+ * Task 35: single continuous form (wizard steps removed).
+ * Task 36: dedicated result screen polish (breakdown, actions, cache-safe).
  */
+body.yk-goal-body {
+    background-color: #fff8fb;
+}
+
 .yk-goal {
-    --g-ink: #0f1f1c;
+    --g-ink: #1f1f1f;
     --g-deep: #6e0b3c;
-    --g-green: #14705f;
-    --g-green-2: #1d8a74;
-    --g-mint: #e4f2ec;
-    --g-mint-2: #f1f8f4;
+    --g-green: #8a0f4d; /* brand primary (legacy name kept for selectors) */
+    --g-green-2: #c3196b;
+    --g-mint: #f8eaf1;
+    --g-mint-2: #fff8fb;
     --g-gold: #e0a73f;
     --g-gold-2: #f0c46a;
     --g-gold-soft: #fbf0d6;
-    --g-paper: #f6f3ec;
-    --g-line: #e1dccf;
-    --g-muted: #5d6a65;
+    --g-paper: #fff8fb;
+    --g-line: #e8e4de;
+    --g-muted: #6b6b7a;
     --g-danger: #a23b32;
+    --g-ok: #2f9e6b;
+    --g-ok-soft: #e8f6ef;
     --g-ease: 180ms ease;
+    --g-shadow: 0 10px 26px -14px rgba(138, 15, 77, 0.3);
+    --g-focus: rgba(138, 15, 77, 0.22);
     position: relative;
     min-height: 70vh;
     padding-bottom: 64px;
@@ -24,7 +36,7 @@
     font-family: "DM Sans", system-ui, sans-serif;
     line-height: 1.45;
     background-color: var(--g-paper);
-    background-image: radial-gradient(rgba(11, 61, 54, 0.08) 1px, transparent 1px);
+    background-image: radial-gradient(rgba(138, 15, 77, 0.06) 1px, transparent 1px);
     background-size: 22px 22px;
     overflow-x: clip;
 }
@@ -40,14 +52,66 @@
     margin-inline: auto;
 }
 
-/* ---- Hero band ---- */
+/* ---- Compact header (Task 31) — replaces large promotional hero band ---- */
+.yk-goal__header {
+    position: relative;
+    padding: 18px 0 12px;
+    color: var(--g-ink, #1f1f1f);
+    background: transparent;
+}
+
+.yk-goal__header-title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.yk-goal__header-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.85rem;
+    background: #f8eaf1;
+    color: #8a0f4d;
+    border: 1px solid rgba(138, 15, 77, 0.1);
+}
+
+.yk-goal__header h1 {
+    margin: 0;
+    color: #1f1f1f;
+    font-size: clamp(1.35rem, 1.1rem + 1vw, 1.85rem);
+    font-weight: 780;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.yk-goal__header .yk-goal__lead {
+    max-width: 42rem;
+    margin: 0.4rem 0 0;
+    color: #6b6b7a;
+    font-size: 0.98rem;
+    line-height: 1.45;
+}
+
+.yk-goal__header-facts {
+    margin-top: 0.75rem;
+}
+
+.yk-goal--compact-header .yk-goal__layout {
+    margin-top: 0;
+}
+
+/* Legacy large hero kept only if somehow still rendered elsewhere */
 .yk-goal__hero {
     position: relative;
     padding: 26px 0 96px;
     color: #fff;
     background:
         radial-gradient(520px 260px at 90% 0%, rgba(240, 196, 106, 0.22), transparent 70%),
-        linear-gradient(135deg, #6e0b3c 0%, #0f4f45 55%, #6e0b3c 100%);
+        linear-gradient(135deg, #6e0b3c 0%, #8a0f4d 55%, #6e0b3c 100%);
     overflow: hidden;
 }
 
@@ -69,8 +133,8 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 4px 10px;
-    margin-bottom: 18px;
-    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 12px;
+    color: #6b6b7a;
     font-size: 0.86rem;
 }
 
@@ -79,13 +143,13 @@
     align-items: center;
     gap: 6px;
     min-height: 32px;
-    color: rgba(255, 255, 255, 0.88);
+    color: #8a0f4d;
     font-weight: 600;
     text-decoration: none;
 }
 
 .yk-goal__crumbs a:hover {
-    color: #fff;
+    color: #6e0b3c;
     text-decoration: underline;
     text-underline-offset: 3px;
 }
@@ -93,7 +157,7 @@
 .yk-goal__crumbs a:focus-visible,
 .yk-goal__link:focus-visible,
 .yk-goal__notice a:focus-visible {
-    outline: 2px solid var(--g-gold-2);
+    outline: 2px solid var(--g-green);
     outline-offset: 3px;
     border-radius: 4px;
 }
@@ -102,24 +166,23 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin: 0 0 12px;
-    padding: 6px 14px 6px 10px;
-    border: 1px solid rgba(240, 196, 106, 0.4);
+    margin: 0 0 10px;
+    padding: 6px 12px 6px 10px;
+    border: 1px solid rgba(138, 15, 77, 0.14);
     border-radius: 999px;
-    background: rgba(240, 196, 106, 0.12);
-    color: var(--g-gold-2);
-    font-size: 0.78rem;
+    background: #f8eaf1;
+    color: #8a0f4d;
+    font-size: 0.76rem;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
 }
 
-.yk-goal__eyebrow svg {
-    width: 18px;
-    height: 18px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.8;
+.yk-goal__eyebrow svg,
+.yk-goal__eyebrow .yk-icon {
+    width: 16px;
+    height: 16px;
+    color: inherit;
 }
 
 .yk-goal__hero h1 {
@@ -135,9 +198,13 @@
 .yk-goal__lead {
     max-width: 52ch;
     margin: 14px 0 0;
-    color: rgba(255, 255, 255, 0.78);
+    color: #6b6b7a;
     font-size: 1.05rem;
     line-height: 1.55;
+}
+
+.yk-goal__hero .yk-goal__lead {
+    color: rgba(255, 255, 255, 0.78);
 }
 
 /* ---- Layout ---- */
@@ -146,6 +213,10 @@
     grid-template-columns: minmax(0, 1fr) 340px;
     align-items: start;
     gap: 24px;
+    margin-top: 0;
+}
+
+.yk-goal:not(.yk-goal--compact-header) .yk-goal__layout {
     margin-top: -60px;
 }
 
@@ -154,9 +225,9 @@
     min-width: 0;
     overflow: hidden;
     border: 1px solid var(--g-line);
-    border-radius: 24px;
+    border-radius: 22px;
     background: #fff;
-    box-shadow: 0 24px 50px -24px rgba(11, 61, 54, 0.35), 0 2px 0 rgba(255, 255, 255, 0.6) inset;
+    box-shadow: var(--g-shadow);
 }
 
 .yk-goal__alert,
@@ -181,7 +252,8 @@
     color: var(--g-deep);
 }
 
-.yk-goal__notice svg {
+.yk-goal__notice svg,
+.yk-goal__notice .yk-icon {
     flex: none;
     width: 18px;
     height: 18px;
@@ -202,7 +274,7 @@
 .yk-goal__steps {
     padding: 22px 28px 20px;
     border-bottom: 1px solid var(--g-line);
-    background: linear-gradient(180deg, #fbfaf6, #fff);
+    background: linear-gradient(180deg, var(--g-mint-2), #fff);
 }
 
 .yk-goal__steps ol {
@@ -259,7 +331,8 @@
     font-weight: 800;
 }
 
-.yk-goal__node svg {
+.yk-goal__node svg,
+.yk-goal__node .yk-icon {
     display: none;
     width: 18px;
     height: 18px;
@@ -286,7 +359,7 @@
     border-color: var(--g-deep);
     background: var(--g-deep);
     color: #fff;
-    box-shadow: 0 0 0 5px rgba(224, 167, 63, 0.3);
+    box-shadow: 0 0 0 5px var(--g-focus);
 }
 
 .yk-goal__steps li.is-done {
@@ -303,23 +376,29 @@
     display: none;
 }
 
-.yk-goal__steps li.is-done .yk-goal__node svg {
+.yk-goal__steps li.is-done .yk-goal__node svg,
+.yk-goal__steps li.is-done .yk-goal__node .yk-icon {
     display: block;
 }
 
-/* ---- Step panels ---- */
+/* ---- Form panels (Task 35 single page; legacy .yk-goal__step kept for safety) ---- */
+.yk-goal__panel,
 .yk-goal__step {
-    padding: 28px 28px 8px;
+    padding: 22px 28px 8px;
 }
 
 .yk-goal__step[hidden] {
     display: none !important;
 }
 
+.yk-goal--single .yk-goal__steps {
+    display: none !important;
+}
+
 .yk-goal__step-head h3 {
     margin: 0;
     color: var(--g-ink);
-    font-size: clamp(1.3rem, 1.05rem + 0.9vw, 1.65rem);
+    font-size: clamp(1.2rem, 1.05rem + 0.7vw, 1.5rem);
     font-weight: 800;
     letter-spacing: -0.02em;
     line-height: 1.2;
@@ -328,7 +407,74 @@
 .yk-goal__step-head p {
     margin: 6px 0 0;
     color: var(--g-muted);
-    font-size: 0.98rem;
+    font-size: 0.95rem;
+}
+
+.yk-goal--single .yk-goal__actions {
+    justify-content: flex-end;
+}
+
+.yk-goal--single .yk-goal__btn--gold {
+    margin-left: 0;
+}
+
+.yk-goal__error {
+    margin: 0.35rem 2px 0;
+    color: var(--g-danger);
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+/* ---- Section hierarchy (Task 34) ---- */
+.yk-goal__section {
+    margin-top: 1.15rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(138, 15, 77, 0.1);
+}
+
+.yk-goal__step-head + .yk-goal__section {
+    margin-top: 1.1rem;
+    padding-top: 0;
+    border-top: 0;
+}
+
+.yk-goal__section-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0 0 0.65rem;
+    color: var(--g-deep);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.yk-goal__section-title .yk-icon {
+    width: 15px;
+    height: 15px;
+    color: var(--g-green);
+    flex: none;
+}
+
+.yk-goal__section .yk-goal__field--flush {
+    margin-top: 0;
+}
+
+.yk-goal__section .yk-goal__types {
+    margin: 0.35rem 0 0.85rem;
+}
+
+.yk-goal__two--flush {
+    margin-top: 0;
+}
+
+.yk-goal__two--flush > .yk-goal__field {
+    margin-top: 0;
+}
+
+.yk-goal__two--flush > .yk-goal__field + .yk-goal__field {
+    margin-top: 0;
 }
 
 /* Goal type tiles */
@@ -406,8 +552,8 @@
     height: 24px;
     border: 2px solid #fff;
     border-radius: 50%;
-    background: var(--g-gold);
-    color: var(--g-deep);
+    background: var(--g-green);
+    color: #fff;
     opacity: 0;
     transform: scale(0.5);
     transition: opacity var(--g-ease), transform var(--g-ease);
@@ -425,13 +571,13 @@
 
 .yk-goal__type:has(input:checked) {
     border-color: var(--g-deep);
-    background: linear-gradient(180deg, var(--g-mint-2), var(--g-mint));
-    box-shadow: 0 10px 22px -10px rgba(11, 61, 54, 0.45);
+    background: linear-gradient(180deg, #fff, var(--g-mint));
+    box-shadow: 0 10px 22px -12px rgba(138, 15, 77, 0.35);
 }
 
 .yk-goal__type:has(input:checked) .yk-goal__type-icon {
     background: var(--g-deep);
-    color: var(--g-gold-2);
+    color: #fff;
 }
 
 .yk-goal__type:has(input:checked) .yk-goal__type-tick {
@@ -440,49 +586,62 @@
 }
 
 .yk-goal__type:has(input:focus-visible) {
-    outline: 3px solid var(--g-gold);
+    outline: 3px solid var(--g-green);
     outline-offset: 3px;
 }
 
 /* Fields */
 .yk-goal__field {
     min-width: 0;
-    margin-top: 22px;
+    margin-top: 1rem;
 }
 
 .yk-goal__step-head + .yk-goal__field {
-    margin-top: 24px;
+    margin-top: 1.1rem;
+}
+
+.yk-goal__section > .yk-goal__field:not(.yk-goal__field--flush) {
+    margin-top: 0.85rem;
 }
 
 .yk-goal__two {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0 20px;
+    gap: 0.85rem 1.1rem;
     margin-top: 0;
 }
 
 .yk-goal__two > .yk-goal__field:first-child {
-    margin-top: 22px;
+    margin-top: 1rem;
 }
 
 .yk-goal__step-head + .yk-goal__two > .yk-goal__field {
-    margin-top: 24px;
+    margin-top: 1.1rem;
 }
 
 .yk-goal__field > label {
-    display: block;
-    margin-bottom: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.4rem;
     color: var(--g-ink);
-    font-size: 0.94rem;
+    font-size: 0.9rem;
     font-weight: 700;
+}
+
+.yk-goal__label-icon {
+    width: 15px;
+    height: 15px;
+    color: var(--g-green);
+    flex: none;
 }
 
 .yk-goal__optional {
     margin-left: 4px;
     padding: 2px 8px;
     border-radius: 999px;
-    background: var(--g-gold-soft);
-    color: #7a5712;
+    background: var(--g-mint);
+    color: var(--g-deep);
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.03em;
@@ -492,37 +651,55 @@
 .yk-goal__control {
     display: flex;
     align-items: stretch;
-    min-height: 58px;
+    min-height: 48px;
+    height: 48px;
     overflow: hidden;
     border: 1.5px solid var(--g-line);
-    border-radius: 16px;
+    border-radius: 12px;
     background: #fff;
     transition: border-color var(--g-ease), box-shadow var(--g-ease);
 }
 
 .yk-goal__control:hover {
-    border-color: #cfc8b6;
+    border-color: #d4cfc8;
 }
 
 .yk-goal__control:focus-within {
     border-color: var(--g-green);
-    box-shadow: 0 0 0 4px rgba(20, 112, 95, 0.16);
+    box-shadow: 0 0 0 4px var(--g-focus);
+}
+
+.yk-goal__control.is-invalid,
+.yk-goal__field.is-invalid .yk-goal__control {
+    border-color: var(--g-danger);
+    box-shadow: 0 0 0 3px rgba(162, 59, 50, 0.16);
 }
 
 .yk-goal__control input {
     flex: 1;
     width: 100%;
     min-width: 0;
-    padding: 0 16px;
+    padding: 0 14px;
     border: 0;
     background: transparent;
     color: var(--g-ink);
     font: inherit;
-    font-size: 1.15rem;
+    font-size: 1.05rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     appearance: textfield;
     -moz-appearance: textfield;
+}
+
+.yk-goal__control--money input {
+    padding-left: 10px;
+    padding-right: 14px;
+}
+
+.yk-goal__control--percent input,
+.yk-goal__control--years input {
+    padding-right: 10px;
+    text-align: left;
 }
 
 .yk-goal__control input::-webkit-outer-spin-button,
@@ -532,7 +709,7 @@
 }
 
 .yk-goal__control input::placeholder {
-    color: #a5a89f;
+    color: #9a94a0;
     font-weight: 500;
 }
 
@@ -544,45 +721,228 @@
     display: grid;
     flex: none;
     place-items: center;
-    min-width: 52px;
-    padding: 0 14px;
+    min-width: 2.6rem;
+    padding: 0 0.7rem;
     border-right: 1.5px solid var(--g-line);
-    background: var(--g-paper);
+    background: var(--g-mint-2);
     color: var(--g-deep);
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 800;
+    line-height: 1;
 }
 
 .yk-goal__affix--end {
     border-right: 0;
     border-left: 1.5px solid var(--g-line);
-    font-size: 0.92rem;
+    min-width: 2.4rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.yk-goal__control--years .yk-goal__affix--end {
+    min-width: 3.6rem;
+    font-size: 0.82rem;
 }
 
 .yk-goal__help {
-    margin: 8px 2px 0;
+    margin: 0.4rem 2px 0;
     color: var(--g-muted);
-    font-size: 0.84rem;
+    font-size: 0.82rem;
     line-height: 1.4;
+}
+
+.yk-goal__field .invalid-feedback,
+.yk-goal__field [role="alert"]:not(.yk-goal__alert) {
+    margin: 0.35rem 2px 0;
+    color: var(--g-danger);
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+/* ---- Years slider (Task 33 + Task 34 polish) ---- */
+.yk-goal__years {
+    min-width: 0;
+}
+
+.yk-goal__years-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(7.5rem, 9.5rem);
+    align-items: center;
+    gap: 0.75rem 1rem;
+    margin: 0 0 0.75rem;
+}
+
+.yk-goal__years-readout {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    margin: 0;
+    min-width: 0;
+}
+
+.yk-goal__years-figure {
+    color: var(--g-deep);
+    font-size: clamp(1.45rem, 1.15rem + 1vw, 1.85rem);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+.yk-goal__years-unit {
+    color: var(--g-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.yk-goal__years-slider {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.65rem;
+}
+
+.yk-goal__years-step {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--g-line);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--g-deep);
+    cursor: pointer;
+    transition: background-color var(--g-ease), border-color var(--g-ease), color var(--g-ease);
+}
+
+.yk-goal__years-step:hover {
+    border-color: var(--g-green);
+    background: var(--g-mint);
+    color: var(--g-green);
+}
+
+.yk-goal__years-step:focus-visible {
+    outline: 3px solid var(--g-green);
+    outline-offset: 2px;
+}
+
+.yk-goal__years-step .yk-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.yk-goal__years-track {
+    min-width: 0;
+}
+
+.yk-goal__years-range {
+    --yk-years-pct: 10%;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 40px;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    touch-action: pan-y;
+}
+
+.yk-goal__years-range:focus {
+    outline: none;
+}
+
+.yk-goal__years-range:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 4px var(--g-focus);
+}
+
+.yk-goal__years-range:focus-visible::-moz-range-thumb {
+    box-shadow: 0 0 0 4px var(--g-focus);
+}
+
+.yk-goal__years-range::-webkit-slider-runnable-track {
+    height: 10px;
+    border-radius: 999px;
+    background: linear-gradient(
+        90deg,
+        var(--g-green) 0%,
+        var(--g-green) var(--yk-years-pct),
+        #ece6ea var(--yk-years-pct),
+        #ece6ea 100%
+    );
+}
+
+.yk-goal__years-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    margin-top: -7px;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background: var(--g-green);
+    box-shadow: 0 2px 8px rgba(138, 15, 77, 0.35);
+}
+
+.yk-goal__years-range::-moz-range-track {
+    height: 10px;
+    border: 0;
+    border-radius: 999px;
+    background: #ece6ea;
+}
+
+.yk-goal__years-range::-moz-range-progress {
+    height: 10px;
+    border-radius: 999px;
+    background: var(--g-green);
+}
+
+.yk-goal__years-range::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background: var(--g-green);
+    box-shadow: 0 2px 8px rgba(138, 15, 77, 0.35);
+}
+
+.yk-goal__years-scale {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.2rem;
+    color: var(--g-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.yk-goal__years-bounds {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.1rem;
+    color: var(--g-deep);
+    font-size: 0.75rem;
+    font-weight: 700;
 }
 
 .yk-goal__quick {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
+    gap: 6px;
+    margin-top: 0.15rem;
 }
 
 .yk-goal__quick button {
-    min-width: 48px;
-    min-height: 36px;
-    padding: 0 14px;
+    min-width: 44px;
+    min-height: 34px;
+    padding: 0 12px;
     border: 1.5px solid var(--g-line);
     border-radius: 999px;
     background: #fff;
     color: var(--g-deep);
     font: inherit;
-    font-size: 0.86rem;
+    font-size: 0.84rem;
     font-weight: 700;
     cursor: pointer;
     transition: border-color var(--g-ease), background-color var(--g-ease), color var(--g-ease);
@@ -600,30 +960,33 @@
 }
 
 .yk-goal__quick button:focus-visible {
-    outline: 3px solid var(--g-gold);
+    outline: 3px solid var(--g-green);
     outline-offset: 2px;
 }
 
 .yk-goal__callout {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-    margin: 24px 0 0;
-    padding: 14px 16px;
-    border: 1px solid #efd9a2;
-    border-radius: 16px;
-    background: var(--g-gold-soft);
-    color: #5e4410;
-    font-size: 0.92rem;
+    gap: 10px;
+    margin: 1rem 0 0;
+    padding: 12px 14px;
+    border: 1px solid rgba(138, 15, 77, 0.14);
+    border-radius: 12px;
+    background: var(--g-mint);
+    color: var(--g-deep);
+    font-size: 0.88rem;
+    line-height: 1.45;
 }
 
-.yk-goal__callout svg {
+.yk-goal__callout svg,
+.yk-goal__callout .yk-icon {
     flex: none;
     width: 22px;
     height: 22px;
     margin-top: 1px;
+    color: var(--g-green);
     fill: none;
-    stroke: #b78419;
+    stroke: currentColor;
     stroke-width: 1.8;
     stroke-linecap: round;
 }
@@ -631,16 +994,16 @@
 .yk-goal__review {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-    margin: 20px 0 0;
+    gap: 8px;
+    margin: 0.95rem 0 0;
 }
 
 .yk-goal__review > div {
     min-width: 0;
-    padding: 12px 14px;
-    border: 1px dashed #cdc6b2;
-    border-radius: 14px;
-    background: var(--g-paper);
+    padding: 10px 12px;
+    border: 1px dashed rgba(138, 15, 77, 0.18);
+    border-radius: 12px;
+    background: var(--g-mint-2);
 }
 
 .yk-goal__review dt {
@@ -666,25 +1029,25 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 12px;
-    margin-top: 28px;
-    padding: 18px 28px;
+    gap: 10px;
+    margin-top: 1.15rem;
+    padding: 14px 28px;
     border-top: 1px solid var(--g-line);
-    background: #fbfaf6;
+    background: var(--g-mint-2);
 }
 
 .yk-goal__btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    min-height: 52px;
-    padding: 0 26px;
-    border: 1.5px solid transparent;
-    border-radius: 15px;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0.55rem 1.05rem;
+    border: 1px solid transparent;
+    border-radius: 10px;
     font: inherit;
-    font-size: 1rem;
-    font-weight: 800;
+    font-size: 0.95rem;
+    font-weight: 700;
     text-decoration: none;
     cursor: pointer;
     transition: transform var(--g-ease), box-shadow var(--g-ease), background-color var(--g-ease), border-color var(--g-ease);
@@ -694,7 +1057,8 @@
     display: none !important;
 }
 
-.yk-goal__btn svg {
+.yk-goal__btn svg,
+.yk-goal__btn .yk-icon {
     width: 20px;
     height: 20px;
     fill: none;
@@ -707,20 +1071,30 @@
 
 .yk-goal__btn--primary {
     margin-left: auto;
-    background: linear-gradient(135deg, var(--g-green), var(--g-deep));
+    background: var(--g-green);
     color: #fff;
-    box-shadow: 0 12px 22px -10px rgba(11, 61, 54, 0.7);
+    box-shadow: var(--g-shadow);
 }
 
-.yk-goal__btn--primary:hover svg {
+.yk-goal__btn--primary:hover {
+    background: var(--g-green-2);
+}
+
+.yk-goal__btn--primary:hover svg,
+.yk-goal__btn--primary:hover .yk-icon {
     transform: translateX(3px);
 }
 
+/* Calculate / Save — same Yuktione primary (class kept for existing markup) */
 .yk-goal__btn--gold {
     margin-left: auto;
-    background: linear-gradient(135deg, var(--g-gold-2), var(--g-gold));
-    color: var(--g-deep);
-    box-shadow: 0 12px 22px -10px rgba(177, 123, 20, 0.75);
+    background: var(--g-green);
+    color: #fff;
+    box-shadow: var(--g-shadow);
+}
+
+.yk-goal__btn--gold:hover {
+    background: var(--g-green-2);
 }
 
 .yk-goal__btn--ghost {
@@ -730,25 +1104,33 @@
 }
 
 .yk-goal__btn--ghost:hover {
-    border-color: var(--g-green-2);
-    background: var(--g-mint-2);
+    border-color: var(--g-green);
+    background: var(--g-mint);
 }
 
 .yk-goal__btn--primary:hover,
 .yk-goal__btn--gold:hover {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .yk-goal__btn:focus-visible {
-    outline: 3px solid var(--g-gold);
+    outline: 3px solid var(--g-green);
     outline-offset: 3px;
 }
 
 .yk-goal__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     color: var(--g-green);
     font-size: 0.94rem;
     font-weight: 700;
     text-underline-offset: 3px;
+}
+
+.yk-goal__link .yk-icon {
+    width: 16px;
+    height: 16px;
 }
 
 /* ---- Sidebar ---- */
@@ -763,20 +1145,16 @@
 .yk-goal__summary {
     position: relative;
     overflow: hidden;
-    padding: 22px 22px 22px;
-    border-radius: 24px;
-    background:
-        radial-gradient(300px 160px at 100% 0%, rgba(240, 196, 106, 0.22), transparent 70%),
-        linear-gradient(160deg, #0f4f45, #6e0b3c 70%);
-    color: #fff;
-    box-shadow: 0 24px 40px -24px rgba(11, 61, 54, 0.75);
+    padding: 22px;
+    border: 1px solid var(--g-line);
+    border-radius: 22px;
+    background: #fff;
+    color: var(--g-ink);
+    box-shadow: var(--g-shadow);
 }
 
 .yk-goal__summary-art {
-    display: block;
-    width: calc(100% + 44px);
-    height: auto;
-    margin: -22px -22px 6px;
+    display: none;
 }
 
 .yk-goal__summary-head {
@@ -792,11 +1170,13 @@
     width: 52px;
     height: 52px;
     border-radius: 16px;
-    background: rgba(240, 196, 106, 0.18);
-    color: var(--g-gold-2);
+    background: var(--g-mint);
+    color: var(--g-green);
+    border: 1px solid rgba(138, 15, 77, 0.1);
 }
 
-.yk-goal__summary-icon svg {
+.yk-goal__summary-icon svg,
+.yk-goal__summary-icon .yk-icon {
     width: 28px;
     height: 28px;
     fill: none;
@@ -808,7 +1188,7 @@
 
 .yk-goal__summary-kicker {
     margin: 0;
-    color: rgba(255, 255, 255, 0.62);
+    color: var(--g-muted);
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -818,7 +1198,7 @@
 .yk-goal__summary h2 {
     margin: 2px 0 0;
     overflow: hidden;
-    color: #fff;
+    color: var(--g-deep);
     font-size: 1.35rem;
     font-weight: 800;
     letter-spacing: -0.01em;
@@ -836,16 +1216,17 @@
     justify-content: space-between;
     gap: 12px;
     padding: 11px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-top: 1px solid var(--g-line);
 }
 
 .yk-goal__rows dt {
-    color: rgba(255, 255, 255, 0.66);
+    color: var(--g-muted);
     font-size: 0.9rem;
 }
 
 .yk-goal__rows dd {
     margin: 0;
+    color: var(--g-ink);
     font-size: 1rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
@@ -855,14 +1236,14 @@
 .yk-goal__future {
     margin-top: 6px;
     padding: 16px 16px 14px;
-    border: 1px solid rgba(240, 196, 106, 0.4);
+    border: 1px solid rgba(138, 15, 77, 0.14);
     border-radius: 18px;
-    background: rgba(240, 196, 106, 0.1);
+    background: var(--g-mint);
 }
 
 .yk-goal__future p {
     margin: 0;
-    color: rgba(255, 255, 255, 0.76);
+    color: var(--g-muted);
     font-size: 0.84rem;
     font-weight: 600;
 }
@@ -871,7 +1252,7 @@
     display: block;
     margin-top: 2px;
     overflow-wrap: anywhere;
-    color: var(--g-gold-2);
+    color: var(--g-deep);
     font-size: clamp(1.6rem, 1.2rem + 0.8vw, 2rem);
     font-weight: 800;
     letter-spacing: -0.02em;
@@ -882,7 +1263,7 @@
 .yk-goal__future span {
     display: block;
     margin-top: 4px;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--g-muted);
     font-size: 0.8rem;
     line-height: 1.35;
 }
@@ -891,11 +1272,13 @@
     padding: 20px 22px;
     border: 1px solid var(--g-line);
     border-radius: 22px;
-    background: rgba(255, 255, 255, 0.92);
+    background: #fff;
+    box-shadow: var(--g-shadow);
 }
 
 .yk-goal__how h2 {
     margin: 0;
+    color: var(--g-deep);
     font-size: 1.05rem;
     font-weight: 800;
 }
@@ -912,7 +1295,7 @@
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    color: #34423e;
+    color: var(--g-ink);
     font-size: 0.9rem;
     line-height: 1.4;
 }
@@ -924,8 +1307,8 @@
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: var(--g-gold-soft);
-    color: #7a5712;
+    background: var(--g-mint);
+    color: var(--g-deep);
     font-size: 0.78rem;
     font-weight: 800;
 }
@@ -960,6 +1343,14 @@
         width: min(1120px, calc(100% - 32px));
     }
 
+    .yk-goal__header {
+        padding: 14px 0 8px;
+    }
+
+    .yk-goal__header h1 {
+        font-size: 1.35rem;
+    }
+
     .yk-goal__hero {
         padding: 18px 0 80px;
     }
@@ -970,7 +1361,7 @@
     }
 
     .yk-goal__crumbs {
-        margin-bottom: 14px;
+        margin-bottom: 10px;
     }
 
     .yk-goal__lead {
@@ -978,8 +1369,12 @@
     }
 
     .yk-goal__layout {
-        margin-top: -52px;
+        margin-top: 0;
         gap: 16px;
+    }
+
+    .yk-goal:not(.yk-goal--compact-header) .yk-goal__layout {
+        margin-top: -52px;
     }
 
     .yk-goal__card {
@@ -1058,6 +1453,38 @@
         grid-template-columns: minmax(0, 1fr);
     }
 
+    .yk-goal__years-head {
+        grid-template-columns: 1fr;
+        gap: 0.55rem;
+    }
+
+    .yk-goal__years-head .yk-goal__control--years {
+        max-width: 11rem;
+    }
+
+    .yk-goal__years-slider {
+        gap: 0.35rem;
+    }
+
+    .yk-goal__years-step {
+        width: 40px;
+        height: 40px;
+    }
+
+    .yk-goal__years-scale span:nth-child(2),
+    .yk-goal__years-scale span:nth-child(4) {
+        display: none;
+    }
+
+    .yk-goal__section {
+        margin-top: 1rem;
+        padding-top: 0.85rem;
+    }
+
+    .yk-goal__actions {
+        padding-inline: 16px;
+    }
+
     .yk-goal__review {
         grid-template-columns: minmax(0, 1fr);
         gap: 8px;
@@ -1086,6 +1513,15 @@
     .yk-goal__btn--gold {
         order: -1;
         margin-left: 0;
+    }
+
+    .yk-goal--single .yk-goal__panel,
+    .yk-goal--single .yk-goal__step {
+        padding: 18px 16px 4px;
+    }
+
+    .yk-goal--single .yk-goal__actions {
+        justify-content: stretch;
     }
 
     .yk-goal__link {
@@ -1119,7 +1555,7 @@
 }
 
 /* =====================================================================
-   Results page (.yk-goalr) — same emerald / gold / paper family as the form.
+   Results page (.yk-goalr) — same plum / pearl family as the form (Task 32).
    ===================================================================== */
 .yk-goalr .yk-goal__hero {
     padding-bottom: 104px;
@@ -1130,20 +1566,25 @@
     overflow-wrap: anywhere;
 }
 
+.yk-goalr.yk-goal--compact-header .yk-goal__header h1 {
+    max-width: 28ch;
+    overflow-wrap: anywhere;
+}
+
 .yk-goalr .yk-goalr__facts {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     max-width: none;
-    margin-top: 18px;
+    margin: 0;
 }
 
 .yk-goalr__facts span {
     padding: 6px 13px;
-    border: 1px solid rgba(255, 255, 255, 0.22);
+    border: 1px solid rgba(138, 15, 77, 0.14);
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: #fff8fb;
+    color: #6e0b3c;
     font-size: 0.9rem;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
@@ -1162,7 +1603,7 @@
 
 /* ---- Headline card ---- */
 .yk-goalr__headline {
-    padding: 32px 32px 28px;
+    padding: 26px 28px 22px;
 }
 
 .yk-goalr__headline::before {
@@ -1174,7 +1615,7 @@
 }
 
 .yk-goalr__headline.is-on-track::before {
-    background: linear-gradient(90deg, var(--g-green), var(--g-green-2));
+    background: linear-gradient(90deg, var(--g-ok), #3bb87d);
 }
 
 .yk-goalr__headline-top {
@@ -1196,7 +1637,8 @@
     text-transform: uppercase;
 }
 
-.yk-goalr__chip svg {
+.yk-goalr__chip svg,
+.yk-goalr__chip .yk-icon {
     width: 15px;
     height: 15px;
     fill: none;
@@ -1212,8 +1654,8 @@
 }
 
 .yk-goalr__chip--ok {
-    background: var(--g-mint);
-    color: var(--g-deep);
+    background: var(--g-ok-soft);
+    color: var(--g-ok);
 }
 
 .yk-goalr__label {
@@ -1229,16 +1671,19 @@
     flex-wrap: wrap;
     align-items: baseline;
     gap: 4px 10px;
-    margin: 14px 0 0;
+    margin: 10px 0 0;
+    min-width: 0;
 }
 
 .yk-goalr__figure strong {
+    max-width: 100%;
     overflow-wrap: anywhere;
+    word-break: break-word;
     color: var(--g-deep);
-    font-size: clamp(2.5rem, 1.6rem + 3.4vw, 3.9rem);
+    font-size: clamp(2rem, 1.35rem + 2.6vw, 3.25rem);
     font-weight: 800;
     letter-spacing: -0.035em;
-    line-height: 1.02;
+    line-height: 1.05;
     font-variant-numeric: tabular-nums;
 }
 
@@ -1251,41 +1696,85 @@
 .yk-goalr__sentence {
     max-width: 58ch;
     margin: 12px 0 0;
-    color: #34423e;
+    color: var(--g-ink);
     font-size: 1rem;
     line-height: 1.55;
+}
+
+.yk-goalr__breakdown {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 1rem 0 0;
+}
+
+.yk-goalr__breakdown > div {
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--g-line);
+    border-radius: 12px;
+    background: var(--g-mint-2);
+}
+
+.yk-goalr__breakdown dt {
+    color: var(--g-muted);
+    font-size: 0.76rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.yk-goalr__breakdown dd {
+    margin: 4px 0 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    color: var(--g-ink);
+    font-size: clamp(0.98rem, 0.9rem + 0.35vw, 1.1rem);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+}
+
+.yk-goalr__chart-summary {
+    margin: 0.5rem 0 0;
+}
+
+.yk-goalr__acts .yk-goal__btn {
+    width: 100%;
 }
 
 .yk-goalr__kpis {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-    margin: 26px 0 0;
+    gap: 10px;
+    margin: 1.25rem 0 0;
 }
 
 .yk-goalr__kpi {
     min-width: 0;
-    padding: 14px 16px;
+    padding: 12px 14px;
     border: 1px solid var(--g-line);
-    border-radius: 16px;
-    background: #fbfaf6;
+    border-radius: 12px;
+    background: var(--g-mint-2);
 }
 
 .yk-goalr__kpi dt {
     color: var(--g-muted);
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     font-weight: 700;
     line-height: 1.3;
 }
 
 .yk-goalr__kpi dd {
-    margin: 6px 0 2px;
+    margin: 5px 0 2px;
     overflow-wrap: anywhere;
+    word-break: break-word;
     color: var(--g-ink);
-    font-size: 1.22rem;
+    font-size: clamp(1rem, 0.9rem + 0.45vw, 1.15rem);
     font-weight: 800;
     letter-spacing: -0.01em;
     font-variant-numeric: tabular-nums;
+    line-height: 1.2;
 }
 
 .yk-goalr__kpi small {
@@ -1305,21 +1794,22 @@
 }
 
 .yk-goalr__kpi.is-ok {
-    border-color: #bfdfd1;
-    background: var(--g-mint-2);
+    border-color: #b7e0cb;
+    background: var(--g-ok-soft);
 }
 
 .yk-goalr__kpi.is-ok dd {
-    color: var(--g-green);
+    color: var(--g-ok);
 }
 
 /* ---- Panels ---- */
 .yk-goalr__panel {
-    padding: 26px 32px;
+    padding: 22px 26px;
 }
 
 .yk-goalr__panel h2 {
     margin: 0;
+    color: var(--g-deep);
     font-size: 1.15rem;
     font-weight: 800;
     letter-spacing: -0.01em;
@@ -1339,7 +1829,7 @@
     gap: 6px 18px;
     margin: 0;
     padding: 0;
-    color: #34423e;
+    color: var(--g-ink);
     font-size: 0.84rem;
     font-weight: 600;
     list-style: none;
@@ -1360,7 +1850,7 @@
 
 .yk-goalr__swatch--savings {
     height: 5px;
-    background: var(--g-green);
+    background: #8a0f4d;
 }
 
 .yk-goalr__swatch--cost {
@@ -1393,7 +1883,7 @@
 }
 
 .yk-goalr__seg--saved {
-    background: linear-gradient(135deg, var(--g-green-2), var(--g-deep));
+    background: linear-gradient(135deg, #8a0f4d, #6e0b3c);
 }
 
 .yk-goalr__seg--gap {
@@ -1425,11 +1915,13 @@
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: 10px;
-    color: #34423e;
+    color: var(--g-ink);
     font-size: 0.95rem;
 }
 
 .yk-goalr__legend b {
+    min-width: 0;
+    overflow-wrap: anywhere;
     color: var(--g-ink);
     font-weight: 800;
     font-variant-numeric: tabular-nums;
@@ -1449,7 +1941,7 @@
 }
 
 .yk-goalr__dot--saved {
-    background: var(--g-green);
+    background: #8a0f4d;
 }
 
 .yk-goalr__dot--gap {
@@ -1506,8 +1998,8 @@
     width: 40px;
     height: 40px;
     border-radius: 12px;
-    background: var(--g-gold-soft);
-    color: #7a5712;
+    background: var(--g-mint);
+    color: var(--g-green);
 }
 
 .yk-goalr__points svg {
@@ -1523,7 +2015,7 @@
 .yk-goalr__points p {
     margin: 0;
     padding-top: 1px;
-    color: #34423e;
+    color: var(--g-ink);
     font-size: 0.97rem;
     line-height: 1.6;
 }
@@ -1546,7 +2038,7 @@
 /* ---- Aside ---- */
 .yk-goalr__keep-text {
     margin: 8px 0 0;
-    color: rgba(255, 255, 255, 0.78);
+    color: var(--g-muted);
     font-size: 0.93rem;
     line-height: 1.5;
 }
@@ -1563,32 +2055,36 @@
 
 .yk-goalr__acts .yk-goal__btn {
     width: 100%;
-    min-height: 50px;
+    min-height: 44px;
     margin-left: 0;
 }
 
 .yk-goalr__btn--dark {
-    border-color: rgba(255, 255, 255, 0.28);
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
+    border-color: var(--g-line);
+    background: #fff;
+    color: var(--g-deep);
 }
 
 .yk-goalr__btn--dark:hover {
-    border-color: rgba(255, 255, 255, 0.5);
-    background: rgba(255, 255, 255, 0.16);
+    border-color: var(--g-green);
+    background: var(--g-mint);
 }
 
 .yk-goalr__hist {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
     justify-self: center;
     padding: 8px 10px;
-    color: var(--g-gold-2);
+    color: var(--g-green);
     font-size: 0.94rem;
     font-weight: 700;
     text-underline-offset: 3px;
 }
 
 .yk-goalr__hist:focus-visible {
-    outline: 2px solid var(--g-gold-2);
+    outline: 2px solid var(--g-green);
     outline-offset: 3px;
     border-radius: 6px;
 }
@@ -1617,8 +2113,10 @@
 
 .yk-goalr__assump dd {
     margin: 0;
+    max-width: 62%;
     overflow-wrap: anywhere;
-    font-size: 0.92rem;
+    word-break: break-word;
+    font-size: 0.9rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     text-align: right;
@@ -1661,6 +2159,10 @@
 
     .yk-goalr__panel {
         padding: 20px 16px;
+    }
+
+    .yk-goalr__breakdown {
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .yk-goalr__kpis {

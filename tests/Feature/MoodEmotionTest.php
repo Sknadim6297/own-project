@@ -12,7 +12,7 @@ use Tests\TestCase;
 
 class MoodEmotionTest extends TestCase
 {
-    public function test_emotion_screen_requires_a_primary_mood_and_lists_three_groups(): void
+    public function test_emotion_screen_requires_a_primary_mood_and_lists_mood_specific_options(): void
     {
         $this->get(route('tools.psychology.mood.emotions'))
             ->assertRedirect(route('tools.psychology.mood'));
@@ -22,36 +22,28 @@ class MoodEmotionTest extends TestCase
 
         $response = $this->get(route('tools.psychology.mood.emotions'));
         $response->assertOk()
-            ->assertSee('What emotions are you feeling?')
-            ->assertSee('Choose up to 6 emotions that describe how you feel right now.')
+            ->assertSee('What feels good right now?')
+            ->assertSee('Choose up to 6 emotions that describe this steady, positive feeling.')
             ->assertSee('Free tool')
             ->assertSee('Positive')
             ->assertSee('Neutral')
-            ->assertSee('Difficult')
             ->assertSee('Happy')
             ->assertSee('Calm')
-            ->assertSee('Excited')
             ->assertSee('Loved')
             ->assertSee('Grateful')
             ->assertSee('Thoughtful')
-            ->assertSee('Quiet')
-            ->assertSee('Tired')
-            ->assertSee('Unsure')
-            ->assertSee('Worried')
-            ->assertSee('Sad')
-            ->assertSee('Angry')
-            ->assertSee('Lonely')
-            ->assertSee('Anxious')
+            ->assertDontSee('>Excited<', false)
+            ->assertDontSee('>Angry<', false)
+            ->assertDontSee('>Anxious<', false)
             ->assertSee('0 of 6 selected')
             ->assertSee('href="'.route('tools.psychology.mood').'"', false)
             ->assertSee('family=DM+Sans', false)
             ->assertSee('yuktione-mood.css', false)
             ->assertSee('Yuktione_logo.png', false)
             ->assertDontSee('data-selected="true"', false)
-            ->assertDontSee('name="journal"', false)
-            ->assertDontSee('reflection', false);
+            ->assertDontSee('name="journal"', false);
 
-        $this->assertSame(15, substr_count($response->getContent(), 'class="yk-emotion__input"'));
+        $this->assertSame(5, substr_count($response->getContent(), 'class="yk-emotion__input"'));
     }
 
     public function test_emotions_are_validated_and_kept_in_the_draft(): void
@@ -62,19 +54,19 @@ class MoodEmotionTest extends TestCase
             ->assertSessionHasErrors('emotions.0');
         $this->assertSame([], session(MoodCheckinDraft::KEY)['emotions']);
 
-        $this->post(route('tools.psychology.mood.emotions.store'), ['emotions' => ['happy', 'happy']])
+        $this->post(route('tools.psychology.mood.emotions.store'), ['emotions' => ['anxious', 'anxious']])
             ->assertSessionHasErrors('emotions.0');
 
         $this->post(route('tools.psychology.mood.emotions.store'), [
-            'emotions' => ['happy', 'calm', 'excited', 'loved', 'grateful', 'tired', 'anxious'],
+            'emotions' => ['anxious', 'worried', 'tired', 'angry', 'unsure', 'calm', 'happy'],
         ])->assertSessionHasErrors('emotions');
         $this->assertSame([], session(MoodCheckinDraft::KEY)['emotions']);
 
-        $this->post(route('tools.psychology.mood.emotions.store'), ['emotions' => ['happy', 'calm']])
+        $this->post(route('tools.psychology.mood.emotions.store'), ['emotions' => ['anxious', 'calm']])
             ->assertRedirect(route('tools.psychology.mood.reflection'));
 
         $page = $this->get(route('tools.psychology.mood.emotions'));
-        $page->assertSee('value="happy"', false)
+        $page->assertSee('value="anxious"', false)
             ->assertSee('value="calm"', false)
             ->assertSee('2 of 6 selected');
         $this->assertSame(2, substr_count($page->getContent(), 'data-selected="true"'));
@@ -82,7 +74,7 @@ class MoodEmotionTest extends TestCase
         $draft = session(MoodCheckinDraft::KEY);
         $this->assertSame('emotions', $draft['step']);
         $this->assertSame('stressed', $draft['mood']);
-        $this->assertSame(['happy', 'calm'], $draft['emotions']);
+        $this->assertSame(['anxious', 'calm'], $draft['emotions']);
         $this->assertArrayNotHasKey('label', $draft);
 
         $this->get(route('tools.psychology.mood'))
@@ -92,7 +84,7 @@ class MoodEmotionTest extends TestCase
 
         $this->post(route('tools.psychology.mood.store'), ['mood' => 'sad'])
             ->assertRedirect(route('tools.psychology.mood.emotions'));
-        $this->assertSame(['happy', 'calm'], session(MoodCheckinDraft::KEY)['emotions']);
+        $this->assertSame([], session(MoodCheckinDraft::KEY)['emotions']);
         $this->assertSame('sad', session(MoodCheckinDraft::KEY)['mood']);
 
         $this->post(route('tools.psychology.mood.emotions.store'), [])
@@ -127,7 +119,7 @@ class MoodEmotionTest extends TestCase
             MoodCheckinDraft::KEY => [
                 'step' => 'emotions',
                 'mood' => 'good',
-                'emotions' => ['lonely'],
+                'emotions' => ['calm'],
                 'owner' => 'guest:guest-token',
                 'expires_at' => now()->subMinute()->getTimestamp(),
             ],

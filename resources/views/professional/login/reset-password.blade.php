@@ -10,16 +10,25 @@
     <link rel="shortcut icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
     @vite(['resources/css/tazen.css', 'resources/css/auth-theme.css', 'resources/css/yuktione-feedback.css'])
+    @include('partials.auth-recovery-chrome')
+    <style>
+        .password-strength { height: 4px; margin-top: .5rem; overflow: hidden; border-radius: 9999px; background: #f8eaf1; }
+        .password-strength-meter { height: 100%; width: 0; transition: width .2s ease, background-color .2s ease; }
+        .strength-weak { width: 33.333%; background: #dc2626; }
+        .strength-medium { width: 66.666%; background: #d97706; }
+        .strength-strong { width: 100%; background: #8a0f4d; }
+    </style>
 </head>
-<body class="yuktione-auth-page min-h-screen bg-background px-4 py-8 font-sans text-text-primary sm:px-6">
-    <main class="mx-auto flex min-h-[75vh] w-full max-w-lg items-center justify-center">
-        <section class="w-full rounded-panel border border-border bg-white p-6 shadow-card sm:p-9">
-            <a href="{{ route('home') }}" class="mb-7 flex justify-center" aria-label="YuktiOne home">
+<body class="yuktione-auth-page auth-recovery-page auth-recovery-page--professional min-h-screen bg-background font-sans text-text-primary antialiased">
+    <main class="mx-auto flex w-full max-w-lg items-center justify-center px-4 py-8 sm:px-6">
+        <section class="w-full rounded-panel border border-divider bg-white p-6 shadow-card sm:p-9" aria-labelledby="reset-title">
+            <a href="{{ route('home') }}" class="mb-6 flex justify-center" aria-label="YuktiOne home">
                 <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="YuktiOne" class="h-auto max-h-16 w-auto max-w-[210px] object-contain">
             </a>
-            <div class="mb-7">
+            <div class="mb-6">
+                <span class="mb-3 inline-flex rounded-full bg-brand-50 px-3 py-1 text-[10px] font-semibold tracking-wide text-brand-800">PROFESSIONAL ACCOUNT</span>
                 <p class="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-brand-primary">Secure your account</p>
-                <h1 class="text-2xl font-semibold text-brand-secondary">Reset password</h1>
+                <h1 id="reset-title" class="text-2xl font-semibold text-brand-secondary">Reset password</h1>
                 <p class="mt-2 text-sm leading-6 text-text-secondary">Choose a new password for your professional account.</p>
             </div>
 
@@ -38,8 +47,9 @@
 
                 <div>
                     <label for="password" class="mb-2 block text-sm font-medium text-text-primary">{{ __('New Password') }}</label>
-                    <input id="password" type="password" name="password" required autocomplete="new-password"
+                    <input id="password" type="password" name="password" required minlength="8" autocomplete="new-password" placeholder="Enter a new password"
                         class="w-full rounded-control border border-border bg-white px-4 py-3 text-sm text-text-primary shadow-sm outline-none transition placeholder:text-text-muted focus:border-brand-primary focus:ring-4 focus:ring-brand-100 @error('password') border-red-500 @enderror">
+                    <div class="password-strength" aria-hidden="true"><div class="password-strength-meter"></div></div>
                     @error('password')
                         <span class="mt-2 block text-sm text-red-700" role="alert"><strong>{{ $message }}</strong></span>
                     @enderror
@@ -47,11 +57,11 @@
 
                 <div>
                     <label for="password-confirm" class="mb-2 block text-sm font-medium text-text-primary">{{ __('Confirm Password') }}</label>
-                    <input id="password-confirm" type="password" name="password_confirmation" required autocomplete="new-password"
+                    <input id="password-confirm" type="password" name="password_confirmation" required minlength="8" autocomplete="new-password" placeholder="Confirm your new password"
                         class="w-full rounded-control border border-border bg-white px-4 py-3 text-sm text-text-primary shadow-sm outline-none transition placeholder:text-text-muted focus:border-brand-primary focus:ring-4 focus:ring-brand-100">
                 </div>
 
-                <button type="submit" class="w-full rounded-control bg-brand-primary px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800 focus:outline-none focus:ring-4 focus:ring-brand-200">
+                <button type="submit" class="inline-flex min-h-11 w-full items-center justify-center rounded-control bg-brand-primary px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-800 focus:outline-none focus:ring-4 focus:ring-brand-200">
                     {{ __('Reset Password') }}
                 </button>
                 <a href="{{ route('professional.login') }}" class="block text-center text-sm font-medium text-brand-primary transition hover:text-brand-800">Back to Login</a>
@@ -73,6 +83,26 @@
             window.addEventListener('load', notify, { once: true });
         }
     </script>
+    <script>
+        const passwordInput = document.getElementById('password');
+        const strengthMeter = document.querySelector('.password-strength-meter');
+
+        passwordInput?.addEventListener('input', function () {
+            const password = this.value;
+            let strength = 0;
+
+            if (password.length >= 8) strength += 1;
+            if (/[a-z]+/.test(password)) strength += 1;
+            if (/[A-Z]+/.test(password)) strength += 1;
+            if (/[0-9]+/.test(password)) strength += 1;
+            if (/[^a-zA-Z0-9]+/.test(password)) strength += 1;
+
+            if (!strengthMeter) {
+                return;
+            }
+            strengthMeter.className = 'password-strength-meter';
+            strengthMeter.classList.add(strength <= 2 ? 'strength-weak' : strength <= 4 ? 'strength-medium' : 'strength-strong');
+        });
+    </script>
 </body>
 </html>
-

@@ -33,11 +33,20 @@ class CareerInterestCatalog
      * Numeric values and labels in SCALE must not change.
      */
     public const SCALE_EMOJI = [
-        1 => '😣',
-        2 => '🙁',
-        3 => '😐',
-        4 => '😊',
-        5 => '🤩',
+        1 => '',
+        2 => '',
+        3 => '',
+        4 => '',
+        5 => '',
+    ];
+
+    /** Lucide icon names for SCALE (presentation only). */
+    public const SCALE_ICON = [
+        1 => 'angry',
+        2 => 'frown',
+        3 => 'meh',
+        4 => 'smile',
+        5 => 'laugh',
     ];
 
     public const AGE_GROUPS = [
@@ -274,7 +283,8 @@ class CareerInterestCatalog
     }
 
     /**
-     * Starting catalogue from the PDF, mapped to RIASEC interests.
+     * Exploratory career map keyed by stable IDs and RIASEC primary/secondary tags.
+     * Existing IDs remain stable; Task 21 added balanced coverage for each dimension.
      * Recommendations are exploratory, not guarantees.
      */
     public static function careers(): array
@@ -335,6 +345,41 @@ class CareerInterestCatalog
                 'summary' => 'Focuses on teaching, guiding and helping people develop and solve problems.',
                 'primary' => ['social'],
                 'secondary' => ['artistic', 'investigative'],
+            ],
+            'research-science' => [
+                'id' => 'research-science',
+                'title' => 'Research & Applied Science',
+                'summary' => 'Centres on inquiry, experimentation and evidence-based problem-solving.',
+                'primary' => ['investigative'],
+                'secondary' => ['realistic', 'conventional'],
+            ],
+            'healthcare-support' => [
+                'id' => 'healthcare-support',
+                'title' => 'Healthcare Support & Helping Roles',
+                'summary' => 'Combines people-focused support with careful, practical problem-solving.',
+                'primary' => ['social'],
+                'secondary' => ['realistic', 'investigative'],
+            ],
+            'operations-administration' => [
+                'id' => 'operations-administration',
+                'title' => 'Operations & Administration',
+                'summary' => 'Focuses on organised systems, accurate records and reliable day-to-day processes.',
+                'primary' => ['conventional'],
+                'secondary' => ['enterprising', 'realistic'],
+            ],
+            'skilled-trades-technical' => [
+                'id' => 'skilled-trades-technical',
+                'title' => 'Skilled Trades & Technical Work',
+                'summary' => 'Hands-on technical work with tools, equipment and tangible results.',
+                'primary' => ['realistic'],
+                'secondary' => ['conventional', 'investigative'],
+            ],
+            'marketing-communications' => [
+                'id' => 'marketing-communications',
+                'title' => 'Marketing & Communications',
+                'summary' => 'Combines persuasive communication with creative messaging and audience insight.',
+                'primary' => ['enterprising'],
+                'secondary' => ['artistic', 'social'],
             ],
         ];
     }

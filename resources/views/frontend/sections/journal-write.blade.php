@@ -6,12 +6,12 @@
 
 @php
     $promptIcons = [
-        'my-thoughts' => '💭',
-        'personal-growth' => '🌱',
-        'work-career' => '💼',
-        'relationships' => '❤️',
-        'difficult-moments' => '🌧️',
-        'my-aspirations' => '✨',
+        'my-thoughts' => 'message-circle',
+        'personal-growth' => 'sprout',
+        'work-career' => 'briefcase',
+        'relationships' => 'heart',
+        'difficult-moments' => 'cloud-rain',
+        'my-aspirations' => 'sparkles',
     ];
     $currentBody = old('body', $body);
     $selectedQuestion = null;
@@ -65,6 +65,8 @@
                 @csrf
                 @if ($editing)
                     @method('PUT')
+                @elseif (! empty($completionKey))
+                    <input type="hidden" name="completion_key" value="{{ old('completion_key', $completionKey) }}">
                 @endif
 
                 <header class="yk-journal__hero">
@@ -108,7 +110,7 @@
                                     data-prompt-question="{{ $prompt['question'] ?? '' }}"
                                 >
                                     <input class="yk-journal__prompt-input" type="radio" name="prompt_key" value="{{ $prompt['key'] }}" @checked($selected === $prompt['key']) required>
-                                    <span class="yk-journal__prompt-icon" aria-hidden="true">{{ $promptIcons[$prompt['key']] ?? '✍️' }}</span>
+                                    <span class="yk-journal__prompt-icon" aria-hidden="true"><x-yk-icon :name="$promptIcons[$prompt['key']] ?? 'pen-line'" class="yk-icon--md" :decorative="true" /></span>
                                     <span class="yk-journal__prompt-label">{{ $prompt['label'] }}</span>
                                     <span class="yk-journal__prompt-check" aria-hidden="true">
                                         <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3L13 4.5"/></svg>
@@ -146,7 +148,7 @@
                     </label>
 
                     <p class="yk-journal__guide" data-journal-guide @if (!$selectedQuestion) hidden @endif>
-                        <span aria-hidden="true">💡</span>
+                        <span aria-hidden="true"><x-yk-icon name="lightbulb" class="yk-icon--md" :decorative="true" /></span>
                         <span data-journal-guide-text>{{ $selectedQuestion }}</span>
                     </p>
 
@@ -170,9 +172,9 @@
                     </div>
                 </div>
 
-                <button class="yk-journal__save" type="submit">
+                <button class="yk-journal__save" type="submit" data-journal-save>
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg>
-                    {{ $submitLabel }}
+                    <span data-journal-save-label>{{ $submitLabel }}</span>
                 </button>
                 <p class="yk-journal__foot">{!! $lockSvg !!} Your writing is saved privately to your account. It is never shared automatically.</p>
             </form>

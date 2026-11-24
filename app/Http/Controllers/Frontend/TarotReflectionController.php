@@ -31,9 +31,20 @@ class TarotReflectionController extends Controller
     public function start(Request $request, TarotDraft $draft)
     {
         $this->assertCustomer();
-        $draft->startFresh();
 
-        return redirect()->route('tools.tarot.category');
+        // Explicit restart always clears; otherwise resume an unfinished draft (Career Interest pattern).
+        if ($request->boolean('restart') || $draft->readable() === null) {
+            $draft->startFresh();
+
+            return redirect()->route('tools.tarot.category');
+        }
+
+        $savedId = $draft->savedReadingId();
+        if ($savedId !== null) {
+            return redirect()->route('tools.tarot.history.show', $savedId);
+        }
+
+        return redirect()->route($this->resumeRouteName($draft));
     }
 
     public function category(TarotDraft $draft)
@@ -300,7 +311,38 @@ class TarotReflectionController extends Controller
 
         $reading->load(['cards.card']);
 
-        $cards = $reading->cards->map(function ($row) use ($reading) {
+        $categoryMeta = TarotCatalog::categories()[$reading->category] ?? [
+            'label' => TarotCatalog::categoryLabel($reading->category),
+            'lens' => 'what may be useful to notice',
+        ];
+        $interpretation = app(TarotInterpretationService::class);
+
+        $cards = $reading->cards->map(function ($row) use ($reading, $categoryMeta, $interpretation) {
+            $isReversed = (bool) $row->is_reversed;
+            $coreMeaning = $isReversed
+                ? ($row->card?->reversed_meaning ?? '')
+                : ($row->card?->upright_meaning ?? '');
+            $keywords = $isReversed
+                ? (string) ($row->card?->reversed_keywords ?? '')
+                : (string) ($row->card?->upright_keywords ?? '');
+            $positionLabel = $this->positionLabel($reading->spread_type, $row->position);
+            $positionPrompt = $this->positionPrompt($reading->spread_type, $row->position);
+
+            // Historical insight_text stays snapshotted; reflection extras are derived live.
+            $extras = $interpretation->composeReadingContext(
+                categoryKey: $reading->category,
+                categoryLabel: $categoryMeta['label'],
+                categoryLens: $categoryMeta['lens'],
+                question: $reading->question,
+                cardName: $row->card?->card_name ?? 'Card',
+                orientation: $isReversed ? 'reversed' : 'upright',
+                positionKey: $row->position,
+                positionLabel: $positionLabel,
+                positionPrompt: $positionPrompt,
+                meaning: $coreMeaning,
+                keywords: $keywords,
+            );
+
             return [
                 'card_id' => $row->card?->card_id,
                 'card_name' => $row->card?->card_name ?? 'Card',
@@ -308,14 +350,15 @@ class TarotReflectionController extends Controller
                 'suit' => $row->card?->suit,
                 'number' => $row->card?->number,
                 'position' => $row->position,
-                'position_label' => $this->positionLabel($reading->spread_type, $row->position),
+                'position_label' => $positionLabel,
                 'position_order' => $row->position_order,
-                'is_reversed' => (bool) $row->is_reversed,
-                'orientation_label' => $row->is_reversed ? 'Reversed' : 'Upright',
+                'is_reversed' => $isReversed,
+                'orientation_label' => $isReversed ? 'Reversed' : 'Upright',
+                'keywords' => $keywords,
                 'insight' => $row->insight_text,
-                'core_meaning' => $row->is_reversed
-                    ? ($row->card?->reversed_meaning ?? '')
-                    : ($row->card?->upright_meaning ?? ''),
+                'core_meaning' => $coreMeaning,
+                'reflection_question' => $extras['reflection_question'],
+                'suggested_action' => $extras['suggested_action'],
                 'image_path' => $row->card?->image_path,
             ];
         })->all();
@@ -370,6 +413,17 @@ class TarotReflectionController extends Controller
         return ucwords(str_replace('_', ' ', $position));
     }
 
+    private function positionPrompt(string $spreadType, string $position): string
+    {
+        foreach (TarotCatalog::spreads()[$spreadType]['positions'] ?? [] as $meta) {
+            if ($meta['key'] === $position) {
+                return $meta['prompt'];
+            }
+        }
+
+        return 'What may be useful to notice here?';
+    }
+
     private function assertCustomer(): void
     {
         if (! Auth::guard('user')->check()) {
@@ -392,5 +446,38 @@ class TarotReflectionController extends Controller
         $text = preg_replace('/\s+/u', ' ', $text) ?? $text;
 
         return trim($text);
+    }
+
+    /**
+     * Resume to the earliest incomplete step for an unfinished session draft.
+     */
+    private function resumeRouteName(TarotDraft $draft): string
+    {
+        $state = $draft->readable();
+        if ($state === null) {
+            return 'tools.tarot.category';
+        }
+
+        if (($state['step'] ?? null) === 'reading' && is_array($state['revealed'] ?? null)) {
+            return 'tools.tarot.reading';
+        }
+
+        if (is_array($state['revealed'] ?? null) || ($state['step'] ?? null) === 'reveal') {
+            return 'tools.tarot.reveal';
+        }
+
+        if (is_string($state['spread_type'] ?? null)) {
+            return 'tools.tarot.draw';
+        }
+
+        if (is_string($state['question'] ?? null)) {
+            return 'tools.tarot.spread';
+        }
+
+        if (is_string($state['category'] ?? null)) {
+            return 'tools.tarot.question';
+        }
+
+        return 'tools.tarot.category';
     }
 }

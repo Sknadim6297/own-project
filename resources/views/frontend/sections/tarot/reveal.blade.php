@@ -14,7 +14,7 @@
         @include('frontend.sections.partials.tool-back-to-tools')
 
         <p class="yk-tarot__step">
-            @include('frontend.sections.tarot.partials.emoji', ['emoji' => '✨'])
+            @include('frontend.sections.tarot.partials.emoji', ['icon' => 'sparkles'])
             Reveal
         </p>
         <h1>{{ $isThree ? 'Your cards' : 'Your Card' }}</h1>
@@ -38,10 +38,10 @@
                         </div>
                     </div>
                     <div class="yk-tarot__reveal-copy">
-                        <p class="yk-tarot__position">{{ $card['position_label'] }}</p>
-                        <h2>{{ $card['card_name'] }} · {{ $card['orientation_label'] }}</h2>
-                        <p class="yk-tarot__meaning">{{ $card['core_meaning'] }}</p>
-                        <p class="yk-tarot__insight">{{ $card['insight'] }}</p>
+                        @include('frontend.sections.tarot.partials.card-interpretation', [
+                            'card' => $card,
+                            'compact' => true,
+                        ])
                     </div>
                 </article>
             @endforeach

@@ -118,7 +118,7 @@ class Phase2CTarotSaveHistoryTest extends TestCase
             ->assertSee('Your Tarot Reading')
             ->assertSee('Quick Clarity')
             ->assertSee('Sit with this:')
-            ->assertSee('Talk to an Expert')
+            ->assertSee('Talk to an Astrology & Tarot Expert')
             ->assertSee('Save Reading')
             ->assertSee('not prediction', false);
 
@@ -173,7 +173,7 @@ class Phase2CTarotSaveHistoryTest extends TestCase
         $show = $this->actingAs($user, 'user')->get(route('tools.tarot.history.show', $saved));
         $show->assertOk()
             ->assertSee($insightSnapshot)
-            ->assertSee('Talk to an Expert')
+            ->assertSee('Talk to an Astrology & Tarot Expert')
             ->assertSee($saved->question);
     }
 
@@ -228,26 +228,19 @@ class Phase2CTarotSaveHistoryTest extends TestCase
     {
         $discovery = app(ExpertsDiscovery::class);
 
-        $love = $discovery->forTarotCategory('love-relationships');
-        $this->assertSame('relationships', $love['category']);
-        $this->assertStringContainsString('category=relationships', $love['url']);
-
-        $career = $discovery->forTarotCategory('career-work');
-        $this->assertSame('career-business', $career['category']);
-
-        $money = $discovery->forTarotCategory('money-finances');
-        $this->assertSame('money-finance', $money['category']);
-
-        $general = $discovery->forTarotCategory('general-guidance');
-        $this->assertSame('astrology-tarot', $general['category']);
-        $this->assertStringContainsString('category=astrology-tarot', $general['url']);
+        // Task 19: every Tarot reading theme links to the Tarot field (Astrology & Tarot),
+        // not theme remapped Explore categories.
+        foreach (TarotCatalog::categoryKeys() as $key) {
+            $result = $discovery->forTarotCategory($key);
+            $this->assertSame('astrology-tarot', $result['category'], $key);
+            $this->assertStringContainsString('category=astrology-tarot', $result['url']);
+            $this->assertStringNotContainsString('question=', $result['url']);
+            $this->assertArrayHasKey($result['category'], \App\Services\ExploreCatalog::CATEGORIES);
+        }
 
         $fallback = $discovery->forTarotCategory('unknown-key');
         $this->assertSame('astrology-tarot', $fallback['category']);
-
-        foreach (TarotCatalog::categoryKeys() as $key) {
-            $this->assertArrayHasKey($discovery->forTarotCategory($key)['category'], \App\Services\ExploreCatalog::CATEGORIES);
-        }
+        $this->assertSame('Talk to an Astrology & Tarot Expert', $fallback['label']);
     }
 
     private function member(string $email = 'phase2c@example.com'): User

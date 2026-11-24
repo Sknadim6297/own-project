@@ -495,7 +495,7 @@
         max-width: 100%;
     }
 
-    /* Four categories fit on screen; the rest scroll sideways (fifth item peeks in as a hint). */
+    /* Four equal category pills fit the viewport; remaining items scroll sideways. */
     .yk-hero__rail-list {
         --rail-gap: 0.55rem;
         display: flex;
@@ -505,11 +505,8 @@
         overflow-x: auto;
         overflow-y: hidden;
         overscroll-behavior-x: contain;
-        scroll-snap-type: x mandatory;
+        /* No scroll-snap: mandatory/proximity left a ~3px residual offset and uneven L/R gutters */
         scrollbar-width: none;
-        /* Fade the fifth item's edge so the peek reads as "more here" */
-        -webkit-mask-image: linear-gradient(90deg, #000 93%, transparent 100%);
-        mask-image: linear-gradient(90deg, #000 93%, transparent 100%);
     }
 
     .yk-hero__rail-list::-webkit-scrollbar {
@@ -521,15 +518,21 @@
         user-select: none;
     }
 
-    .yk-hero__rail.is-end .yk-hero__rail-list {
+    /* Soft edge only while mid-scroll so the rightmost visible pill stays full-size at rest */
+    .yk-hero__rail.is-scrolling .yk-hero__rail-list {
+        -webkit-mask-image: linear-gradient(90deg, #000 96%, transparent 100%);
+        mask-image: linear-gradient(90deg, #000 96%, transparent 100%);
+    }
+
+    .yk-hero__rail.is-end .yk-hero__rail-list,
+    .yk-hero__rail.is-start .yk-hero__rail-list {
         -webkit-mask-image: none;
         mask-image: none;
     }
 
     .yk-hero__rail-list > li {
-        flex: 0 0 calc((100% - 3 * var(--rail-gap)) / 4.3);
+        flex: 0 0 calc((100% - 3 * var(--rail-gap)) / 4);
         min-width: 0;
-        scroll-snap-align: start;
     }
 
     /* Progress pill under the rail: shows how much is left to scroll */
@@ -640,7 +643,7 @@
     }
 }
 
-/* Silk ribbon divider — sits under video shadow, then Explore by Need */
+/* Silk ribbon divider — silver/golden section break (homepage only via markup) */
 .yk-silk-band {
     position: relative;
     z-index: 2;
@@ -653,24 +656,66 @@
     filter: drop-shadow(0 10px 20px rgba(100, 70, 40, 0.14));
 }
 
+/* Compact breaks between mid-page sections — same art, lighter footprint */
+.yk-silk-band--compact {
+    height: clamp(28px, 3.6vw, 44px);
+    margin: 0.15rem auto 0.35rem;
+    filter: drop-shadow(0 6px 14px rgba(100, 70, 40, 0.1));
+}
+
 .yk-silk-band img {
     display: block;
     width: 108%;
     max-width: none;
-    height: 160%;
-    margin: -18% -4% 0;
+    /* Height tied to band; avoid %-margin (%-top is width-relative and over-crops the metallic waves) */
+    height: 100%;
+    margin: 0 -4% 0;
     object-fit: cover;
-    object-position: center 42%;
-    opacity: 0.92;
+    object-position: center 58%;
+    opacity: 0.95;
     -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
     mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
 }
 
+.yk-silk-band--compact img {
+    object-position: center 60%;
+    opacity: 0.9;
+}
+
+@media (max-width: 991.98px) {
+    .yk-silk-band {
+        width: min(100% - 0.75rem, 1320px);
+        height: clamp(36px, 5vw, 52px);
+        margin: -0.85rem auto 0.1rem;
+    }
+
+    .yk-silk-band--compact {
+        height: clamp(24px, 3.2vw, 36px);
+        margin: 0.1rem auto 0.25rem;
+    }
+}
+
 @media (max-width: 767.98px) {
-    /* Decorative ribbon only overlaps the quick pills on phones */
+    /* Keep silver/golden breaks visible on phones — thinner, no overlap with hero pills */
     body.yk-home-bright .yk-silk-band,
     .yk-silk-band {
-        display: none !important;
+        display: block;
+        width: min(100% - 0.5rem, 1320px);
+        height: clamp(22px, 7vw, 32px);
+        margin: 0.35rem auto 0.45rem;
+        filter: drop-shadow(0 4px 10px rgba(100, 70, 40, 0.08));
+    }
+
+    body.yk-home-bright .yk-silk-band--compact,
+    .yk-silk-band--compact {
+        height: clamp(18px, 5.5vw, 26px);
+        margin: 0.2rem auto 0.35rem;
+    }
+
+    .yk-silk-band img {
+        margin: 0 -2% 0;
+        object-position: center 62%;
+        opacity: 0.92;
     }
 }
 

@@ -2,13 +2,15 @@
  * YuktiOne Tools discovery — pastel wellness mockup
  */
 .yk-tools-page .yk-navbar__link.is-active:not(.yk-navbar__link--pill) {
-    color: #97004f;
+    color: var(--yk-plum, #8a0f4d);
 }
 
 .yk-tools-page {
-    --yk-plum: #8a0f4d;
+    --yk-plum: var(--y1-plum, #8a0f4d);
+    --yk-plum-soft: var(--y1-plum-soft, #f8eaf1);
+    --yk-pearl: var(--y1-pearl, #fff8fb);
     --yk-plum-deep: #6b1d3f;
-    --yk-magenta: #c3196b;
+    --yk-magenta: var(--y1-magenta, #c3196b);
     --yk-ink: #1a1a1a;
     --yk-muted: #6b6b7a;
     --yk-line: rgba(138, 15, 77, 0.12);
@@ -18,7 +20,7 @@
     background:
         radial-gradient(ellipse 70% 50% at 88% 8%, rgba(255, 214, 230, 0.55), transparent 58%),
         radial-gradient(ellipse 50% 40% at 8% 0%, rgba(255, 248, 244, 0.9), transparent 55%),
-        linear-gradient(180deg, #fff7f9 0%, #fbf5f7 42%, #f7f1f3 100%) !important;
+        linear-gradient(180deg, var(--yk-pearl) 0%, #fbf5f7 42%, #f7f1f3 100%) !important;
     color: var(--yk-ink);
     font-family: "DM Sans", system-ui, sans-serif;
 }
@@ -55,14 +57,14 @@
     letter-spacing: 0.14em;
     line-height: 1;
     text-transform: uppercase;
-    color: #97004f;
+    color: var(--yk-plum);
 }
 
 .yk-tools__eyebrow-mark {
     width: 2.25rem;
     height: 3px;
     border-radius: 999px;
-    background: linear-gradient(90deg, #97004f, #74113f);
+    background: linear-gradient(90deg, var(--yk-plum), var(--yk-plum-deep));
     flex: 0 0 auto;
 }
 
@@ -76,7 +78,7 @@
 }
 
 .yk-tools__hero-copy h1 span {
-    color: #97004f;
+    color: var(--yk-plum);
 }
 
 .yk-tools__lead {
@@ -158,6 +160,7 @@
     align-items: center;
     gap: 0.4rem;
     min-height: 2.9rem;
+    max-width: min(100%, 16.5rem);
     padding: 0.5rem 1.1rem;
     border-radius: 999px;
     border: 1px solid rgba(0, 0, 0, 0.06);
@@ -171,12 +174,20 @@
     transition: background var(--yk-ease), color var(--yk-ease), box-shadow var(--yk-ease), transform var(--yk-ease);
 }
 
+@media (max-width: 639px) {
+    .yk-tools__chip {
+        max-width: min(100%, 14.5rem);
+        font-size: 0.82rem;
+        padding: 0.45rem 0.9rem;
+    }
+}
+
 .yk-tools__chip-icon {
     display: grid;
     place-items: center;
     width: 1.45rem;
     height: 1.45rem;
-    color: #97004f;
+    color: var(--yk-plum);
     flex: 0 0 auto;
 }
 
@@ -314,7 +325,7 @@
     min-height: 2.65rem;
     padding: 0 1.2rem;
     border-radius: 0;
-    background: linear-gradient(135deg, #a2145c, #97004f 45%, #74113f);
+    background: linear-gradient(135deg, #a2145c, var(--yk-plum) 45%, var(--yk-plum-deep));
     color: #fff;
     font: inherit;
     font-size: 0.86rem;
@@ -382,14 +393,16 @@
 .yk-tools .yk-tool-card {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(88px, 42%);
-    gap: 0.35rem;
+    grid-template-columns: minmax(0, 1.1fr) minmax(96px, 40%);
+    gap: 0.5rem;
+    align-items: stretch;
     width: 100%;
-    min-height: 178px;
-    padding: 1rem 0.85rem 0.95rem 1.05rem;
-    border-radius: 1.4rem;
-    border: 1px solid #eedfe8;
-    background: linear-gradient(165deg, #fffcfc 0%, #fff8fb 55%, #fff1f7 100%);
+    height: 100%;
+    min-height: 11.75rem;
+    padding: 1.05rem 0.9rem 1rem 1.1rem;
+    border-radius: 1.35rem;
+    border: 1px solid rgba(138, 15, 77, 0.12);
+    background: linear-gradient(165deg, #fffcfc 0%, var(--yk-pearl, #fff8fb) 55%, #fff1f7 100%);
     box-shadow: 0 12px 28px rgba(120, 40, 80, 0.08);
     text-decoration: none;
     color: inherit;
@@ -400,7 +413,7 @@
 .yk-tools .yk-tool-card:hover,
 .yk-tools .yk-tool-card:focus-visible {
     transform: translateY(-4px);
-    border-color: rgba(151, 0, 79, 0.22);
+    border-color: rgba(138, 15, 77, 0.24);
     box-shadow: 0 20px 40px rgba(120, 40, 80, 0.14);
     outline: none;
 }
@@ -411,23 +424,26 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    align-self: stretch;
     min-width: 0;
+    min-height: 100%;
 }
 
 .yk-tool-card__icon {
     display: grid;
     place-items: center;
-    width: 1.85rem;
-    height: 1.85rem;
-    margin-bottom: 0.55rem;
-    border-radius: 0.55rem;
-    background: transparent;
-    color: #97004f;
+    flex: 0 0 auto;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin: 0 0 0.6rem;
+    border-radius: 0.65rem;
+    background: var(--yk-plum-soft, #f8eaf1);
+    color: var(--yk-plum, #8a0f4d);
 }
 
 .yk-tool-card__icon svg {
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 1.15rem;
+    height: 1.15rem;
     fill: none;
     stroke: currentColor;
     stroke-width: 1.65;
@@ -435,20 +451,38 @@
     stroke-linejoin: round;
 }
 
+.yk-tool-card__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    width: 100%;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
 .yk-tool-card__title {
     margin: 0;
-    font-size: 0.98rem;
+    min-height: 2.4em;
+    max-width: 100%;
+    font-size: 1rem;
     font-weight: 750;
     letter-spacing: -0.02em;
     line-height: 1.2;
     color: #111;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .yk-tool-card__desc {
-    margin: 0.35rem 0 0;
-    max-width: 18ch;
-    font-size: 0.78rem;
-    line-height: 1.4;
+    margin: 0;
+    max-width: 100%;
+    min-height: 2.9em;
+    padding-right: 0.15rem;
+    font-size: 0.8rem;
+    line-height: 1.45;
     color: #66647a;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -459,11 +493,12 @@
 .yk-tool-card__go {
     display: grid;
     place-items: center;
-    width: 2.15rem;
-    height: 2.15rem;
+    flex: 0 0 auto;
+    width: 2.25rem;
+    height: 2.25rem;
     margin-top: auto;
     border-radius: 999px;
-    background: linear-gradient(135deg, #c3196b, #97004f 50%, #74113f);
+    background: linear-gradient(135deg, var(--yk-magenta, #c3196b), var(--yk-plum, #8a0f4d) 50%, var(--yk-plum-deep, #6b1d3f));
     color: #fff;
     box-shadow: 0 8px 16px rgba(138, 15, 77, 0.28);
     transition: transform 220ms ease, filter 220ms ease;
@@ -484,10 +519,10 @@
     z-index: 1;
     display: grid;
     place-items: end center;
-    align-self: end;
+    align-self: stretch;
     min-height: 100%;
     pointer-events: none;
-    padding-bottom: 0.15rem;
+    padding: 0.15rem 0.1rem 0.2rem;
 }
 
 .yk-tool-card__art-wave {
@@ -495,16 +530,16 @@
     inset: auto -18% -35% -20%;
     height: 78%;
     border-radius: 55% 45% 0 0;
-    background: radial-gradient(circle at 50% 20%, rgba(255, 214, 230, 0.75), rgba(248, 240, 255, 0.35) 55%, transparent 75%);
+    background: radial-gradient(circle at 50% 20%, rgba(255, 214, 230, 0.75), rgba(248, 234, 241, 0.45) 55%, transparent 75%);
     z-index: 0;
 }
 
 .yk-tool-card__illust {
     position: relative;
     z-index: 1;
-    width: min(100%, 7.5rem);
-    height: auto;
-    max-height: 7.2rem;
+    width: 7rem;
+    height: 6.5rem;
+    max-width: 100%;
     object-fit: contain;
     object-position: bottom center;
     filter: drop-shadow(0 10px 16px rgba(80, 40, 60, 0.12));
@@ -515,11 +550,11 @@
     z-index: 1;
     display: grid;
     place-items: center;
-    width: 4.5rem;
-    height: 4.5rem;
+    width: 4.75rem;
+    height: 4.75rem;
     border-radius: 1.1rem;
-    background: rgba(255, 241, 247, 0.9);
-    color: #97004f;
+    background: var(--yk-plum-soft, #f8eaf1);
+    color: var(--yk-plum, #8a0f4d);
 }
 
 .yk-tool-card__illust-fallback svg {
@@ -528,6 +563,35 @@
     fill: none;
     stroke: currentColor;
     stroke-width: 1.5;
+}
+
+/* Phone: keep equal card rhythm without oversized empty space */
+@media (max-width: 639px) {
+    .yk-tools .yk-tool-card {
+        min-height: 10.75rem;
+        padding: 0.95rem 0.8rem 0.9rem 0.95rem;
+        grid-template-columns: minmax(0, 1.15fr) minmax(84px, 38%);
+        gap: 0.4rem;
+    }
+
+    .yk-tool-card__title {
+        font-size: 0.95rem;
+    }
+
+    .yk-tool-card__desc {
+        font-size: 0.78rem;
+        min-height: 2.7em;
+    }
+
+    .yk-tool-card__illust {
+        width: 6.25rem;
+        height: 5.75rem;
+    }
+
+    .yk-tool-card__go {
+        width: 2.35rem;
+        height: 2.35rem;
+    }
 }
 
 /* Card pastel themes */

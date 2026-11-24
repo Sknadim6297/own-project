@@ -24,24 +24,48 @@ class DigitalJournalController extends Controller
         $prompts = $open ? $journal->prompts() : [];
         $selected = $open ? ($draft->promptKey() ?? ($prompts[0]['key'] ?? null)) : null;
         $selectedLabel = $selected ? $journal->promptLabel($selected) : null;
+        $completionKey = null;
+        if ($open) {
+            $fromInput = old('completion_key');
+            if (is_string($fromInput) && \Illuminate\Support\Str::isUuid($fromInput)) {
+                $completionKey = strtolower($fromInput);
+                $draft->remember(
+                    (string) ($draft->promptKey() ?? $selected ?? ''),
+                    $draft->title(),
+                    (string) ($draft->body() ?? ''),
+                    $completionKey
+                );
+            } elseif ($draft->awaitingLogin() || filled($draft->body())) {
+                $completionKey = $draft->ensureCompletionKey();
+            } else {
+                $completionKey = $draft->beginFreshSubmission(
+                    (string) ($selected ?? ''),
+                    $draft->title() ?? $selectedLabel,
+                    ''
+                );
+            }
+        }
 
-        return view('frontend.sections.journal-write', [
-            'open' => $open,
-            'editing' => false,
-            'entry' => null,
-            'formAction' => route('tools.psychology.journal.store'),
-            'backUrl' => route('tools.psychology'),
-            'heading' => 'Digital Journal',
-            'lead' => 'Express your thoughts in your own words.',
-            'submitLabel' => 'Save Entry',
-            'prompts' => $prompts,
-            'selected' => $selected,
-            'title' => $open ? ($draft->title() ?? $selectedLabel ?? '') : '',
-            'body' => $open ? ($draft->body() ?? '') : '',
-            'preserveTitle' => false,
-            'titleMax' => PsychologyCatalog::JOURNAL_TITLE_MAX,
-            'bodyMax' => PsychologyCatalog::JOURNAL_BODY_MAX,
-        ]);
+        return response()
+            ->view('frontend.sections.journal-write', [
+                'open' => $open,
+                'editing' => false,
+                'entry' => null,
+                'formAction' => route('tools.psychology.journal.store'),
+                'backUrl' => route('tools.psychology'),
+                'heading' => 'Digital Journal',
+                'lead' => 'Express your thoughts in your own words.',
+                'submitLabel' => 'Save Entry',
+                'prompts' => $prompts,
+                'selected' => $selected,
+                'title' => $open ? ($draft->title() ?? $selectedLabel ?? '') : '',
+                'body' => $open ? ($draft->body() ?? '') : '',
+                'completionKey' => $completionKey,
+                'preserveTitle' => false,
+                'titleMax' => PsychologyCatalog::JOURNAL_TITLE_MAX,
+                'bodyMax' => PsychologyCatalog::JOURNAL_BODY_MAX,
+            ])
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
     }
 
     public function store(Request $request, DigitalJournal $journal, JournalDraft $draft)
@@ -52,6 +76,7 @@ class DigitalJournalController extends Controller
 
         $allowed = array_column($journal->prompts(), 'key');
         $data = $request->validate([
+            'completion_key' => ['required', 'uuid'],
             'prompt_key' => ['required', 'string', Rule::in($allowed)],
             'title' => ['nullable', 'string', 'max:'.PsychologyCatalog::JOURNAL_TITLE_MAX],
             'body' => ['required', 'string', 'max:'.PsychologyCatalog::JOURNAL_BODY_MAX],
@@ -65,7 +90,12 @@ class DigitalJournalController extends Controller
             ]);
         }
 
-        $draft->remember($data['prompt_key'], $title === '' ? null : $title, $body);
+        $draft->remember(
+            $data['prompt_key'],
+            $title === '' ? null : $title,
+            $body,
+            strtolower($data['completion_key'])
+        );
 
         if (!Auth::guard('user')->check()) {
             $draft->markAwaitingLogin();
@@ -230,6 +260,7 @@ class DigitalJournalController extends Controller
             'selected' => old('prompt_key', $record->prompt_key),
             'title' => old('title', $record->title ?? ''),
             'body' => old('body', $record->body),
+            'completionKey' => null,
             'preserveTitle' => true,
             'titleMax' => PsychologyCatalog::JOURNAL_TITLE_MAX,
             'bodyMax' => PsychologyCatalog::JOURNAL_BODY_MAX,

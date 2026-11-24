@@ -1601,7 +1601,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (res.status === 401) {
                 // User is not logged in, show SweetAlert
                 Swal.fire({
-                    title: '<span class="login-popup-title"><span class="wave-icon">👋</span> Hey! You forgot to login</span>',
+                    title: '<span class="login-popup-title">Hey! You forgot to login</span>',
                     text: '',
                     showCloseButton: true,
                     showCancelButton: false,
@@ -1741,7 +1741,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (res.status === 401) {
                 // Show SweetAlert for login prompt
                 Swal.fire({
-                    title: '<span class="login-popup-title"><span class="wave-icon">👋</span> Hey! You forgot to login</span>',
+                    title: '<span class="login-popup-title">Hey! You forgot to login</span>',
                     text: '',
                     showCloseButton: true,
                     showCancelButton: false,

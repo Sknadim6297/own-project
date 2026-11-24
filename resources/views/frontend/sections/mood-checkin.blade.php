@@ -101,7 +101,14 @@
             @include('frontend.sections.partials.mood-progress', ['current' => 'mood'])
 
             <div class="yk-mood__layout">
-                <form class="yk-mood__form" method="post" action="{{ route('tools.psychology.mood.store') }}" data-mood-form>
+                <form
+                    class="yk-mood__form"
+                    method="post"
+                    action="{{ route('tools.psychology.mood.store') }}"
+                    data-mood-form
+                    data-mood-initial="{{ $selected ?? '' }}"
+                    @if ($hasFollowUpAnswers ?? false) data-mood-has-followup="1" @endif
+                >
                     @csrf
                     <div class="yk-mood__panel yk-mood__panel--select">
                         <div class="yk-mood__heading">

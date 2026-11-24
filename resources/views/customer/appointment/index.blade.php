@@ -657,7 +657,7 @@ function sendChatMessage() {
 // Show selected file name
 $(document).on('change', '#chatFileInput', function() {
     const fileName = this.files[0]?.name || '';
-    $('#selectedFileName').text(fileName ? `📎 ${fileName}` : '');
+    $('#selectedFileName').text(fileName ? `Attached: ${fileName}` : '');
 });
 
 // Close modal and stop polling - Use OFF to prevent multiple bindings

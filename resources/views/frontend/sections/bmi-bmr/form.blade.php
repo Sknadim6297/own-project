@@ -34,13 +34,6 @@
         'very-active' => '6–7 days/week',
         'extra-active' => 'Intense exercise & physical job',
     ];
-    $activityEmoji = [
-        'sedentary' => '🛋️',
-        'lightly-active' => '🚶',
-        'moderately-active' => '🚴',
-        'very-active' => '🏃',
-        'extra-active' => '🏋️',
-    ];
 @endphp
 <main class="yk-bmi yk-tools-ds" data-yk-tools-ds data-yk-bmi>
     <svg class="yk-bmi__leaf yk-bmi__leaf--bl" viewBox="0 0 200 260" aria-hidden="true" focusable="false">
@@ -253,7 +246,7 @@
                                 @foreach ($activities as $item)
                                     <label class="yk-bmi__activity-card" title="{{ $item['description'] }}">
                                         <input type="radio" name="activity" value="{{ $item['key'] }}" data-factor="{{ $item['factor'] }}" @checked($activity === $item['key']) required>
-                                        <span class="yk-bmi__activity-emoji" aria-hidden="true">{{ $activityEmoji[$item['key']] ?? ($item['emoji'] ?? '•') }}</span>
+                                        <span class="yk-bmi__activity-emoji" aria-hidden="true"><x-yk-icon :name="$item['icon'] ?? 'activity'" class="yk-icon--md" :decorative="true" /></span>
                                         <span class="yk-bmi__activity-text">
                                             <span class="yk-bmi__activity-label">{{ $item['label'] }}</span>
                                             <span class="yk-bmi__activity-desc">{{ $activityShort[$item['key']] ?? $item['description'] }}</span>

@@ -27,13 +27,26 @@ class SkillsStrengthsRecorder
             throw new InvalidArgumentException('The skills assessment draft is incomplete.');
         }
 
+        return $this->storeForUser((int) $userId, $key, $answers);
+    }
+
+    /**
+     * Persist a completed assessment for a Sanctum (or session) customer.
+     * Same scoring, idempotency and reward hooks as the website draft save.
+     */
+    public function storeForUser(int $userId, string $completionKey, array $answers): SkillsStrengthsAttempt
+    {
+        if ($completionKey === '' || strlen($completionKey) > 64) {
+            throw new InvalidArgumentException('The completion key is invalid.');
+        }
+
         $scored = $this->scorer->score($answers);
 
         try {
-            $record = $this->persist((int) $userId, $key, $scored);
+            $record = $this->persist($userId, $completionKey, $scored);
         } catch (QueryException $exception) {
             if (str_contains(strtolower($exception->getMessage()), 'unique')) {
-                $record = $this->existingForUser($key, (int) $userId);
+                $record = $this->existingForUser($completionKey, $userId);
             } else {
                 throw $exception;
             }

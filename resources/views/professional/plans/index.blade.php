@@ -119,13 +119,13 @@
                             <p class="text-xs font-semibold text-text-primary">Plan includes</p>
                             <ul class="mt-2 space-y-2 text-xs leading-5 text-text-secondary">
                                 <li class="flex gap-2">
-                                    <span class="text-success" aria-hidden="true">✓</span>
+                                    <span class="text-success" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.2L19 7"/></svg></span>
                                     <span>{{ $plan->lead_limit }} leads</span>
                                 </li>
                                 @if(is_array($plan->features))
                                     @foreach($plan->features as $feature)
                                         <li class="flex gap-2">
-                                            <span class="text-success" aria-hidden="true">✓</span>
+                                            <span class="text-success" aria-hidden="true"></span>
                                             <span>{{ $feature }}</span>
                                         </li>
                                     @endforeach

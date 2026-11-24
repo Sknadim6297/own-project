@@ -20,6 +20,7 @@
         #rejectionModal { display: none; }
         #rejectionModal.is-open { display: flex; }
     </style>
+    @include('professional.login.partials.onboarding-spacing')
 </head>
 <body class="yuktione-auth-page professional-rejected-page min-h-screen bg-background font-sans text-text-primary antialiased">
 @php
@@ -176,21 +177,6 @@
                         @endforeach
                     </select>
                     <p id="experience-error" class="hidden text-xs text-error" data-error-for="experience"></p>
-                </div>
-
-                <div class="space-y-1.5">
-                    <label for="starting_price" class="block text-xs font-medium text-text-primary">Starting price</label>
-                    <input
-                        id="starting_price"
-                        class="form-control w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary placeholder:text-text-muted/70 focus:border-brand-primary focus:outline-none focus:ring-4 focus:ring-brand-100"
-                        type="text"
-                        name="starting_price"
-                        placeholder="e.g. 1000 or 1000-2000"
-                        value="{{ old('starting_price', $profile->starting_price ?? '') }}"
-                        aria-describedby="starting_price-hint starting_price-error"
-                    >
-                    <p id="starting_price-hint" class="text-[11px] text-text-muted">Enter a fixed price or a price range per session.</p>
-                    <p id="starting_price-error" class="hidden text-xs text-error" data-error-for="starting_price"></p>
                 </div>
 
                 <div class="space-y-1.5">
@@ -556,15 +542,6 @@
             if (phone && (phone.length < 6 || phone.length > 15 || !/^\d+$/.test(phone))) {
                 showFieldError('phone', 'Please enter a valid phone number (6-15 digits)');
                 isValid = false;
-            }
-        } else if (step === 2) {
-            const startingPrice = $('[name="starting_price"]').val().trim();
-            if (startingPrice) {
-                const pricePattern = /^(\d+(\.\d{1,2})?(-\d+(\.\d{1,2})?)?)$/;
-                if (!pricePattern.test(startingPrice)) {
-                    showFieldError('starting_price', 'Please enter a valid price (e.g., 1000 or 1000-2000)');
-                    isValid = false;
-                }
             }
         } else if (step === 3) {
             if ($('#has_gst').is(':checked')) {

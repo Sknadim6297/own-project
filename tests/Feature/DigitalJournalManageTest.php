@@ -34,11 +34,11 @@ class DigitalJournalManageTest extends TestCase
             '2026-10-12 10:00:00'
         );
 
-        $this->actingAs($member, 'user')
+        $response = $this->actingAs($member, 'user')
             ->get(route('tools.psychology.journal.show', $entry->id))
             ->assertOk()
             ->assertSee('Quiet wins')
-            ->assertSee('Personal growth')
+            ->assertDontSee('Personal growth')
             ->assertSee('How are you growing or changing lately?')
             ->assertSee('12 Oct 2026', false)
             ->assertSee('Today I noticed progress.')
@@ -53,6 +53,11 @@ class DigitalJournalManageTest extends TestCase
             ->assertSee('value="DELETE"', false)
             ->assertSee('name="_token"', false)
             ->assertSee('yuktione-journal.css', false);
+
+        $this->assertStringNotContainsString(
+            'yk-journal-entry__chip',
+            $response->getContent()
+        );
     }
 
     public function test_j3_edit_prefills_and_updates_while_preserving_date_and_key(): void

@@ -101,7 +101,7 @@
                                 @endphp
                                 <p class="mb-0 text-success fw-bold">₹{{ number_format($effectiveTotalPrice, 2) }}</p>
                                 @if($additionalService->negotiation_status !== 'none')
-                                    <small class="text-info">✅ Updated after negotiation</small>
+                                    <small class="text-info"> Updated after negotiation</small>
                                 @endif
                             </div>
                         </div>
@@ -128,7 +128,7 @@
                             <h6 class="mb-2">
                                 <i class="fe fe-message-square"></i> 
                                 @if($additionalService->negotiation_status === 'user_negotiated')
-                                    🔥 PENDING NEGOTIATION - ACTION REQUIRED
+                                     PENDING NEGOTIATION - ACTION REQUIRED
                                 @else
                                     Negotiation Details
                                 @endif
@@ -524,7 +524,7 @@
 
                         @if($additionalService->negotiation_status === 'user_negotiated')
                         <button class="btn btn-warning btn-sm respond-negotiation pulse-btn" data-id="{{ $additionalService->id }}" style="animation: pulse 2s infinite;">
-                            <i class="fe fe-message-square"></i> 🔥 RESPOND TO NEGOTIATION
+                            <i class="fe fe-message-square"></i>  RESPOND TO NEGOTIATION
                         </button>
                         @endif
 

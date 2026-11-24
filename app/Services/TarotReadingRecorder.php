@@ -29,6 +29,14 @@ class TarotReadingRecorder
             throw new RuntimeException('Authentication required to save a Tarot reading.');
         }
 
+        return $this->saveFromDraftForUser((int) $userId);
+    }
+
+    /**
+     * Sanctum / explicit-user save path. Same persistence + rewards as the website.
+     */
+    public function saveFromDraftForUser(int $userId): TarotReading
+    {
         $draft = $this->draft->requireOwned();
         $key = is_string($draft['completion_key'] ?? null) ? $draft['completion_key'] : null;
         $revealed = is_array($draft['revealed'] ?? null) ? $draft['revealed'] : null;
@@ -40,10 +48,10 @@ class TarotReadingRecorder
         $this->assertRevealShape($revealed, $draft);
 
         try {
-            $reading = $this->persist((int) $userId, $key, $revealed);
+            $reading = $this->persist($userId, $key, $revealed);
         } catch (QueryException $exception) {
             if (str_contains(strtolower($exception->getMessage()), 'unique')) {
-                $reading = $this->existingForUser($key, (int) $userId);
+                $reading = $this->existingForUser($key, $userId);
             } else {
                 throw $exception;
             }

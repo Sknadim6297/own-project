@@ -26,6 +26,7 @@
         : ($professional ? route('professional.admin-chat.index') : null);
 
     $catalogCategories = \App\Services\ExploreCatalog::CATEGORIES;
+    $toolCategories = \App\Services\ToolsCatalog::CATEGORIES;
     $programmesEnabled = (bool) config('yuktione.programmes_enabled');
 
     $exploreDropdown = collect($catalogCategories)
@@ -41,10 +42,9 @@
             ['label' => 'All Tools', 'href' => route('tools.index')],
             ['label' => 'All Categories', 'href' => route('categories.index')],
         ],
-        collect($catalogCategories)
-            ->take(6)
+        collect($toolCategories)
             ->map(fn (array $category, string $slug) => [
-                'label' => $category['label'].' tools',
+                'label' => $category['label'],
                 'href' => route('tools.index', ['category' => $slug]),
             ])
             ->values()

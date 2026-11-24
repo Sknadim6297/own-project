@@ -48,7 +48,7 @@
 
             @if($purchase->features && is_array($purchase->features))
                 <div class="features-section">
-                    <h6>✨ Your Plan Features</h6>
+                    <h6>Your Plan Features</h6>
                     <ul>
                         @foreach($purchase->features as $feature)
                             <li><i class="fas fa-check"></i>{{ $feature }}</li>

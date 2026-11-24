@@ -75,18 +75,7 @@
     </figure>
 
 @elseif ($toolKey === 'emergency-fund-calculator')
-    @php
-        $target = max(0, (float) ($result['target_amount'] ?? 0));
-        $current = max(0, (float) ($inputs['current_savings'] ?? 0));
-        $pct = $target > 0 ? min(100, ($current / $target) * 100) : 0;
-    @endphp
-    <figure class="yk-pfm__chart" aria-labelledby="{{ $chartId }}-title">
-        <figcaption id="{{ $chartId }}-title" class="yk-pfm__chart-title">Emergency fund progress</figcaption>
-        <div class="yk-pfm__progress" role="img" aria-label="{{ number_format($pct, 1) }} percent of target funded">
-            <span style="width: {{ $pct }}%"></span>
-        </div>
-        <p class="yk-pfm__chart-note">{{ $money($current) }} of {{ $money($target) }} ({{ number_format($pct, 1) }}%)</p>
-    </figure>
+    {{-- Progress + metrics are rendered in emergency-summary (Task 30). --}}
 
 @elseif ($toolKey === 'financial-goal-calculator')
     @php

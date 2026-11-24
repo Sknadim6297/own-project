@@ -37,11 +37,20 @@ class SkillsStrengthsCatalog
      * Numeric values and labels in SCALE must not change.
      */
     public const SCALE_EMOJI = [
-        1 => '😟',
-        2 => '😕',
-        3 => '😐',
-        4 => '🙂',
-        5 => '🤩',
+        1 => '',
+        2 => '',
+        3 => '',
+        4 => '',
+        5 => '',
+    ];
+
+    /** Lucide icon names for SCALE (presentation only). */
+    public const SCALE_ICON = [
+        1 => 'frown',
+        2 => 'meh',
+        3 => 'meh',
+        4 => 'smile',
+        5 => 'laugh',
     ];
 
     public static function categories(): array
@@ -286,7 +295,7 @@ class SkillsStrengthsCatalog
     }
 
     /**
-     * @return array<int, array{value:int,label:string,emoji:string}>
+     * @return array<int, array{value:int,label:string,emoji:string,icon:string}>
      */
     public static function scaleOptions(): array
     {
@@ -296,6 +305,7 @@ class SkillsStrengthsCatalog
                 'value' => (int) $value,
                 'label' => $label,
                 'emoji' => self::SCALE_EMOJI[$value] ?? '',
+                'icon' => self::SCALE_ICON[$value] ?? 'meh',
             ];
         }
 

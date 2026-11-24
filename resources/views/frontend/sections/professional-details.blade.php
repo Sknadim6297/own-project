@@ -570,7 +570,7 @@
 
                 // Show the login popup with custom styling
                 Swal.fire({
-                    title: '<span class="login-popup-title"><span class="wave-icon">👋</span> Hey! You forgot to login</span>',
+                    title: '<span class="login-popup-title">Hey! You forgot to login</span>',
                     html: '<p style="color: white; margin: 15px 0;">Please login to select a consultation plan and proceed with booking.</p>',
                     showCloseButton: true,
                     showCancelButton: false,

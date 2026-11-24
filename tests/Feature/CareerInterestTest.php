@@ -261,10 +261,14 @@ class CareerInterestTest extends TestCase
             'geography' => 'open-to-both',
         ]);
         $this->assertNotNull(session(CareerInterestDraft::KEY)['about']);
+        $priorKey = session(CareerInterestDraft::KEY)['completion_key'] ?? null;
+        $this->assertNotEmpty($priorKey);
 
         $this->post(route('tools.career-interest.retake'))
             ->assertRedirect(route('tools.career-interest.about'));
         $this->assertNull(session(CareerInterestDraft::KEY)['about']);
+        $this->assertSame([], session(CareerInterestDraft::KEY)['answers'] ?? []);
+        $this->assertNotSame($priorKey, session(CareerInterestDraft::KEY)['completion_key'] ?? null);
     }
 
     public function test_start_resumes_existing_draft_without_wiping_answers(): void

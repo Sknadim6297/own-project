@@ -15,11 +15,56 @@ class PfmDraft
 
     public function store(string $toolKey, array $result, array $normalized): void
     {
+        $current = $this->readable($toolKey);
+
         $this->write($toolKey, [
             'result' => $result,
             'normalized' => $normalized,
             'awaiting_login' => false,
+            // Preserve edit context across recalculations (Task 24).
+            'editing_id' => is_array($current) ? ($current['editing_id'] ?? null) : null,
+            'editing_updated_at' => is_array($current) ? ($current['editing_updated_at'] ?? null) : null,
         ]);
+    }
+
+    /**
+     * Start editing a specific saved calculation. Scoped via controller to Monthly Money Planner.
+     */
+    public function beginEdit(
+        string $toolKey,
+        int $calculationId,
+        int $updatedAtTimestamp,
+        array $normalized,
+        ?array $result = null
+    ): void {
+        $this->write($toolKey, [
+            'result' => $result,
+            'normalized' => $normalized,
+            'awaiting_login' => false,
+            'editing_id' => $calculationId,
+            'editing_updated_at' => $updatedAtTimestamp,
+        ]);
+    }
+
+    public function editingId(string $toolKey): ?int
+    {
+        $draft = $this->readable($toolKey);
+        $id = is_array($draft) ? ($draft['editing_id'] ?? null) : null;
+
+        return is_numeric($id) ? (int) $id : null;
+    }
+
+    public function editingUpdatedAt(string $toolKey): ?int
+    {
+        $draft = $this->readable($toolKey);
+        $ts = is_array($draft) ? ($draft['editing_updated_at'] ?? null) : null;
+
+        return is_numeric($ts) ? (int) $ts : null;
+    }
+
+    public function isEditing(string $toolKey): bool
+    {
+        return $this->editingId($toolKey) !== null;
     }
 
     public function readable(string $toolKey): ?array
@@ -107,6 +152,25 @@ class PfmDraft
         session()->forget($this->key($toolKey));
     }
 
+    /**
+     * Drop the preview result while keeping normalized inputs and edit context (Task 29).
+     */
+    public function clearResult(string $toolKey): void
+    {
+        $current = $this->readable($toolKey);
+        if (! is_array($current)) {
+            return;
+        }
+
+        $this->write($toolKey, [
+            'result' => null,
+            'normalized' => is_array($current['normalized'] ?? null) ? $current['normalized'] : null,
+            'awaiting_login' => false,
+            'editing_id' => $current['editing_id'] ?? null,
+            'editing_updated_at' => $current['editing_updated_at'] ?? null,
+        ]);
+    }
+
     private function write(string $toolKey, array $payload): void
     {
         $key = $this->key($toolKey);
@@ -116,12 +180,17 @@ class PfmDraft
             ? $current['completion_key']
             : (string) Str::uuid();
 
+        $editingId = $payload['editing_id'] ?? null;
+        $editingUpdatedAt = $payload['editing_updated_at'] ?? null;
+
         session([
             $key => [
                 'result' => $payload['result'] ?? null,
                 'normalized' => $payload['normalized'] ?? null,
                 'completion_key' => $completionKey,
                 'awaiting_login' => (bool) ($payload['awaiting_login'] ?? false),
+                'editing_id' => is_numeric($editingId) ? (int) $editingId : null,
+                'editing_updated_at' => is_numeric($editingUpdatedAt) ? (int) $editingUpdatedAt : null,
                 'owner' => $this->owner(),
                 'expires_at' => now()->addMinutes(self::TTL_MINUTES)->getTimestamp(),
             ],

@@ -8,16 +8,38 @@
     @include('partials.dm-sans')
     <link rel="icon" type="image/png" href="{{ asset('frontend/assets/Yuktione_logo.png') }}">
     @vite(['resources/css/tazen.css', 'resources/css/yuktione-feedback.css', 'resources/css/auth-theme.css'])
+    <style>
+        /* Task 06: subtle brand-tinted page shading — Application Under Review only */
+        body.yuktione-auth-page.professional-pending-page {
+            --color-brand-50: #fff8fb;
+            --color-background: #fff8fb;
+            background-color: #fff8fb;
+        }
+
+        body.yuktione-auth-page.professional-pending-page > main {
+            min-height: 100vh;
+            min-height: 100dvh;
+            /* Soft plum wash matching onboarding (brand-50 → brand-100 → white) */
+            background-image: linear-gradient(
+                135deg,
+                #fff8fb 0%,
+                #f8eaf1 46%,
+                #ffffff 100%
+            );
+        }
+    </style>
 </head>
-<body class="yuktione-auth-page flex min-h-screen items-center justify-center bg-background px-3 py-5 font-sans text-text-primary sm:px-5">
-    <main class="w-full max-w-[430px]">
+<body class="yuktione-auth-page professional-pending-page min-h-screen bg-background font-sans text-text-primary antialiased">
+    <main class="flex min-h-screen w-full items-center justify-center px-3 py-5 sm:px-5">
         @php
             $applicationStatus = $professional->status ?? 'pending';
             $statusIsPending = $applicationStatus === 'pending';
             $statusIsAccepted = $applicationStatus === 'accepted';
             $statusIsRejected = $applicationStatus === 'rejected';
+            // Presentation-only; does not change stored professional name values.
+            $displayName = \App\Helpers\DisplayName::present($professional->name ?? null);
         @endphp
-        <section class="rounded-panel border border-divider bg-white p-5 text-center shadow-card sm:p-7" aria-labelledby="application-status-title">
+        <section class="w-full max-w-[430px] rounded-panel border border-divider bg-white p-5 text-center shadow-card sm:p-7" aria-labelledby="application-status-title">
             <a href="{{ route('home') }}" class="mb-5 inline-flex items-center justify-center" aria-label="Yuktione home">
                 <img src="{{ asset('frontend/assets/Yuktione_logo.png') }}" alt="Yuktione" class="h-9 w-auto max-w-36 object-contain">
             </a>
@@ -32,8 +54,8 @@
                 <span class="inline-flex rounded-full bg-warning-surface px-3 py-1 text-[11px] font-semibold text-warning">Application under review</span>
                 <h1 id="application-status-title" class="mt-3 text-xl font-semibold leading-tight text-brand-950 sm:text-2xl">Application Under Review</h1>
                 <p class="mt-2 text-[13px] leading-5 text-text-secondary">
-                    @if(filled($professional->name ?? null))
-                        Hi {{ $professional->name }}, your professional profile is currently being reviewed by the Yuktione team.
+                    @if($displayName !== '')
+                        Hi {{ $displayName }}, your professional profile is currently being reviewed by the Yuktione team.
                     @else
                         Your professional profile is currently being reviewed by the Yuktione team.
                     @endif
@@ -47,7 +69,7 @@
                 </a>
             @elseif($statusIsAccepted)
                 <div class="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-success-surface text-success" aria-hidden="true">
-                    <span class="text-2xl font-semibold">✓</span>
+                    <span class="text-2xl font-semibold"></span>
                 </div>
                 <span class="inline-flex rounded-full bg-success-surface px-3 py-1 text-[11px] font-semibold text-success">Approved</span>
                 <h1 id="application-status-title" class="mt-3 text-xl font-semibold leading-tight text-brand-950 sm:text-2xl">Application Approved</h1>

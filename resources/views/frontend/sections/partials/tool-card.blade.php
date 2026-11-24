@@ -29,8 +29,10 @@
         <span class="yk-tool-card__icon" aria-hidden="true">
             @include('frontend.sections.partials.tool-icon-svg', ['icon' => $icon])
         </span>
-        <h3 class="yk-tool-card__title">{{ $label }}</h3>
-        <p class="yk-tool-card__desc">{{ $description }}</p>
+        <div class="yk-tool-card__copy">
+            <h3 class="yk-tool-card__title">{{ $label }}</h3>
+            <p class="yk-tool-card__desc">{{ $description }}</p>
+        </div>
         <span class="yk-tool-card__go" aria-hidden="true">
             <svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h12M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>

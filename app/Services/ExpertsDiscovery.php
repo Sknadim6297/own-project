@@ -62,38 +62,75 @@ class ExpertsDiscovery
     }
 
     /**
-     * Map a Tarot reading category to a real Explore experts filter.
-     * Uses only verified ExploreCatalog keys; falls back to astrology-tarot.
+     * Tarot Reflection expert CTA → Astrology & Tarot professional field.
+     *
+     * Reading themes (love, career, …) are intentionally not used as Explore
+     * destinations: the client requires a Tarot field/service link, not theme
+     * remapping into Relationships/Career/etc. The optional $tarotCategoryKey
+     * argument is retained for call-site compatibility and is not appended to
+     * the URL (privacy: no reading content in query strings).
+     *
+     * When a live Service whose name/slug contains "tarot" exists, the CTA
+     * filters to that service and uses a Tarot-specific label. Otherwise the
+     * truthful Astrology & Tarot category listing is used (no invented services).
      *
      * @return array{url: string, category: ?string, service: ?string, resolved_via: string, label: string}
      */
-    public function forTarotCategory(?string $tarotCategoryKey): array
+    public function forTarotCategory(?string $tarotCategoryKey = null): array
     {
-        $map = [
-            'love-relationships' => ['explore' => 'relationships', 'specialist' => 'Talk to a Relationships Expert', 'browse' => 'Browse Relationships Experts'],
-            'career-work' => ['explore' => 'career-business', 'specialist' => 'Talk to a Career Expert', 'browse' => 'Browse Career Experts'],
-            'money-finances' => ['explore' => 'money-finance', 'specialist' => 'Talk to a Money & Finance Expert', 'browse' => 'Browse Money & Finance Experts'],
-            'personal-growth' => ['explore' => 'mental-health', 'specialist' => 'Talk to a Mental Health Expert', 'browse' => 'Browse Mental Health Experts'],
-            'life-direction' => ['explore' => 'spirituality', 'specialist' => 'Talk to a Spirituality Expert', 'browse' => 'Browse Spirituality Experts'],
-            'general-guidance' => ['explore' => 'astrology-tarot', 'specialist' => 'Talk to an Astrology & Tarot Expert', 'browse' => 'Browse Astrology & Tarot Experts'],
-        ];
+        unset($tarotCategoryKey); // retained for signature compatibility only
 
-        $fallback = [
-            'explore' => 'astrology-tarot',
-            'specialist' => 'Talk to an Astrology & Tarot Expert',
-            'browse' => 'Browse Astrology & Tarot Experts',
-        ];
-
-        $target = $map[$tarotCategoryKey] ?? $fallback;
-        if (! array_key_exists($target['explore'], ExploreCatalog::CATEGORIES)) {
-            $target = $fallback;
+        $categoryKey = 'astrology-tarot';
+        if (! array_key_exists($categoryKey, ExploreCatalog::CATEGORIES)) {
+            return [
+                'url' => route('professionals'),
+                'category' => null,
+                'service' => null,
+                'resolved_via' => 'unfiltered_fallback',
+                'label' => 'Browse Experts',
+            ];
         }
 
-        return $this->resolveCategory(
-            $target['explore'],
-            $target['specialist'],
-            $target['browse']
-        );
+        $tarotService = $this->resolveTarotService();
+        if ($tarotService !== null) {
+            return [
+                'url' => route('professionals', [
+                    'category' => $categoryKey,
+                    'service' => $tarotService->slug,
+                ]),
+                'category' => $categoryKey,
+                'service' => $tarotService->slug,
+                'resolved_via' => 'tarot_service_and_category',
+                'label' => 'Talk to a Tarot Expert',
+            ];
+        }
+
+        // No Tarot-named service in the catalogue — do not pick a Vastu/Astrology
+        // sibling and label it as Tarot. Category filter remains truthful.
+        return [
+            'url' => route('professionals', ['category' => $categoryKey]),
+            'category' => $categoryKey,
+            'service' => null,
+            'resolved_via' => 'astrology_tarot_category',
+            'label' => 'Talk to an Astrology & Tarot Expert',
+        ];
+    }
+
+    /**
+     * Prefer a live catalogue Service that is clearly Tarot (name/slug), not
+     * merely the first Astrology & Tarot mapped row (which may be Vastu/etc.).
+     */
+    private function resolveTarotService(): ?Service
+    {
+        try {
+            if (! Schema::hasTable('services')) {
+                return null;
+            }
+
+            return app(ExploreCatalog::class)->resolveTarotService();
+        } catch (QueryException) {
+            return null;
+        }
     }
 
     /**

@@ -12,6 +12,7 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class DigitalJournalWriteTest extends TestCase
@@ -45,6 +46,7 @@ class DigitalJournalWriteTest extends TestCase
             ->assertSee('name="prompt_key"', false)
             ->assertSee('name="title"', false)
             ->assertSee('name="body"', false)
+            ->assertSee('name="completion_key"', false)
             ->assertSee('yuktione-journal.css', false)
             ->assertDontSee('Coming soon', false);
 
@@ -58,7 +60,9 @@ class DigitalJournalWriteTest extends TestCase
         $other = $this->member('other-journal@example.com');
 
         $this->actingAs($member, 'user');
+        $key = (string) Str::uuid();
         $this->post(route('tools.psychology.journal.store'), [
+            'completion_key' => $key,
             'prompt_key' => 'personal-growth',
             'title' => 'Growing quietly',
             'body' => "Today I noticed progress.\nनमस्ते",
@@ -70,6 +74,7 @@ class DigitalJournalWriteTest extends TestCase
         $this->assertSame('personal-growth', $saved->prompt_key);
         $this->assertSame('Growing quietly', $saved->title);
         $this->assertSame("Today I noticed progress.\nनमस्ते", $saved->body);
+        $this->assertSame($key, $saved->completion_key);
         $this->assertNull(session(JournalDraft::KEY));
 
         $this->withSession([
@@ -84,6 +89,7 @@ class DigitalJournalWriteTest extends TestCase
                 'expires_at' => now()->addMinutes(10)->getTimestamp(),
             ],
         ])->post(route('tools.psychology.journal.store'), [
+            'completion_key' => $saved->completion_key,
             'prompt_key' => 'personal-growth',
             'title' => 'Growing quietly',
             'body' => "Today I noticed progress.\nनमस्ते",
@@ -102,6 +108,7 @@ class DigitalJournalWriteTest extends TestCase
         Event::fake([Login::class]);
 
         $this->post(route('tools.psychology.journal.store'), [
+            'completion_key' => (string) Str::uuid(),
             'prompt_key' => 'my-thoughts',
             'title' => '',
             'body' => 'A private thought from a guest.',
@@ -134,6 +141,7 @@ class DigitalJournalWriteTest extends TestCase
 
         $this->actingAs($member, 'user')
             ->post(route('tools.psychology.journal.store'), [
+                'completion_key' => (string) Str::uuid(),
                 'prompt_key' => '',
                 'title' => str_repeat('t', PsychologyCatalog::JOURNAL_TITLE_MAX + 1),
                 'body' => '',
@@ -179,6 +187,7 @@ class DigitalJournalWriteTest extends TestCase
         $member = $this->member('closed-journal@example.com');
         $this->actingAs($member, 'user')
             ->post(route('tools.psychology.journal.store'), [
+                'completion_key' => (string) Str::uuid(),
                 'prompt_key' => 'relationships',
                 'title' => 'Hidden',
                 'body' => 'Should not save',

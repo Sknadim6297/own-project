@@ -16,11 +16,13 @@
         var prevBtn = root.querySelector('[data-gratitude-prev]');
         var nextBtn = root.querySelector('[data-gratitude-next]');
         var skipBtn = root.querySelector('[data-gratitude-skip]');
+        var nav = root.querySelector('.yk-gratitude-nav');
         var error = form.querySelector('[data-gratitude-error]');
         var progressBar = root.querySelector('[data-gratitude-progress]');
         var minAnswered = Number(form.getAttribute('data-min-answered') || 1);
         var answerMax = Number(form.getAttribute('data-answer-max') || 1000);
         var index = 0;
+        var navLockUntil = 0;
 
         var answerOf = function (card) {
             var field = card.querySelector('[data-gratitude-answer]');
@@ -33,6 +35,41 @@
             }, 0);
         };
 
+        var viewportHeight = function () {
+            if (window.visualViewport && window.visualViewport.height) {
+                return window.visualViewport.height;
+            }
+            return window.innerHeight || document.documentElement.clientHeight || 0;
+        };
+
+        var syncNavToVisualViewport = function () {
+            if (!nav || !window.visualViewport) {
+                if (nav) nav.style.bottom = '';
+                return;
+            }
+            // On mobile the nav is fixed; lift it above the soft keyboard when the visual viewport shrinks.
+            var vv = window.visualViewport;
+            var inset = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+            nav.style.bottom = inset > 0 ? inset + 'px' : '';
+        };
+
+        var ensureNavVisible = function () {
+            syncNavToVisualViewport();
+            if (!nextBtn || nextBtn.hidden || nextBtn.disabled) return;
+            var target = nav || nextBtn;
+            var rect = target.getBoundingClientRect();
+            var viewH = viewportHeight();
+            if (rect.bottom > viewH - 12 || rect.top < 0) {
+                target.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        };
+
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', syncNavToVisualViewport);
+            window.visualViewport.addEventListener('scroll', syncNavToVisualViewport);
+        }
+        window.addEventListener('resize', syncNavToVisualViewport);
+
         var syncCounts = function () {
             cards.forEach(function (card) {
                 var field = card.querySelector('[data-gratitude-answer]');
@@ -41,7 +78,8 @@
             });
         };
 
-        var show = function (nextIndex) {
+        var show = function (nextIndex, opts) {
+            opts = opts || {};
             index = Math.max(0, Math.min(cards.length - 1, nextIndex));
             cards.forEach(function (card, i) {
                 var active = i === index;
@@ -61,10 +99,24 @@
                 progressBar.style.width = pct + '%';
                 progressBar.setAttribute('aria-valuenow', String(pct));
             }
+
+            var isLast = index >= cards.length - 1;
             var hasAnswer = answerOf(cards[index]) !== '';
+
             if (prevBtn) prevBtn.hidden = index === 0;
-            if (nextBtn) nextBtn.hidden = !(hasAnswer && index < cards.length - 1);
-            if (skipBtn) skipBtn.hidden = hasAnswer || index >= cards.length - 1;
+
+            // Keep Next visible (disabled when empty) so users always see navigation.
+            if (nextBtn) {
+                nextBtn.hidden = isLast;
+                nextBtn.disabled = !hasAnswer;
+                nextBtn.setAttribute('aria-disabled', hasAnswer ? 'false' : 'true');
+            }
+
+            if (skipBtn) skipBtn.hidden = hasAnswer || isLast;
+
+            if (opts.revealNav && hasAnswer && !isLast) {
+                ensureNavVisible();
+            }
         };
 
         var go = function (delta) {
@@ -73,25 +125,44 @@
             if (field) field.focus();
         };
 
+        var onAnswerEdit = function (field) {
+            if (field.value.length > answerMax) {
+                field.value = field.value.slice(0, answerMax);
+            }
+            syncCounts();
+            show(index, { revealNav: true });
+        };
+
         cards.forEach(function (card) {
             var field = card.querySelector('[data-gratitude-answer]');
             if (!field) return;
-            field.addEventListener('input', function () {
-                if (field.value.length > answerMax) {
-                    field.value = field.value.slice(0, answerMax);
-                }
-                syncCounts();
-                show(index);
-            });
+            field.addEventListener('input', function () { onAnswerEdit(field); });
+            field.addEventListener('change', function () { onAnswerEdit(field); });
+            field.addEventListener('compositionend', function () { onAnswerEdit(field); });
         });
 
-        if (prevBtn) prevBtn.addEventListener('click', function () { go(-1); });
-        if (nextBtn) {
-            nextBtn.addEventListener('click', function () {
-                if (answerOf(cards[index])) go(1);
+        if (prevBtn) {
+            prevBtn.addEventListener('click', function () {
+                if (Date.now() < navLockUntil) return;
+                navLockUntil = Date.now() + 350;
+                go(-1);
             });
         }
-        if (skipBtn) skipBtn.addEventListener('click', function () { go(1); });
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function () {
+                if (Date.now() < navLockUntil) return;
+                if (nextBtn.disabled || nextBtn.hidden || !answerOf(cards[index])) return;
+                navLockUntil = Date.now() + 350;
+                go(1);
+            });
+        }
+        if (skipBtn) {
+            skipBtn.addEventListener('click', function () {
+                if (Date.now() < navLockUntil) return;
+                navLockUntil = Date.now() + 350;
+                go(1);
+            });
+        }
         dots.forEach(function (dot) {
             dot.addEventListener('click', function () {
                 show(Number(dot.getAttribute('data-card-index') || 0));
@@ -113,13 +184,20 @@
                 error.hidden = false;
                 error.textContent = 'Please fill in at least one card before saving.';
             }
-            show(0);
+            show(0, { revealNav: true });
             var first = cards[0] && cards[0].querySelector('[data-gratitude-answer]');
             if (first) first.focus();
         });
 
+        // Browser-restored / draft values should enable navigation immediately.
         syncCounts();
-        show(0);
+        show(0, { revealNav: answeredCount() > 0 });
+
+        // Re-sync after bfcache restore or delayed autofill.
+        window.addEventListener('pageshow', function () {
+            syncCounts();
+            show(index, { revealNav: answerOf(cards[index]) !== '' });
+        });
     }
 
     function initDeleteDialog() {

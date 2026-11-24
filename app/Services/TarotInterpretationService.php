@@ -64,18 +64,25 @@ class TarotInterpretationService
             $card = $cardsById[$pick['card_id']];
             $isReversed = $reversedEnabled ? (bool) ($pick['is_reversed'] ?? false) : false;
             $position = $spreadMeta['positions'][$index];
-            $meaning = $isReversed ? $card->reversed_meaning : $card->upright_meaning;
+            $meaning = $isReversed ? (string) $card->reversed_meaning : (string) $card->upright_meaning;
+            $keywords = $isReversed ? (string) ($card->reversed_keywords ?? '') : (string) ($card->upright_keywords ?? '');
 
-            $insight = $this->composeInsight(
+            if (trim($meaning) === '') {
+                throw new InvalidArgumentException('Card meaning content is missing for '.$card->card_id.'.');
+            }
+
+            $readingContext = $this->composeReadingContext(
+                categoryKey: $category,
                 categoryLabel: $categoryMeta['label'],
                 categoryLens: $categoryMeta['lens'],
                 question: $question,
                 cardName: $card->card_name,
                 orientation: $isReversed ? 'reversed' : 'upright',
+                positionKey: $position['key'],
                 positionLabel: $position['label'],
                 positionPrompt: $position['prompt'],
                 meaning: $meaning,
-                spreadType: $spreadType,
+                keywords: $keywords,
             );
 
             $revealedCards[] = [
@@ -89,8 +96,11 @@ class TarotInterpretationService
                 'position_order' => (int) ($pick['position_order'] ?? ($index + 1)),
                 'is_reversed' => $isReversed,
                 'orientation_label' => $isReversed ? 'Reversed' : 'Upright',
+                'keywords' => $keywords,
                 'core_meaning' => $meaning,
-                'insight' => $insight,
+                'insight' => $readingContext['insight'],
+                'reflection_question' => $readingContext['reflection_question'],
+                'suggested_action' => $readingContext['suggested_action'],
                 'image_path' => $card->image_path,
             ];
         }
@@ -117,42 +127,135 @@ class TarotInterpretationService
         return $payload;
     }
 
-    private function composeInsight(
+    /**
+     * Deterministic reading-context fields for live or historical display.
+     *
+     * @return array{insight: string, reflection_question: string, suggested_action: string}
+     */
+    public function composeReadingContext(
+        string $categoryKey,
         string $categoryLabel,
         string $categoryLens,
         string $question,
         string $cardName,
         string $orientation,
+        string $positionKey,
         string $positionLabel,
         string $positionPrompt,
         string $meaning,
-        string $spreadType,
-    ): string {
-        $safeQuestion = $this->clip($question, 180);
+        string $keywords = '',
+    ): array {
+        $safeQuestion = $this->clip($question, 160);
+        $theme = $this->primaryTheme($keywords, $meaning);
         $orientationPhrase = $orientation === 'reversed' ? 'in a reversed orientation' : 'upright';
 
-        $sentences = [];
-        $sentences[] = sprintf(
-            'As %s in your %s reading, %s %s may offer a reflective lens on “%s”.',
-            $positionLabel,
-            $categoryLabel,
-            $cardName,
-            $orientationPhrase,
-            $safeQuestion
-        );
-        $sentences[] = sprintf(
-            'In this position — %s — the card’s core theme (%s) can suggest noticing themes around %s.',
-            lcfirst($positionPrompt),
-            rtrim($meaning, '.'),
-            $categoryLens
-        );
-        $sentences[] = 'This is an invitation to reflect, not a prediction of what will happen or what another person thinks.';
+        $categoryLine = $this->categoryLine($categoryKey, $categoryLabel, $cardName, $theme, $categoryLens);
+        $positionLine = $this->positionLine($positionKey, $positionLabel, $positionPrompt, $cardName, $theme);
 
-        if ($spreadType === TarotCatalog::SPREAD_ONE) {
-            $sentences[] = 'Sit with what feels most relevant, and let the image of this card guide a gentle next question for yourself.';
+        $insight = implode(' ', [
+            sprintf(
+                'As %s in your %s reading, %s %s may offer a reflective lens on “%s”.',
+                $positionLabel,
+                $categoryLabel,
+                $cardName,
+                $orientationPhrase,
+                $safeQuestion
+            ),
+            $categoryLine,
+            $positionLine,
+            'This is an invitation to reflect, not a prediction of what will happen or what another person thinks.',
+        ]);
+
+        return [
+            'insight' => $insight,
+            'reflection_question' => $this->reflectionQuestion($positionKey, $categoryKey, $cardName, $theme),
+            'suggested_action' => $this->suggestedAction($positionKey, $categoryKey, $theme),
+        ];
+    }
+
+    private function categoryLine(
+        string $categoryKey,
+        string $categoryLabel,
+        string $cardName,
+        string $theme,
+        string $categoryLens,
+    ): string {
+        return match ($categoryKey) {
+            'love-relationships' => "In {$categoryLabel}, {$cardName} may invite reflection on trust, communication, and emotional honesty through the theme of {$theme}.",
+            'career-work' => "In {$categoryLabel}, {$cardName} may invite reflection on direction, confidence, and practical choices through the theme of {$theme}.",
+            'money-finances' => "In {$categoryLabel}, {$cardName} may invite reflection on priorities, habits, and realistic planning through the theme of {$theme}.",
+            'personal-growth' => "In {$categoryLabel}, {$cardName} may invite reflection on resilience, boundaries, and personal values through the theme of {$theme}.",
+            'life-direction' => "In {$categoryLabel}, {$cardName} may invite reflection on meaningful priorities and longer-term goals through the theme of {$theme}.",
+            default => "In {$categoryLabel}, {$cardName} may invite reflection on {$categoryLens} through the theme of {$theme}.",
+        };
+    }
+
+    private function positionLine(
+        string $positionKey,
+        string $positionLabel,
+        string $positionPrompt,
+        string $cardName,
+        string $theme,
+    ): string {
+        return match ($positionKey) {
+            'quick_clarity' => "For Quick Clarity, {$cardName} may highlight a central theme of {$theme} — {$positionPrompt}",
+            'situation' => "As Situation, {$cardName} may help you reflect on what feels present around {$theme} — {$positionPrompt}",
+            'challenge' => "As Challenge, {$cardName} may point to tensions or considerations around {$theme} — {$positionPrompt}",
+            'guidance' => "As Guidance, {$cardName} may suggest a supportive perspective around {$theme} — {$positionPrompt}",
+            default => "In the {$positionLabel} position, {$cardName} may relate to {$theme} — {$positionPrompt}",
+        };
+    }
+
+    private function reflectionQuestion(string $positionKey, string $categoryKey, string $cardName, string $theme): string
+    {
+        $focus = match ($categoryKey) {
+            'love-relationships' => 'your relationships and emotional needs',
+            'career-work' => 'your work and professional direction',
+            'money-finances' => 'your money habits and financial priorities',
+            'personal-growth' => 'your personal growth and boundaries',
+            'life-direction' => 'your longer-term direction and values',
+            default => 'what feels most important right now',
+        };
+
+        return match ($positionKey) {
+            'quick_clarity' => "Where might {$cardName}’s theme of {$theme} be asking for honest attention in {$focus}?",
+            'situation' => "What in your current circumstances around {$focus} most resonates with {$theme}?",
+            'challenge' => "What tension around {$theme} might be useful to name without judging yourself?",
+            'guidance' => "Which small, kind next step around {$theme} feels most supportive for {$focus}?",
+            default => "How might the theme of {$theme} invite reflection on {$focus}?",
+        };
+    }
+
+    private function suggestedAction(string $positionKey, string $categoryKey, string $theme): string
+    {
+        $domain = match ($categoryKey) {
+            'love-relationships' => 'a conversation or boundary that supports clearer connection',
+            'career-work' => 'one practical work step that builds clarity or confidence',
+            'money-finances' => 'one concrete review of spending, saving, or planning',
+            'personal-growth' => 'one habit or boundary that supports steadier self-care',
+            'life-direction' => 'one priority you can honour in a small way this week',
+            default => 'one gentle next step that feels realistic today',
+        };
+
+        return match ($positionKey) {
+            'quick_clarity' => "You might find it helpful to journal for five minutes on {$theme}, then choose {$domain}.",
+            'situation' => "You might find it helpful to list what is already true in this situation before deciding {$domain}.",
+            'challenge' => "You might find it helpful to name the hardest part of {$theme} privately, then choose {$domain}.",
+            'guidance' => "You might find it helpful to carry one insight about {$theme} into {$domain}.",
+            default => "You might find it helpful to pause with {$theme}, then choose {$domain}.",
+        };
+    }
+
+    private function primaryTheme(string $keywords, string $meaning): string
+    {
+        $parts = array_values(array_filter(array_map('trim', explode(',', $keywords))));
+        if ($parts !== []) {
+            return mb_strtolower($parts[0]);
         }
 
-        return implode(' ', $sentences);
+        $clip = $this->clip($meaning, 48);
+
+        return mb_strtolower(rtrim($clip, '.…'));
     }
 
     /**
@@ -184,12 +287,14 @@ class TarotInterpretationService
      */
     private function composeOneCardReflection(array $card, string $categoryLabel, string $question): string
     {
+        $theme = $this->primaryTheme((string) ($card['keywords'] ?? ''), (string) ($card['core_meaning'] ?? ''));
+
         return sprintf(
             'A concise reflection for this %s reading: %s may be asking you to notice “%s” through the theme of %s — gently, and without needing a fixed answer today.',
             $categoryLabel,
             $card['card_name'],
             $this->clip($question, 140),
-            rtrim((string) $card['core_meaning'], '.')
+            $theme
         );
     }
 

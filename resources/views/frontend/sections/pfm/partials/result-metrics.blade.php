@@ -18,12 +18,10 @@
         <div class="yk-pfm__metric"><span>Debt / asset</span><strong>{{ $result['debt_asset_ratio'] === null ? 'N/A' : number_format(((float) $result['debt_asset_ratio']) * 100, 2).'%' }}</strong></div>
     </div>
 @elseif ($toolKey === 'emergency-fund-calculator')
-    <div class="yk-pfm__metrics">
-        <div class="yk-pfm__metric yk-pfm__metric--primary"><span>Target fund</span><strong>{{ $money($result['target_amount']) }}</strong></div>
-        <div class="yk-pfm__metric"><span>Shortfall</span><strong>{{ $money($result['shortfall']) }}</strong></div>
-        <div class="yk-pfm__metric"><span>Coverage</span><strong>{{ number_format((float) $result['coverage_months_actual'], 1) }} months</strong></div>
-        <div class="yk-pfm__metric"><span>Months to target</span><strong>{{ $result['months_to_target'] === null ? '—' : number_format((float) $result['months_to_target'], 1) }}</strong></div>
-    </div>
+    @include('frontend.sections.pfm.partials.emergency-summary', [
+        'result' => $result,
+        'inputs' => $inputs ?? [],
+    ])
 @elseif ($toolKey === 'financial-goal-calculator')
     <div class="yk-pfm__metrics">
         <div class="yk-pfm__metric yk-pfm__metric--primary"><span>Monthly investment</span><strong>{{ $money($result['monthly_investment']) }}</strong></div>

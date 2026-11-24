@@ -794,14 +794,19 @@
 		@include('frontend.home.partials.hero')
 
 		@include('frontend.home.partials.categories')
+		@include('frontend.home.partials.section-divider', ['compact' => true])
 
 		@include('frontend.home.partials.tools')
+		@include('frontend.home.partials.section-divider', ['compact' => true])
 
 		@include('frontend.home.partials.insights')
+		@include('frontend.home.partials.section-divider', ['compact' => true])
 
 		@include('frontend.home.partials.talk-experts')
+		@include('frontend.home.partials.section-divider', ['compact' => true])
 
 		@include('frontend.home.partials.platform-experience')
+		@include('frontend.home.partials.section-divider', ['compact' => true])
 
 		<!-- /bg_gray -->
 
@@ -810,7 +815,9 @@
 		@else
 			@include('frontend.home.partials.programmes-showcase')
 		@endif
+		@include('frontend.home.partials.section-divider', ['compact' => true])
 		@include('frontend.home.partials.professional-showcase')
+		@include('frontend.home.partials.section-divider', ['compact' => true])
 		@include('frontend.home.partials.testimonials-showcase')
 
 	</main>

@@ -64,7 +64,7 @@ class Phase4BMoodRedesignTest extends TestCase
             ->assertSee('Step 2 of 4', false)
             ->assertDontSee('reflection', false)
             ->assertSee('class="yk-emotion__input"', false);
-        $this->assertSame(15, substr_count($emotions->getContent(), 'class="yk-emotion__input"'));
+        $this->assertSame(5, substr_count($emotions->getContent(), 'class="yk-emotion__input"'));
 
         $this->post(route('tools.psychology.mood.emotions.store'), ['emotions' => ['calm']]);
         $this->get(route('tools.psychology.mood.reflection'))

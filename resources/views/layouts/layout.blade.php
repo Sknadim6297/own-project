@@ -56,6 +56,7 @@
 
 	@if ($isAuthenticationRoute)
 		<link href="{{ asset('frontend/assets/css/yuktione-brand.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-brand.css')) }}" rel="stylesheet">
+		<link href="{{ asset('frontend/assets/css/yuktione-icons.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-icons.css')) }}" rel="stylesheet">
 		@vite([
 			'resources/css/tazen.css',
 			'resources/css/auth-theme.css',
@@ -181,6 +182,7 @@
 		<link href="{{ asset('frontend/assets/css/yuktione-booking.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-booking.css')) }}" rel="stylesheet">
 	@endif
 	<link href="{{ asset('frontend/assets/css/yuktione-brand.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-brand.css')) }}" rel="stylesheet">
+	<link href="{{ asset('frontend/assets/css/yuktione-icons.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-icons.css')) }}" rel="stylesheet">
 	<link href="{{ asset('frontend/assets/css/tazen-public-chrome.css') }}?v={{ filemtime(public_path('frontend/assets/css/tazen-public-chrome.css')) }}" rel="stylesheet">
 	<link href="{{ asset('frontend/assets/css/yuktione-footer.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-footer.css')) }}" rel="stylesheet">
 	@if (request()->routeIs('home'))
@@ -224,10 +226,7 @@
 		<script src="{{ asset('frontend/assets/js/yuktione-experts.js') }}?v={{ filemtime(public_path('frontend/assets/js/yuktione-experts.js')) }}" defer></script>
 	@endif
 	@if (request()->routeIs('tools.index'))
-<<<<<<< HEAD
 		<link href="{{ asset('frontend/assets/css/yuktione-tools.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools.css')) }}" rel="stylesheet">
-=======
->>>>>>> 6ab04e0 (chnages)
 		<link href="{{ asset('frontend/assets/css/yuktione-tools-page.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-tools-page.css')) }}" rel="stylesheet">
 	@endif
 	@if (request()->routeIs('tools.psychology', 'tools.psychology.*'))

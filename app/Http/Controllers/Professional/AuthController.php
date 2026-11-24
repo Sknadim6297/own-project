@@ -21,42 +21,36 @@ class AuthController extends Controller
     }
 
     /**
-     * Send password reset link
+     * Send a password reset link to the professional's registered email.
+     *
+     * Always returns a generic confirmation to avoid account enumeration.
      */
     public function sendResetLink(Request $request, AccountRecovery $recovery)
     {
         $request->validate([
-            'phone' => ['required', 'string', 'min:10', 'max:20', 'regex:/^[0-9+\-\s()]+$/'],
+            'email' => ['required', 'email', 'max:255'],
+        ], [
+            'email.required' => 'Please enter your registered email address.',
+            'email.email' => 'Please enter a valid email address.',
         ]);
 
-        if ($recovery->nationalNumber($request->phone) === '') {
-            return back()
-                ->withInput($request->only('phone'))
-                ->withErrors(['phone' => 'Enter a valid mobile number.']);
-        }
-
-        $professional = $recovery->registeredProfessional($request->phone);
-
-        if (! $professional) {
-            return back()
-                ->withInput($request->only('phone'))
-                ->with('recovery_unregistered', true);
-        }
+        $email = AccountRecovery::normalizeEmail($request->input('email'));
 
         try {
-            $sent = $recovery->sendProfessionalReset($professional);
+            $professional = $recovery->registeredProfessionalByEmail($email);
+
+            if ($professional) {
+                $recovery->sendProfessionalReset($professional);
+            }
         } catch (\Throwable $exception) {
             report($exception);
-            $sent = false;
-        }
 
-        if (! $sent) {
             return back()
-                ->withInput($request->only('phone'))
-                ->withErrors(['phone' => AccountRecovery::SEND_FAILED]);
+                ->withInput($request->only('email'))
+                ->withErrors(['email' => AccountRecovery::SEND_FAILED]);
         }
 
-        return back()->with('status', AccountRecovery::SENT_MESSAGE);
+        return back()->with('status', AccountRecovery::PROFESSIONAL_SENT_MESSAGE);
     }
 
     /**
@@ -65,8 +59,8 @@ class AuthController extends Controller
     public function showResetForm(Request $request)
     {
         return view('professional.login.reset-password', [
-            'token' => $request->token,
-            'email' => $request->email,
+            'token' => $request->query('token', $request->input('token')),
+            'email' => $request->query('email', $request->input('email')),
         ]);
     }
 

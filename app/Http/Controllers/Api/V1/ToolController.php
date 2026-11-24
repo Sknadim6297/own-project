@@ -19,8 +19,8 @@ use Illuminate\Support\Str;
 class ToolController extends Controller
 {
     /**
-     * Slugs that already have a dedicated mobile runner screen.
-     * Others remain listed but flagged mobile_ready=false.
+     * Slugs that already have a dedicated in-app runner.
+     * Everything else stays listed and opens on the website until a native screen ships.
      */
     private const MOBILE_READY_SLUGS = [
         'daily-mood-check-in',
@@ -28,10 +28,10 @@ class ToolController extends Controller
         'gratitude-journal',
         'bmi-bmr-calculator',
         'water-intake-tracker',
-        'career-interest-test',
-        'skills-strengths-assessment',
         'weight-journey',
         'calorie-nutrition-tracker',
+        'career-interest-test',
+        'skills-strengths-assessment',
         'tarot-reflection',
         'debt-emi-calculator',
     ];
@@ -169,6 +169,7 @@ class ToolController extends Controller
 
         $description = str_replace("\0", '', strip_tags((string) $tool->description));
         $mobileReady = in_array($tool->slug, self::MOBILE_READY_SLUGS, true);
+        $canLaunch = $tool->canLaunch();
 
         $payload = [
             'id' => $tool->id,
@@ -177,13 +178,14 @@ class ToolController extends Controller
             'description' => $detailed ? trim($description) : Str::limit(trim($description), 160),
             'icon' => $tool->icon,
             'image_url' => $this->imageUrl($tool),
+            'web_url' => $canLaunch ? route($tool->route_name) : null,
             'access_type' => $tool->access_type,
             'status' => $tool->status,
             'status_label' => $tool->statusLabel(),
             'display_order' => $tool->display_order,
             'module_key' => $tool->module_key,
             'is_implemented' => (bool) $tool->is_implemented,
-            'can_launch_web' => $tool->canLaunch(),
+            'can_launch_web' => $canLaunch,
             'mobile_ready' => $mobileReady,
             'mobile_message' => $mobileReady
                 ? null

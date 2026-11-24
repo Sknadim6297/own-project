@@ -63,8 +63,15 @@ class CareerInterestScorerTest extends TestCase
         $this->assertNotEmpty($first['items']);
         $this->assertLessThanOrEqual(5, count($first['items']));
         $titles = array_column($first['items'], 'title');
-        $this->assertContains('Financial Analysis', $titles);
-        $this->assertContains('Data & Business Analytics', $titles);
+        // I+E dominant profile should surface consulting / enterprising / research areas.
+        $this->assertContains('Management Consulting', $titles);
+        $this->assertTrue(
+            in_array('Entrepreneurship', $titles, true)
+            || in_array('Business Management', $titles, true)
+            || in_array('Research & Applied Science', $titles, true)
+        );
+        $this->assertNotContains('Creative Media & Design', $titles);
+        $this->assertNotContains('Education & Counselling', $titles);
     }
 
     public function test_missing_answer_is_rejected(): void
@@ -93,15 +100,16 @@ class CareerInterestScorerTest extends TestCase
             5 => 'Love it',
         ], CareerInterestCatalog::SCALE);
         $this->assertSame([
-            1 => '😣',
-            2 => '🙁',
-            3 => '😐',
-            4 => '😊',
-            5 => '🤩',
+            1 => '',
+            2 => '',
+            3 => '',
+            4 => '',
+            5 => '',
         ], CareerInterestCatalog::SCALE_EMOJI);
         $this->assertSame(1, CareerInterestCatalog::scaleOptions()[1]['value']);
         $this->assertSame('Not at all', CareerInterestCatalog::scaleOptions()[1]['label']);
-        $this->assertSame('😣', CareerInterestCatalog::scaleOptions()[1]['emoji']);
+        $this->assertSame('', CareerInterestCatalog::scaleOptions()[1]['emoji']);
+        $this->assertSame('angry', CareerInterestCatalog::scaleOptions()[1]['icon']);
         $this->assertSame(18, CareerInterestCatalog::questionCount());
     }
 

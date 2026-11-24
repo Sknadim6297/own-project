@@ -267,8 +267,12 @@ class LoginController extends Controller
         ]);
 
         try {
-            // Check if email already exists with completed registration
-            $existingUser = User::where('email', $request->email)->first();
+            $email = \App\Services\AccountRecovery::normalizeEmail($request->email);
+
+            // Check if email already exists with completed registration (case-insensitive)
+            $existingUser = User::query()
+                ->whereRaw('LOWER(email) = ?', [$email])
+                ->first();
             if ($existingUser && $existingUser->registration_completed) {
                 return response()->json([
                     'status' => 'error',
@@ -290,7 +294,7 @@ class LoginController extends Controller
                 // Create new user record with "started" status
                 $user = User::create([
                     'name' => $request->first_name . ' ' . $request->last_name,
-                    'email' => $request->email,
+                    'email' => $email,
                     'phone' => $request->phone,
                     'password' => null, // No password yet
                     'email_verified' => false,
@@ -338,8 +342,12 @@ class LoginController extends Controller
             'email' => 'required|email',
         ]);
 
+        $email = \App\Services\AccountRecovery::normalizeEmail($request->email);
+
         // Find the user that should have been created in saveCustomerLead
-        $user = User::where('email', $request->email)->first();
+        $user = User::query()
+            ->whereRaw('LOWER(email) = ?', [$email])
+            ->first();
         if (!$user) {
             return response()->json([
                 'status' => 'error',
@@ -359,8 +367,8 @@ class LoginController extends Controller
             // Update status to pending_otp
             $user->update(['registration_status' => 'pending_otp']);
             
-            // Generate and send OTP
-            $otp = $this->otpService->generate($request->email);
+            // Generate and send OTP (normalized email key)
+            $otp = $this->otpService->generate($email);
             
             return response()->json([
                 'status' => 'success',
@@ -388,11 +396,14 @@ class LoginController extends Controller
             'otp' => 'required|string|size:6', // Changed to string|size:6 to handle leading zeros
         ]);
 
-        $result = $this->otpService->verify($request->email, $request->otp);
+        $email = \App\Services\AccountRecovery::normalizeEmail($request->email);
+        $result = $this->otpService->verify($email, $request->otp);
 
         if ($result['success']) {
             // Update user status to otp_verified
-            $user = User::where('email', $request->email)->first();
+            $user = User::query()
+                ->whereRaw('LOWER(email) = ?', [$email])
+                ->first();
             if ($user) {
                 $user->update([
                     'email_verified' => true,
@@ -428,8 +439,12 @@ class LoginController extends Controller
             'otp'        => 'required|string|size:6', // Changed to string|size:6
         ]);
         
+        $email = \App\Services\AccountRecovery::normalizeEmail($request->email);
+
         // Check if email already exists with completed registration
-        $existingUser = User::where('email', $request->email)->first();
+        $existingUser = User::query()
+            ->whereRaw('LOWER(email) = ?', [$email])
+            ->first();
         if ($existingUser && $existingUser->registration_completed) {
             return response()->json([
                 'status' => 'error',
@@ -438,7 +453,7 @@ class LoginController extends Controller
         }
 
         // Verify OTP code
-        $verification = $this->otpService->verify($request->email, $request->otp);
+        $verification = $this->otpService->verify($email, $request->otp);
         if (!$verification['success']) {
             return response()->json([
                 'status' => 'error',
@@ -456,7 +471,7 @@ class LoginController extends Controller
             // Create user
             $user = User::create([
                 'name'                   => $request->first_name . ' ' . $request->last_name,
-                'email'                  => $request->email,
+                'email'                  => $email,
                 'phone'                  => $request->phone,
                 'password'               => $request->password, // Will be hashed by the mutator
                 'email_verified'         => true,
@@ -519,8 +534,12 @@ class LoginController extends Controller
             'otp'        => 'required|string|size:6',
         ]);
         
+        $email = \App\Services\AccountRecovery::normalizeEmail($request->email);
+
         // Check if email already exists with completed registration
-        $existingUser = User::where('email', $request->email)->first();
+        $existingUser = User::query()
+            ->whereRaw('LOWER(email) = ?', [$email])
+            ->first();
         if ($existingUser && $existingUser->registration_completed) {
             return response()->json([
                 'status' => 'error',
@@ -529,7 +548,7 @@ class LoginController extends Controller
         }
 
         // Verify OTP code
-        $verification = $this->otpService->verify($request->email, $request->otp);
+        $verification = $this->otpService->verify($email, $request->otp);
         if (!$verification['success']) {
             return response()->json([
                 'status' => 'error',
@@ -554,7 +573,7 @@ class LoginController extends Controller
                 // Create new user (should not happen with new flow, but keeping as fallback)
                 $user = User::create([
                     'name'                   => $request->first_name . ' ' . $request->last_name,
-                    'email'                  => $request->email,
+                    'email'                  => $email,
                     'phone'                  => $request->phone,
                     'email_verified'         => true,
                     'registration_status'    => 'otp_verified',

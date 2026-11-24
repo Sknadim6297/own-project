@@ -8,7 +8,8 @@
     $scaleOptions = $scaleOptions ?? collect($scale)->map(fn ($label, $value) => [
         'value' => (int) $value,
         'label' => $label,
-        'emoji' => \App\Support\SkillsStrengths\SkillsStrengthsCatalog::SCALE_EMOJI[$value] ?? '',
+        'emoji' => '',
+        'icon' => \App\Support\SkillsStrengths\SkillsStrengthsCatalog::SCALE_ICON[$value] ?? 'meh',
     ])->all();
 @endphp
 
@@ -63,7 +64,7 @@
                                     required
                                 >
                                 <span class="yk-ssa__option-value" aria-hidden="true">{{ $option['value'] }}</span>
-                                <span class="yk-ssa__emoji" aria-hidden="true">{{ $option['emoji'] }}</span>
+                                <span class="yk-ssa__emoji" aria-hidden="true"><x-yk-icon :name="$option['icon'] ?? 'meh'" class="yk-icon--md" :decorative="true" /></span>
                                 <span class="yk-ssa__option-label">{{ $option['label'] }}</span>
                             </label>
                         @endforeach

@@ -25,6 +25,7 @@
     <link id="style" href="{{ asset('admin/assets/libs/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/assets/css/styles.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/assets/css/icons.css') }}" rel="stylesheet">
+    <link href="{{ asset('frontend/assets/css/yuktione-icons.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-icons.css')) }}" rel="stylesheet">
     <link href="{{ asset('admin/assets/libs/node-waves/waves.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/assets/libs/simplebar/simplebar.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('admin/assets/libs/@simonwep/pickr/themes/nano.min.css') }}">
@@ -108,7 +109,7 @@
                     }
                 });
                 
-                console.info('✅ Admin layout: Error prevention initialized');
+                console.info(' Admin layout: Error prevention initialized');
             });
             
             // Wrap defaultmenu functions to prevent errors
@@ -195,7 +196,7 @@
                     }
                 });
                 
-                console.info('✅ Custom.js: Error prevention ready');
+                console.info(' Custom.js: Error prevention ready');
             });
             
             // Enhanced error handling for custom.js

@@ -36,9 +36,11 @@
     $existing = (float) ($inputs['existing_savings'] ?? 0);
     $infl = (float) ($inputs['inflation_percent'] ?? 0);
     $ret = (float) ($inputs['expected_return_percent'] ?? 0);
-    $goalName = (string) ($inputs['goal_name'] ?? $tool['name']);
     $typeKey = (string) ($inputs['goal_type'] ?? 'custom');
     $typeLabel = $goalTypes[$typeKey] ?? ucfirst($typeKey);
+    $customName = trim((string) ($inputs['goal_name'] ?? ''));
+    // Prefer custom name; otherwise goal type — never empty tool-name placeholders.
+    $displayName = $customName !== '' ? $customName : $typeLabel;
 
     $onTrack = $gap <= 0.5;
     $coveredPct = $corpus > 0 ? max(0, min(100, ($fvExisting / $corpus) * 100)) : 100;
@@ -59,44 +61,27 @@
         : '';
     $deposits = $monthly * $months;
     $growthShare = max(0, $gap - $deposits);
+
+    $factChips = [];
+    $factChips[] = e($typeLabel);
+    if ($customName !== '' && strcasecmp($customName, $typeLabel) !== 0) {
+        $factChips[] = e($customName);
+    }
+    $factChips[] = e($inr($cost)).' today';
+    $factChips[] = e($yearsLabel);
+    $factChips[] = 'Target '.e((string) $targetYear);
+    $factsHtml = '<p class="yk-goalr__facts">'.implode('', array_map(fn ($c) => '<span>'.$c.'</span>', $factChips)).'</p>';
 @endphp
-<main class="yk-goal yk-goalr">
-    <header class="yk-goal__hero">
-        <svg class="yk-goal__hero-art" viewBox="0 0 520 220" aria-hidden="true" focusable="false">
-            <g fill="none" stroke="#e9b955" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" opacity=".55">
-                <path d="M20 190h480"/>
-                <path d="M70 190v-34M130 190v-62M190 190v-92M250 190v-124"/>
-                <path d="M70 156l60-28 60-30 60-34 80-22"/>
-                <path d="M318 72l-14-2M318 72l-6 13"/>
-            </g>
-            <g fill="#e9b955" opacity=".7">
-                <circle cx="70" cy="156" r="5"/><circle cx="130" cy="128" r="5"/><circle cx="190" cy="98" r="5"/><circle cx="250" cy="64" r="5"/><circle cx="330" cy="42" r="7"/>
-            </g>
-            <g opacity=".22" fill="#fff">
-                <circle cx="420" cy="150" r="44"/><circle cx="468" cy="112" r="26"/>
-            </g>
-        </svg>
-        <div class="yk-goal__wrap">
-            <nav class="yk-goal__crumbs" aria-label="Breadcrumb">
-                <a href="{{ route('tools.index') }}"><span aria-hidden="true">←</span> Back to Tools</a>
-                <span aria-hidden="true">/</span>
-                <a href="{{ route('tools.pfm') }}">Money &amp; Finance</a>
-                <span aria-hidden="true">/</span>
-                <a href="{{ route($tool['route']) }}">{{ $tool['name'] }}</a>
-            </nav>
-            <p class="yk-goal__eyebrow">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>
-                Your goal plan
-            </p>
-            <h1 id="pfm-results-heading">{{ $goalName }}</h1>
-            <p class="yk-goal__lead yk-goalr__facts">
-                <span>{{ $typeLabel }}</span>
-                <span>{{ $inr($cost) }} today</span>
-                <span>{{ $yearsLabel }}</span>
-                <span>Target {{ $targetYear }}</span>
-            </p>
-        </div>
-    </header>
+<main class="yk-goal yk-goalr yk-goal--compact-header" data-yk-goal-results>
+    @include('frontend.sections.pfm.partials.goal-compact-header', [
+        'title' => 'Your Financial Goal Plan',
+        'titleId' => 'pfm-results-heading',
+        'lead' => $displayName,
+        'eyebrow' => 'Dedicated result',
+        'showToolCrumb' => true,
+        'tool' => $tool,
+        'facts' => $factsHtml,
+    ])
 
     <div class="yk-goal__wrap yk-goal__layout">
         <div class="yk-goalr__main">
@@ -108,26 +93,24 @@
                 <div class="yk-goalr__headline-top">
                     <span class="yk-goalr__chip {{ $onTrack ? 'yk-goalr__chip--ok' : 'yk-goalr__chip--gap' }}">
                         @if ($onTrack)
-                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12.5l4.2 4.2L19 7"/></svg>
+                            <x-yk-icon name="circle-check" class="yk-icon--sm" />
                             On track
                         @else
-                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v9M12 18.5v.01"/></svg>
+                            <x-yk-icon name="triangle-alert" class="yk-icon--sm" />
                             Gap to fund
                         @endif
                     </span>
-                    <h2 id="goalr-headline" class="yk-goalr__label">{{ $onTrack ? 'Extra to invest each month' : 'Invest every month' }}</h2>
+                    <h2 id="goalr-headline" class="yk-goalr__label">{{ $onTrack ? 'Extra to invest each month' : 'Required monthly investment' }}</h2>
                 </div>
                 <p class="yk-goalr__figure" data-goalr="monthly">
                     <strong>{{ $inr($monthly) }}</strong>
-                    @unless ($onTrack)
-                        <span>/ month</span>
-                    @endunless
+                    <span>/ month · {{ $yearsLabel }}</span>
                 </p>
                 <p class="yk-goalr__sentence">
                     @if ($onTrack)
                         Your current savings are projected to cover this goal on their own. No additional monthly investment is needed.
                     @else
-                        For {{ $yearsLabel }} at an assumed {{ $num($ret, 2) }}% yearly return, to fund the {{ $inr($gap) }} your savings won’t cover.
+                        For {{ $yearsLabel }} at an assumed {{ $num($ret, 2) }}% yearly return, invest this amount each month to fund the {{ $inr($gap) }} your savings won’t cover.
                     @endif
                 </p>
 
@@ -146,6 +129,58 @@
                         <dt>{{ $onTrack ? 'Surplus' : 'Remaining gap' }}</dt>
                         <dd data-goalr="gap">{{ $onTrack ? $inr(max(0, $fvExisting - $corpus)) : $inr($gap) }}</dd>
                         <small>{{ $onTrack ? 'Above the goal cost' : 'Funded by monthly investing' }}</small>
+                    </div>
+                </dl>
+            </section>
+
+            <section class="yk-goal__card yk-goalr__panel" aria-labelledby="goalr-breakdown">
+                <h2 id="goalr-breakdown">Financial breakdown</h2>
+                <dl class="yk-goalr__breakdown">
+                    <div>
+                        <dt>Current goal cost</dt>
+                        <dd>{{ $inr($cost) }}</dd>
+                    </div>
+                    <div>
+                        <dt>Inflation-adjusted goal cost</dt>
+                        <dd>{{ $inr($corpus) }}</dd>
+                    </div>
+                    <div>
+                        <dt>Existing savings today</dt>
+                        <dd>{{ $inr($existing) }}</dd>
+                    </div>
+                    <div>
+                        <dt>Future value of savings</dt>
+                        <dd>{{ $inr($fvExisting) }}</dd>
+                    </div>
+                    <div>
+                        <dt>Remaining funding need</dt>
+                        <dd>{{ $inr($gap) }}</dd>
+                    </div>
+                    <div>
+                        <dt>Required monthly investment</dt>
+                        <dd>{{ $inr($monthly) }}</dd>
+                    </div>
+                    @unless ($onTrack)
+                        <div>
+                            <dt>Total projected contributions</dt>
+                            <dd>{{ $inr($deposits) }}</dd>
+                        </div>
+                        <div>
+                            <dt>Projected investment growth</dt>
+                            <dd>{{ $inr($growthShare) }}</dd>
+                        </div>
+                    @endunless
+                    <div>
+                        <dt>Expected annual return</dt>
+                        <dd>{{ $num($ret, 2) }}%</dd>
+                    </div>
+                    <div>
+                        <dt>Annual inflation rate</dt>
+                        <dd>{{ $num($infl, 2) }}%</dd>
+                    </div>
+                    <div>
+                        <dt>Investment duration</dt>
+                        <dd>{{ $yearsLabel }}</dd>
                     </div>
                 </dl>
             </section>
@@ -179,15 +214,25 @@
                     <div class="yk-goalr__panel-head">
                         <h2 id="goalr-growth">Savings growth vs. goal cost</h2>
                         <ul class="yk-goalr__key" aria-hidden="true">
-                            <li><i class="yk-goalr__swatch yk-goalr__swatch--savings"></i>Your savings</li>
-                            <li><i class="yk-goalr__swatch yk-goalr__swatch--cost"></i>Goal cost</li>
+                            <li><i class="yk-goalr__swatch yk-goalr__swatch--savings"></i>Projected savings value</li>
+                            <li><i class="yk-goalr__swatch yk-goalr__swatch--cost"></i>Goal target cost</li>
                         </ul>
                     </div>
                     <div class="yk-goalr__chart">
                         @include('frontend.sections.pfm.partials.goal-chart', ['projection' => $projection, 'compact' => false])
                         @include('frontend.sections.pfm.partials.goal-chart', ['projection' => $projection, 'compact' => true])
                     </div>
-                    <p class="yk-goalr__caption">Assumes {{ $num($ret, 2) }}% yearly return on your savings and {{ $num($infl, 2) }}% yearly inflation on the goal’s cost, with deposits at the end of each month.</p>
+                    <p class="yk-goalr__caption">
+                        Over {{ $yearsLabel }}, projected savings (contributions plus assumed growth at {{ $num($ret, 2) }}%) are compared with the inflation-adjusted goal cost at {{ $num($infl, 2) }}% a year. Deposits are assumed at the end of each month.
+                    </p>
+                    @php
+                        $last = is_array($projection['points'] ?? null) ? end($projection['points']) : null;
+                    @endphp
+                    @if (is_array($last))
+                        <p class="yk-goalr__chart-summary visually-hidden">
+                            At the end of the timeline, projected savings reach {{ $inr($last['savings'] ?? 0) }} while the goal cost is {{ $inr($last['cost'] ?? 0) }}.
+                        </p>
+                    @endif
                 </section>
             @endif
 
@@ -195,26 +240,48 @@
                 <h2 id="goalr-meaning">What this means</h2>
                 <ul class="yk-goalr__points">
                     <li>
-                        <span aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 17l6-6 4 4 6-8M15 7h5v5"/></svg></span>
-                        <p>At {{ $num($infl, 2) }}% inflation, a goal that costs <b>{{ $inr($cost) }}</b> today is expected to cost <b>{{ $inr($corpus) }}</b> in {{ $yearsLabel }}{!! $inflationClause !!}.</p>
+                        <span aria-hidden="true"><x-yk-icon name="target" class="yk-icon--sm" /></span>
+                        <p>
+                            Your plan for <b>{{ e($displayName) }}</b>
+                            @if ($customName !== '' && strcasecmp($customName, $typeLabel) !== 0)
+                                ({{ e($typeLabel) }})
+                            @endif
+                            spans <b>{{ $yearsLabel }}</b>, targeting {{ $targetYear }}.
+                        </p>
                     </li>
                     <li>
-                        <span aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 19V9M12 19V5M19 19v-7"/></svg></span>
+                        <span aria-hidden="true"><x-yk-icon name="chart-no-axes-combined" class="yk-icon--sm" /></span>
                         <p>
-                            @if ($existing > 0)
-                                Your <b>{{ $inr($existing) }}</b> in savings can grow to <b>{{ $inr($fvExisting) }}</b>, covering about <b>{{ $coveredLabel }}%</b> of the goal.
+                            @if ($infl > 0)
+                                At {{ $num($infl, 2) }}% inflation, a goal that costs <b>{{ $inr($cost) }}</b> today is expected to cost <b>{{ $inr($corpus) }}</b> in {{ $yearsLabel }}{!! $inflationClause !!}.
                             @else
-                                You’re starting from zero, so the whole goal has to be built through monthly investing.
+                                With <b>0%</b> inflation, the goal cost stays <b>{{ $inr($cost) }}</b> over {{ $yearsLabel }}.
                             @endif
                         </p>
                     </li>
                     <li>
-                        <span aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="4" y="6" width="16" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/></svg></span>
+                        <span aria-hidden="true"><x-yk-icon name="wallet" class="yk-icon--sm" /></span>
+                        <p>
+                            @if ($existing > 0)
+                                Your <b>{{ $inr($existing) }}</b> in savings can grow to <b>{{ $inr($fvExisting) }}</b>
+                                @if ($ret > 0)
+                                    at an assumed {{ $num($ret, 2) }}% yearly return,
+                                @else
+                                    (with 0% assumed return growth is from time alone on contributions already set aside),
+                                @endif
+                                covering about <b>{{ $coveredLabel }}%</b> of the goal.
+                            @else
+                                You’re starting from zero existing savings, so the whole goal has to be built through monthly investing.
+                            @endif
+                        </p>
+                    </li>
+                    <li>
+                        <span aria-hidden="true"><x-yk-icon name="calendar-days" class="yk-icon--sm" /></span>
                         <p>
                             @if ($onTrack)
-                                Your savings alone are projected to finish <b>{{ $inr(max(0, $fvExisting - $corpus)) }}</b> ahead of the goal, so you can keep this plan as is.
+                                Your savings alone are projected to finish <b>{{ $inr(max(0, $fvExisting - $corpus)) }}</b> ahead of the goal, so the required monthly investment is <b>{{ $inr($monthly) }}</b>.
                             @else
-                                Investing <b>{{ $inr($monthly) }}</b> a month puts in about <b>{{ $inr($deposits) }}</b> of your own money; market growth at the assumed return supplies roughly <b>{{ $inr($growthShare) }}</b> more.
+                                Investing <b>{{ $inr($monthly) }}</b> a month puts in about <b>{{ $inr($deposits) }}</b> of your own money; market growth at the assumed return supplies roughly <b>{{ $inr($growthShare) }}</b> more. These returns are illustrative estimates, not guarantees.
                             @endif
                         </p>
                     </li>
@@ -225,13 +292,6 @@
 
         <aside class="yk-goal__aside yk-goalr__aside" aria-label="Plan actions">
             <section class="yk-goal__summary yk-goalr__keep" aria-labelledby="goalr-keep">
-                <svg class="yk-goal__summary-art" viewBox="0 0 320 110" aria-hidden="true" focusable="false">
-                    <path d="M0 96c40-26 74-40 112-40s62 20 96 20 74-26 112-52v86H0Z" fill="#fff" opacity=".07"/>
-                    <path d="M0 106c52-20 92-26 140-18 50 8 96-6 180-40v62H0Z" fill="#fff" opacity=".07"/>
-                    <path d="M214 78V22" stroke="#e9b955" stroke-width="3" stroke-linecap="round"/>
-                    <path d="M214 22l36 11-36 11Z" fill="#e9b955"/>
-                    <g fill="#e9b955"><ellipse cx="60" cy="92" rx="22" ry="6.5"/><ellipse cx="60" cy="85" rx="22" ry="6.5" opacity=".8"/><ellipse cx="60" cy="78" rx="22" ry="6.5" opacity=".6"/></g>
-                </svg>
                 <p class="yk-goal__summary-kicker">Next steps</p>
                 <h2 id="goalr-keep">Keep this plan</h2>
                 <p class="yk-goalr__keep-text">{{ $authenticated ? 'Save it to your history, or adjust the numbers and see how the plan changes.' : 'Sign in to save it to your history, or adjust the numbers and see how the plan changes.' }}</p>
@@ -240,25 +300,50 @@
                     @if ($authenticated)
                         <form method="post" action="{{ route($tool['route'].'.save') }}">
                             @csrf
-                            <button type="submit" class="yk-goal__btn yk-goal__btn--gold">Save result</button>
+                            <button type="submit" class="yk-goal__btn yk-goal__btn--gold">
+                                <x-yk-icon name="save" class="yk-icon--sm" />
+                                Save result
+                            </button>
                         </form>
                         <form method="post" action="{{ route($tool['route'].'.save') }}">
                             @csrf
                             <input type="hidden" name="as_draft" value="1">
-                            <button type="submit" class="yk-goal__btn yk-goalr__btn--dark">Save as draft</button>
+                            <button type="submit" class="yk-goal__btn yk-goalr__btn--dark">
+                                <x-yk-icon name="pencil" class="yk-icon--sm" />
+                                Save as draft
+                            </button>
                         </form>
                     @else
                         <form method="post" action="{{ route($tool['route'].'.save') }}">
                             @csrf
-                            <button type="submit" class="yk-goal__btn yk-goal__btn--gold">Save result (sign in)</button>
+                            <button type="submit" class="yk-goal__btn yk-goal__btn--gold">
+                                <x-yk-icon name="save" class="yk-icon--sm" />
+                                Save result (sign in)
+                            </button>
                         </form>
                     @endif
                     <form method="post" action="{{ route($tool['route'].'.recalculate') }}">
                         @csrf
-                        <button type="submit" class="yk-goal__btn yk-goalr__btn--dark">Edit &amp; recalculate</button>
+                        <button type="submit" class="yk-goal__btn yk-goalr__btn--dark">
+                            <x-yk-icon name="refresh-cw" class="yk-icon--sm" />
+                            Edit &amp; recalculate
+                        </button>
                     </form>
+                    @include('frontend.sections.pfm.partials.new-calculation-action', [
+                        'tool' => $tool,
+                        'toolKey' => 'financial-goal-calculator',
+                        'confirm' => true,
+                        'buttonClass' => 'yk-goal__btn yk-goalr__btn--dark',
+                    ])
+                    <a class="yk-goal__btn yk-goalr__btn--dark" href="{{ route($tool['route']) }}">
+                        <x-yk-icon name="arrow-left" class="yk-icon--sm" />
+                        Back to calculator
+                    </a>
                     @if ($authenticated)
-                        <a class="yk-goalr__hist" href="{{ route($tool['route'].'.history') }}">View history</a>
+                        <a class="yk-goalr__hist" href="{{ route($tool['route'].'.history') }}">
+                            <x-yk-icon name="history" class="yk-icon--sm" />
+                            View history
+                        </a>
                     @endif
                 </div>
             </section>
@@ -267,6 +352,9 @@
                 <h2 id="goalr-assump">Assumptions you used</h2>
                 <dl>
                     <div><dt>Goal type</dt><dd>{{ $typeLabel }}</dd></div>
+                    @if ($customName !== '')
+                        <div><dt>Goal name</dt><dd>{{ $customName }}</dd></div>
+                    @endif
                     <div><dt>Cost today</dt><dd>{{ $inr($cost) }}</dd></div>
                     <div><dt>Timeline</dt><dd>{{ $yearsLabel }} · {{ $targetYear }}</dd></div>
                     <div><dt>Inflation</dt><dd>{{ $num($infl, 2) }}% a year</dd></div>

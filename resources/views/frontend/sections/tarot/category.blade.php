@@ -25,7 +25,7 @@
                     <li>
                         <label class="yk-tarot__option is-{{ $category['tone'] }} @if ($selected === $key) is-selected @endif">
                             <input type="radio" name="category" value="{{ $key }}" @checked($selected === $key) required>
-                            <span class="yk-tarot__option-emoji" aria-hidden="true">{{ $ui['emoji'] }}</span>
+                            <span class="yk-tarot__option-emoji" aria-hidden="true"><x-yk-icon :name="$ui['icon']" class="yk-icon--md" :decorative="true" /></span>
                             <span class="yk-tarot__option-copy">
                                 <span class="yk-tarot__option-label">{{ $category['label'] }}</span>
                                 <span class="yk-tarot__option-meta">{{ $ui['blurb'] }}</span>

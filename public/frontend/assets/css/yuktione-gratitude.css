@@ -24,8 +24,12 @@
     box-sizing: border-box;
     margin: 0;
     padding: max(0.85rem, env(safe-area-inset-top, 0px)) 0 max(2rem, env(safe-area-inset-bottom, 0px));
-    overflow-x: clip;
-    background: transparent;
+    /* Keep overflow visible so sticky card navigation can pin above the keyboard/viewport. */
+    overflow-x: visible;
+    background:
+        radial-gradient(900px 380px at 8% -12%, rgba(49, 109, 97, 0.12), transparent 55%),
+        radial-gradient(700px 300px at 100% 0%, rgba(196, 163, 90, 0.12), transparent 52%),
+        linear-gradient(180deg, #fbfcfe 0%, var(--yk-cream-2) 100%);
     color: var(--yk-ink);
     font-family: "DM Sans", sans-serif;
 }
@@ -269,10 +273,16 @@
 }
 
 .yk-gratitude-nav {
+    position: sticky;
+    bottom: 0;
+    z-index: 6;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0.55rem;
     margin-top: 0.85rem;
+    padding: 0.7rem 0 calc(0.45rem + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.94) 34%, #fff 100%);
 }
 
 .yk-gratitude-nav__prev,
@@ -304,7 +314,15 @@
     color: #fff;
 }
 
-.yk-gratitude-nav__next:hover { filter: brightness(1.05); }
+.yk-gratitude-nav__next:hover:not(:disabled) { filter: brightness(1.05); }
+
+.yk-gratitude-nav__next:disabled,
+.yk-gratitude-nav__next[aria-disabled="true"] {
+    opacity: 0.48;
+    cursor: not-allowed;
+    filter: none;
+    box-shadow: none;
+}
 
 .yk-gratitude-nav__prev[hidden],
 .yk-gratitude-nav__next[hidden],
@@ -353,9 +371,39 @@
     }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 640px) {
     .yk-gratitude-card { padding: 0.9rem; }
-    .yk-gratitude-card__input { min-height: 128px; }
+    .yk-gratitude-card__input { min-height: 110px; }
+    .yk-gratitude__form.yk-gratitude__panel,
+    .yk-gratitude__form {
+        /* Keep Finish & Save above the fixed mobile navigation bar. */
+        padding-bottom: 6.25rem;
+    }
+    .yk-gratitude-steps {
+        padding-bottom: 0.35rem;
+    }
+    .yk-gratitude-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 40;
+        margin: 0;
+        padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+        border-top: 1px solid var(--yk-line);
+        background: rgba(255, 255, 255, 0.98);
+        box-shadow: 0 -8px 20px rgba(11, 32, 72, 0.08);
+        backdrop-filter: blur(8px);
+        justify-content: flex-end;
+    }
+    .yk-gratitude-nav__next {
+        flex: 1 1 auto;
+        min-width: 7rem;
+    }
+    .yk-gratitude-nav__prev,
+    .yk-gratitude-nav__skip {
+        flex: 0 0 auto;
+    }
 }
 
 .yk-gratitude-complete__wrap { text-align: center; }

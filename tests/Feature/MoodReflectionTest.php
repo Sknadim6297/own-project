@@ -16,19 +16,20 @@ class MoodReflectionTest extends TestCase
         $this->post(route('tools.psychology.mood.store'), ['mood' => 'good'])
             ->assertRedirect(route('tools.psychology.mood.emotions'));
 
-        $this->post(route('tools.psychology.mood.emotions.store'), ['emotions' => ['calm', 'tired']])
+        $this->post(route('tools.psychology.mood.emotions.store'), ['emotions' => ['calm', 'grateful']])
             ->assertRedirect(route('tools.psychology.mood.reflection'));
 
         $this->get(route('tools.psychology.mood.reflection'))
             ->assertOk()
             ->assertSee('Would you like to share more?')
             ->assertSee("Sometimes writing down what's on your mind can help.", false)
-            ->assertSee('What made you feel this way today?')
+            ->assertSee('What helped you feel good today?')
             ->assertSee('Write anything you would like to share...')
             ->assertSee('Need a little inspiration?')
-            ->assertSee('Something good happened today')
-            ->assertSee('Something is bothering me')
-            ->assertSee('I am thinking about my future')
+            ->assertSee('A kind moment with someone')
+            ->assertSee('Something went smoothly today')
+            ->assertSee('I took care of myself in a small way')
+            ->assertDontSee('Something good happened today')
             ->assertSee('Optional · Up to 1,000 characters')
             ->assertSee('0 / 1,000')
             ->assertSee('Save Check-in')
@@ -136,7 +137,7 @@ class MoodReflectionTest extends TestCase
 
     public function test_reflection_text_is_escaped_and_isolated(): void
     {
-        $this->reachReflection(['anxious']);
+        $this->reachReflection(['grateful']);
 
         $payload = '<script>alert(1)</script>';
         $this->post(route('tools.psychology.mood.reflection.store'), [

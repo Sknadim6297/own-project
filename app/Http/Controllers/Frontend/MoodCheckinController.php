@@ -18,6 +18,7 @@ use RuntimeException;
 
 class MoodCheckinController extends Controller
 {
+    /** @deprecated Use MoodFollowUpCatalog mood-specific prompts instead. Kept for reference only. */
     public const PROMPTS = [
         'Something good happened today',
         'Something is bothering me',
@@ -36,6 +37,7 @@ class MoodCheckinController extends Controller
             'open' => $open,
             'moods' => $open ? $checkin->options() : [],
             'selected' => $open ? $draft->mood() : null,
+            'hasFollowUpAnswers' => $open && $draft->hasFollowUpAnswers(),
         ]);
     }
 
@@ -61,11 +63,21 @@ class MoodCheckinController extends Controller
             return redirect()->route('tools.psychology.mood');
         }
 
+        $moodKey = $open ? $draft->mood() : null;
+        $followUp = ($open && is_string($moodKey)) ? $checkin->followUpForMood($moodKey) : null;
+        $selected = [];
+        if ($open && is_string($moodKey)) {
+            $selected = $checkin->filterEmotionsForMood($moodKey, $draft->emotions());
+        }
+
         return view('frontend.sections.mood-emotions', [
             'open' => $open,
-            'groups' => $open ? $checkin->emotionGroups() : [],
-            'selected' => $open ? $draft->emotions() : [],
+            'moodKey' => $moodKey,
+            'groups' => ($open && is_string($moodKey)) ? $checkin->emotionGroups($moodKey) : [],
+            'selected' => $selected,
             'limit' => PsychologyCatalog::MAX_EMOTIONS,
+            'emotionHeading' => $followUp['emotion_heading'] ?? 'What emotions are you feeling?',
+            'emotionLead' => $followUp['emotion_lead'] ?? 'Choose up to 6 emotions that describe how you feel right now.',
         ]);
     }
 
@@ -75,13 +87,15 @@ class MoodCheckinController extends Controller
             abort(403);
         }
 
-        if ($draft->mood() === null) {
+        $moodKey = $draft->mood();
+        if ($moodKey === null) {
             return redirect()->route('tools.psychology.mood');
         }
 
+        $allowed = $checkin->emotionKeysForMood($moodKey);
         $data = $request->validate([
             'emotions' => ['nullable', 'array', 'max:'.PsychologyCatalog::MAX_EMOTIONS],
-            'emotions.*' => ['string', 'distinct', Rule::in($checkin->emotionKeys())],
+            'emotions.*' => ['string', 'distinct', Rule::in($allowed)],
         ]);
 
         $draft->rememberEmotions(array_values($data['emotions'] ?? []));
@@ -99,17 +113,22 @@ class MoodCheckinController extends Controller
             return redirect()->route('tools.psychology.mood.emotions');
         }
 
-        $summary = $open ? $checkin->summary($draft->mood(), $draft->emotions()) : ['mood' => null, 'emotions' => []];
+        $moodKey = $open ? $draft->mood() : null;
+        $summary = ($open && is_string($moodKey))
+            ? $checkin->summary($moodKey, $draft->emotions())
+            : ['mood' => null, 'emotions' => []];
+        $followUp = ($open && is_string($moodKey)) ? $checkin->followUpForMood($moodKey) : null;
 
         return view('frontend.sections.mood-reflection', [
             'open' => $open,
-            'moodKey' => $open ? $draft->mood() : null,
+            'moodKey' => $moodKey,
             'moodLabel' => $summary['mood'],
             'emotionChips' => $summary['emotions'],
             'reflection' => $open ? ($draft->reflection() ?? '') : '',
             'held' => $open && $draft->reflectionHeld(),
             'limit' => PsychologyCatalog::REFLECTION_MAX,
-            'prompts' => self::PROMPTS,
+            'prompts' => $followUp['reflection_prompts'] ?? self::PROMPTS,
+            'reflectionQuestion' => $followUp['reflection_question'] ?? 'What made you feel this way today?',
         ]);
     }
 
@@ -270,6 +289,7 @@ class MoodCheckinController extends Controller
             'mood' => $summary['mood'],
             'emotions' => $summary['emotions'],
             'reflection' => $record->reflection,
+            'tip' => $summary['tip'] ?? null,
             'psychologistsUrl' => $home->psychologistsUrl(),
         ]);
     }

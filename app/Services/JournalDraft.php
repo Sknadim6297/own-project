@@ -43,6 +43,35 @@ class JournalDraft
         return is_string($key) ? $key : null;
     }
 
+    /**
+     * Stable submission id for the compose form. Retries / double-clicks keep the
+     * same key so JournalRecorder can idempotently return one row.
+     */
+    public function ensureCompletionKey(): string
+    {
+        $current = $this->readable();
+        if (is_array($current) && is_string($current['completion_key'] ?? null) && $current['completion_key'] !== '') {
+            return $current['completion_key'];
+        }
+
+        return $this->beginFreshSubmission(
+            is_array($current) && is_string($current['prompt_key'] ?? null) ? $current['prompt_key'] : '',
+            is_array($current) && is_string($current['title'] ?? null) ? $current['title'] : null,
+            is_array($current) && is_string($current['body'] ?? null) ? $current['body'] : ''
+        );
+    }
+
+    /**
+     * Mint a new submission id for an intentional new compose visit.
+     */
+    public function beginFreshSubmission(string $promptKey = '', ?string $title = null, string $body = ''): string
+    {
+        $key = (string) Str::uuid();
+        $this->write($promptKey, $title, $body, false, $key);
+
+        return $key;
+    }
+
     public function awaitingLogin(): bool
     {
         $draft = $this->readable();
@@ -50,9 +79,9 @@ class JournalDraft
         return is_array($draft) && ($draft['awaiting_login'] ?? false) === true;
     }
 
-    public function remember(string $promptKey, ?string $title, string $body): void
+    public function remember(string $promptKey, ?string $title, string $body, ?string $completionKey = null): void
     {
-        $this->write($promptKey, $title, $body, false);
+        $this->write($promptKey, $title, $body, false, $completionKey);
     }
 
     public function markAwaitingLogin(): void
@@ -66,7 +95,8 @@ class JournalDraft
             is_string($current['prompt_key'] ?? null) ? $current['prompt_key'] : '',
             is_string($current['title'] ?? null) ? $current['title'] : null,
             $current['body'],
-            true
+            true,
+            is_string($current['completion_key'] ?? null) ? $current['completion_key'] : null
         );
     }
 
@@ -116,13 +146,25 @@ class JournalDraft
         return $draft;
     }
 
-    private function write(string $promptKey, ?string $title, string $body, bool $awaiting): void
+    private function write(string $promptKey, ?string $title, string $body, bool $awaiting, ?string $requestedKey = null): void
     {
         $current = session(self::KEY);
         $ownedCurrent = is_array($current) && ($current['owner'] ?? null) === $this->owner();
-        $key = $ownedCurrent && is_string($current['completion_key'] ?? null)
+        $sessionKey = $ownedCurrent && is_string($current['completion_key'] ?? null)
             ? $current['completion_key']
-            : (string) Str::uuid();
+            : null;
+
+        if (is_string($requestedKey) && Str::isUuid($requestedKey)) {
+            $key = strtolower($requestedKey);
+            // Keep the in-progress draft key when the browser resubmits a stale form token.
+            if (is_string($sessionKey) && $sessionKey !== '' && $sessionKey !== $key) {
+                $key = $sessionKey;
+            }
+        } elseif (is_string($sessionKey) && $sessionKey !== '') {
+            $key = $sessionKey;
+        } else {
+            $key = (string) Str::uuid();
+        }
 
         session([
             self::KEY => [

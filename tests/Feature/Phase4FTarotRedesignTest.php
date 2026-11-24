@@ -269,7 +269,7 @@ class Phase4FTarotRedesignTest extends TestCase
         $readingPage->assertOk()
             ->assertSee('data-yk-tools-ds', false)
             ->assertSee('Save Reading')
-            ->assertSee('Talk to an Expert')
+            ->assertSee('Talk to an Astrology & Tarot Expert')
             ->assertSee('not prediction', false);
 
         $key = session(TarotDraft::KEY)['completion_key'];

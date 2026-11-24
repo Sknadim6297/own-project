@@ -68,8 +68,8 @@
                                 <svg viewBox="0 0 36 36"><path d="M18 30.4S6.4 23.6 6.4 15.4A6.1 6.1 0 0 1 18 12.2a6.1 6.1 0 0 1 11.6 3.2C29.6 23.6 18 30.4 18 30.4Z"/><path class="yk-emotion__heading-spark" d="M27.6 4.6v4.2M25.5 6.7h4.2M8 5.6v3M6.5 7.1h3"/></svg>
                             </span>
                             <div>
-                                <h1><x-yuktione.two-tone text="What emotions are you feeling?" /></h1>
-                                <p class="yk-mood__lead">Choose up to 6 emotions that describe how you feel right now.</p>
+                                <h1>{{ $emotionHeading }}</h1>
+                                <p class="yk-mood__lead">{{ $emotionLead }}</p>
                                 <p class="yk-mood__hint">Optional — pick what fits. You can continue with none selected.</p>
                             </div>
                         </div>
@@ -79,6 +79,7 @@
                         @endif
 
                         @foreach ($groupLabels as $bucket => $groupLabel)
+                            @continue(empty($groups[$bucket] ?? []))
                             <fieldset class="yk-emotion__group is-{{ $bucket }}">
                                 <legend>
                                     <span class="yk-emotion__group-icon" aria-hidden="true">

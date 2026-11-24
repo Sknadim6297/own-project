@@ -516,9 +516,12 @@ class ExploreCatalog
 
         $prices = $filters['price'];
         if (count($prices) === 1 && $prices[0] === 'free') {
+            // Explicit zero only — missing/null onboarding price must not read as free.
             $query->where(function (Builder $inner) {
                 $inner->whereHas('profile', function (Builder $profile) {
-                    $profile->whereNull('starting_price')->orWhere('starting_price', '<=', 0);
+                    $profile->whereNotNull('starting_price')
+                        ->where('starting_price', '<=', 0)
+                        ->where('starting_price', '!=', '');
                 })->whereDoesntHave('rates', fn (Builder $rate) => $rate->where('final_rate', '>', 0));
             });
         }
@@ -1032,6 +1035,22 @@ class ExploreCatalog
         }
 
         return Service::query()->whereIn('id', $ids)->orderBy('id')->first();
+    }
+
+    /**
+     * Resolve a live Tarot consultation Service from the catalogue.
+     * Matches name/slug containing "tarot" only — does not invent rows or treat
+     * every Astrology/Vastu service as Tarot.
+     */
+    public function resolveTarotService(): ?Service
+    {
+        return Service::query()
+            ->where(function (Builder $query) {
+                $query->where('slug', 'like', '%tarot%')
+                    ->orWhere('name', 'like', '%tarot%');
+            })
+            ->orderBy('id')
+            ->first();
     }
 
     /**

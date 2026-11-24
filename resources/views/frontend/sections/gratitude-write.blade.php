@@ -108,9 +108,15 @@
                         @endforeach
                     </div>
 
-                    <div class="yk-gratitude-nav">
+                    <div class="yk-gratitude-nav" data-gratitude-nav>
                         <button class="yk-gratitude-nav__prev" type="button" data-gratitude-prev hidden>Previous</button>
-                        <button class="yk-gratitude-nav__next" type="button" data-gratitude-next hidden>Next</button>
+                        <button
+                            class="yk-gratitude-nav__next"
+                            type="button"
+                            data-gratitude-next
+                            disabled
+                            aria-disabled="true"
+                        >Next</button>
                         <button class="yk-gratitude-nav__skip" type="button" data-gratitude-skip>Skip</button>
                     </div>
                 </div>

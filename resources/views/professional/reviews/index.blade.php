@@ -35,11 +35,11 @@
                     <div class="flex items-center gap-1 text-lg leading-none text-amber-500" role="img" aria-label="{{ number_format($averageRating, 1) }} out of 5 stars">
                         @for($i = 1; $i <= 5; $i++)
                             @if($averageRating >= $i)
-                                <span aria-hidden="true">★</span>
+                                <span aria-hidden="true" class="text-amber-500"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
                             @elseif($averageRating >= ($i - 0.5))
-                                <span aria-hidden="true" class="text-amber-400">★</span>
+                                <span aria-hidden="true" class="text-amber-400"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
                             @else
-                                <span aria-hidden="true" class="text-border">☆</span>
+                                <span aria-hidden="true" class="text-border"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
                             @endif
                         @endfor
                     </div>
@@ -49,7 +49,7 @@
                 <div class="mt-3">
                     <div class="flex items-center gap-1 text-lg leading-none text-border" role="img" aria-label="No ratings yet">
                         @for($i = 1; $i <= 5; $i++)
-                            <span aria-hidden="true">☆</span>
+                            <span aria-hidden="true" class="text-border"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>
                         @endfor
                     </div>
                     <p class="mt-1.5 text-xs font-medium text-text-muted">No ratings yet</p>
@@ -197,7 +197,13 @@
                                 </div>
                                 <div class="flex items-center gap-1" role="img" aria-label="{{ $reviewRating }} out of 5 stars">
                                     @for($i = 1; $i <= 5; $i++)
-                                        <span class="text-sm leading-none {{ $i <= $reviewRating ? 'text-amber-500' : 'text-border' }}" aria-hidden="true">{{ $i <= $reviewRating ? '★' : '☆' }}</span>
+                                        <span class="text-sm leading-none {{ $i <= $reviewRating ? 'text-amber-500' : 'text-border' }}" aria-hidden="true">
+                                            @if ($i <= $reviewRating)
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                            @else
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                            @endif
+                                        </span>
                                     @endfor
                                     <span class="ml-1 text-[11px] font-medium text-text-secondary">{{ $reviewRating }}.0</span>
                                 </div>

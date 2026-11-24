@@ -52,6 +52,53 @@ class PfmRecorder
         }
     }
 
+    /**
+     * Update an existing saved calculation from an edit-mode draft (Task 24).
+     * Preserves id, ownership, tool_key, completion_key, and created_at.
+     *
+     * @throws InvalidArgumentException incomplete draft
+     * @throws RuntimeException missing record or stale concurrent edit
+     */
+    public function updateFromEdit(string $toolKey, PfmDraft $draft): PfmCalculation
+    {
+        $userId = Auth::guard('user')->id();
+        $editId = $draft->editingId($toolKey);
+        $expectedUpdatedAt = $draft->editingUpdatedAt($toolKey);
+        $result = $draft->result($toolKey);
+        $normalized = $draft->normalized($toolKey);
+
+        if (! $userId || ! $editId || ! is_array($result) || ! is_array($normalized)) {
+            throw new InvalidArgumentException('The editing context is incomplete.');
+        }
+
+        return DB::transaction(function () use ($userId, $toolKey, $editId, $expectedUpdatedAt, $result, $normalized) {
+            $record = PfmCalculation::query()->whereKey($editId)->lockForUpdate()->first();
+            if (! $record) {
+                throw new RuntimeException('The saved calculation could not be found.');
+            }
+
+            if ((int) $record->user_id !== (int) $userId || $record->tool_key !== $toolKey) {
+                abort(403);
+            }
+
+            $actualUpdatedAt = $record->updated_at?->getTimestamp();
+            if ($expectedUpdatedAt !== null && $actualUpdatedAt !== null && (int) $actualUpdatedAt !== (int) $expectedUpdatedAt) {
+                throw new RuntimeException(
+                    'This calculation was updated elsewhere. Reload the latest saved version before editing again.'
+                );
+            }
+
+            $record->inputs = $normalized;
+            $record->outputs = $result;
+            $record->summary = (string) ($result['summary'] ?? '');
+            $record->content_version = (string) ($result['content_version'] ?? PfmCatalog::CONTENT_VERSION);
+            $record->is_draft = false;
+            $record->save();
+
+            return $record->fresh();
+        });
+    }
+
     private function persist(
         int $userId,
         string $toolKey,

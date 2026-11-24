@@ -109,7 +109,7 @@
                 <ul class="mt-3 grid gap-2 sm:grid-cols-2">
                     @foreach($purchase->features as $feature)
                         <li class="flex gap-2 text-xs leading-5 text-text-secondary">
-                            <span class="font-semibold text-success" aria-hidden="true">✓</span>
+                            <span class="font-semibold text-success" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.2L19 7"/></svg></span>
                             <span>{{ $feature }}</span>
                         </li>
                     @endforeach

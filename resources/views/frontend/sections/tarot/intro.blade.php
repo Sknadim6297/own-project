@@ -10,7 +10,7 @@
         <div class="yk-tarot__toolbar">
             @include('frontend.sections.partials.tool-back-to-tools')
             <a class="yk-tarot__history-link" href="{{ route('tools.tarot.history') }}">
-                @include('frontend.sections.tarot.partials.emoji', ['emoji' => '📖'])
+                @include('frontend.sections.tarot.partials.emoji', ['icon' => 'book-open'])
                 My Readings
             </a>
         </div>
@@ -18,7 +18,7 @@
         <section class="yk-tarot__hero" aria-labelledby="tarot-intro-heading">
             <div class="yk-tarot__hero-copy">
                 <p class="yk-tarot__badge">
-                    @include('frontend.sections.tarot.partials.emoji', ['emoji' => '🃏'])
+                    @include('frontend.sections.tarot.partials.emoji', ['icon' => 'layers'])
                     Reflective tool
                 </p>
                 <h1 id="tarot-intro-heading">Tarot Reflection</h1>
@@ -66,18 +66,37 @@
 
         <aside class="yk-tarot__disclaimer" aria-label="Disclaimer">
             <p>
-                @include('frontend.sections.tarot.partials.emoji', ['emoji' => '🌙'])
+                @include('frontend.sections.tarot.partials.emoji', ['icon' => 'moon-star'])
                 {{ $disclaimer }}
             </p>
         </aside>
 
-        <form method="post" action="{{ route('tools.tarot.start') }}" class="yk-tarot__actions" data-tarot-once>
-            @csrf
-            <button class="yk-tarot__btn" type="submit">
-                @include('frontend.sections.tarot.partials.emoji', ['emoji' => '🔮'])
-                Start a Reading
-            </button>
-        </form>
+        <div class="yk-tarot__actions @if ($hasDraft) yk-tarot__actions--split @endif">
+            @if ($hasDraft)
+                <form method="post" action="{{ route('tools.tarot.start') }}" data-tarot-once>
+                    @csrf
+                    <button class="yk-tarot__btn" type="submit">
+                        @include('frontend.sections.tarot.partials.emoji', ['icon' => 'sparkles'])
+                        Continue Reading
+                    </button>
+                </form>
+                <form method="post" action="{{ route('tools.tarot.start') }}" data-tarot-once>
+                    @csrf
+                    <input type="hidden" name="restart" value="1">
+                    <button class="yk-tarot__btn yk-tarot__btn--secondary" type="submit">
+                        Start a new reading
+                    </button>
+                </form>
+            @else
+                <form method="post" action="{{ route('tools.tarot.start') }}" data-tarot-once>
+                    @csrf
+                    <button class="yk-tarot__btn" type="submit">
+                        @include('frontend.sections.tarot.partials.emoji', ['icon' => 'sparkles'])
+                        Start a Reading
+                    </button>
+                </form>
+            @endif
+        </div>
     </div>
 </main>
 @endsection

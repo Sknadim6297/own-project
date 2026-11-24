@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 
-@section('title', $tool['name'].' | YuktiOne')
+@section('title', ($editing ?? false) ? 'Edit '.$tool['name'].' | YuktiOne' : $tool['name'].' | YuktiOne')
 @section('meta_description', $tool['description'])
 @section('body_class', 'yk-pfm-body')
 
@@ -10,7 +10,8 @@
         'monthly-money-planner' => ['partial' => 'money-fields', 'steps' => ['Income', 'Expenses', 'Investments']],
         'net-worth-calculator' => ['partial' => 'net-worth-fields', 'steps' => ['Assets', 'Liabilities']],
         'emergency-fund-calculator' => ['partial' => 'emergency-fields', 'steps' => ['Expenses', 'Savings']],
-        'financial-goal-calculator' => ['partial' => 'goal-fields', 'steps' => ['Goal type', 'Cost & timeline', 'Assumptions']],
+        // FG uses dedicated goal-form (Task 35 single page). Empty steps if this map is ever hit.
+        'financial-goal-calculator' => ['partial' => 'goal-fields', 'steps' => []],
         'debt-emi-calculator' => ['partial' => 'debt-fields', 'steps' => ['Loan details', 'Extra payment']],
         'retirement-calculator' => ['partial' => 'retirement-fields', 'steps' => ['Profile', 'Assumptions']],
         'inflation-calculator' => ['partial' => 'inflation-fields', 'steps' => []],
@@ -20,14 +21,29 @@
     $partial = $config['partial'] ?? null;
     $steps = $config['steps'] ?? [];
     $wizard = $steps !== [];
+    $isEditing = (bool) ($editing ?? false);
+    $needsFreshConfirm = (bool) ($unsavedWork ?? false) || $isEditing;
+    $isMoneyPlanner = $toolKey === 'monthly-money-planner';
+    $isEmergency = $toolKey === 'emergency-fund-calculator';
 @endphp
-<main class="yk-pfm yk-tools-ds" data-yk-tools-ds data-yk-pfm>
+<main class="yk-pfm yk-tools-ds {{ $isEmergency ? 'yk-pfm--ef' : '' }}" data-yk-tools-ds data-yk-pfm @if ($isEditing) data-yk-pfm-editing="1" @endif>
     @include('frontend.sections.pfm.partials.page-hero', [
-        'crumbs' => [['Money & Finance', route('tools.pfm')], [$tool['name'], null]],
-        'eyebrow' => $wizard ? 'Calculator · '.count($steps).' quick steps' : 'Calculator',
-        'title' => $tool['name'],
+        'crumbs' => $isEditing
+            ? [['Money & Finance', route('tools.pfm')], [$tool['name'], route($tool['route'])], ['Edit Calculation', null]]
+            : [['Money & Finance', route('tools.pfm')], [$tool['name'], null]],
+        'eyebrow' => $isEditing
+            ? 'Edit Calculation'.($editingId ? ' #'.$editingId : '')
+            : ($isEmergency ? 'Emergency Fund Calculator' : ($wizard ? 'Calculator · '.count($steps).' quick steps' : 'Calculator')),
+        'heroIcon' => $isEmergency ? 'shield-check' : null,
+        'title' => ($isEditing && $isEmergency)
+            ? 'Edit Emergency Fund Calculation'
+            : $tool['name'],
         'titleId' => 'pfm-form-heading',
-        'lead' => $tool['description'].' Educational estimates only—not financial advice.',
+        'lead' => $isEditing
+            ? 'Update your saved financial inputs, recalculate, then Save Changes. Educational estimates only—not financial advice.'
+            : ($isEmergency
+                ? 'Estimate a practical emergency fund target from your expenses, coverage, and savings. Educational estimates only—not financial advice.'
+                : $tool['description'].' Educational estimates only—not financial advice.'),
     ])
 
     <div class="yk-pfm__wrap yk-pfm__wrap--wide yk-pfm__sheet">
@@ -35,15 +51,45 @@
             @if (! $open)
                 <p class="yk-pfm__error" role="alert">This calculator is unavailable right now.</p>
             @else
+                @if (session('status'))
+                    <p class="yk-pfm__status" role="status">{{ session('status') }}</p>
+                @endif
+
                 @if ($errors->any())
                     <p class="yk-pfm__error" role="alert">{{ $errors->first() }}</p>
                 @endif
 
-                @if ($hasResult)
-                    <p class="yk-pfm__status">
-                        You have a recent result.
-                        <a href="{{ route($tool['route'].'.results') }}">View results</a>
+                @if ($isEditing)
+                    <p class="yk-pfm__note yk-pfm__show-banner" role="status">
+                        Editing saved calculation{{ $editingId ? ' #'.$editingId : '' }} · changes are not saved until you Save Changes
                     </p>
+                @elseif (! empty($latestSaved))
+                    <div class="yk-pfm__status yk-pfm__status--row">
+                        <span>You have a saved calculation.</span>
+                        <a href="{{ route($tool['route'].'.history.show', $latestSaved) }}">Show Saved</a>
+                        <a href="{{ route($tool['route'].'.history') }}">View History</a>
+                        @include('frontend.sections.pfm.partials.new-calculation-action', [
+                            'tool' => $tool,
+                            'toolKey' => $toolKey,
+                            'confirm' => $needsFreshConfirm,
+                            'buttonClass' => 'yk-pfm__text-btn',
+                            'formClass' => 'yk-pfm__inline-form',
+                        ])
+                    </div>
+                @endif
+
+                @if ($hasResult && ! $isEditing)
+                    <div class="yk-pfm__status yk-pfm__status--row">
+                        <span>You have a recent unsaved result.</span>
+                        <a href="{{ route($tool['route'].'.results') }}">View results</a>
+                        @include('frontend.sections.pfm.partials.new-calculation-action', [
+                            'tool' => $tool,
+                            'toolKey' => $toolKey,
+                            'confirm' => true,
+                            'buttonClass' => 'yk-pfm__text-btn',
+                            'formClass' => 'yk-pfm__inline-form',
+                        ])
+                    </div>
                 @endif
 
                 <form
@@ -51,6 +97,7 @@
                     action="{{ route($tool['route'].'.calculate') }}"
                     class="yk-pfm__form"
                     data-pfm-form
+                    autocomplete="off"
                     @if ($wizard) data-pfm-wizard="1" @endif
                     novalidate
                 >
@@ -73,12 +120,44 @@
                             <button type="button" class="yk-pfm__btn yk-pfm__btn--ghost" data-pfm-prev hidden>Back</button>
                             <button type="button" class="yk-pfm__btn" data-pfm-next>Continue</button>
                         @endif
-                        <button type="submit" class="yk-pfm__btn" data-pfm-submit @if ($wizard) hidden @endif>Calculate</button>
-                        @auth('user')
-                            <a class="yk-pfm__btn yk-pfm__btn--ghost" href="{{ route($tool['route'].'.history') }}">View history</a>
-                        @endauth
+                        <button type="submit" class="yk-pfm__btn" data-pfm-submit @if ($wizard) hidden @endif>
+                            @if ($isEmergency)
+                                <x-yk-icon :name="$isEditing ? 'refresh-cw' : 'calculator'" class="yk-icon--sm" />
+                            @endif
+                            {{ $isEditing ? 'Recalculate' : 'Calculate' }}
+                        </button>
+                        @if (! $isEditing)
+                            @auth('user')
+                                <a class="yk-pfm__btn yk-pfm__btn--ghost" href="{{ route($tool['route'].'.history') }}">
+                                    @if ($isEmergency)<x-yk-icon name="history" class="yk-icon--sm" />@endif
+                                    View History
+                                </a>
+                            @endauth
+                        @endif
                     </div>
                 </form>
+
+                @if ($isEditing)
+                    <div class="yk-pfm__actions yk-pfm__actions--secondary">
+                        <form method="post" action="{{ route($tool['route'].'.cancel-edit') }}" @if ($needsFreshConfirm) onsubmit="return confirm('Discard unsaved edits? The saved calculation will not change.');" @endif>
+                            @csrf
+                            <button type="submit" class="yk-pfm__btn yk-pfm__btn--ghost">Cancel Edit</button>
+                        </form>
+                        @include('frontend.sections.pfm.partials.new-calculation-action', [
+                            'tool' => $tool,
+                            'toolKey' => $toolKey,
+                            'confirm' => true,
+                        ])
+                    </div>
+                @elseif ($isMoneyPlanner)
+                    <div class="yk-pfm__actions yk-pfm__actions--secondary">
+                        @include('frontend.sections.pfm.partials.new-calculation-action', [
+                            'tool' => $tool,
+                            'toolKey' => $toolKey,
+                            'confirm' => $needsFreshConfirm,
+                        ])
+                    </div>
+                @endif
             @endif
         </section>
     </div>

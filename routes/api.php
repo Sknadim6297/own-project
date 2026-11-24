@@ -8,6 +8,12 @@ use App\Http\Controllers\Api\V1\MyActivityController;
 use App\Http\Controllers\Api\V1\MyBookingsController;
 use App\Http\Controllers\Api\V1\MyNotificationsController;
 use App\Http\Controllers\Api\V1\MyPsychologyController;
+use App\Http\Controllers\Api\V1\MyCareerInterestController;
+use App\Http\Controllers\Api\V1\MySkillsStrengthsController;
+use App\Http\Controllers\Api\V1\MyTarotReflectionController;
+use App\Http\Controllers\Api\V1\MyNutritionController;
+use App\Http\Controllers\Api\V1\MyWaterIntakeController;
+use App\Http\Controllers\Api\V1\MyWeightJourneyController;
 use App\Http\Controllers\Api\V1\PasswordResetController;
 use App\Http\Controllers\Api\V1\ProgrammeEventController;
 use App\Http\Controllers\Api\V1\ProfileController;
@@ -81,24 +87,58 @@ Route::prefix('v1')->group(function () {
             Route::post('/notifications/{notificationId}/read', [MyNotificationsController::class, 'markRead'])
                 ->where('notificationId', '[0-9a-fA-F-]{36}');
             Route::get('/psychology/options', [MyPsychologyController::class, 'options']);
+            Route::get('/water-intake/dashboard', [MyWaterIntakeController::class, 'dashboard']);
+            Route::get('/water-intake/week', [MyWaterIntakeController::class, 'week']);
+            Route::get('/weight-journey/summary', [MyWeightJourneyController::class, 'summary']);
+            Route::get('/weight-journey/chart', [MyWeightJourneyController::class, 'chart']);
+            Route::get('/weight-journey/measurements', [MyWeightJourneyController::class, 'measurements']);
+            Route::get('/nutrition/dashboard', [MyNutritionController::class, 'dashboard']);
+            Route::get('/nutrition/insights', [MyNutritionController::class, 'insights']);
+            Route::get('/nutrition/search', [MyNutritionController::class, 'search']);
+            Route::get('/nutrition/foods/{food}/portion', [MyNutritionController::class, 'portion'])
+                ->whereNumber('food');
+            Route::get('/career-interest/history', [MyCareerInterestController::class, 'history']);
+            Route::get('/career-interest/attempts/{attempt}', [MyCareerInterestController::class, 'show'])
+                ->whereNumber('attempt');
+            Route::get('/skills-strengths/history', [MySkillsStrengthsController::class, 'history']);
+            Route::get('/skills-strengths/attempts/{attempt}', [MySkillsStrengthsController::class, 'show'])
+                ->whereNumber('attempt');
+            Route::get('/tarot/history', [MyTarotReflectionController::class, 'history']);
+            Route::get('/tarot/readings/{reading}', [MyTarotReflectionController::class, 'show'])
+                ->whereNumber('reading');
             Route::middleware('throttle:30,1')->group(function () {
                 Route::post('/mood-checkins', [MyPsychologyController::class, 'storeMood']);
                 Route::post('/journal-entries', [MyPsychologyController::class, 'storeJournal']);
                 Route::post('/gratitude-entries', [MyPsychologyController::class, 'storeGratitude']);
-            });
-
-            // Tarot Reflection — same draw/interpretation/save services as the website.
-            Route::prefix('tarot')->middleware('throttle:60,1')->group(function () {
-                Route::post('/start', [TarotReflectionController::class, 'start']);
-                Route::post('/category', [TarotReflectionController::class, 'storeCategory']);
-                Route::post('/question', [TarotReflectionController::class, 'storeQuestion']);
-                Route::post('/spread', [TarotReflectionController::class, 'storeSpread']);
-                Route::post('/fan', [TarotReflectionController::class, 'fan']);
-                Route::post('/pick', [TarotReflectionController::class, 'pick']);
-                Route::post('/reveal', [TarotReflectionController::class, 'reveal']);
-                Route::post('/save', [TarotReflectionController::class, 'save']);
-                Route::get('/history', [TarotReflectionController::class, 'history']);
-                Route::get('/readings/{id}', [TarotReflectionController::class, 'show'])->whereNumber('id');
+                Route::post('/water-intake/entries', [MyWaterIntakeController::class, 'storeEntry']);
+                Route::patch('/water-intake/settings', [MyWaterIntakeController::class, 'updateSettings']);
+                Route::delete('/water-intake/entries/{entry}', [MyWaterIntakeController::class, 'destroyEntry'])
+                    ->whereNumber('entry');
+                Route::post('/weight-journey/measurements', [MyWeightJourneyController::class, 'storeMeasurement']);
+                Route::delete('/weight-journey/measurements/{measurement}', [MyWeightJourneyController::class, 'destroyMeasurement'])
+                    ->whereNumber('measurement');
+                Route::post('/weight-journey/goal', [MyWeightJourneyController::class, 'saveGoal']);
+                Route::post('/weight-journey/goal/archive', [MyWeightJourneyController::class, 'archiveGoal']);
+                Route::post('/nutrition/entries', [MyNutritionController::class, 'storeEntry']);
+                Route::put('/nutrition/entries/{entry}', [MyNutritionController::class, 'updateEntry'])
+                    ->whereNumber('entry');
+                Route::delete('/nutrition/entries/{entry}', [MyNutritionController::class, 'destroyEntry'])
+                    ->whereNumber('entry');
+                Route::post('/nutrition/goals', [MyNutritionController::class, 'updateGoals']);
+                Route::post('/career-interest/complete', [MyCareerInterestController::class, 'complete']);
+                Route::delete('/career-interest/attempts/{attempt}', [MyCareerInterestController::class, 'destroy'])
+                    ->whereNumber('attempt');
+                Route::post('/skills-strengths/complete', [MySkillsStrengthsController::class, 'complete']);
+                Route::delete('/skills-strengths/attempts/{attempt}', [MySkillsStrengthsController::class, 'destroy'])
+                    ->whereNumber('attempt');
+                Route::post('/tarot/start', [MyTarotReflectionController::class, 'start']);
+                Route::post('/tarot/category', [MyTarotReflectionController::class, 'storeCategory']);
+                Route::post('/tarot/question', [MyTarotReflectionController::class, 'storeQuestion']);
+                Route::post('/tarot/spread', [MyTarotReflectionController::class, 'storeSpread']);
+                Route::post('/tarot/fan', [MyTarotReflectionController::class, 'fan']);
+                Route::post('/tarot/pick', [MyTarotReflectionController::class, 'pick']);
+                Route::post('/tarot/reveal', [MyTarotReflectionController::class, 'reveal']);
+                Route::post('/tarot/save', [MyTarotReflectionController::class, 'save']);
             });
 
             // Debt & EMI — save/history/delete (calculate is public below).
@@ -130,11 +170,19 @@ Route::prefix('v1')->group(function () {
     Route::get('/experts/{id}/availability', [ExpertController::class, 'availability'])->whereNumber('id');
     Route::get('/programme-events', [ProgrammeEventController::class, 'index']);
 
-    // Public Tarot options (login still required to draw / save).
+    // Public Tarot catalogue — always 200 with open flag (login still required to draw / save).
     Route::get('/tarot/options', [TarotReflectionController::class, 'options']);
 
     // Debt & EMI — guests may calculate; save needs auth (website parity).
     Route::get('/pfm/debt-emi/options', [DebtEmiController::class, 'options']);
     Route::post('/pfm/debt-emi/calculate', [DebtEmiController::class, 'calculate'])
         ->middleware('throttle:60,1');
+
+    // Career Interest + Skills guest-try catalogue + preview (scoring stays server-side).
+    Route::get('/career-interest/options', [MyCareerInterestController::class, 'options']);
+    Route::get('/skills-strengths/options', [MySkillsStrengthsController::class, 'options']);
+    Route::middleware('throttle:30,1')->group(function () {
+        Route::post('/career-interest/preview', [MyCareerInterestController::class, 'preview']);
+        Route::post('/skills-strengths/preview', [MySkillsStrengthsController::class, 'preview']);
+    });
 });

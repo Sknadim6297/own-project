@@ -79,11 +79,20 @@
                             <span class="yk-cit__suggest-icon">{!! $icon('briefcase', 20) !!}</span>
                             <div>
                                 <h3>{{ $item['title'] }}</h3>
+                                @if (isset($item['fit_percent']))
+                                    <p class="yk-cit__suggest-fit">Interest alignment {{ (int) $item['fit_percent'] }}% · based on your primary interest scores for this area</p>
+                                @endif
                                 <p>{{ $item['summary'] }}</p>
+                                @if (filled($item['why'] ?? null))
+                                    <p class="yk-cit__suggest-why">{{ $item['why'] }}</p>
+                                @endif
                             </div>
                         </li>
                     @endforeach
                 </ul>
+                @if (filled($attempt->recommendations['disclaimer'] ?? null))
+                    <p class="yk-cit__note">{!! $icon('info', 16) !!}<span>{{ $attempt->recommendations['disclaimer'] }}</span></p>
+                @endif
             @endif
 
             <div class="yk-cit__actions" aria-label="Result actions">

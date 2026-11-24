@@ -1002,6 +1002,14 @@
     line-height: 1.55;
 }
 
+.yk-cit .yk-cit__suggest .yk-cit__suggest-fit {
+    margin: 0.35rem 0 0.45rem;
+    color: var(--cit-plum, #8A0F4D);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
 .yk-cit .yk-cit__suggest .yk-cit__suggest-why {
     margin-top: 0.5rem;
     padding-top: 0.5rem;

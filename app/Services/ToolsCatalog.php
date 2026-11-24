@@ -19,6 +19,81 @@ class ToolsCatalog
 
     private const PRIVATE_ROUTE_MARKERS = ['history', 'complete', 'reflection', 'finish', 'emotions'];
 
+    /**
+     * Client-requested Explore Tools categories (display order is array order).
+     * Keys are tools-catalogue identifiers; tool routes/slugs stay unchanged.
+     *
+     * @var array<string, array{label: string, tone: string, icon: string}>
+     */
+    public const CATEGORIES = [
+        'mental-wellness' => ['label' => 'Mental Wellness', 'tone' => 'mint', 'icon' => 'lotus'],
+        'career-counselling' => ['label' => 'Career Counselling', 'tone' => 'lilac', 'icon' => 'career'],
+        'nutrition' => ['label' => 'Nutrition', 'tone' => 'mint', 'icon' => 'nutrition'],
+        'fitness' => ['label' => 'Fitness', 'tone' => 'mint', 'icon' => 'fitness'],
+        'astrology' => ['label' => 'Astrology', 'tone' => 'lavender', 'icon' => 'moon'],
+        'tarot' => ['label' => 'Tarot', 'tone' => 'lavender', 'icon' => 'tarot'],
+        'business-consulting' => ['label' => 'Business Consulting', 'tone' => 'lilac', 'icon' => 'chart'],
+        'tax-matters' => ['label' => 'Tax Matters', 'tone' => 'cream', 'icon' => 'coins'],
+        'investments' => ['label' => 'Investments', 'tone' => 'cream', 'icon' => 'finance'],
+    ];
+
+    /**
+     * Legacy /tools?category=… values still accepted and normalized to one
+     * tools-catalogue key (bookmarks keep working).
+     *
+     * @var array<string, string>
+     */
+    public const CATEGORY_ALIASES = [
+        'mental-health' => 'mental-wellness',
+        'career-business' => 'career-counselling',
+        'money-finance' => 'investments',
+        'parenting' => 'mental-wellness',
+        'spirituality' => 'mental-wellness',
+        'health-wellness' => 'fitness',
+    ];
+
+    /**
+     * Legacy compound Explore keys that span more than one tools category.
+     *
+     * @var array<string, list<string>>
+     */
+    public const CATEGORY_GROUP_ALIASES = [
+        'nutrition-fitness' => ['nutrition', 'fitness'],
+        'astrology-tarot' => ['astrology', 'tarot'],
+    ];
+
+    /**
+     * Explicit tool → tools-catalogue category + All Categories hub key.
+     * Hub keys continue to use ExploreCatalog::CATEGORIES for experts.
+     *
+     * @var array<string, array{tools: string, hub: string}>
+     */
+    private const TOOL_PLACEMENT = [
+        'daily-mood-check-in' => ['tools' => 'mental-wellness', 'hub' => 'mental-health'],
+        'digital-journal' => ['tools' => 'mental-wellness', 'hub' => 'mental-health'],
+        'gratitude-journal' => ['tools' => 'mental-wellness', 'hub' => 'mental-health'],
+        'daily-mindfulness-calm' => ['tools' => 'mental-wellness', 'hub' => 'spirituality'],
+        'purpose-values-finder' => ['tools' => 'mental-wellness', 'hub' => 'spirituality'],
+        'parenting-stress-check' => ['tools' => 'mental-wellness', 'hub' => 'parenting'],
+        'child-routine-planner' => ['tools' => 'mental-wellness', 'hub' => 'parenting'],
+        'parent-child-conversation-guide' => ['tools' => 'mental-wellness', 'hub' => 'parenting'],
+        'career-interest-test' => ['tools' => 'career-counselling', 'hub' => 'career-business'],
+        'skills-strengths-assessment' => ['tools' => 'career-counselling', 'hub' => 'career-business'],
+        'water-intake-tracker' => ['tools' => 'nutrition', 'hub' => 'nutrition-fitness'],
+        'calorie-nutrition-tracker' => ['tools' => 'nutrition', 'hub' => 'nutrition-fitness'],
+        'bmi-bmr-calculator' => ['tools' => 'fitness', 'hub' => 'nutrition-fitness'],
+        'weight-journey' => ['tools' => 'fitness', 'hub' => 'nutrition-fitness'],
+        'tarot-reflection' => ['tools' => 'tarot', 'hub' => 'astrology-tarot'],
+        'monthly-money-planner' => ['tools' => 'investments', 'hub' => 'money-finance'],
+        'net-worth-calculator' => ['tools' => 'investments', 'hub' => 'money-finance'],
+        'emergency-fund-calculator' => ['tools' => 'investments', 'hub' => 'money-finance'],
+        'financial-goal-calculator' => ['tools' => 'investments', 'hub' => 'money-finance'],
+        'debt-emi-calculator' => ['tools' => 'investments', 'hub' => 'money-finance'],
+        'retirement-calculator' => ['tools' => 'investments', 'hub' => 'money-finance'],
+        'inflation-calculator' => ['tools' => 'investments', 'hub' => 'money-finance'],
+        'savings-investment-calculator' => ['tools' => 'investments', 'hub' => 'money-finance'],
+    ];
+
     public function browse(Request $request): array
     {
         $filters = $this->filters($request);
@@ -41,7 +116,7 @@ class ToolsCatalog
         return [
             'items' => $items,
             'filters' => $filters,
-            'categories' => ExploreCatalog::CATEGORIES,
+            'categories' => self::CATEGORIES,
             'counts' => $this->counts($published, $filters),
             'topics' => self::TOPICS,
             'catalogueAvailable' => $published->isNotEmpty(),
@@ -49,20 +124,31 @@ class ToolsCatalog
     }
 
     /**
-     * Launchable tools for one Explore category key (needle-mapped via exploreCategory).
+     * Launchable tools for a tools-catalogue category key, or for a legacy
+     * Explore/All Categories hub key (experts hub slug).
      */
     public function forExploreCategory(string $categoryKey): Collection
     {
+        $categoryKey = $this->normalizeCategoryKey($categoryKey) ?? $categoryKey;
+
+        if (array_key_exists($categoryKey, self::CATEGORIES)) {
+            return $this->published()
+                ->filter(fn (array $card) => ($card['category'] ?? null) === $categoryKey)
+                ->values();
+        }
+
         if (! array_key_exists($categoryKey, ExploreCatalog::CATEGORIES)) {
             return collect();
         }
 
         return $this->published()
-            ->filter(fn (array $card) => ($card['category'] ?? null) === $categoryKey)
+            ->filter(fn (array $card) => ($card['hub_category'] ?? null) === $categoryKey)
             ->values();
     }
 
     /**
+     * Tool counts keyed by tools-catalogue category (nine client categories).
+     *
      * @return array<string, int>
      */
     public function categoryCounts(): array
@@ -70,26 +156,66 @@ class ToolsCatalog
         return $this->counts($this->published(), ['q' => '', 'category' => '']);
     }
 
+    /**
+     * Tool counts keyed by Explore/All Categories hub slug.
+     *
+     * @return array<string, int>
+     */
+    public function hubCategoryCounts(): array
+    {
+        $counts = array_fill_keys(array_keys(ExploreCatalog::CATEGORIES), 0);
+
+        foreach ($this->published() as $card) {
+            $hub = $card['hub_category'] ?? null;
+            if (is_string($hub) && array_key_exists($hub, $counts)) {
+                $counts[$hub]++;
+            }
+        }
+
+        return $counts;
+    }
+
     private function filters(Request $request): array
     {
         $q = trim(strip_tags((string) $request->query('q', '')));
         $q = Str::limit($q, 100, '');
 
-        $category = (string) $request->query('category', '');
-        if (!array_key_exists($category, ExploreCatalog::CATEGORIES)) {
-            $category = '';
-        }
+        $rawCategory = trim((string) $request->query('category', ''));
+        $categoryAny = self::CATEGORY_GROUP_ALIASES[$rawCategory] ?? null;
+        $category = $categoryAny
+            ? ''
+            : ($this->normalizeCategoryKey($rawCategory) ?? '');
 
         return [
             'q' => $q,
             'category' => $category,
+            'category_any' => $categoryAny,
+            'category_raw' => $rawCategory,
         ];
+    }
+
+    public function normalizeCategoryKey(?string $category): ?string
+    {
+        $category = trim((string) $category);
+        if ($category === '') {
+            return null;
+        }
+
+        if (array_key_exists($category, self::CATEGORIES)) {
+            return $category;
+        }
+
+        if (isset(self::CATEGORY_GROUP_ALIASES[$category])) {
+            return self::CATEGORY_GROUP_ALIASES[$category][0] ?? null;
+        }
+
+        return self::CATEGORY_ALIASES[$category] ?? null;
     }
 
     private function published(): Collection
     {
         try {
-            if (!Schema::hasTable('tools')) {
+            if (! Schema::hasTable('tools')) {
                 return collect();
             }
 
@@ -117,7 +243,7 @@ class ToolsCatalog
 
     private function present(Tool $tool): ?array
     {
-        if (!$this->isPublicEntry($tool)) {
+        if (! $this->isPublicEntry($tool)) {
             return null;
         }
 
@@ -127,7 +253,8 @@ class ToolsCatalog
             return null;
         }
 
-        $category = $this->exploreCategory($tool);
+        $placement = $this->placementFor($tool);
+        $category = $placement['tools'];
         $description = str_replace("\0", '', strip_tags((string) $tool->description));
         $cataloguePending = $tool->slug === 'calorie-nutrition-tracker'
             && $this->nutritionCataloguePending();
@@ -147,9 +274,26 @@ class ToolsCatalog
             'availability' => $cataloguePending ? 'Pending' : 'Available',
             'availability_state' => $cataloguePending ? 'pending' : 'available',
             'category' => $category,
-            'category_label' => $category ? ExploreCatalog::CATEGORIES[$category]['label'] : '',
+            'category_label' => $category ? (self::CATEGORIES[$category]['label'] ?? '') : '',
+            'hub_category' => $placement['hub'],
             'icon' => $this->iconKey($tool),
             'slug' => $tool->slug,
+        ];
+    }
+
+    /**
+     * @return array{tools: string, hub: string}
+     */
+    private function placementFor(Tool $tool): array
+    {
+        if (isset(self::TOOL_PLACEMENT[$tool->slug])) {
+            return self::TOOL_PLACEMENT[$tool->slug];
+        }
+
+        // Unknown tools stay visible under Mental Wellness until mapped explicitly.
+        return [
+            'tools' => 'mental-wellness',
+            'hub' => ExploreCatalog::PSYCHOLOGY_CATEGORY,
         ];
     }
 
@@ -210,7 +354,7 @@ class ToolsCatalog
 
     private function isPublicEntry(Tool $tool): bool
     {
-        if (!$tool->canLaunch()) {
+        if (! $tool->canLaunch()) {
             return false;
         }
 
@@ -224,34 +368,18 @@ class ToolsCatalog
         return true;
     }
 
-    private function exploreCategory(Tool $tool): ?string
-    {
-        $haystack = mb_strtolower(implode(' ', array_filter([
-            $tool->name,
-            $tool->description,
-            $tool->module_key,
-            $tool->category?->name,
-            $tool->category?->slug,
-        ])));
-
-        foreach (ExploreCatalog::CATEGORIES as $slug => $category) {
-            foreach ($category['needles'] as $needle) {
-                if ($needle !== '' && str_contains($haystack, mb_strtolower($needle))) {
-                    return $slug;
-                }
-            }
-        }
-
-        return null;
-    }
-
     private function matches(array $card, array $filters): bool
     {
-        if ($filters['category'] !== '' && $card['category'] !== $filters['category']) {
+        $allowed = $filters['category_any'] ?? null;
+        if (is_array($allowed) && $allowed !== []) {
+            if (! in_array($card['category'] ?? null, $allowed, true)) {
+                return false;
+            }
+        } elseif (($filters['category'] ?? '') !== '' && ($card['category'] ?? null) !== $filters['category']) {
             return false;
         }
 
-        if ($filters['q'] === '') {
+        if (($filters['q'] ?? '') === '') {
             return true;
         }
 
@@ -266,7 +394,7 @@ class ToolsCatalog
         $search['category'] = '';
         $counts = [];
 
-        foreach (array_keys(ExploreCatalog::CATEGORIES) as $slug) {
+        foreach (array_keys(self::CATEGORIES) as $slug) {
             $counts[$slug] = $published->filter(function (array $card) use ($search, $slug) {
                 return $card['category'] === $slug && $this->matches($card, $search);
             })->count();

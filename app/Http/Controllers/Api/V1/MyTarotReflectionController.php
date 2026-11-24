@@ -53,6 +53,7 @@ class MyTarotReflectionController extends Controller
                 'examples' => $cat['examples'],
                 'tone' => $cat['tone'],
                 'emoji' => $ui['emoji'],
+                'icon' => $ui['icon'],
                 'blurb' => $ui['blurb'],
             ];
         })->values();
@@ -102,7 +103,7 @@ class MyTarotReflectionController extends Controller
 
         $key = isset($data['completion_key']) ? strtolower($data['completion_key']) : null;
         $this->draft->forApi((int) $user->id, $key);
-        $draft = $this->draft->startFresh();
+        $draft = $this->draft->startFresh($key);
 
         return response()->json([
             'status' => 'success',
@@ -426,6 +427,10 @@ class MyTarotReflectionController extends Controller
                     is_string($card['suit'] ?? null) ? $card['suit'] : null,
                     (string) ($card['arcana'] ?? 'minor')
                 ),
+                'icon' => TarotUi::suitIcon(
+                    is_string($card['suit'] ?? null) ? $card['suit'] : null,
+                    (string) ($card['arcana'] ?? 'minor')
+                ),
                 'image_path' => $card['image_path'] ?? null,
             ], $cards),
         ];
@@ -455,6 +460,7 @@ class MyTarotReflectionController extends Controller
                 'core_meaning' => $meaning,
                 'insight' => $row->insight_text,
                 'glyph' => TarotUi::suitGlyph($card?->suit, (string) ($card?->arcana ?? 'minor')),
+                'icon' => TarotUi::suitIcon($card?->suit, (string) ($card?->arcana ?? 'minor')),
                 'image_path' => $card?->image_path,
             ];
         })->all();
@@ -522,7 +528,7 @@ class MyTarotReflectionController extends Controller
     private function authorizeReading(TarotReading $reading, User $user): void
     {
         if ((int) $reading->user_id !== (int) $user->id) {
-            abort(403);
+            abort(404);
         }
     }
 

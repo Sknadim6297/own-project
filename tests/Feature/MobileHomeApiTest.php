@@ -40,11 +40,20 @@ class MobileHomeApiTest extends TestCase
         foreach ($tools as $slug => $tool) {
             $this->assertArrayHasKey('image_url', $tool, $slug);
             $this->assertArrayHasKey('icon', $tool, $slug);
+            $this->assertArrayHasKey('web_url', $tool, $slug);
+        }
+
+        $this->assertTrue($tools['daily-mood-check-in']['mobile_ready']);
+        $this->assertNotEmpty($tools['daily-mood-check-in']['web_url']);
+        if (isset($tools['monthly-money-planner'])) {
+            $this->assertFalse($tools['monthly-money-planner']['mobile_ready']);
+            $this->assertNotEmpty($tools['monthly-money-planner']['web_url']);
         }
 
         $this->getJson('/api/v1/tools/daily-mood-check-in')
             ->assertOk()
-            ->assertJsonPath('tool.image_url', $tools['daily-mood-check-in']['image_url']);
+            ->assertJsonPath('tool.image_url', $tools['daily-mood-check-in']['image_url'])
+            ->assertJsonPath('tool.web_url', $tools['daily-mood-check-in']['web_url']);
     }
 
     public function test_expert_categories_carry_the_website_home_photos(): void

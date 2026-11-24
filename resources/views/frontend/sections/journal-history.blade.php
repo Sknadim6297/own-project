@@ -6,12 +6,12 @@
 
 @php
     $promptIcons = [
-        'my-thoughts' => '💭',
-        'personal-growth' => '🌱',
-        'work-career' => '💼',
-        'relationships' => '❤️',
-        'difficult-moments' => '🌧️',
-        'my-aspirations' => '✨',
+        'my-thoughts' => 'message-circle',
+        'personal-growth' => 'sprout',
+        'work-career' => 'briefcase',
+        'relationships' => 'heart',
+        'difficult-moments' => 'cloud-rain',
+        'my-aspirations' => 'sparkles',
     ];
     $heroImage = \App\Support\Tools\ToolIllustration::DIRECTORY.'digital-journal-3d.webp';
     $heroImageExists = file_exists(public_path($heroImage));
@@ -145,15 +145,12 @@
                             <ul class="yk-journal-history__list">
                                 @foreach ($group['items'] as $item)
                                     <li class="yk-journal-history__card">
-                                        <span class="yk-journal-history__card-icon" aria-hidden="true">{{ $promptIcons[$item['prompt_key'] ?? ''] ?? '✍️' }}</span>
+                                        <span class="yk-journal-history__card-icon" aria-hidden="true"><x-yk-icon :name="$promptIcons[$item['prompt_key'] ?? ''] ?? 'pen-line'" class="yk-icon--md" :decorative="true" /></span>
                                         <div class="yk-journal-history__card-body">
                                             <div class="yk-journal-history__card-top">
                                                 <h3>{{ $item['title'] }}</h3>
                                                 <time datetime="{{ $item['datetime'] }}">{{ $item['when'] }}</time>
                                             </div>
-                                            @if ($item['title'] !== $item['prompt'])
-                                                <p class="yk-journal-history__prompt">{{ $item['prompt'] }}</p>
-                                            @endif
                                             <p class="yk-journal-history__preview">{{ $item['preview'] }}</p>
                                             <a class="yk-journal-history__open" href="{{ route('tools.psychology.journal.show', $item['id']) }}">Open Entry <span aria-hidden="true">→</span></a>
                                         </div>

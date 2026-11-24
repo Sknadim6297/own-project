@@ -40,7 +40,7 @@
                     @if ($already)
                         <span class="yk-tarot__facedown is-picked" aria-disabled="true">Selected</span>
                     @else
-                        <form method="post" action="{{ route('tools.tarot.draw.pick') }}" data-tarot-once>
+                        <form method="post" action="{{ route('tools.tarot.draw.pick') }}" data-tarot-draw-once>
                             @csrf
                             <input type="hidden" name="slot_token" value="{{ $token }}">
                             <input type="hidden" name="draw_nonce" value="{{ $fan['nonce'] }}">

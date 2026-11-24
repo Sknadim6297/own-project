@@ -429,15 +429,8 @@
     font-weight: 600;
 }
 
-.yk-journal-history__prompt {
-    margin: 0.35rem 0 0;
-    color: var(--yk-eucalyptus);
-    font-size: 0.84rem;
-    font-weight: 700;
-}
-
 .yk-journal-history__preview {
-    margin: 0.4rem 0 0;
+    margin: 0.35rem 0 0;
     color: #5f5566;
     font-size: 0.92rem;
     line-height: 1.45;
@@ -1086,6 +1079,15 @@ body.yk-journal-dialog-open { overflow: hidden; }
 
 .yk-journal__save:active { transform: translateY(0); }
 
+.yk-journal__save:disabled,
+.yk-journal__save.is-saving {
+    cursor: wait;
+    opacity: 0.82;
+    transform: none;
+    box-shadow: 0 10px 20px rgba(138, 15, 77, 0.22);
+    background: linear-gradient(90deg, #8A0F4D 0%, #a0185c 100%);
+}
+
 .yk-journal__save:focus-visible {
     outline: 3px solid rgba(195, 25, 107, 0.4);
     outline-offset: 3px;
@@ -1396,17 +1398,6 @@ body.yk-journal-dialog-open { overflow: hidden; }
     font-weight: 600;
 }
 
-.yk-journal-history__prompt {
-    display: inline-block;
-    margin: 0.4rem 0 0;
-    padding: 0.14rem 0.65rem;
-    border-radius: 999px;
-    background: var(--jr-pink-soft);
-    color: var(--jr-plum);
-    font-size: 0.76rem;
-    font-weight: 700;
-}
-
 .yk-journal-history__preview {
     display: -webkit-box;
     margin: 0.5rem 0 0;
@@ -1521,15 +1512,6 @@ body.yk-journal-dialog-open { overflow: hidden; }
     color: #6b6b7a;
     font-size: 0.88rem;
     font-weight: 600;
-}
-
-.yk-journal-entry__chip {
-    padding: 0.18rem 0.75rem;
-    border-radius: 999px;
-    background: var(--jr-pink-soft);
-    color: var(--jr-plum);
-    font-size: 0.8rem;
-    font-weight: 700;
 }
 
 .yk-journal-entry__question {

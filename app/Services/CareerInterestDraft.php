@@ -14,6 +14,9 @@ class CareerInterestDraft
 
     public function start(): void
     {
+        // Clear any prior draft first so a retake cannot reuse an old completion_key
+        // (idempotent save would otherwise return the previous assessment).
+        $this->forget();
         $this->write([
             'step' => 'about',
             'about' => null,

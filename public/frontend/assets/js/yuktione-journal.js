@@ -58,6 +58,25 @@
             });
         });
 
+        var saveBtn = form.querySelector('[data-journal-save]');
+        var saveLabel = form.querySelector('[data-journal-save-label]');
+        var defaultLabel = saveLabel ? saveLabel.textContent : '';
+        form.addEventListener('submit', function (event) {
+            if (form.getAttribute('data-submitting') === '1') {
+                event.preventDefault();
+                return;
+            }
+            form.setAttribute('data-submitting', '1');
+            if (saveBtn) {
+                saveBtn.disabled = true;
+                saveBtn.classList.add('is-saving');
+                saveBtn.setAttribute('aria-busy', 'true');
+            }
+            if (saveLabel) {
+                saveLabel.textContent = 'Saving…';
+            }
+        });
+
         syncCount();
     }
 

@@ -27,9 +27,20 @@
         const update = () => {
             const max = list.scrollWidth - list.clientWidth;
             const share = list.scrollWidth > 0 ? list.clientWidth / list.scrollWidth : 1;
+            // Allow a few px of snap/subpixel drift so the first/last pills stay unmasked.
+            const edge = 8;
+            let atStart = max <= edge || list.scrollLeft <= edge;
+            const atEnd = max <= edge || list.scrollLeft >= max - edge;
+            // Pin to true origin at rest so left/right gutters match (mandatory snap left residual).
+            if (atStart && list.scrollLeft !== 0) {
+                list.scrollLeft = 0;
+                atStart = true;
+            }
             bar.style.setProperty('--thumb', (share * 100).toFixed(2) + '%');
             bar.style.setProperty('--p', max > 0 ? (list.scrollLeft / max).toFixed(4) : '0');
-            rail.classList.toggle('is-end', max <= 2 || list.scrollLeft >= max - 2);
+            rail.classList.toggle('is-start', atStart);
+            rail.classList.toggle('is-end', atEnd);
+            rail.classList.toggle('is-scrolling', !atStart && !atEnd);
         };
         list.addEventListener('scroll', () => window.requestAnimationFrame(update), { passive: true });
         window.addEventListener('resize', update);
@@ -159,13 +170,4 @@
 </section>
 
 {{-- Soft silk band between hero and Explore by Need --}}
-<div class="yk-silk-band" aria-hidden="true">
-    <img
-        src="{{ asset('frontend/assets/img/yuktione-silk-ribbon.jpg') }}"
-        alt=""
-        loading="lazy"
-        decoding="async"
-        width="1600"
-        height="900"
-    >
-</div>
+@include('frontend.home.partials.section-divider')

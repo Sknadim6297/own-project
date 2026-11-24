@@ -376,7 +376,16 @@ class ManageProfessionalController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:professionals,email,' . $id,
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                function (string $attribute, mixed $value, \Closure $fail) use ($id) {
+                    if (app(\App\Services\AccountRecovery::class)->professionalEmailTaken((string) $value, (int) $id)) {
+                        $fail('The email has already been taken.');
+                    }
+                },
+            ],
             'phone' => 'nullable|string|max:20',
             'specialization' => 'nullable|string|max:255',
             'experience' => 'nullable|string|max:255',
@@ -408,10 +417,10 @@ class ManageProfessionalController extends Controller
             // Find the professional
             $professional = Professional::findOrFail($id);
             
-            // Update professional basic info
+            // Update professional basic info (normalize email; do not rewrite other accounts)
             $professional->update([
                 'name' => $request->name,
-                'email' => $request->email,
+                'email' => \App\Services\AccountRecovery::normalizeEmail($request->email),
                 'phone' => $request->phone,
             ]);
 

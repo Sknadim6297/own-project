@@ -82,7 +82,7 @@
                         </label>
                     </div>
                     <div class="float-end">
-                        <a id="forgot" href="{{ route('professional.forgot.form') }}">Forgot Password?</a>
+                        <a id="forgot" href="{{ route('professional.forgot.form') }}">Forgot password?</a>
                     </div>
                 </div>
 
@@ -221,7 +221,7 @@
             if (reachedBottom) {
                 agreeButton.disabled = false;
                 agreeButton.textContent = 'I Agree';
-                $('.scroll-indicator').html('<small class="text-success">✓ You have read the complete terms</small>');
+                $('.scroll-indicator').html('<small class="text-success"> You have read the complete terms</small>');
             }
         }
 

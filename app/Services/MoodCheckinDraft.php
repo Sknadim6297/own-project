@@ -119,13 +119,31 @@ class MoodCheckinDraft
     public function remember(string $mood): void
     {
         $current = $this->readable();
+        $previousMood = is_array($current) ? ($current['mood'] ?? null) : null;
+        $sameMood = is_string($previousMood) && $previousMood === $mood;
+
+        // Changing primary mood clears follow-up answers so stale emotions/notes
+        // cannot be submitted with a different mood.
         $emotions = [];
-        if (is_array($current) && is_array($current['emotions'] ?? null)) {
-            $emotions = array_values(array_filter($current['emotions'], 'is_string'));
+        $reflection = null;
+        $held = false;
+        if ($sameMood) {
+            if (is_array($current['emotions'] ?? null)) {
+                $emotions = array_values(array_filter($current['emotions'], 'is_string'));
+            }
+            [$reflection, $held] = $this->carriedReflection($current);
         }
 
-        [$reflection, $held] = $this->carriedReflection($current);
         $this->write('mood', $mood, $emotions, $reflection, $held);
+    }
+
+    public function hasFollowUpAnswers(): bool
+    {
+        if ($this->emotions() !== []) {
+            return true;
+        }
+
+        return $this->reflectionHeld();
     }
 
     public function rememberEmotions(array $emotions): void

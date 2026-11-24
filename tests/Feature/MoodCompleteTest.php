@@ -78,14 +78,14 @@ class MoodCompleteTest extends TestCase
 
         $this->actingAs($member, 'user');
         $this->post(route('tools.psychology.mood.store'), ['mood' => 'sad']);
-        $this->post(route('tools.psychology.mood.emotions.store'), ['emotions' => ['anxious']]);
+        $this->post(route('tools.psychology.mood.emotions.store'), ['emotions' => ['lonely']]);
         $this->post(route('tools.psychology.mood.reflection.store'), ['action' => 'skip'])
             ->assertRedirect();
 
         $skipped = PsychologyMoodCheckin::query()->where('mood_key', 'sad')->first();
         $this->assertNotNull($skipped);
         $this->assertNull($skipped->reflection);
-        $this->assertSame(['anxious'], $skipped->emotion_keys);
+        $this->assertSame(['lonely'], $skipped->emotion_keys);
         $this->get(route('tools.psychology.mood.complete', $skipped->completion_key))
             ->assertOk()
             ->assertSee('Sad')
@@ -114,7 +114,7 @@ class MoodCompleteTest extends TestCase
             MoodCheckinDraft::KEY => [
                 'step' => 'reflection',
                 'mood' => 'sad',
-                'emotions' => ['anxious'],
+                'emotions' => ['lonely'],
                 'reflection' => 'First private note',
                 'reflection_held' => true,
                 'completion_key' => $key,
@@ -131,7 +131,7 @@ class MoodCompleteTest extends TestCase
         $this->assertFalse($draft['awaiting_login']);
         $this->assertNull($draft['reflection']);
 
-        $this->post(route('tools.psychology.mood.emotions.store'), ['emotions' => ['anxious']]);
+        $this->post(route('tools.psychology.mood.emotions.store'), ['emotions' => ['lonely']]);
         $this->post(route('tools.psychology.mood.reflection.store'), [
             'action' => 'save',
             'reflection' => 'Second note',

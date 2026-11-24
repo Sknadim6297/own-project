@@ -110,7 +110,11 @@ class CareerInterestScorer
 
     private function interpretation(array $ranked): string
     {
-        $top = array_slice($ranked, 0, min(2, count($ranked)));
+        // Mention a second interest only when it is competitively close to #1.
+        $top = $ranked === [] ? [] : [$ranked[0]];
+        if (isset($ranked[1]) && (($ranked[0]['percent'] - $ranked[1]['percent']) <= 13)) {
+            $top[] = $ranked[1];
+        }
         $labels = array_map(static fn (array $row) => strtolower($row['label']), $top);
         $phrase = match (count($labels)) {
             0 => 'your interests',

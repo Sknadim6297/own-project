@@ -126,7 +126,7 @@
                                 <div class="mt-1 flex items-center justify-end gap-1.5 text-[10px] {{ $isSent ? 'text-white/75' : 'text-text-muted' }}">
                                     <time datetime="{{ $message->created_at->toIso8601String() }}">{{ $message->created_at->format('h:i A') }}</time>
                                     @if($isSent)
-                                        <span class="read-receipt {{ $message->is_read ? 'text-cyan-200' : 'text-white/60' }}" data-read-receipt aria-label="{{ $message->is_read ? 'Read' : 'Sent' }}">✓✓</span>
+                                        <span class="read-receipt {{ $message->is_read ? 'text-cyan-200' : 'text-white/60' }}" data-read-receipt aria-label="{{ $message->is_read ? 'Read' : 'Sent' }}"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 3.5 3.5"/><path d="m9 12.5 3.5 3.5L19 7"/></svg></span>
                                     @endif
                                 </div>
                             </div>
@@ -312,7 +312,7 @@
             receipt.className = `read-receipt ${message.is_read ? 'text-cyan-200' : 'text-white/60'}`;
             receipt.dataset.readReceipt = '';
             receipt.setAttribute('aria-label', message.is_read ? 'Read' : 'Sent');
-            receipt.textContent = '✓✓';
+            receipt.textContent = '';
             footer.append(receipt);
         }
         bubble.append(footer);

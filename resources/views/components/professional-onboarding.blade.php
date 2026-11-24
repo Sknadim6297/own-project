@@ -3,20 +3,20 @@
 document.addEventListener('DOMContentLoaded', function() {
     const professionalOnboardingSteps = [
         {
-            title: "Welcome to Your Professional Dashboard! 💼",
+            title: "Welcome to Your Professional Dashboard! ",
             message: "Welcome aboard! As a professional on our platform, you have access to powerful tools to manage your services, clients, and business. Let's explore your dashboard together!",
             target: null,
             position: 'center'
         },
         {
-            title: "📊 Dashboard Overview",
+            title: " Dashboard Overview",
             message: "This is your business command center! View key metrics, recent bookings, revenue summaries, and quick actions. Monitor your business performance at a glance.",
             target: ".dashboard-stats, .overview-cards, .main-content, .dashboard-content",
             action: 'pulse',
             instruction: 'Your main business dashboard'
         },
         {
-            title: "🧭 Navigation & Menu",
+            title: " Navigation & Menu",
             message: "Your main navigation is here. Click on different menu items to access all professional tools including your profile, services, bookings, availability, billing, and more.",
             target: ".sidebar, .app-sidebar, .nav-sidebar",
             interactive: true,
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
             position: 'right'
         },
         {
-            title: "👤 Professional Profile",
+            title: " Professional Profile",
             message: "Your professional profile is crucial for attracting clients. Click here to add your qualifications, experience, photos, and detailed service descriptions.",
             target: "[href*='profile'], .profile-section, a:contains('Profile')",
             interactive: true,
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
             position: 'right'
         },
         {
-            title: "🛠️ Service Management",
+            title: " Service Management",
             message: "Manage all your services here. Click to add new services, set pricing, update descriptions, and manage service categories.",
             target: "[href*='service'], .service-management, a:contains('Service')",
             interactive: true,
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
             position: 'right'
         },
         {
-            title: "📅 Availability & Scheduling",
+            title: " Availability & Scheduling",
             message: "Set your working hours and availability here. Click to manage when clients can book with you and avoid scheduling conflicts.",
             target: "[href*='availability'], .availability-section, a:contains('Availability')",
             interactive: true,
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
             position: 'right'
         },
         {
-            title: "📋 Booking Management",
+            title: " Booking Management",
             message: "All your client bookings appear here. Click to accept or decline requests, manage schedules, and communicate with clients.",
             target: "[href*='booking'], .booking-management, a:contains('Booking')",
             interactive: true,
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
             position: 'right'
         },
         {
-            title: "💰 Billing & Earnings",
+            title: " Billing & Earnings",
             message: "Track your earnings and view payment history here. Click to monitor your revenue trends and download financial reports.",
             target: "[href*='billing'], [href*='earning'], .billing-section, a:contains('Billing'), a:contains('Earning')",
             interactive: true,
@@ -72,14 +72,14 @@ document.addEventListener('DOMContentLoaded', function() {
             position: 'right'
         },
         {
-            title: "🔔 Notifications",
+            title: " Notifications",
             message: "Stay updated with new bookings, messages, and important updates. Check your notifications regularly to never miss important information.",
             target: ".notification, .alert, [class*='notification'], .dropdown-toggle[data-toggle='dropdown']",
             action: 'pulse',
             instruction: 'Your notifications appear here'
         },
         {
-            title: "🌟 Ready to Succeed!",
+            title: " Ready to Succeed!",
             message: "Excellent! You're now ready to manage your professional business on our platform. Complete your profile, add your services, and start receiving bookings. Success awaits you!",
             target: null,
             position: 'center'

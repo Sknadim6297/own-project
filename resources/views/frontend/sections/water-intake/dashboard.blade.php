@@ -79,7 +79,7 @@
                         <input type="hidden" name="amount_ml" value="{{ $preset['ml'] }}">
                         <input type="hidden" name="idempotency_key" value="{{ (string) \Illuminate\Support\Str::uuid() }}">
                         <button type="submit" class="yk-water__quick-card">
-                            <span class="yk-water__quick-emoji" aria-hidden="true">{{ $preset['emoji'] }}</span>
+                            <span class="yk-water__quick-emoji" aria-hidden="true"><x-yk-icon :name="$preset['icon'] ?? 'droplet'" class="yk-icon--md" :decorative="true" /></span>
                             <span class="yk-water__quick-label">{{ $preset['label'] }}</span>
                             <span class="yk-water__quick-amt">+{{ number_format($preset['ml']) }} ml</span>
                         </button>

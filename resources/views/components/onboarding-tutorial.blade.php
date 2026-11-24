@@ -518,7 +518,7 @@ class OnboardingTour {
         // Create success popup
         const successPopup = document.createElement('div');
         successPopup.className = 'onboarding-success-popup';
-        successPopup.innerHTML = '✅ Great! Well done!';
+        successPopup.innerHTML = ' Great! Well done!';
         successPopup.style.cssText = `
             position: fixed;
             top: 50%;
@@ -751,7 +751,7 @@ class OnboardingTour {
             animation: slideInRight 0.5s ease;
         `;
         notification.innerHTML = `
-            <strong>🎉 Welcome aboard!</strong> You've completed the tour. 
+            <strong> Welcome aboard!</strong> You've completed the tour. 
             You can restart it anytime using the help button in the bottom right.
         `;
         

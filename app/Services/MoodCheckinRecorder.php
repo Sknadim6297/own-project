@@ -46,8 +46,10 @@ class MoodCheckinRecorder
         if (count($emotions) > PsychologyCatalog::MAX_EMOTIONS) {
             throw new InvalidArgumentException('Too many emotions were selected.');
         }
-        if (array_diff($emotions, PsychologyCatalog::emotionKeys()) !== []) {
-            throw new InvalidArgumentException('An emotion is not allowed.');
+
+        $allowedEmotions = app(MoodCheckin::class)->emotionKeysForMood($mood);
+        if ($allowedEmotions === [] || array_diff($emotions, $allowedEmotions) !== []) {
+            throw new InvalidArgumentException('An emotion is not allowed for this mood.');
         }
         if ($reflection !== null && mb_strlen($reflection) > PsychologyCatalog::REFLECTION_MAX) {
             throw new InvalidArgumentException('The reflection is too long.');

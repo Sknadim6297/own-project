@@ -18,6 +18,12 @@ class AccountRecovery
      */
     public const SENT_MESSAGE = 'If an account exists for that email address, we have sent password reset instructions.';
 
+    /**
+     * Generic confirmation for every professional email recovery attempt
+     * (known or unknown) to avoid account enumeration. Not SMS OTP.
+     */
+    public const PROFESSIONAL_SENT_MESSAGE = 'If a professional account exists for that email address, we have sent password reset instructions.';
+
     public const SEND_FAILED = "We couldn't send the reset email right now. Please try again in a moment.";
 
     public function nationalNumber(string $phone): string
@@ -39,11 +45,20 @@ class AccountRecovery
     }
 
     /**
+     * Normalize email for comparison and new account writes (trim + lowercase).
+     * Does not rewrite existing stored identities by itself.
+     */
+    public static function normalizeEmail(?string $email): string
+    {
+        return strtolower(trim((string) $email));
+    }
+
+    /**
      * Find a completed customer account by email for password recovery.
      */
     public function registeredCustomerByEmail(string $email): ?User
     {
-        $normalized = strtolower(trim($email));
+        $normalized = self::normalizeEmail($email);
 
         if ($normalized === '' || ! filter_var($normalized, FILTER_VALIDATE_EMAIL)) {
             return null;
@@ -60,6 +75,65 @@ class AccountRecovery
         return $user;
     }
 
+    /**
+     * Case-insensitive email match within the Customer table.
+     */
+    public function customerEmailTaken(string $email, ?int $exceptUserId = null): bool
+    {
+        $normalized = self::normalizeEmail($email);
+
+        if ($normalized === '') {
+            return false;
+        }
+
+        $query = User::query()->whereRaw('LOWER(email) = ?', [$normalized]);
+
+        if ($exceptUserId !== null) {
+            $query->where('id', '!=', $exceptUserId);
+        }
+
+        return $query->exists();
+    }
+
+    /**
+     * Case-insensitive email match within the Professional table.
+     */
+    public function professionalEmailTaken(string $email, ?int $exceptProfessionalId = null): bool
+    {
+        $normalized = self::normalizeEmail($email);
+
+        if ($normalized === '') {
+            return false;
+        }
+
+        $query = Professional::query()->whereRaw('LOWER(email) = ?', [$normalized]);
+
+        if ($exceptProfessionalId !== null) {
+            $query->where('id', '!=', $exceptProfessionalId);
+        }
+
+        return $query->exists();
+    }
+
+    /**
+     * Find a professional account by registered email for password recovery.
+     */
+    public function registeredProfessionalByEmail(string $email): ?Professional
+    {
+        $normalized = self::normalizeEmail($email);
+
+        if ($normalized === '' || ! filter_var($normalized, FILTER_VALIDATE_EMAIL)) {
+            return null;
+        }
+
+        return Professional::query()
+            ->whereRaw('LOWER(email) = ?', [$normalized])
+            ->first();
+    }
+
+    /**
+     * Legacy phone lookup retained for non-recovery callers; forgot-password uses email.
+     */
     public function registeredProfessional(string $phone): ?Professional
     {
         $national = $this->nationalNumber($phone);

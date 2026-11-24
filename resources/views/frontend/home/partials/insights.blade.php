@@ -7,7 +7,7 @@
             'text' => 'A short private check-in to notice how you feel today.',
             'tone' => 'blush',
             'accent' => 'pink',
-            'emoji' => '😊',
+            'icon' => 'smile',
             'cta' => 'Start Check-in',
             'url' => route('tools.psychology.mood'),
         ],
@@ -17,7 +17,7 @@
             'text' => 'Map your interests and explore career directions that fit.',
             'tone' => 'mint',
             'accent' => 'teal',
-            'emoji' => '🎯',
+            'icon' => 'target',
             'cta' => 'Open Assessment',
             'url' => route('tools.career-interest'),
         ],
@@ -27,7 +27,7 @@
             'text' => 'Browse verified experts and book a consultation that fits your goals.',
             'tone' => 'lavender',
             'accent' => 'purple',
-            'emoji' => '🌟',
+            'icon' => 'star',
             'cta' => 'Explore Experts',
             'url' => route('professionals'),
         ],
@@ -37,7 +37,7 @@
             'text' => 'Ideas and practical guidance from the '.$brand.' community.',
             'tone' => 'cream',
             'accent' => 'orange',
-            'emoji' => '✨',
+            'icon' => 'sparkles',
             'cta' => 'Read Articles',
             'url' => route('blog.index'),
         ],
@@ -77,7 +77,7 @@
                             </a>
                         </div>
                         <div class="yk-insight__art" aria-hidden="true">
-                            <span class="yk-insight__emoji">{{ $card['emoji'] }}</span>
+                            <span class="yk-insight__emoji"><x-yk-icon :name="$card['icon'] ?? 'sparkles'" class="yk-icon--md" :decorative="true" /></span>
                         </div>
                     </article>
                 </li>

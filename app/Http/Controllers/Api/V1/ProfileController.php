@@ -42,12 +42,9 @@ class ProfileController extends Controller
             'zip_code' => 'required|string|max:20',
         ]);
 
-        $emailTaken = User::query()
-            ->where('email', $validated['email'])
-            ->where('id', '!=', $user->id)
-            ->exists();
+        $email = \App\Services\AccountRecovery::normalizeEmail($validated['email']);
 
-        if ($emailTaken) {
+        if (app(\App\Services\AccountRecovery::class)->customerEmailTaken($email, $user->id)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'This email address is already in use.',
@@ -59,7 +56,7 @@ class ProfileController extends Controller
 
         $profile->update([
             'name' => $validated['name'],
-            'email' => $validated['email'],
+            'email' => $email,
             'phone' => $validated['phone'] ?? null,
             'address' => $validated['address'] ?? null,
             'notes' => $validated['notes'] ?? null,
@@ -70,7 +67,7 @@ class ProfileController extends Controller
 
         $user->update([
             'name' => $validated['name'],
-            'email' => $validated['email'],
+            'email' => $email,
             'phone' => $validated['phone'] ?? $user->phone,
         ]);
 

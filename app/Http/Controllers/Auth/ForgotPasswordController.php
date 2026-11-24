@@ -33,7 +33,7 @@ class ForgotPasswordController extends Controller
             'email.email' => 'Please enter a valid email address.',
         ]);
 
-        $email = Str::lower(trim((string) $request->input('email')));
+        $email = AccountRecovery::normalizeEmail($request->input('email'));
 
         try {
             $user = $recovery->registeredCustomerByEmail($email);

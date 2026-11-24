@@ -10,110 +10,192 @@
         'child' => '<circle cx="12" cy="12.4" r="7.6"/><path d="M9 14.2c.9 1.1 1.8 1.6 3 1.6s2.1-.5 3-1.6"/><path d="M9.4 11h.01M14.6 11h.01" stroke-width="2.6"/><path d="M12 4.8c.2-1.3 1.2-2 2.4-1.8"/>',
         'custom' => '<path d="M6 21V4.2"/><path d="M6 5h11.4l-2.2 3.6 2.2 3.6H6"/>',
     ];
+    $yearsRaw = $v('years');
+    $yearsNumeric = is_numeric($yearsRaw) ? (float) $yearsRaw : null;
+    $yearsSlider = ($yearsNumeric !== null && $yearsNumeric > 0)
+        ? max(0.01, min(100, $yearsNumeric))
+        : 10;
+    $yearsDisplay = ($yearsNumeric !== null && $yearsNumeric > 0)
+        ? rtrim(rtrim(number_format($yearsNumeric, 2, '.', ''), '0'), '.')
+        : '—';
 @endphp
 
-<div class="yk-goal__step" data-pfm-step="0">
+{{-- Task 35: all seven inputs on one continuous form (no wizard steps) --}}
+<div class="yk-goal__panel">
     <header class="yk-goal__step-head">
-        <h3>What are you saving for?</h3>
-        <p>Pick the closest match. You can name it anything you like.</p>
+        <h3>Plan your financial goal</h3>
+        <p>Enter your goal details, timeline, and assumptions below. Everything is on this page.</p>
     </header>
 
-    <fieldset class="yk-goal__types">
-        <legend class="visually-hidden">Goal type</legend>
-        @foreach ($goalTypes as $key => $label)
-            <label class="yk-goal__type" data-goal-label="{{ $label }}">
-                <input type="radio" name="goal_type" value="{{ $key }}" @checked($goalType === $key) required>
-                <span class="yk-goal__type-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" focusable="false">{!! $icons[$key] ?? $icons['custom'] !!}</svg>
-                </span>
-                <span class="yk-goal__type-name">{{ $label }}</span>
-                <span class="yk-goal__type-tick" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6.4 12.4l3.6 3.6 7.6-7.8"/></svg></span>
-            </label>
-        @endforeach
-    </fieldset>
+    <section class="yk-goal__section" aria-labelledby="goal-section-details">
+        <h4 id="goal-section-details" class="yk-goal__section-title">
+            <x-yk-icon name="target" class="yk-icon--sm" />
+            Goal details
+        </h4>
 
-    <div class="yk-goal__field">
-        <label for="pfm-goal-name">Goal name <span class="yk-goal__optional">optional</span></label>
-        <div class="yk-goal__control">
-            <input id="pfm-goal-name" type="text" name="goal_name" maxlength="80" value="{{ $v('goal_name') }}" placeholder="e.g. Dream home" autocomplete="off">
-        </div>
-    </div>
-</div>
+        <fieldset class="yk-goal__types">
+            <legend class="visually-hidden">Goal type</legend>
+            @foreach ($goalTypes as $key => $label)
+                <label class="yk-goal__type" data-goal-label="{{ $label }}">
+                    <input type="radio" name="goal_type" value="{{ $key }}" @checked($goalType === $key) required>
+                    <span class="yk-goal__type-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false">{!! $icons[$key] ?? $icons['custom'] !!}</svg>
+                    </span>
+                    <span class="yk-goal__type-name">{{ $label }}</span>
+                    <span class="yk-goal__type-tick" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6.4 12.4l3.6 3.6 7.6-7.8"/></svg></span>
+                </label>
+            @endforeach
+        </fieldset>
 
-<div class="yk-goal__step" data-pfm-step="1" hidden>
-    <header class="yk-goal__step-head">
-        <h3>What will it cost, and by when?</h3>
-        <p>Use today's estimated price. We'll account for rising costs.</p>
-    </header>
-
-    <div class="yk-goal__field">
-        <label for="pfm-current-cost">Current goal cost</label>
-        <div class="yk-goal__control">
-            <span class="yk-goal__affix" aria-hidden="true">₹</span>
-            <input id="pfm-current-cost" type="number" name="current_cost" min="0.01" step="0.01" inputmode="decimal" value="{{ $v('current_cost') }}" placeholder="0" required>
-        </div>
-        <p class="yk-goal__help" data-goal-out="cost-words">Enter the price as it is today.</p>
-    </div>
-
-    <div class="yk-goal__two">
         <div class="yk-goal__field">
-            <label for="pfm-years">Years to prepare</label>
+            <label for="pfm-goal-name">Goal name <span class="yk-goal__optional">optional</span></label>
             <div class="yk-goal__control">
-                <input id="pfm-years" type="number" name="years" min="0.01" max="100" step="0.01" inputmode="decimal" value="{{ $v('years') }}" placeholder="0" required>
-                <span class="yk-goal__affix yk-goal__affix--end" aria-hidden="true">years</span>
+                <input id="pfm-goal-name" type="text" name="goal_name" maxlength="80" value="{{ $v('goal_name') }}" placeholder="e.g. Dream home" autocomplete="off">
             </div>
+            @error('goal_name')
+                <p class="yk-goal__error" role="alert">{{ $message }}</p>
+            @enderror
+        </div>
+    </section>
+
+    <section class="yk-goal__section" aria-labelledby="goal-section-cost">
+        <h4 id="goal-section-cost" class="yk-goal__section-title">
+            <x-yk-icon name="wallet" class="yk-icon--sm" />
+            Goal cost
+        </h4>
+        <div class="yk-goal__field yk-goal__field--flush">
+            <label for="pfm-current-cost">Current goal cost</label>
+            <div class="yk-goal__control yk-goal__control--money @error('current_cost') is-invalid @enderror">
+                <span class="yk-goal__affix" aria-hidden="true">₹</span>
+                <input id="pfm-current-cost" type="number" name="current_cost" min="0.01" step="0.01" inputmode="decimal" value="{{ $v('current_cost') }}" placeholder="0" required aria-describedby="pfm-current-cost-help{{ $errors->has('current_cost') ? ' pfm-current-cost-error' : '' }}">
+            </div>
+            <p id="pfm-current-cost-help" class="yk-goal__help" data-goal-out="cost-words">Enter the price as it is today.</p>
+            @error('current_cost')
+                <p id="pfm-current-cost-error" class="yk-goal__error" role="alert">{{ $message }}</p>
+            @enderror
+        </div>
+    </section>
+
+    <section class="yk-goal__section yk-goal__years" data-yk-goal-years data-years-min="0.01" data-years-max="100" data-years-step="0.01" data-years-bump="1" aria-labelledby="goal-section-duration">
+        <h4 id="goal-section-duration" class="yk-goal__section-title">
+            <x-yk-icon name="calendar-days" class="yk-icon--sm" />
+            Investment duration
+        </h4>
+
+        <div class="yk-goal__field yk-goal__field--flush">
+            <label for="pfm-years" class="visually-hidden">Years to prepare</label>
+            <div class="yk-goal__years-head">
+                <p class="yk-goal__years-readout" aria-live="polite">
+                    <span class="yk-goal__years-figure" data-goal-years-display>{{ $yearsDisplay }}</span>
+                    <span class="yk-goal__years-unit">years</span>
+                </p>
+                <div class="yk-goal__control yk-goal__control--years @error('years') is-invalid @enderror">
+                    <input id="pfm-years" type="number" name="years" min="0.01" max="100" step="0.01" inputmode="decimal" value="{{ $yearsRaw }}" placeholder="0" required data-goal-years-input aria-describedby="pfm-years-help{{ $errors->has('years') ? ' pfm-years-error' : '' }}">
+                    <span class="yk-goal__affix yk-goal__affix--end" aria-hidden="true">years</span>
+                </div>
+            </div>
+
+            <div class="yk-goal__years-slider">
+                <button type="button" class="yk-goal__years-step" data-goal-years-dec aria-label="Decrease investment years by 1">
+                    <x-yk-icon name="minus" class="yk-icon--sm" />
+                </button>
+                <div class="yk-goal__years-track">
+                    <input
+                        id="pfm-years-slider"
+                        class="yk-goal__years-range"
+                        type="range"
+                        min="0.01"
+                        max="100"
+                        step="0.01"
+                        value="{{ $yearsSlider }}"
+                        data-goal-years-slider
+                        aria-valuemin="0.01"
+                        aria-valuemax="100"
+                        aria-valuenow="{{ $yearsSlider }}"
+                        aria-label="Investment duration in years"
+                    >
+                    <div class="yk-goal__years-scale" aria-hidden="true">
+                        <span>Min</span>
+                        <span>25</span>
+                        <span>50</span>
+                        <span>75</span>
+                        <span>Max</span>
+                    </div>
+                    <div class="yk-goal__years-bounds">
+                        <span>0.01 yr</span>
+                        <span>100 yr</span>
+                    </div>
+                </div>
+                <button type="button" class="yk-goal__years-step" data-goal-years-inc aria-label="Increase investment years by 1">
+                    <x-yk-icon name="plus" class="yk-icon--sm" />
+                </button>
+            </div>
+
             <div class="yk-goal__quick" role="group" aria-label="Quick year choices">
                 @foreach ([3, 5, 10, 15, 20] as $quick)
                     <button type="button" data-goal-years="{{ $quick }}">{{ $quick }}y</button>
                 @endforeach
             </div>
+            <p id="pfm-years-help" class="yk-goal__help">Drag the slider or type a duration between 0.01 and 100 years.</p>
+            @error('years')
+                <p id="pfm-years-error" class="yk-goal__error" role="alert">{{ $message }}</p>
+            @enderror
         </div>
+    </section>
 
-        <div class="yk-goal__field">
+    <section class="yk-goal__section" aria-labelledby="goal-section-savings">
+        <h4 id="goal-section-savings" class="yk-goal__section-title">
+            <x-yk-icon name="wallet" class="yk-icon--sm" />
+            Existing savings
+        </h4>
+        <div class="yk-goal__field yk-goal__field--flush">
             <label for="pfm-existing">Savings already set aside</label>
-            <div class="yk-goal__control">
+            <div class="yk-goal__control yk-goal__control--money @error('existing_savings') is-invalid @enderror">
                 <span class="yk-goal__affix" aria-hidden="true">₹</span>
-                <input id="pfm-existing" type="number" name="existing_savings" min="0" step="0.01" inputmode="decimal" value="{{ $v('existing_savings', '0') }}" required>
+                <input id="pfm-existing" type="number" name="existing_savings" min="0" step="0.01" inputmode="decimal" value="{{ $v('existing_savings', '0') }}" required aria-describedby="pfm-existing-help{{ $errors->has('existing_savings') ? ' pfm-existing-error' : '' }}">
             </div>
-            <p class="yk-goal__help">Money already earmarked for this goal. Use 0 if none.</p>
+            <p id="pfm-existing-help" class="yk-goal__help">Money already earmarked for this goal. Use 0 if none.</p>
+            @error('existing_savings')
+                <p id="pfm-existing-error" class="yk-goal__error" role="alert">{{ $message }}</p>
+            @enderror
         </div>
-    </div>
-</div>
+    </section>
 
-<div class="yk-goal__step" data-pfm-step="2" hidden>
-    <header class="yk-goal__step-head">
-        <h3>Set your assumptions</h3>
-        <p>These are illustrative. Change them to match your own view.</p>
-    </header>
+    <section class="yk-goal__section" aria-labelledby="goal-section-assumptions">
+        <h4 id="goal-section-assumptions" class="yk-goal__section-title">
+            <x-yk-icon name="activity" class="yk-icon--sm" />
+            Investment assumptions
+        </h4>
 
-    <div class="yk-goal__two">
-        <div class="yk-goal__field">
-            <label for="pfm-inflation">Inflation per year</label>
-            <div class="yk-goal__control">
-                <input id="pfm-inflation" type="number" name="inflation_percent" min="0" max="50" step="0.01" inputmode="decimal" value="{{ $v('inflation_percent', '6') }}" required>
-                <span class="yk-goal__affix yk-goal__affix--end" aria-hidden="true">%</span>
+        <div class="yk-goal__two yk-goal__two--flush">
+            <div class="yk-goal__field yk-goal__field--flush">
+                <label for="pfm-inflation"><x-yk-icon name="chart-no-axes-combined" class="yk-icon--sm yk-goal__label-icon" /> Inflation per year</label>
+                <div class="yk-goal__control yk-goal__control--percent @error('inflation_percent') is-invalid @enderror">
+                    <input id="pfm-inflation" type="number" name="inflation_percent" min="0" max="50" step="0.01" inputmode="decimal" value="{{ $v('inflation_percent', '6') }}" required aria-describedby="pfm-inflation-help{{ $errors->has('inflation_percent') ? ' pfm-inflation-error' : '' }}">
+                    <span class="yk-goal__affix yk-goal__affix--end" aria-hidden="true">%</span>
+                </div>
+                <p id="pfm-inflation-help" class="yk-goal__help">How fast you expect this goal's cost to rise.</p>
+                @error('inflation_percent')
+                    <p id="pfm-inflation-error" class="yk-goal__error" role="alert">{{ $message }}</p>
+                @enderror
             </div>
-            <p class="yk-goal__help">How fast you expect this goal's cost to rise.</p>
-        </div>
 
-        <div class="yk-goal__field">
-            <label for="pfm-return">Expected return per year</label>
-            <div class="yk-goal__control">
-                <input id="pfm-return" type="number" name="expected_return_percent" min="0" max="50" step="0.01" inputmode="decimal" value="{{ $v('expected_return_percent', '10') }}" required>
-                <span class="yk-goal__affix yk-goal__affix--end" aria-hidden="true">%</span>
+            <div class="yk-goal__field yk-goal__field--flush">
+                <label for="pfm-return"><x-yk-icon name="activity" class="yk-icon--sm yk-goal__label-icon" /> Expected return per year</label>
+                <div class="yk-goal__control yk-goal__control--percent @error('expected_return_percent') is-invalid @enderror">
+                    <input id="pfm-return" type="number" name="expected_return_percent" min="0" max="50" step="0.01" inputmode="decimal" value="{{ $v('expected_return_percent', '10') }}" required aria-describedby="pfm-return-help{{ $errors->has('expected_return_percent') ? ' pfm-return-error' : '' }}">
+                    <span class="yk-goal__affix yk-goal__affix--end" aria-hidden="true">%</span>
+                </div>
+                <p id="pfm-return-help" class="yk-goal__help">Growth you assume on money set aside.</p>
+                @error('expected_return_percent')
+                    <p id="pfm-return-error" class="yk-goal__error" role="alert">{{ $message }}</p>
+                @enderror
             </div>
-            <p class="yk-goal__help">Growth you assume on money set aside.</p>
         </div>
-    </div>
+    </section>
 
     <p class="yk-goal__callout">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.8"/><path d="M12 11v5M12 7.8v.01" stroke-width="2.4"/></svg>
+        <x-yk-icon name="info" class="yk-icon--sm" />
         <span>Returns are illustrative estimates, not guarantees. Actual results can be higher or lower.</span>
     </p>
-
-    <dl class="yk-goal__review" aria-label="Your inputs">
-        <div><dt>Goal</dt><dd data-goal-out="name">—</dd></div>
-        <div><dt>Cost today</dt><dd data-goal-out="cost">—</dd></div>
-        <div><dt>Timeline</dt><dd data-goal-out="years">—</dd></div>
-    </dl>
 </div>

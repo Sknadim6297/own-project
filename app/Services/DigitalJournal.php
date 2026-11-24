@@ -194,7 +194,8 @@ class DigitalJournal
     {
         $at = $entry->written_at->timezone(self::HISTORY_TIMEZONE);
         $prompt = $this->promptLabel($entry->prompt_key) ?? 'Journal entry';
-        $title = filled($entry->title) ? $entry->title : $prompt;
+        // Subject-only heading: do not fall back to the prompt/category label.
+        $title = filled($entry->title) ? $entry->title : 'Untitled entry';
         $preview = trim(preg_replace('/\s+/u', ' ', (string) $entry->body) ?? '');
 
         return [

@@ -132,7 +132,7 @@ class MyTarotReflectionApiTest extends TestCase
             ->assertJsonPath('meta.total', 1);
 
         Sanctum::actingAs($other);
-        $this->getJson('/api/v1/my/tarot/readings/'.$id)->assertForbidden();
+        $this->getJson('/api/v1/my/tarot/readings/'.$id)->assertNotFound();
 
         Sanctum::actingAs($owner);
         $this->getJson('/api/v1/my/tarot/readings/'.$id)
@@ -155,7 +155,9 @@ class MyTarotReflectionApiTest extends TestCase
             'is_implemented' => false,
         ]);
 
-        $this->getJson('/api/v1/tarot/options')->assertForbidden();
+        $this->getJson('/api/v1/tarot/options')
+            ->assertOk()
+            ->assertJsonPath('open', false);
     }
 
     private function storage(bool $open): void

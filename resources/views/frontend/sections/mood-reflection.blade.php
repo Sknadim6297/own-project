@@ -77,7 +77,7 @@
 
                         <label class="yk-reflect__label" for="mood-reflection">
                             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 19h3.6L18.4 9.2a2.3 2.3 0 0 0-3.6-3.6L5 15.4V19Z"/><path d="M13.4 7l3.6 3.6"/></svg>
-                            What made you feel this way today?
+                            {{ $reflectionQuestion }}
                         </label>
                         <div class="yk-reflect__field">
                             <textarea id="mood-reflection" class="yk-reflect__input" name="reflection" rows="5" maxlength="{{ $limit }}" placeholder="Write anything you would like to share..." data-reflection-input aria-describedby="reflection-meta reflection-count">{{ $reflection }}</textarea>

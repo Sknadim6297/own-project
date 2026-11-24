@@ -13,7 +13,7 @@
         </div>
 
         <p class="yk-tarot__badge">
-            @include('frontend.sections.tarot.partials.emoji', ['emoji' => '📖'])
+            @include('frontend.sections.tarot.partials.emoji', ['icon' => 'book-open'])
             Saved
         </p>
         <h1>My Readings</h1>
@@ -26,7 +26,7 @@
         @if ($readings->isEmpty())
             <section class="yk-tarot__empty">
                 <p>
-                    @include('frontend.sections.tarot.partials.emoji', ['emoji' => '🔮'])
+                    @include('frontend.sections.tarot.partials.emoji', ['icon' => 'sparkles'])
                     No saved readings yet.
                 </p>
                 <a class="yk-tarot__btn" href="{{ route('tools.tarot.intro') }}">Start a Reading</a>
@@ -39,7 +39,7 @@
                         <div>
                             <p class="yk-tarot__history-date">{{ optional($item->created_at)->timezone('Asia/Kolkata')->format('d M Y · g:i A') }}</p>
                             <h2>
-                                <span class="yk-tarot__emoji" aria-hidden="true">{{ $ui['emoji'] }}</span>
+                                @include('frontend.sections.tarot.partials.emoji', ['icon' => $ui['icon']])
                                 {{ \App\Support\Tarot\TarotCatalog::categoryLabel($item->category) }}
                             </h2>
                             <p class="yk-tarot__history-q">“{{ \Illuminate\Support\Str::limit($item->question, 110) }}”</p>

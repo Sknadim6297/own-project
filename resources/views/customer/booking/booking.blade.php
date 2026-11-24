@@ -377,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                         console.error('PAYMENT: Server error response:', errorData);
                                         if (errorData.redirect) {
                                             Swal.fire({
-                                                title: '👋 Hey! You forgot to login',
+                                                title: 'Hey! You forgot to login',
                                                 text: '',
                                                 showCloseButton: true,
                                                 showCancelButton: false,
@@ -468,7 +468,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Handle authentication errors specifically
                     if (data.redirect) {
                         Swal.fire({
-                            title: '<span class="login-popup-title"><span class="wave-icon">👋</span> Hey! You forgot to login</span>',
+                            title: '<span class="login-popup-title">Hey! You forgot to login</span>',
                             text: '',
                             showCloseButton: true,
                             showCancelButton: false,
@@ -502,7 +502,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     error.response.json().then(errorData => {
                         if (errorData.redirect) {
                             Swal.fire({
-                                title: '👋 Hey! You forgot to login',
+                                title: 'Hey! You forgot to login',
                                 text: '',
                                 showCloseButton: true,
                                 showCancelButton: false,

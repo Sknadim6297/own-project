@@ -149,8 +149,11 @@ body.yk-home-bright main {
 
 body.yk-home-bright .yk-silk-band {
     width: min(100% - 1rem, 1320px) !important;
-    height: clamp(44px, 5.5vw, 64px) !important;
     opacity: 1 !important;
+}
+
+body.yk-home-bright .yk-silk-band--compact {
+    width: min(100% - 1rem, 1320px) !important;
 }
 
 /* ——— Tools ——— */
@@ -275,7 +278,6 @@ body.yk-home-bright .yk-home-professional .yk-home-button {
         inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
 }
 
-<<<<<<< HEAD
 
 /* ---------- Home: right-edge "Need help?" tab (replaces the WhatsApp bubble) ---------- */
 .yk-help-tab {
@@ -368,5 +370,4 @@ body:has(.yk-navbar__quick-menu.is-open) .yk-help-tab {
         transition: none;
     }
 }
-=======
->>>>>>> 6ab04e0 (chnages)
+

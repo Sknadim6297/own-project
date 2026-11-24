@@ -43,6 +43,7 @@ class TarotReflectionController extends Controller
                 'examples' => $meta['examples'],
                 'tone' => $meta['tone'],
                 'emoji' => $presentation['emoji'],
+                'icon' => $presentation['icon'],
                 'blurb' => $presentation['blurb'],
             ];
         }

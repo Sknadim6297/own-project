@@ -28,7 +28,11 @@
                 @endforeach
             </nav>
             <p class="yk-pfm__eyebrow">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H17v3"/><path d="M4 7.5V17a2 2 0 0 0 2 2h12a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H6.5A2.5 2.5 0 0 1 4 7.5Z"/><circle cx="15.5" cy="13.5" r="1" fill="currentColor"/></svg>
+                @if (! empty($heroIcon))
+                    <x-yk-icon :name="$heroIcon" class="yk-icon--sm" />
+                @else
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H17v3"/><path d="M4 7.5V17a2 2 0 0 0 2 2h12a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H6.5A2.5 2.5 0 0 1 4 7.5Z"/><circle cx="15.5" cy="13.5" r="1" fill="currentColor"/></svg>
+                @endif
                 {{ $eyebrow }}
             </p>
             <h1 id="{{ $titleId }}"><x-yuktione.two-tone :text="$title" /></h1>

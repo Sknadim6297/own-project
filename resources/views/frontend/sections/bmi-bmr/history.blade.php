@@ -7,7 +7,7 @@
 @section('content')
 @php
     $activityLabels = collect(\App\Support\BmiBmr\BmiBmrCatalog::ACTIVITIES)->mapWithKeys(fn ($a) => [$a['key'] => $a['label']]);
-    $activityEmojis = collect(\App\Support\BmiBmr\BmiBmrCatalog::ACTIVITIES)->mapWithKeys(fn ($a) => [$a['key'] => $a['emoji'] ?? '']);
+    $activityIcons = collect(\App\Support\BmiBmr\BmiBmrCatalog::ACTIVITIES)->mapWithKeys(fn ($a) => [$a['key'] => $a['icon'] ?? 'activity']);
 @endphp
 <main class="yk-bmi yk-tools-ds" data-yk-tools-ds data-yk-bmi>
     <div class="yk-bmi__wrap yk-bmi__wrap--wide">
@@ -40,7 +40,7 @@
                             $when = optional($item->calculated_at)->timezone($timezone)?->format('d M Y, g:i A');
                             $actKey = $item->activity;
                             $actLabel = $activityLabels[$actKey] ?? str_replace('-', ' ', (string) $actKey);
-                            $actEmoji = $activityEmojis[$actKey] ?? '';
+                            $actIcon = $activityIcons[$actKey] ?? 'activity';
                         @endphp
                         <li class="yk-bmi__history-card">
                             <div class="yk-bmi__history-meta">
@@ -63,7 +63,7 @@
                             </div>
                             <div class="yk-bmi__history-foot">
                                 <p class="yk-bmi__history-activity">
-                                    @if ($actEmoji)<span aria-hidden="true">{{ $actEmoji }}</span> @endif
+                                    @if ($actIcon)<span aria-hidden="true"><x-yk-icon :name="$actIcon" class="yk-icon--md" :decorative="true" /></span> @endif
                                     {{ $actLabel }}
                                     · ×{{ rtrim(rtrim(number_format((float) $item->activity_factor, 3, '.', ''), '0'), '.') }}
                                 </p>

@@ -185,13 +185,16 @@ class PfmToolsTest extends TestCase
             ->post(route($route.'.calculate'), $input)
             ->assertRedirect(route($route.'.results'));
 
-        $this->actingAs($user, 'user')
+        $results = $this->actingAs($user, 'user')
             ->get(route($route.'.results'))
             ->assertOk()
-            ->assertSee('Save result')
             ->assertSee('Save as draft')
-            ->assertSee('View history')
             ->assertDontSee('NaN');
+        $results->assertSee($toolKey === 'monthly-money-planner' ? 'Save Calculation' : 'Save result');
+        $this->assertTrue(
+            str_contains($results->getContent(), 'View History')
+            || str_contains($results->getContent(), 'View history')
+        );
 
         $this->actingAs($user, 'user')->post(route($route.'.save'))->assertRedirect();
 
@@ -269,12 +272,14 @@ class PfmToolsTest extends TestCase
         $this->actingAs($user, 'user')
             ->get(route('tools.pfm.money-planner.history'))
             ->assertOk()
-            ->assertSee('Private history')
-            ->assertSee('View results')
-            ->assertSee('Continue')
-            ->assertSee('Edit &amp; recalculate', false)
+            ->assertHeader('Cache-Control')
+            ->assertSee('Calculation History')
+            ->assertSee('Show Saved')
+            ->assertSee('Edit Calculation')
+            ->assertDontSee('>Continue<', false)
+            ->assertDontSee('Edit &amp; recalculate', false)
             ->assertSee('Delete')
-            ->assertSee('Free cash')
+            ->assertSee('Available cash')
             ->assertSee('Needs attention');
 
         $this->actingAs($user, 'user')

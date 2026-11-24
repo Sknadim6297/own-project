@@ -14,25 +14,50 @@ class TarotDraft
 
     public const STEPS = ['intro', 'category', 'question', 'spread', 'draw', 'reveal', 'reading'];
 
-    /**
-     * When set, drafts are stored in Cache (Sanctum mobile API) instead of the web session.
-     * Website flow leaves this null and keeps using session(self::KEY).
-     */
-    private ?int $apiOwnerId = null;
+    /** When set, draft lives in Cache for Sanctum API (no session). */
+    private ?int $apiUserId = null;
+
+    private ?string $apiCompletionKey = null;
+
+    /** Legacy mobile API: one cache row per user (TarotReflectionController). */
+    private bool $apiSingleDraftPerUser = false;
 
     /**
      * Bind this draft instance to a Sanctum-authenticated customer for Cache-backed storage.
+     * One active draft per user (completion_key still stored in the payload).
      */
     public function useApiCache(int $userId): self
     {
-        $this->apiOwnerId = $userId;
+        $this->apiUserId = $userId;
+        $this->apiCompletionKey = null;
+        $this->apiSingleDraftPerUser = true;
 
         return $this;
     }
 
+    /**
+     * Bind this draft instance to a Sanctum API reading session.
+     * Pass completion_key on every step after start.
+     */
+    public function forApi(int $userId, ?string $completionKey = null): self
+    {
+        $this->apiUserId = $userId;
+        $this->apiSingleDraftPerUser = false;
+        $this->apiCompletionKey = is_string($completionKey) && $completionKey !== ''
+            ? strtolower($completionKey)
+            : null;
+
+        return $this;
+    }
+
+    public function isApiMode(): bool
+    {
+        return $this->apiUserId !== null;
+    }
+
     public function readable(): ?array
     {
-        $draft = $this->loadRaw();
+        $draft = $this->load();
         if (! is_array($draft)) {
             return null;
         }
@@ -72,6 +97,10 @@ class TarotDraft
             ? strtolower($completionKey)
             : (string) Str::uuid();
 
+        if ($this->isApiMode() && ! $this->apiSingleDraftPerUser) {
+            $this->apiCompletionKey = $key;
+        }
+
         $draft = [
             'step' => 'intro',
             'completion_key' => $key,
@@ -96,7 +125,12 @@ class TarotDraft
 
     public function forget(): void
     {
-        if ($this->apiOwnerId !== null) {
+        if ($this->isApiMode()) {
+            if (! $this->apiSingleDraftPerUser && $this->apiCompletionKey === null) {
+                session()->forget(self::KEY);
+
+                return;
+            }
             Cache::forget($this->cacheKey());
 
             return;
@@ -305,7 +339,16 @@ class TarotDraft
 
     private function put(array $draft): void
     {
-        if ($this->apiOwnerId !== null) {
+        if ($this->isApiMode()) {
+            if (! $this->apiSingleDraftPerUser) {
+                if ($this->apiCompletionKey === null) {
+                    $key = is_string($draft['completion_key'] ?? null) ? strtolower($draft['completion_key']) : null;
+                    if ($key === null) {
+                        throw new RuntimeException('Tarot API draft is missing a completion key.');
+                    }
+                    $this->apiCompletionKey = $key;
+                }
+            }
             Cache::put(
                 $this->cacheKey(),
                 $draft,
@@ -321,9 +364,13 @@ class TarotDraft
     /**
      * @return array<string, mixed>|null
      */
-    private function loadRaw(): ?array
+    private function load(): ?array
     {
-        if ($this->apiOwnerId !== null) {
+        if ($this->isApiMode()) {
+            if (! $this->apiSingleDraftPerUser && $this->apiCompletionKey === null) {
+                return null;
+            }
+
             $draft = Cache::get($this->cacheKey());
 
             return is_array($draft) ? $draft : null;
@@ -336,7 +383,11 @@ class TarotDraft
 
     private function cacheKey(): string
     {
-        return 'tarot.api.draft.'.$this->apiOwnerId;
+        if ($this->apiSingleDraftPerUser) {
+            return 'tarot.api.draft.'.$this->apiUserId;
+        }
+
+        return 'tarot.api_draft:'.$this->apiUserId.':'.$this->apiCompletionKey;
     }
 
     private function requireUserOwner(): string
@@ -351,8 +402,8 @@ class TarotDraft
 
     private function ownerOrNull(): ?string
     {
-        if ($this->apiOwnerId !== null) {
-            return 'user:'.$this->apiOwnerId;
+        if ($this->apiUserId !== null) {
+            return 'user:'.$this->apiUserId;
         }
 
         $id = Auth::guard('user')->id();

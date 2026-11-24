@@ -76,12 +76,13 @@ class ToolsCatalogueTest extends TestCase
 
         $page->assertOk()
             ->assertSee('Try')
-            ->assertSee('Our Tools')
+            ->assertSee('Tools')
             ->assertSee('Daily Mood Check-in')
             ->assertSee('Digital Journal')
             ->assertSee('Gratitude Journal')
-            ->assertSee('yk-tools__tiles', false)
-            ->assertSee('yk-tool-tile', false)
+            ->assertSee('yk-tools__grid', false)
+            ->assertSee('yk-tool-card', false)
+            ->assertSee('Mental Wellness')
             ->assertSee('href="'.route('tools.psychology.mood').'"', false)
             ->assertSee('href="'.route('tools.psychology.journal').'"', false)
             ->assertSee('href="'.route('tools.psychology.gratitude').'"', false)
@@ -101,7 +102,7 @@ class ToolsCatalogueTest extends TestCase
         $this->get('/tools/gratitude-journal')->assertNotFound();
     }
 
-    public function test_search_and_mental_health_category_find_the_published_tools(): void
+    public function test_search_and_mental_wellness_category_find_the_published_tools(): void
     {
         $this->get(route('tools.index', ['q' => 'Mood']))
             ->assertOk()
@@ -114,19 +115,25 @@ class ToolsCatalogueTest extends TestCase
             ->assertSee('Gratitude Journal')
             ->assertSee('Showing 2 tools');
 
-        $this->get(route('tools.index', ['category' => 'mental-health']))
+        $this->get(route('tools.index', ['category' => 'mental-wellness']))
             ->assertOk()
             ->assertSee('Daily Mood Check-in')
             ->assertSee('Digital Journal')
             ->assertSee('Gratitude Journal')
-            ->assertSee('(3)', false);
+            ->assertSee('Mental Wellness');
+
+        // Legacy Explore key still resolves for bookmarks.
+        $this->get(route('tools.index', ['category' => 'mental-health']))
+            ->assertOk()
+            ->assertSee('Daily Mood Check-in')
+            ->assertSee('Digital Journal');
 
         $this->get(route('tools.index', ['q' => 'Sleep']))
             ->assertOk()
             ->assertSee('No tools match these filters')
             ->assertDontSee('Daily Mood Check-in');
 
-        $this->get(route('tools.index', ['category' => 'astrology-tarot']))
+        $this->get(route('tools.index', ['category' => 'astrology']))
             ->assertOk()
             ->assertSee('No tools match these filters')
             ->assertDontSee('Daily Mood Check-in');

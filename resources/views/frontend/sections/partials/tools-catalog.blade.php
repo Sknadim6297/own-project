@@ -20,19 +20,19 @@
 
         return route($tRoute, $params);
     };
-    $tFiltering = $tFilters['q'] !== '' || $tFilters['category'] !== '';
+    $tCategoryActive = (string) ($tFilters['category'] ?? '');
+    $tHasCategoryFilter = $tCategoryActive !== '' || ! empty($tFilters['category_any']);
+    $tFiltering = ($tFilters['q'] ?? '') !== '' || $tHasCategoryFilter;
     $tClearUrl = $tLink([], ['q', 'category']);
-    $tAllCount = $tFilters['category'] === ''
-        ? $tItems->total()
-        : collect($tCounts)->sum();
+    $tAllCount = $tHasCategoryFilter ? collect($tCounts)->sum() : $tItems->total();
 @endphp
 
 <nav class="yk-cat-detail__tabs yk-cat-detail__tabs--filters" aria-label="Tool categories" role="tablist">
     <a
         href="{{ $tLink([], ['category']) }}"
-        class="yk-cat-detail__tab{{ $tFilters['category'] === '' ? ' is-active' : '' }}"
+        class="yk-tools__chip{{ ! $tHasCategoryFilter ? ' is-active' : '' }}"
         role="tab"
-        aria-selected="{{ $tFilters['category'] === '' ? 'true' : 'false' }}"
+        aria-selected="{{ ! $tHasCategoryFilter ? 'true' : 'false' }}"
     >
         All
         <span class="yk-cat-detail__count">{{ $tAllCount }}</span>
@@ -40,9 +40,13 @@
     @foreach ($tCategories as $slug => $category)
         <a
             href="{{ $tLink(['category' => $slug]) }}"
+<<<<<<< Updated upstream
             class="yk-cat-detail__tab{{ $tFilters['category'] === $slug ? ' is-active' : '' }}"
+=======
+            class="yk-tools__chip is-{{ $category['tone'] }}{{ $tCategoryActive === $slug || in_array($slug, $tFilters['category_any'] ?? [], true) ? ' is-active' : '' }}"
+>>>>>>> Stashed changes
             role="tab"
-            aria-selected="{{ $tFilters['category'] === $slug ? 'true' : 'false' }}"
+            aria-selected="{{ $tCategoryActive === $slug || in_array($slug, $tFilters['category_any'] ?? [], true) ? 'true' : 'false' }}"
         >
             {{ $category['label'] }}
             <span class="yk-cat-detail__count">{{ $tCounts[$slug] ?? 0 }}</span>

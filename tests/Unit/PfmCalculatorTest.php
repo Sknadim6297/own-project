@@ -90,6 +90,36 @@ class PfmCalculatorTest extends TestCase
         $this->assertSame(-1000.0, $payload['result']['net_worth']);
     }
 
+    public function test_nw03_blank_fields_normalize_to_zero(): void
+    {
+        $payload = $this->calculator->calculate('net-worth-calculator', [
+            'cash' => '',
+            'bank' => null,
+            'mf' => 100.5,
+            'loans' => '',
+        ]);
+
+        $this->assertSame(0.0, $payload['normalized']['cash']);
+        $this->assertSame(0.0, $payload['normalized']['bank']);
+        $this->assertSame(100.5, $payload['normalized']['mf']);
+        $this->assertSame(0.0, $payload['normalized']['loans']);
+        $this->assertSame(100.5, $payload['result']['net_worth']);
+    }
+
+    public function test_nw04_rejects_invalid_and_negative_amounts(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cash must be a number.');
+        $this->calculator->calculate('net-worth-calculator', ['cash' => 'not-a-number']);
+    }
+
+    public function test_nw05_rejects_negative_liability(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Loans cannot be negative.');
+        $this->calculator->calculate('net-worth-calculator', ['loans' => -50]);
+    }
+
     public function test_ef01_and_ef02_target_and_shortfall(): void
     {
         $payload = $this->calculator->calculate('emergency-fund-calculator', [

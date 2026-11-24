@@ -32,14 +32,22 @@ class PasswordResetBrandingTest extends TestCase
         $forgot->assertSee('Forgot Password | YuktiOne', false);
         $forgot->assertSee('frontend/assets/Yuktione_logo.png', false);
         $forgot->assertSee('alt="YuktiOne"', false);
+        $forgot->assertSee('CUSTOMER ACCOUNT', false);
+        $forgot->assertSee('content="#8A0F4D"', false);
+        $forgot->assertSee('auth-recovery-page--customer', false);
+        $forgot->assertSee(route('login'), false);
         $forgot->assertDontSee('Tazen', false);
         $forgot->assertDontSee('support@tazen.in', false);
+        $forgot->assertDontSee('PROFESSIONAL ACCOUNT', false);
 
         $reset = $this->get('/reset-password?token=test-token&email=customer@example.test');
         $reset->assertOk();
         $reset->assertSee('Reset Password | YuktiOne', false);
         $reset->assertSee('frontend/assets/Yuktione_logo.png', false);
         $reset->assertSee('YuktiOne account', false);
+        $reset->assertSee('CUSTOMER ACCOUNT', false);
+        $reset->assertSee('content="#8A0F4D"', false);
+        $reset->assertSee(route('login'), false);
         $reset->assertDontSee('Tazen', false);
     }
 
@@ -50,12 +58,20 @@ class PasswordResetBrandingTest extends TestCase
         $forgot->assertSee('Forgot Password | YuktiOne', false);
         $forgot->assertSee('frontend/assets/Yuktione_logo.png', false);
         $forgot->assertSee('alt="YuktiOne"', false);
+        $forgot->assertSee('PROFESSIONAL ACCOUNT', false);
+        $forgot->assertSee('content="#8A0F4D"', false);
+        $forgot->assertSee('auth-recovery-page--professional', false);
+        $forgot->assertSee(route('professional.login'), false);
         $forgot->assertDontSee('Tazen', false);
+        $forgot->assertDontSee('CUSTOMER ACCOUNT', false);
 
         $reset = $this->get('/professional/reset-password?token=test-token&email=pro@example.test');
         $reset->assertOk();
         $reset->assertSee('Reset Password | YuktiOne', false);
         $reset->assertSee('frontend/assets/Yuktione_logo.png', false);
+        $reset->assertSee('PROFESSIONAL ACCOUNT', false);
+        $reset->assertSee('content="#8A0F4D"', false);
+        $reset->assertSee(route('professional.login'), false);
         $reset->assertDontSee('Tazen', false);
     }
 
@@ -135,6 +151,7 @@ class PasswordResetBrandingTest extends TestCase
     private function storage(): void
     {
         Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('professional_password_reset_tokens');
         Schema::dropIfExists('users');
         Schema::dropIfExists('professionals');
 
@@ -161,6 +178,12 @@ class PasswordResetBrandingTest extends TestCase
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('professional_password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();

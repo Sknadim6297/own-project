@@ -77,26 +77,26 @@
 <svg class="yk-goalr__svg {{ $compact ? 'yk-goalr__svg--compact' : 'yk-goalr__svg--wide' }}" viewBox="0 0 {{ $w }} {{ $h }}" role="img" aria-label="{{ $ariaLabel }}" preserveAspectRatio="xMidYMid meet" focusable="false">
     <defs>
         <linearGradient id="{{ $uid }}-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#14705f" stop-opacity=".32"/>
-            <stop offset="1" stop-color="#14705f" stop-opacity="0"/>
+            <stop offset="0" stop-color="#8a0f4d" stop-opacity=".28"/>
+            <stop offset="1" stop-color="#8a0f4d" stop-opacity="0"/>
         </linearGradient>
     </defs>
 
     @for ($tick = 0; $tick * $step <= $top + 0.0001; $tick++)
         @php $value = $tick * $step; @endphp
-        <line x1="{{ $padL }}" x2="{{ $w - $padR }}" y1="{{ $Y($value) }}" y2="{{ $Y($value) }}" stroke="{{ $tick === 0 ? '#c9c2ae' : '#ebe6d9' }}" stroke-width="1"/>
-        <text x="{{ $padL - 8 }}" y="{{ $Y($value) + 4 }}" text-anchor="end" font-size="{{ $fs }}" fill="#5d6a65">{{ $short((float) $value) }}</text>
+        <line x1="{{ $padL }}" x2="{{ $w - $padR }}" y1="{{ $Y($value) }}" y2="{{ $Y($value) }}" stroke="{{ $tick === 0 ? '#e8e4de' : '#f3ebe6' }}" stroke-width="1"/>
+        <text x="{{ $padL - 8 }}" y="{{ $Y($value) + 4 }}" text-anchor="end" font-size="{{ $fs }}" fill="#6b6b7a">{{ $short((float) $value) }}</text>
     @endfor
 
-    <text x="{{ $X(0) }}" y="{{ $h - 9 }}" text-anchor="start" font-size="{{ $fs }}" fill="#5d6a65">Today</text>
+    <text x="{{ $X(0) }}" y="{{ $h - 9 }}" text-anchor="start" font-size="{{ $fs }}" fill="#6b6b7a">Today</text>
     @foreach ($xTicks as $t)
-        <text x="{{ $X($t * 12) }}" y="{{ $h - 9 }}" text-anchor="{{ $t * 12 === $months ? 'end' : 'middle' }}" font-size="{{ $fs }}" fill="#5d6a65">{{ $t }}y</text>
+        <text x="{{ $X($t * 12) }}" y="{{ $h - 9 }}" text-anchor="{{ $t * 12 === $months ? 'end' : 'middle' }}" font-size="{{ $fs }}" fill="#6b6b7a">{{ $t }}y</text>
     @endforeach
 
     <path d="{{ $areaPath }}" fill="url(#{{ $uid }}-fill)"/>
-    <path d="{{ $costLine }}" fill="none" stroke="#d69a2d" stroke-width="2.6" stroke-dasharray="7 6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="{{ $savingsLine }}" fill="none" stroke="#14705f" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="{{ $costLine }}" fill="none" stroke="#e0a73f" stroke-width="2.6" stroke-dasharray="7 6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="{{ $savingsLine }}" fill="none" stroke="#8a0f4d" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
 
-    <circle cx="{{ $X($lastPoint['month']) }}" cy="{{ $Y($lastPoint['cost']) }}" r="5" fill="#fff" stroke="#d69a2d" stroke-width="3"/>
+    <circle cx="{{ $X($lastPoint['month']) }}" cy="{{ $Y($lastPoint['cost']) }}" r="5" fill="#fff" stroke="#e0a73f" stroke-width="3"/>
     <circle cx="{{ $X($lastPoint['month']) }}" cy="{{ $Y($lastPoint['savings']) }}" r="4" fill="#6e0b3c"/>
 </svg>

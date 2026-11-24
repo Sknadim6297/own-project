@@ -188,6 +188,8 @@ foreach ([
     Route::get($pfmPrefix.'/finish', [\App\Http\Controllers\Frontend\PfmToolController::class, 'finish'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.finish');
     Route::post($pfmPrefix.'/save', [\App\Http\Controllers\Frontend\PfmToolController::class, 'save'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.save');
     Route::post($pfmPrefix.'/recalculate', [\App\Http\Controllers\Frontend\PfmToolController::class, 'recalculate'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.recalculate');
+    Route::post($pfmPrefix.'/new-test', [\App\Http\Controllers\Frontend\PfmToolController::class, 'newTest'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.new-test');
+    Route::post($pfmPrefix.'/cancel-edit', [\App\Http\Controllers\Frontend\PfmToolController::class, 'cancelEdit'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.cancel-edit');
     Route::get($pfmPrefix.'/results', [\App\Http\Controllers\Frontend\PfmToolController::class, 'results'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.results');
     Route::post($pfmPrefix.'/calculate', [\App\Http\Controllers\Frontend\PfmToolController::class, 'calculate'])->defaults('toolKey', $pfmToolKey)->name($pfmName.'.calculate');
     Route::get($pfmPrefix, [\App\Http\Controllers\Frontend\PfmToolController::class, 'create'])->defaults('toolKey', $pfmToolKey)->name($pfmName);
@@ -722,7 +724,6 @@ Route::post('register', [LoginController::class, 'register'])->name('register.su
 Route::post('/register/send-otp', [App\Http\Controllers\Frontend\LoginController::class, 'sendOtp'])->name('register.send-otp');
 Route::post('/register/verify-otp', [App\Http\Controllers\Frontend\LoginController::class, 'verifyOtp'])->name('register.verify-otp');
 Route::post('/register/save-lead', [App\Http\Controllers\Frontend\LoginController::class, 'saveCustomerLead'])->name('register.save-lead');
-Route::post('/register/verify-otp', [App\Http\Controllers\Frontend\LoginController::class, 'verifyOtp'])->name('register.verify-otp');
 Route::post('/register/create-incomplete', [App\Http\Controllers\Frontend\LoginController::class, 'createIncompleteUser'])->name('register.create-incomplete');
 Route::post('/register/complete', [App\Http\Controllers\Frontend\LoginController::class, 'completeRegistration'])->name('register.complete');
 

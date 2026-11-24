@@ -22,10 +22,10 @@ class TarotCardSeeder extends Seeder
                         'number' => $card['number'],
                         'upright_meaning' => $card['upright_meaning'],
                         'reversed_meaning' => $card['reversed_meaning'],
-                        // Keywords, reflection prompts, and artwork are not supplied — leave null.
-                        'upright_keywords' => null,
-                        'reversed_keywords' => null,
-                        'image_path' => null,
+                        'upright_keywords' => $card['upright_keywords'] ?? null,
+                        'reversed_keywords' => $card['reversed_keywords'] ?? null,
+                        // Artwork remains optional until asset mapping is supplied.
+                        'image_path' => $card['image_path'] ?? null,
                         'sort_order' => $card['sort_order'],
                     ]
                 );

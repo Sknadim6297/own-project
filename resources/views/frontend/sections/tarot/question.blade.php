@@ -14,7 +14,7 @@
 
         <p class="yk-tarot__step">
             Step 2 of 5 ·
-            @include('frontend.sections.tarot.partials.emoji', ['emoji' => $ui['emoji']])
+            @include('frontend.sections.tarot.partials.emoji', ['icon' => $ui['icon']])
             {{ $categoryLabel }}
         </p>
         <h1>What would you like to explore?</h1>

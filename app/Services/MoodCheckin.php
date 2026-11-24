@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Tool;
 use App\Models\ToolConfigItem;
+use App\Support\Psychology\MoodFollowUpCatalog;
 use App\Support\Psychology\PsychologyCatalog;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Schema;
@@ -39,7 +40,41 @@ class MoodCheckin
         return PsychologyCatalog::emotionKeys();
     }
 
-    public function emotionGroups(): array
+    /**
+     * @return list<string>
+     */
+    public function emotionKeysForMood(string $moodKey): array
+    {
+        if (! MoodFollowUpCatalog::hasMood($moodKey)) {
+            return [];
+        }
+
+        $allowed = MoodFollowUpCatalog::emotionKeysForMood($moodKey);
+        $catalog = $this->emotionKeys();
+
+        return array_values(array_filter(
+            $allowed,
+            fn (string $key) => in_array($key, $catalog, true)
+        ));
+    }
+
+    /**
+     * @return array{emotion_heading: string, emotion_lead: string, reflection_question: string, reflection_prompts: list<string>, complete_tip: string}
+     */
+    public function followUpForMood(string $moodKey): array
+    {
+        $set = MoodFollowUpCatalog::forMood($moodKey);
+
+        return [
+            'emotion_heading' => $set['emotion_heading'],
+            'emotion_lead' => $set['emotion_lead'],
+            'reflection_question' => $set['reflection_question'],
+            'reflection_prompts' => $set['reflection_prompts'],
+            'complete_tip' => $set['complete_tip'],
+        ];
+    }
+
+    public function emotionGroups(?string $moodKey = null): array
     {
         $configured = $this->configuredEmotions();
         $groups = [
@@ -47,11 +82,15 @@ class MoodCheckin
             'neutral' => [],
             'difficult' => [],
         ];
+        $allowed = $moodKey !== null ? $this->emotionKeysForMood($moodKey) : null;
 
         foreach (PsychologyCatalog::emotions() as $emotion) {
             $key = $emotion['item_key'];
             $bucket = $emotion['bucket'];
             if (!isset($groups[$bucket])) {
+                continue;
+            }
+            if (is_array($allowed) && ! in_array($key, $allowed, true)) {
                 continue;
             }
 
@@ -72,9 +111,26 @@ class MoodCheckin
         return $groups;
     }
 
+    /**
+     * Keep only emotion keys that belong to the selected mood's follow-up set.
+     *
+     * @param  list<string>  $emotionKeys
+     * @return list<string>
+     */
+    public function filterEmotionsForMood(string $moodKey, array $emotionKeys): array
+    {
+        $allowed = $this->emotionKeysForMood($moodKey);
+
+        return array_values(array_filter(
+            array_unique($emotionKeys),
+            fn ($key) => is_string($key) && in_array($key, $allowed, true)
+        ));
+    }
+
     public function summary(string $moodKey, array $emotionKeys): array
     {
         $moods = collect($this->options())->keyBy('key');
+        // Full catalogue so historical entries stay readable after mood-specific filtering.
         $emotions = collect($this->emotionGroups())->flatten(1)->keyBy('key');
         $chips = [];
         foreach ($emotionKeys as $key) {
@@ -88,9 +144,15 @@ class MoodCheckin
             ];
         }
 
+        $tip = null;
+        if (MoodFollowUpCatalog::hasMood($moodKey)) {
+            $tip = MoodFollowUpCatalog::forMood($moodKey)['complete_tip'];
+        }
+
         return [
             'mood' => $moods->has($moodKey) ? $moods[$moodKey]['label'] : null,
             'emotions' => $chips,
+            'tip' => $tip,
         ];
     }
 

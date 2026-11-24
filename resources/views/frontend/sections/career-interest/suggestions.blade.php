@@ -34,8 +34,13 @@
                             <span class="yk-cit__suggest-icon">{!! $icon('briefcase', 20) !!}</span>
                             <div>
                                 <h3>{{ $item['title'] }}</h3>
+                                @if (isset($item['fit_percent']))
+                                    <p class="yk-cit__suggest-fit">Interest alignment {{ (int) $item['fit_percent'] }}% · based on your primary interest scores for this area</p>
+                                @endif
                                 <p>{{ $item['summary'] }}</p>
-                                <p class="yk-cit__suggest-why">{{ $item['why'] }}</p>
+                                @if (filled($item['why'] ?? null))
+                                    <p class="yk-cit__suggest-why">{{ $item['why'] }}</p>
+                                @endif
                             </div>
                         </li>
                     @endforeach

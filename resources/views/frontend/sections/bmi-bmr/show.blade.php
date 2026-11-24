@@ -48,7 +48,7 @@
                     </p>
                     @if ($activity)
                         <p class="yk-bmi__result-tag">
-                            <span aria-hidden="true">{{ $activity['emoji'] ?? '' }}</span>
+                            <span aria-hidden="true"><x-yk-icon :name="$activity['icon'] ?? 'activity'" class="yk-icon--md" :decorative="true" /></span>
                             {{ $activity['label'] }} ×{{ $calculation->activity_factor }}
                         </p>
                     @endif
