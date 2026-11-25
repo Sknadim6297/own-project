@@ -9,6 +9,8 @@
     $isEditing = (bool) ($editing ?? false);
     $isEmergency = $toolKey === 'emergency-fund-calculator';
     $isMoneyPlanner = $toolKey === 'monthly-money-planner';
+    $isRetirement = $toolKey === 'retirement-calculator';
+    $isSavings = $toolKey === 'savings-investment-calculator';
     $recalculateLabel = $isEmergency
         ? 'Recalculate'
         : ($isEditing ? 'Edit inputs' : 'Edit &amp; recalculate');
@@ -20,21 +22,29 @@
         'monthly-money-planner' => 'wallet',
         'net-worth-calculator' => 'chart-pie',
         'emergency-fund-calculator' => 'shield-check',
+        'retirement-calculator' => 'wallet',
+        'savings-investment-calculator' => 'wallet',
     ];
     $resultHeroIcon = $resultHeroIcons[$toolKey] ?? 'calculator';
 @endphp
-<main class="yk-pfm yk-tools-ds yk-tool-shell {{ $isEmergency ? 'yk-pfm--ef' : '' }}" data-yk-tools-ds data-yk-pfm data-yk-tool-shell="1" @if ($isEditing) data-yk-pfm-editing="1" @endif>
+<main class="yk-pfm yk-tools-ds yk-tool-shell {{ $isEmergency ? 'yk-pfm--ef' : '' }}{{ $isRetirement ? ' yk-pfm--rt' : '' }}{{ $isSavings ? ' yk-pfm--si' : '' }}" data-yk-tools-ds data-yk-pfm data-yk-tool-shell="1" @if ($isEditing) data-yk-pfm-editing="1" @endif @if ($isRetirement) data-yk-rt-results="1" @endif @if ($isSavings) data-yk-si-results="1" @endif>
     @include('frontend.sections.pfm.partials.page-hero', [
         'crumbs' => $isEditing
             ? [['Money & Finance', route('tools.pfm')], [$tool['name'], route($tool['route'])], ['Edit preview', null]]
             : [['Money & Finance', route('tools.pfm')], [$tool['name'], route($tool['route'])], ['Results', null]],
         'eyebrow' => $isEditing
             ? 'Edit preview'.($editingId ? ' · #'.$editingId : '')
-            : 'Your results',
+            : ($isRetirement ? 'Your retirement plan' : ($isSavings ? 'Your investment plan' : 'Your results')),
         'heroIcon' => $resultHeroIcon,
         'title' => $tool['name'],
         'titleId' => 'pfm-results-heading',
-        'lead' => $isEmergency ? 'Clear view of your emergency fund target, savings gap, and estimated timeline.' : ($result['summary'] ?? ''),
+        'lead' => $isEmergency
+            ? 'Clear view of your emergency fund target, savings gap, and estimated timeline.'
+            : ($isRetirement
+                ? 'Understand your estimated corpus, funding gap, and monthly investment under the assumptions you entered.'
+                : ($isSavings
+                    ? 'Understand your total contributions and estimated investment growth under the assumptions you entered.'
+                    : ($result['summary'] ?? ''))),
     ])
 
     <div class="yk-pfm__wrap yk-pfm__wrap--wide yk-pfm__sheet">
@@ -52,7 +62,23 @@
             @include('frontend.sections.pfm.partials.result-metrics', ['toolKey' => $toolKey, 'result' => $result, 'inputs' => $inputs ?? []])
             @include('frontend.sections.pfm.partials.result-charts', ['toolKey' => $toolKey, 'result' => $result, 'inputs' => $inputs ?? []])
 
-            <p class="yk-pfm__note yk-pfm__disclaimer">These figures are educational estimates only and are not financial advice.</p>
+            @if ($isRetirement)
+                @include('frontend.sections.pfm.partials.retirement-sufficiency', [
+                    'result' => $result,
+                    'inputs' => $inputs ?? [],
+                ])
+                @include('frontend.sections.pfm.partials.retirement-conclusion', [
+                    'result' => $result,
+                    'inputs' => $inputs ?? [],
+                ])
+            @elseif ($isSavings)
+                @include('frontend.sections.pfm.partials.savings-conclusion', [
+                    'result' => $result,
+                    'inputs' => $inputs ?? [],
+                ])
+            @else
+                <p class="yk-pfm__note yk-pfm__disclaimer">These figures are educational estimates only and are not financial advice.</p>
+            @endif
 
             <div class="yk-pfm__actions {{ $isEmergency ? 'yk-ef__actions' : '' }}">
                 @if ($isEditing)

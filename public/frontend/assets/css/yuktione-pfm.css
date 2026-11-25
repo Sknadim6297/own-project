@@ -1,4 +1,4 @@
-/**
+﻿/**
  * PFM Money & Finance tools — soft lavender / deep violet / plum with a warm gold accent (DM Sans).
  * Matches the Money & Finance hub. The Financial Goal tool has its own stylesheet (yuktione-pfm-goal.css).
  *
@@ -902,18 +902,17 @@
     line-height: 1.45;
 }
 
-/* ---- Header (Task 37 compact — decorative hero art removed) ---- */
+/* ---- Header ---- */
 .yk-pfm__hero {
     position: relative;
-    padding: 18px 0 6px;
-}
-
-.yk-pfm__hero--compact {
-    padding: 16px 0 4px;
+    padding: 24px 0 8px;
 }
 
 .yk-pfm__hero-in {
-    display: block;
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.5fr);
+    align-items: center;
+    gap: 16px;
     width: min(1040px, calc(100% - 48px));
     margin-inline: auto;
 }
@@ -922,32 +921,12 @@
     min-width: 0;
 }
 
-.yk-pfm__hero-title-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-}
-
-.yk-pfm__hero-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    background: #f8eaf1;
-    color: #8a0f4d;
-}
-
-.yk-pfm__hero-icon .yk-icon {
-    width: 26px;
-    height: 26px;
-}
-
-/* Legacy decorative art class kept for safety if referenced elsewhere — hidden */
 .yk-pfm__hero-art {
-    display: none !important;
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin-left: auto;
 }
 
 .yk-pfm__crumbs {
@@ -1010,22 +989,22 @@
 }
 
 .yk-pfm__hero h1 {
-    max-width: 28ch;
+    max-width: 24ch;
     margin: 0;
     overflow-wrap: anywhere;
     color: var(--yk-ink);
-    font-size: clamp(1.35rem, 1.1rem + 1.1vw, 1.85rem);
+    font-size: clamp(2rem, 1.3rem + 2.4vw, 3.1rem);
     font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
+    letter-spacing: -0.03em;
+    line-height: 1.06;
 }
 
 .yk-pfm__hero-lead {
     max-width: 58ch;
-    margin: 8px 0 0;
+    margin: 14px 0 0;
     color: #4a3a5e;
-    font-size: 0.98rem;
-    line-height: 1.5;
+    font-size: 1.05rem;
+    line-height: 1.55;
 }
 
 .yk-pfm__hero-meta {
@@ -1761,7 +1740,7 @@
 }
 
 /* -------------------------------------------------------------------------- */
-/* Task 40 � Debt & EMI Calculator structure (scoped; other PFM untouched)     */
+/* Task 41 � Debt & EMI Calculator single-page form (scoped; other PFM untouched) */
 /* -------------------------------------------------------------------------- */
 
 .yk-pfm--debt .yk-pfm__wrap--wide {
@@ -1769,54 +1748,34 @@
 }
 
 .yk-pfm--debt .yk-pfm__card {
-    padding: 1.35rem 1.3rem 1.3rem;
+    padding: 1.35rem 1.25rem 1.25rem;
 }
 
 .yk-pfm--debt .yk-pfm__hero-lead,
 .yk-pfm--debt [data-yk-tool-page-lead] {
     max-width: 40rem;
+    font-size: 0.98rem;
+    line-height: 1.45;
 }
 
-.yk-pfm--debt .yk-pfm__wizard-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: 0 0 1.15rem;
-    padding: 0.35rem;
-    border: 1px solid rgba(138, 15, 77, 0.12);
-    border-radius: 14px;
-    background: #fff8fb;
-}
-
-.yk-pfm--debt .yk-pfm__wizard-step {
-    display: inline-flex;
-    align-items: center;
-    min-height: 40px;
-    padding: 0.35rem 0.85rem;
-    border-radius: 10px;
-    color: #6b6b7a;
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
-.yk-pfm--debt .yk-pfm__wizard-step.is-active {
-    background: #8a0f4d;
-    color: #fff;
-    box-shadow: 0 8px 18px -12px rgba(138, 15, 77, 0.55);
+.yk-debt {
+    display: grid;
+    gap: 1.35rem;
 }
 
 .yk-debt__section {
     margin: 0;
-    padding: 0;
+    padding: 1rem 1rem 1.1rem;
+    border: 1px solid var(--yk-line, #ead9e2);
+    border-radius: 14px;
+    background: #fff;
 }
 
 .yk-debt__section-head {
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
-    margin: 0 0 1rem;
-    padding-bottom: 0.85rem;
-    border-bottom: 1px solid rgba(138, 15, 77, 0.12);
+    margin-bottom: 0.85rem;
 }
 
 .yk-debt__section-icon {
@@ -1832,38 +1791,25 @@
 }
 
 .yk-debt__section-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
     margin: 0;
-    color: #1f1f1f;
     font-size: 1.05rem;
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    line-height: 1.25;
+    font-weight: 700;
+    color: var(--yk-ink, #1f1220);
 }
 
-.yk-debt__section-lead {
-    margin: 0.3rem 0 0;
-    max-width: 46ch;
-    color: #6b6b7a;
-    font-size: 0.9rem;
-    line-height: 1.45;
+.yk-debt__section-title .yk-icon {
+    color: #8a0f4d;
 }
 
-.yk-debt__grid {
-    gap: 1rem;
-}
-
-.yk-debt__field--tenure {
-    grid-column: 1 / -1;
-}
-
-@media (min-width: 768px) {
-    .yk-debt__field--tenure {
-        grid-column: span 1;
-    }
-
-    .yk-pfm--debt .yk-debt__grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+.yk-debt__section-lead,
+.yk-debt__help {
+    margin: 0.35rem 0 0;
+    font-size: 0.86rem;
+    line-height: 1.4;
+    color: var(--yk-muted, #6b5a63);
 }
 
 .yk-debt__label-row {
@@ -1882,12 +1828,16 @@
     font-weight: 800;
 }
 
+.yk-debt__grid {
+    gap: 0.9rem 1rem;
+}
+
 .yk-debt__control {
     display: flex;
     align-items: stretch;
     width: 100%;
     min-height: var(--yk-touch, 48px);
-    border: 1px solid var(--yk-line, #e8e4de);
+    border: 1px solid var(--yk-line, #ead9e2);
     border-radius: 12px;
     background: #fff;
     overflow: hidden;
@@ -1903,118 +1853,1867 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex: none;
-    min-width: 2.6rem;
+    flex: 0 0 auto;
     padding: 0 0.75rem;
-    border-right: 1px solid var(--yk-line, #e8e4de);
     background: #f8eaf1;
-    color: #6e0b3c;
-    font-size: 1rem;
-    font-weight: 800;
-    line-height: 1;
+    color: #8a0f4d;
+    font-weight: 700;
+    font-size: 0.92rem;
+    white-space: nowrap;
 }
 
+.yk-debt__affix--prefix {
+    border-right: 1px solid var(--yk-line, #ead9e2);
+}
+
+.yk-debt__affix--suffix,
 .yk-debt__affix--end {
-    border-right: 0;
-    border-left: 1px solid var(--yk-line, #e8e4de);
-    min-width: 3.4rem;
-    font-size: 0.84rem;
-    font-weight: 700;
+    border-left: 1px solid var(--yk-line, #ead9e2);
 }
 
 .yk-pfm--debt .yk-debt__control input {
-    width: 100%;
-    min-width: 0;
-    min-height: var(--yk-touch, 48px);
-    margin: 0;
-    padding: 0.65rem 0.85rem;
     border: 0 !important;
     border-radius: 0 !important;
-    background: transparent;
     box-shadow: none !important;
-    color: var(--yk-navy, #1f1f1f);
-    font: inherit;
+    min-height: var(--yk-touch, 48px);
+    padding-inline: 0.85rem;
+    width: 100%;
+    background: transparent;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
-    appearance: textfield;
-    -moz-appearance: textfield;
-}
-
-.yk-pfm--debt .yk-debt__control input::-webkit-outer-spin-button,
-.yk-pfm--debt .yk-debt__control input::-webkit-inner-spin-button {
-    margin: 0;
-    -webkit-appearance: none;
-}
-
-.yk-pfm--debt .yk-debt__control input::placeholder {
-    color: #9a94a0;
-    font-weight: 500;
 }
 
 .yk-pfm--debt .yk-debt__control input:focus {
     outline: 0;
 }
 
-.yk-debt__help {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.35rem;
-    margin: 0.4rem 2px 0;
-    color: #6b6b7a;
-    font-size: 0.82rem;
-    line-height: 1.4;
+.yk-pfm--debt .yk-pfm__actions {
+    margin-top: 1.15rem;
+    flex-wrap: wrap;
 }
 
-.yk-debt__help .yk-icon {
-    flex: none;
-    margin-top: 0.1rem;
-    color: #8a0f4d;
+.yk-pfm--debt .yk-pfm__actions .yk-pfm__btn[data-pfm-submit] {
+    min-width: 10.5rem;
 }
 
-.yk-pfm--debt .yk-debt__actions {
-    margin-top: 1.25rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(138, 15, 77, 0.1);
-}
-
-.yk-pfm--debt .yk-debt__actions .yk-pfm__btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-}
-
-.yk-pfm--debt .yk-debt__actions .yk-pfm__btn--ghost {
-    background: #fff;
-}
-
-@media (max-width: 767.98px) {
-    .yk-pfm--debt .yk-pfm__wrap--wide {
-        width: min(920px, calc(100% - 1.5rem));
-    }
-
-    .yk-pfm--debt .yk-pfm__card {
-        padding: 1.1rem 1rem 1.15rem;
-    }
-
-    .yk-debt__section-head {
-        gap: 0.65rem;
-    }
-
-    .yk-debt__actions .yk-pfm__btn {
-        flex: 1 1 auto;
-        min-width: min(100%, 10rem);
+@media (max-width: 768px) {
+    .yk-pfm--debt .yk-debt__grid {
+        grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 430px) {
-    .yk-pfm--debt .yk-pfm__wizard-step {
-        flex: 1 1 auto;
-        justify-content: center;
-        font-size: 0.84rem;
+    .yk-debt__section {
+        padding: 0.9rem 0.85rem 1rem;
     }
 
-    .yk-debt__actions .yk-pfm__btn {
+    .yk-pfm--debt .yk-pfm__actions .yk-pfm__btn {
         width: 100%;
+    }
+}
+
+/* Task 42 � Debt & EMI down payment financed preview (scoped) */
+.yk-debt__financed {
+    margin: 0.55rem 0 0;
+    padding: 0.55rem 0.75rem;
+    border-radius: 10px;
+    background: #f8eaf1;
+    border: 1px solid #ead9e2;
+    color: #1f1220;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.yk-debt__financed strong {
+    color: #8a0f4d;
+    font-weight: 700;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Task 43 � Debt & EMI explanatory result (scoped .yk-debtr)                   */
+/* -------------------------------------------------------------------------- */
+
+.yk-debtr {
+    --debtr-plum: #8a0f4d;
+    --debtr-pearl: #fff8fb;
+    --debtr-soft: #f8eaf1;
+    --debtr-line: #ead9e2;
+    --debtr-ink: #1f1220;
+    --debtr-muted: #6b5a63;
+    --debtr-interest: #c45a8a;
+    background: var(--debtr-pearl);
+}
+
+.yk-debtr .visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.yk-debtr__header {
+    padding: 1.25rem 0 0.5rem;
+    background: linear-gradient(180deg, #fff 0%, var(--debtr-pearl) 100%);
+    border-bottom: 1px solid var(--debtr-line);
+}
+
+.yk-debtr__wrap {
+    width: min(1100px, calc(100% - 2rem));
+    margin-inline: auto;
+}
+
+.yk-debtr__crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.5rem;
+    align-items: center;
+    margin: 0 0 0.85rem;
+    font-size: 0.86rem;
+    color: var(--debtr-muted);
+}
+
+.yk-debtr__crumbs a {
+    color: var(--debtr-plum);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.yk-debtr__crumbs a:hover,
+.yk-debtr__crumbs a:focus-visible {
+    text-decoration: underline;
+}
+
+.yk-debtr__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 0 0.55rem;
+    color: var(--debtr-plum);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.yk-debtr__title-row {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+}
+
+.yk-debtr__title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 12px;
+    background: var(--debtr-soft);
+    color: var(--debtr-plum);
+    flex: 0 0 auto;
+}
+
+.yk-debtr__header h1 {
+    margin: 0;
+    font-size: clamp(1.45rem, 2.4vw, 1.85rem);
+    line-height: 1.2;
+    color: var(--debtr-ink);
+}
+
+.yk-debtr__lead {
+    margin: 0.35rem 0 0;
+    color: var(--debtr-muted);
+    font-size: 0.98rem;
+    line-height: 1.45;
+    max-width: 36rem;
+}
+
+.yk-debtr__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0.9rem 0 0;
+}
+
+.yk-debtr__facts span {
+    display: inline-flex;
+    padding: 0.28rem 0.65rem;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid var(--debtr-line);
+    color: var(--debtr-ink);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.yk-debtr__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+    gap: 1.25rem;
+    padding: 1.25rem 0 2.5rem;
+    align-items: start;
+}
+
+.yk-debtr__main {
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.yk-debtr__aside {
+    display: grid;
+    gap: 1rem;
+    position: sticky;
+    top: 1rem;
+}
+
+.yk-debtr__alert,
+.yk-debtr__banner {
+    margin: 0;
+}
+
+.yk-debtr__banner {
+    padding: 0.7rem 0.9rem;
+    border-radius: 12px;
+    background: var(--debtr-soft);
+    border: 1px solid var(--debtr-line);
+    color: var(--debtr-ink);
+    font-size: 0.9rem;
+}
+
+.yk-debtr__headline,
+.yk-debtr__panel,
+.yk-debtr__keep,
+.yk-debtr__assump,
+.yk-debtr__terms {
+    margin: 0;
+    padding: 1.1rem 1.15rem;
+    border: 1px solid var(--debtr-line);
+    border-radius: 14px;
+    background: #fff;
+}
+
+.yk-debtr__headline {
+    position: relative;
+    overflow: hidden;
+}
+
+.yk-debtr__headline::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: var(--debtr-plum);
+}
+
+.yk-debtr__headline.is-no-loan::before {
+    background: #2fa37c;
+}
+
+.yk-debtr__headline-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 0.75rem;
+    align-items: center;
+    margin-bottom: 0.35rem;
+}
+
+.yk-debtr__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.yk-debtr__chip--loan {
+    background: var(--debtr-soft);
+    color: var(--debtr-plum);
+}
+
+.yk-debtr__chip--ok {
+    background: #e8f7f0;
+    color: #1d6b4f;
+}
+
+.yk-debtr__label {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--debtr-muted);
+}
+
+.yk-debtr__figure {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.45rem 0.75rem;
+    margin: 0.35rem 0 0;
+}
+
+.yk-debtr__figure strong {
+    font-size: clamp(1.85rem, 4vw, 2.35rem);
+    line-height: 1.1;
+    color: var(--debtr-plum);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.yk-debtr__figure span {
+    color: var(--debtr-muted);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.yk-debtr__kpis {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin: 1rem 0 0;
+}
+
+.yk-debtr__kpi {
+    padding: 0.7rem 0.75rem;
+    border-radius: 12px;
+    background: var(--debtr-pearl);
+    border: 1px solid var(--debtr-line);
+}
+
+.yk-debtr__kpi dt {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--debtr-muted);
+    font-weight: 600;
+}
+
+.yk-debtr__kpi dd {
+    margin: 0.25rem 0 0;
+    font-size: 1.05rem;
+    font-weight: 750;
+    color: var(--debtr-ink);
+    word-break: break-word;
+}
+
+.yk-debtr__payment-split {
+    margin: 0.95rem 0 0;
+    padding: 0.75rem 0.85rem;
+    border-radius: 12px;
+    background: var(--debtr-soft);
+    border: 1px solid var(--debtr-line);
+    display: grid;
+    gap: 0.4rem;
+}
+
+.yk-debtr__payment-split p {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--debtr-ink);
+}
+
+.yk-debtr__payment-split-total {
+    padding-top: 0.35rem;
+    border-top: 1px solid var(--debtr-line);
+    font-weight: 700;
+}
+
+.yk-debtr__hint {
+    font-size: 0.8rem !important;
+    color: var(--debtr-muted) !important;
+    display: block !important;
+}
+
+.yk-debtr__panel h2,
+.yk-debtr__keep h2,
+.yk-debtr__assump h2 {
+    margin: 0 0 0.65rem;
+    font-size: 1.05rem;
+    color: var(--debtr-ink);
+}
+
+.yk-debtr__panel-lead {
+    margin: -0.25rem 0 0.85rem;
+    color: var(--debtr-muted);
+    font-size: 0.88rem;
+    line-height: 1.4;
+}
+
+.yk-debtr__breakdown {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+    margin: 0;
+}
+
+.yk-debtr__breakdown > div {
+    padding: 0.7rem 0.8rem;
+    border-radius: 12px;
+    background: var(--debtr-pearl);
+    border: 1px solid var(--debtr-line);
+}
+
+.yk-debtr__breakdown dt {
+    margin: 0;
+    font-size: 0.78rem;
+    color: var(--debtr-muted);
+    font-weight: 600;
+}
+
+.yk-debtr__breakdown dd {
+    margin: 0.3rem 0 0;
+    font-size: 1.05rem;
+    font-weight: 750;
+    color: var(--debtr-ink);
+    word-break: break-word;
+}
+
+.yk-debtr__breakdown small {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: var(--debtr-muted);
+    font-weight: 500;
+}
+
+.yk-debtr__bar {
+    display: flex;
+    width: 100%;
+    height: 1.65rem;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--debtr-soft);
+}
+
+.yk-debtr__seg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.yk-debtr__seg--principal {
+    background: var(--debtr-plum);
+}
+
+.yk-debtr__seg--interest {
+    background: var(--debtr-interest);
+}
+
+.yk-debtr__legend {
+    list-style: none;
+    margin: 0.85rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.45rem;
+}
+
+.yk-debtr__legend li {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.55rem;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--debtr-ink);
+}
+
+.yk-debtr__legend b {
+    font-weight: 700;
+}
+
+.yk-debtr__legend em {
+    font-style: normal;
+    color: var(--debtr-muted);
+    font-weight: 600;
+}
+
+.yk-debtr__dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+}
+
+.yk-debtr__dot--principal {
+    background: var(--debtr-plum);
+}
+
+.yk-debtr__dot--interest {
+    background: var(--debtr-interest);
+}
+
+.yk-debtr__table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.yk-debtr__table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 320px;
+    font-size: 0.9rem;
+}
+
+.yk-debtr__table th,
+.yk-debtr__table td {
+    padding: 0.65rem 0.55rem;
+    border-bottom: 1px solid var(--debtr-line);
+    text-align: left;
+    vertical-align: top;
+}
+
+.yk-debtr__table thead th {
+    color: var(--debtr-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: var(--debtr-pearl);
+}
+
+.yk-debtr__table tbody th {
+    font-weight: 650;
+    color: var(--debtr-ink);
+}
+
+.yk-debtr__savings {
+    list-style: none;
+    margin: 0.85rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.45rem;
+}
+
+.yk-debtr__savings li {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 0.7rem;
+    border-radius: 10px;
+    background: #e8f7f0;
+    color: #1d6b4f;
+    font-size: 0.9rem;
+}
+
+.yk-debtr__points {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.yk-debtr__points li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.65rem;
+    align-items: start;
+}
+
+.yk-debtr__points li > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 8px;
+    background: var(--debtr-soft);
+    color: var(--debtr-plum);
+}
+
+.yk-debtr__points p {
+    margin: 0;
+    color: var(--debtr-ink);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.yk-debtr__terms summary {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 700;
+    color: var(--debtr-ink);
+    list-style: none;
+}
+
+.yk-debtr__terms summary::-webkit-details-marker {
+    display: none;
+}
+
+.yk-debtr__terms[open] summary {
+    margin-bottom: 0.75rem;
+}
+
+.yk-debtr__terms dl {
+    margin: 0;
+    display: grid;
+    gap: 0.65rem;
+}
+
+.yk-debtr__terms dt {
+    margin: 0;
+    font-weight: 700;
+    color: var(--debtr-plum);
+    font-size: 0.88rem;
+}
+
+.yk-debtr__terms dd {
+    margin: 0.2rem 0 0;
+    color: var(--debtr-muted);
+    font-size: 0.88rem;
+    line-height: 1.4;
+}
+
+.yk-debtr__disclaimer {
+    margin: 0.25rem 0 0;
+    padding: 0.85rem 0.95rem;
+    border-radius: 12px;
+    background: var(--debtr-soft);
+    border: 1px solid var(--debtr-line);
+    color: var(--debtr-muted);
+    font-size: 0.86rem;
+    line-height: 1.45;
+}
+
+.yk-debtr__kicker {
+    margin: 0 0 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--debtr-plum);
+}
+
+.yk-debtr__keep-text {
+    margin: 0 0 0.9rem;
+    color: var(--debtr-muted);
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.yk-debtr__acts {
+    display: grid;
+    gap: 0.55rem;
+}
+
+.yk-debtr__acts form,
+.yk-debtr__acts .yk-pfm__btn,
+.yk-debtr__acts a.yk-pfm__btn {
+    width: 100%;
+}
+
+.yk-debtr__acts .yk-pfm__btn {
+    justify-content: center;
+}
+
+.yk-debtr__hist {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.55rem;
+    color: var(--debtr-plum);
+    font-weight: 700;
+    font-size: 0.92rem;
+    text-decoration: none;
+}
+
+.yk-debtr__hist:hover,
+.yk-debtr__hist:focus-visible {
+    text-decoration: underline;
+}
+
+.yk-debtr__assump dl {
+    margin: 0;
+    display: grid;
+    gap: 0;
+}
+
+.yk-debtr__assump dl > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.55rem 0;
+    border-top: 1px solid var(--debtr-line);
+    font-size: 0.88rem;
+}
+
+.yk-debtr__assump dl > div:first-child {
+    border-top: 0;
+    padding-top: 0;
+}
+
+.yk-debtr__assump dt {
+    margin: 0;
+    color: var(--debtr-muted);
+}
+
+.yk-debtr__assump dd {
+    margin: 0;
+    font-weight: 700;
+    color: var(--debtr-ink);
+    text-align: right;
+    word-break: break-word;
+}
+
+@media (max-width: 1024px) {
+    .yk-debtr__layout {
+        grid-template-columns: 1fr;
+    }
+
+    .yk-debtr__aside {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .yk-debtr__kpis,
+    .yk-debtr__breakdown {
+        grid-template-columns: 1fr;
+    }
+
+    .yk-debtr__figure strong {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 430px) {
+    .yk-debtr__wrap {
+        width: calc(100% - 1.25rem);
+    }
+
+    .yk-debtr__headline,
+    .yk-debtr__panel,
+    .yk-debtr__keep,
+    .yk-debtr__assump,
+    .yk-debtr__terms {
+        padding: 0.95rem 0.85rem;
+    }
+
+    .yk-debtr__facts span {
+        font-size: 0.75rem;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Task 44 � Retirement Calculator conclusion (scoped .yk-pfm--rt / .yk-rtconc) */
+/* -------------------------------------------------------------------------- */
+
+.yk-pfm--rt .yk-pfm__wrap--wide {
+    width: min(920px, calc(100% - 2rem));
+}
+
+.yk-rtconc {
+    margin: 1.25rem 0 0;
+    padding: 1.15rem 1.2rem 1.2rem;
+    border: 1px solid #ead9e2;
+    border-radius: 14px;
+    background: #fff;
+}
+
+.yk-rtconc__head {
+    margin-bottom: 0.85rem;
+}
+
+.yk-rtconc__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0;
+    font-size: 1.12rem;
+    font-weight: 750;
+    color: #1f1220;
+}
+
+.yk-rtconc__title .yk-icon {
+    color: #8a0f4d;
+}
+
+.yk-rtconc__lead {
+    margin: 0.35rem 0 0;
+    color: #6b5a63;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.yk-rtconc__points {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.yk-rtconc__points li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.65rem;
+    align-items: start;
+}
+
+.yk-rtconc__points li > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 8px;
+    background: #f8eaf1;
+    color: #8a0f4d;
+}
+
+.yk-rtconc__points p {
+    margin: 0;
+    color: #1f1220;
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.yk-rtconc__panel {
+    margin: 1.1rem 0 0;
+    padding: 0.9rem 0.95rem;
+    border-radius: 12px;
+    background: #fff8fb;
+    border: 1px solid #ead9e2;
+}
+
+.yk-rtconc__subtitle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 0 0.65rem;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #1f1220;
+}
+
+.yk-rtconc__subtitle .yk-icon {
+    color: #8a0f4d;
+}
+
+.yk-rtconc__terms {
+    margin: 0;
+    display: grid;
+    gap: 0.7rem;
+}
+
+.yk-rtconc__terms dt {
+    margin: 0;
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: #8a0f4d;
+}
+
+.yk-rtconc__terms dd {
+    margin: 0.2rem 0 0;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: #6b5a63;
+}
+
+.yk-rtconc__next {
+    margin: 0;
+    padding-left: 1.15rem;
+    color: #1f1220;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.yk-rtconc__next li + li {
+    margin-top: 0.35rem;
+}
+
+.yk-rtconc__assump-grid {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem 0.85rem;
+}
+
+.yk-rtconc__assump-grid > div {
+    padding: 0.55rem 0.65rem;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #ead9e2;
+}
+
+.yk-rtconc__assump-grid dt {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #6b5a63;
+    font-weight: 600;
+}
+
+.yk-rtconc__assump-grid dd {
+    margin: 0.2rem 0 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1f1220;
+    word-break: break-word;
+}
+
+.yk-rtconc__disclaimer {
+    margin: 1rem 0 0;
+    padding: 0.85rem 0.95rem;
+    border-radius: 12px;
+    background: #f8eaf1;
+    border: 1px solid #ead9e2;
+    color: #6b5a63;
+    font-size: 0.86rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .yk-rtconc__assump-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 430px) {
+    .yk-rtconc {
+        padding: 0.95rem 0.85rem 1rem;
+    }
+
+    .yk-rtconc__points li {
+        gap: 0.5rem;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Task 45 ? Retirement monthly investment sufficiency (.yk-rtsuf)            */
+/* -------------------------------------------------------------------------- */
+
+.yk-rtsuf {
+    margin: 1.25rem 0 0;
+    padding: 1.15rem 1.2rem 1.2rem;
+    border: 1px solid #ead9e2;
+    border-radius: 14px;
+    background: #fff;
+}
+
+.yk-rtsuf__head {
+    margin-bottom: 0.9rem;
+}
+
+.yk-rtsuf__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0 0 0.55rem;
+    padding: 0.28rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.3;
+    border: 1px solid transparent;
+}
+
+.yk-rtsuf__chip .yk-icon {
+    flex-shrink: 0;
+}
+
+.yk-rtsuf__chip--ok {
+    color: #1f5a3a;
+    background: #e8f6ee;
+    border-color: #c6e5d3;
+}
+
+.yk-rtsuf__chip--gap {
+    color: #7a3a12;
+    background: #fff1e6;
+    border-color: #f0d0b4;
+}
+
+.yk-rtsuf__chip--muted {
+    color: #6b5a63;
+    background: #f8eaf1;
+    border-color: #ead9e2;
+}
+
+.yk-rtsuf__title {
+    margin: 0;
+    font-size: 1.12rem;
+    font-weight: 750;
+    color: #1f1220;
+}
+
+.yk-rtsuf__lead {
+    margin: 0.35rem 0 0;
+    color: #6b5a63;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.yk-rtsuf__note {
+    margin: 0.75rem 0 0;
+    padding: 0.85rem 0.95rem;
+    border-radius: 12px;
+    background: #fff8fb;
+    border: 1px solid #ead9e2;
+    color: #1f1220;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.yk-rtsuf__groups {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 0.85rem;
+}
+
+.yk-rtsuf__group {
+    padding: 0.9rem 0.95rem;
+    border-radius: 12px;
+    background: #fff8fb;
+    border: 1px solid #ead9e2;
+}
+
+.yk-rtsuf__group h3 {
+    margin: 0 0 0.65rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #8a0f4d;
+}
+
+.yk-rtsuf__metrics {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem 0.85rem;
+}
+
+.yk-rtsuf__metrics > div {
+    padding: 0.55rem 0.65rem;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #ead9e2;
+}
+
+.yk-rtsuf__metrics dt {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #6b5a63;
+    font-weight: 600;
+}
+
+.yk-rtsuf__metrics dd {
+    margin: 0.2rem 0 0;
+    font-size: 0.98rem;
+    font-weight: 750;
+    color: #1f1220;
+    word-break: break-word;
+}
+
+.yk-rtsuf__coverage {
+    margin-top: 0.85rem;
+}
+
+.yk-rtsuf__coverage-label {
+    margin: 0 0 0.4rem;
+    font-size: 0.86rem;
+    color: #6b5a63;
+    line-height: 1.4;
+}
+
+.yk-rtsuf__coverage-label strong {
+    color: #1f1220;
+    font-weight: 750;
+}
+
+.yk-rtsuf__bar {
+    height: 0.7rem;
+    border-radius: 999px;
+    background: #ead9e2;
+    overflow: hidden;
+}
+
+.yk-rtsuf__bar-fill {
+    display: block;
+    height: 100%;
+    min-width: 0;
+    border-radius: 999px;
+    background: #8a0f4d;
+}
+
+.yk-rtsuf__explain {
+    list-style: none;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+}
+
+.yk-rtsuf__explain li {
+    margin: 0;
+    padding: 0.75rem 0.85rem;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #ead9e2;
+    color: #1f1220;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.yk-rtsuf .visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 768px) {
+    .yk-rtsuf__metrics {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 430px) {
+    .yk-rtsuf {
+        padding: 0.95rem 0.85rem 1rem;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Task 46 ? Inflation Calculator year-wise graph (.yk-infchart)              */
+/* -------------------------------------------------------------------------- */
+
+.yk-infchart {
+    max-width: none;
+}
+
+.yk-infchart .yk-infchart__svg {
+    max-width: 100%;
+    width: 100%;
+}
+
+.yk-infchart__explain {
+    margin: 0 0 0.75rem;
+    color: #1f1220;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.yk-infchart__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 0.85rem;
+    margin: 0 0 0.85rem;
+    color: #6b5a63;
+    font-size: 0.82rem;
+}
+
+.yk-infchart__meta strong {
+    color: #1f1220;
+    font-weight: 700;
+}
+
+.yk-infchart__unavailable {
+    margin: 0;
+    padding: 0.85rem 0.95rem;
+    border-radius: 12px;
+    background: #fff8fb;
+    border: 1px solid #ead9e2;
+    color: #1f1220;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.yk-infchart__grid {
+    stroke: #f0e4eb;
+    stroke-width: 1;
+}
+
+.yk-infchart__axis {
+    stroke: #ead9e2;
+    stroke-width: 1.5;
+}
+
+.yk-infchart__tick {
+    fill: #6b5a63;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.yk-infchart__line {
+    stroke: #8a0f4d;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.yk-infchart__dot {
+    fill: #8a0f4d;
+    stroke: #fff;
+    stroke-width: 1.5;
+}
+
+.yk-infchart__dot--end {
+    fill: #e0a73f;
+    stroke: #8a0f4d;
+}
+
+.yk-infchart__value {
+    fill: #1f1220;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.yk-infchart__xlabel {
+    fill: #6b5a63;
+    font-size: 9.5px;
+}
+
+.yk-infchart__xlabel--strong {
+    fill: #1f1220;
+    font-weight: 700;
+}
+
+.yk-infchart__point:focus {
+    outline: none;
+}
+
+.yk-infchart__point:focus .yk-infchart__dot {
+    stroke: #8a0f4d;
+    stroke-width: 2.5;
+    r: 6;
+}
+
+.yk-infchart__table-wrap {
+    margin: 0.85rem 0 0;
+    border: 1px solid #ead9e2;
+    border-radius: 12px;
+    background: #fff8fb;
+    padding: 0.55rem 0.75rem 0.75rem;
+}
+
+.yk-infchart__table-summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: #8a0f4d;
+    font-size: 0.9rem;
+    list-style: none;
+}
+
+.yk-infchart__table-summary::-webkit-details-marker {
+    display: none;
+}
+
+.yk-infchart__table-scroll {
+    margin-top: 0.55rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.yk-infchart__table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 260px;
+}
+
+.yk-infchart__table th,
+.yk-infchart__table td {
+    padding: 0.45rem 0.55rem;
+    border-bottom: 1px solid #ead9e2;
+    text-align: left;
+    font-size: 0.88rem;
+}
+
+.yk-infchart__table thead th {
+    color: #6b5a63;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: none;
+}
+
+.yk-infchart__table tbody th {
+    color: #1f1220;
+    font-weight: 650;
+}
+
+.yk-infchart__table td {
+    color: #1f1220;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.yk-infchart .visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 768px) {
+    .yk-infchart__value {
+        font-size: 9px;
+    }
+
+    .yk-infchart__xlabel {
+        font-size: 8.5px;
+    }
+
+    .yk-infchart__meta {
+        gap: 0.35rem 0.65rem;
+    }
+}
+
+@media (max-width: 430px) {
+    .yk-infchart__explain {
+        font-size: 0.88rem;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Task 47 ? Savings & Investment summary (.yk-siconc / .yk-pfm--si)           */
+/* -------------------------------------------------------------------------- */
+
+.yk-pfm--si .yk-pfm__wrap--wide {
+    width: min(920px, calc(100% - 2rem));
+}
+
+.yk-pfm__metric-note {
+    display: block;
+    margin-top: 0.25rem;
+    font-style: normal;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #6b5a63;
+}
+
+.yk-siconc {
+    margin: 1.25rem 0 0;
+    padding: 1.15rem 1.2rem 1.2rem;
+    border: 1px solid #ead9e2;
+    border-radius: 14px;
+    background: #fff;
+}
+
+.yk-siconc__head {
+    margin-bottom: 0.85rem;
+}
+
+.yk-siconc__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0;
+    font-size: 1.12rem;
+    font-weight: 750;
+    color: #1f1220;
+}
+
+.yk-siconc__title .yk-icon {
+    color: #8a0f4d;
+}
+
+.yk-siconc__lead {
+    margin: 0.35rem 0 0;
+    color: #6b5a63;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.yk-siconc__kpi {
+    margin: 0.85rem 0 0;
+    padding: 0.95rem 1rem;
+    border-radius: 12px;
+    background: #fff8fb;
+    border: 1px solid #ead9e2;
+}
+
+.yk-siconc__kpi-label {
+    margin: 0;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #8a0f4d;
+}
+
+.yk-siconc__kpi-value {
+    margin: 0.25rem 0 0;
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: #1f1220;
+    word-break: break-word;
+}
+
+.yk-siconc__kpi-note {
+    margin: 0.3rem 0 0;
+    color: #6b5a63;
+    font-size: 0.86rem;
+}
+
+.yk-siconc__metrics {
+    margin: 0.9rem 0 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem 0.85rem;
+}
+
+.yk-siconc__metrics > div {
+    padding: 0.55rem 0.65rem;
+    border-radius: 10px;
+    background: #fff8fb;
+    border: 1px solid #ead9e2;
+}
+
+.yk-siconc__metrics dt {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #6b5a63;
+    font-weight: 600;
+}
+
+.yk-siconc__metrics dd {
+    margin: 0.2rem 0 0;
+    font-size: 0.98rem;
+    font-weight: 750;
+    color: #1f1220;
+    word-break: break-word;
+}
+
+.yk-siconc__panel {
+    margin: 1.1rem 0 0;
+    padding: 0.9rem 0.95rem;
+    border-radius: 12px;
+    background: #fff8fb;
+    border: 1px solid #ead9e2;
+}
+
+.yk-siconc__subtitle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 0 0.65rem;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #1f1220;
+}
+
+.yk-siconc__subtitle .yk-icon {
+    color: #8a0f4d;
+}
+
+.yk-siconc__points {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.yk-siconc__points li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.65rem;
+    align-items: start;
+}
+
+.yk-siconc__points li > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 8px;
+    background: #f8eaf1;
+    color: #8a0f4d;
+}
+
+.yk-siconc__points p {
+    margin: 0;
+    color: #1f1220;
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.yk-siconc__terms {
+    margin: 0;
+    display: grid;
+    gap: 0.7rem;
+}
+
+.yk-siconc__terms dt {
+    margin: 0;
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: #8a0f4d;
+}
+
+.yk-siconc__terms dd {
+    margin: 0.2rem 0 0;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: #6b5a63;
+}
+
+.yk-siconc__next {
+    margin: 0;
+    padding-left: 1.15rem;
+    color: #1f1220;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.yk-siconc__next li + li {
+    margin-top: 0.35rem;
+}
+
+.yk-siconc__assump-grid {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem 0.85rem;
+}
+
+.yk-siconc__assump-grid > div {
+    padding: 0.55rem 0.65rem;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #ead9e2;
+}
+
+.yk-siconc__assump-grid dt {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #6b5a63;
+    font-weight: 600;
+}
+
+.yk-siconc__assump-grid dd {
+    margin: 0.2rem 0 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1f1220;
+    word-break: break-word;
+}
+
+.yk-siconc__disclaimer {
+    margin: 1rem 0 0;
+    padding: 0.85rem 0.95rem;
+    border-radius: 12px;
+    background: #f8eaf1;
+    border: 1px solid #ead9e2;
+    color: #6b5a63;
+    font-size: 0.86rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .yk-siconc__metrics,
+    .yk-siconc__assump-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 430px) {
+    .yk-siconc {
+        padding: 0.95rem 0.85rem 1rem;
+    }
+
+    .yk-siconc__kpi-value {
+        font-size: 1.35rem;
+    }
+
+    .yk-siconc__points li {
+        gap: 0.5rem;
+    }
+}
+
+/* Task 48 ? Savings & Investment amount UI (.yk-siamt / .yk-pfm--si)           */
+
+.yk-siamt {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.yk-siamt__section {
+    padding: 1.1rem 1.15rem 1.2rem;
+    border-radius: 16px;
+    background: #fff;
+    border: 1px solid #ead9e2;
+    box-shadow: 0 1px 0 rgba(138, 15, 77, 0.04);
+}
+
+.yk-siamt__head {
+    margin-bottom: 0.95rem;
+}
+
+.yk-siamt__title {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 1.12rem;
+    font-weight: 700;
+    color: #1f1220;
+}
+
+.yk-siamt__title .yk-icon {
+    color: #8a0f4d;
+}
+
+.yk-siamt__lead {
+    margin: 0.35rem 0 0;
+    color: #6b5a63;
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+.yk-siamt__legend {
+    margin: 0 0 0.55rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #8a0f4d;
+}
+
+.yk-siamt__types {
+    margin: 0 0 1rem;
+    padding: 0;
+    border: 0;
+}
+
+.yk-siamt__type-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+}
+
+.yk-siamt__type {
+    margin: 0;
+    cursor: pointer;
+}
+
+.yk-siamt__type input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.yk-siamt__type-card {
+    display: grid;
+    gap: 0.2rem;
+    min-height: 100%;
+    padding: 0.8rem 0.75rem;
+    border-radius: 14px;
+    border: 1px solid #ead9e2;
+    background: #fff8fb;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.yk-siamt__type.is-active .yk-siamt__type-card,
+.yk-siamt__type:focus-within .yk-siamt__type-card {
+    border-color: #8a0f4d;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(138, 15, 77, 0.12);
+}
+
+.yk-siamt__type-icon {
+    color: #8a0f4d;
+}
+
+.yk-siamt__type-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1f1220;
+}
+
+.yk-siamt__type-hint {
+    font-size: 0.8rem;
+    color: #6b5a63;
+    line-height: 1.35;
+}
+
+.yk-siamt__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.1rem;
+}
+
+.yk-siamt__control {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid #ead9e2;
+    border-radius: 12px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.yk-siamt__control:focus-within {
+    border-color: #8a0f4d;
+    box-shadow: 0 0 0 3px rgba(138, 15, 77, 0.12);
+}
+
+.yk-siamt__affix {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.4rem;
+    padding: 0 0.55rem;
+    background: #f8eaf1;
+    color: #8a0f4d;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.yk-siamt__affix--suffix {
+    border-left: 1px solid #ead9e2;
+}
+
+.yk-pfm--si .yk-siamt__control input,
+.yk-siamt__control input {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    padding: 0.7rem 0.75rem;
+}
+
+.yk-pfm--si .yk-siamt__control input:focus,
+.yk-siamt__control input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.yk-siamt__help {
+    margin: 0.4rem 0 0;
+    color: #6b5a63;
+    font-size: 0.84rem;
+    line-height: 1.4;
+}
+
+.yk-siamt__presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.55rem;
+}
+
+.yk-siamt__preset {
+    appearance: none;
+    border: 1px solid #ead9e2;
+    background: #fff8fb;
+    color: #8a0f4d;
+    border-radius: 999px;
+    padding: 0.35rem 0.7rem;
+    font-size: 0.8rem;
+    font-weight: 650;
+    cursor: pointer;
+    line-height: 1.2;
+}
+
+.yk-siamt__preset:hover,
+.yk-siamt__preset:focus-visible {
+    background: #f8eaf1;
+    border-color: #8a0f4d;
+    outline: none;
+}
+
+.yk-siamt__error {
+    margin: 0.75rem 0 0;
+    padding: 0.7rem 0.85rem;
+    border-radius: 12px;
+    background: #fff1f0;
+    border: 1px solid #f0c7c2;
+    color: #8a1f1a;
+    font-size: 0.88rem;
+}
+
+.yk-siamt__preview {
+    margin-top: 1rem;
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+    background: #fff8fb;
+    border: 1px solid #ead9e2;
+}
+
+.yk-siamt__preview-title {
+    margin: 0 0 0.65rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #1f1220;
+}
+
+.yk-siamt__preview-title .yk-icon {
+    color: #8a0f4d;
+}
+
+.yk-siamt__preview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem 0.85rem;
+    margin: 0;
+}
+
+.yk-siamt__preview-grid dt {
+    margin: 0;
+    font-size: 0.78rem;
+    color: #6b5a63;
+}
+
+.yk-siamt__preview-grid dd {
+    margin: 0.15rem 0 0;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #1f1220;
+    word-break: break-word;
+}
+
+.yk-siamt__preview-total {
+    grid-column: 1 / -1;
+    padding-top: 0.55rem;
+    border-top: 1px dashed #ead9e2;
+}
+
+.yk-siamt__preview-note {
+    margin: 0.75rem 0 0;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: #6b5a63;
+}
+
+@media (max-width: 768px) {
+    .yk-siamt__type-row,
+    .yk-siamt__grid,
+    .yk-siamt__preview-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 430px) {
+    .yk-siamt__section {
+        padding: 0.95rem 0.85rem 1rem;
+    }
+
+    .yk-siamt__preset {
+        flex: 1 1 calc(50% - 0.4rem);
+        text-align: center;
     }
 }

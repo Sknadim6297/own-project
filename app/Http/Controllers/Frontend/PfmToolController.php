@@ -8,6 +8,7 @@ use App\Models\Tool;
 use App\Services\Pfm\PfmCalculator;
 use App\Services\Pfm\PfmDraft;
 use App\Services\Pfm\PfmRecorder;
+use App\Support\Pfm\DebtEmiPresentation;
 use App\Support\Pfm\GoalProjection;
 use App\Support\Pfm\PfmCatalog;
 use Illuminate\Database\QueryException;
@@ -122,6 +123,17 @@ class PfmToolController extends Controller
                 ->view('frontend.sections.pfm.goal-results', $data + [
                     'projection' => GoalProjection::build($inputs, $result),
                     'goalTypes' => PfmCatalog::GOAL_TYPES,
+                ])
+                ->header('Cache-Control', 'private, no-store, no-cache, must-revalidate')
+                ->header('Pragma', 'no-cache');
+        }
+
+        // Task 43 — Debt & EMI dedicated explanatory result (no input form).
+        if ($toolKey === 'debt-emi-calculator') {
+            return response()
+                ->view('frontend.sections.pfm.debt-results', $data + [
+                    'presentation' => DebtEmiPresentation::build($inputs, $result),
+                    'saved' => false,
                 ])
                 ->header('Cache-Control', 'private, no-store, no-cache, must-revalidate')
                 ->header('Pragma', 'no-cache');
@@ -256,14 +268,38 @@ class PfmToolController extends Controller
         }
         $this->authorizeRecord($calculation, $toolKey);
 
+        $inputs = is_array($calculation->inputs) ? $calculation->inputs : [];
+        $result = is_array($calculation->outputs) ? $calculation->outputs : [];
+
+        // Task 43 — Debt saved detail uses the same explanatory presentation (original snapshot only).
+        if ($toolKey === 'debt-emi-calculator') {
+            $savedAt = optional($calculation->updated_at)->timezone(self::HISTORY_TIMEZONE)?->format('d M Y, h:i A');
+
+            return response()
+                ->view('frontend.sections.pfm.debt-results', [
+                    'tool' => $meta,
+                    'toolKey' => $toolKey,
+                    'calculation' => $calculation,
+                    'result' => $result,
+                    'inputs' => $inputs,
+                    'presentation' => DebtEmiPresentation::build($inputs, $result),
+                    'authenticated' => true,
+                    'saved' => true,
+                    'savedAt' => $savedAt,
+                    'unsavedWork' => $draft->readable($toolKey) !== null,
+                ])
+                ->header('Cache-Control', 'private, no-store, no-cache, must-revalidate')
+                ->header('Pragma', 'no-cache');
+        }
+
         // Read-only: never mutate the calculation or the active session draft.
         return response()
             ->view('frontend.sections.pfm.show', [
                 'tool' => $meta,
                 'toolKey' => $toolKey,
                 'calculation' => $calculation,
-                'result' => is_array($calculation->outputs) ? $calculation->outputs : [],
-                'inputs' => is_array($calculation->inputs) ? $calculation->inputs : [],
+                'result' => $result,
+                'inputs' => $inputs,
                 'timezone' => self::HISTORY_TIMEZONE,
                 'unsavedWork' => $draft->readable($toolKey) !== null,
             ])
@@ -292,7 +328,9 @@ class PfmToolController extends Controller
 
         // Task 29 — Emergency Fund: restore current inputs; never wipe draft or auto-save.
         // Task 36 — Financial Goal: same restore behaviour so Edit & recalculate keeps all seven inputs.
-        if (in_array($toolKey, ['emergency-fund-calculator', 'financial-goal-calculator'], true)) {
+        // Task 43 — Debt & EMI: restore all five inputs (including down payment); do not deduct twice.
+        // Task 44 — Retirement: restore supported profile/assumption inputs.
+        if (in_array($toolKey, ['emergency-fund-calculator', 'financial-goal-calculator', 'debt-emi-calculator', 'retirement-calculator'], true)) {
             if ($draft->readable($toolKey) === null) {
                 return redirect()->route($meta['route']);
             }

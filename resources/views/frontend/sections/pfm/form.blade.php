@@ -12,7 +12,8 @@
         'emergency-fund-calculator' => ['partial' => 'emergency-fields', 'steps' => ['Expenses', 'Savings']],
         // FG uses dedicated goal-form (Task 35 single page). Empty steps if this map is ever hit.
         'financial-goal-calculator' => ['partial' => 'goal-fields', 'steps' => []],
-        'debt-emi-calculator' => ['partial' => 'debt-fields', 'steps' => ['Loan details', 'Extra payment']],
+        // Task 41 — Debt & EMI: single continuous form (no wizard steps).
+        'debt-emi-calculator' => ['partial' => 'debt-fields', 'steps' => []],
         'retirement-calculator' => ['partial' => 'retirement-fields', 'steps' => ['Profile', 'Assumptions']],
         'inflation-calculator' => ['partial' => 'inflation-fields', 'steps' => []],
         'savings-investment-calculator' => ['partial' => 'savings-fields', 'steps' => []],
@@ -26,21 +27,22 @@
     $isMoneyPlanner = $toolKey === 'monthly-money-planner';
     $isEmergency = $toolKey === 'emergency-fund-calculator';
     $isDebt = $toolKey === 'debt-emi-calculator';
+    $isSavings = $toolKey === 'savings-investment-calculator';
     $heroIcons = [
         'monthly-money-planner' => 'wallet',
         'net-worth-calculator' => 'chart-pie',
         'emergency-fund-calculator' => 'shield-check',
         'debt-emi-calculator' => 'calculator',
-        'retirement-calculator' => 'calculator',
+        'retirement-calculator' => 'wallet',
         'inflation-calculator' => 'calculator',
-        'savings-investment-calculator' => 'calculator',
+        'savings-investment-calculator' => 'wallet',
     ];
     $heroIcon = $heroIcons[$toolKey] ?? 'calculator';
     $debtEyebrow = $isEditing
         ? 'Edit Calculation'.($editingId ? ' #'.$editingId : '')
-        : 'Debt & EMI · loan details then optional extra payment';
+        : 'EMI planner · all inputs on one page';
 @endphp
-<main class="yk-pfm yk-tools-ds yk-tool-shell {{ $isEmergency ? 'yk-pfm--ef' : '' }} {{ $isDebt ? 'yk-pfm--debt' : '' }}" data-yk-tools-ds data-yk-pfm data-yk-tool-shell="1" @if ($isDebt) data-yk-tool-shell-ref="debt-emi" @endif @if ($isDebt) data-yk-debt-structure="1" @endif @if ($isEditing) data-yk-pfm-editing="1" @endif>
+<main class="yk-pfm yk-tools-ds yk-tool-shell {{ $isEmergency ? 'yk-pfm--ef' : '' }}{{ $isDebt ? ' yk-pfm--debt' : '' }}{{ $isSavings ? ' yk-pfm--si' : '' }}" data-yk-tools-ds data-yk-pfm data-yk-tool-shell="1" @if ($isDebt) data-yk-tool-shell-ref="debt-emi" @endif @if ($isDebt) data-yk-debt-structure="1" data-yk-debt-single="1" @endif @if ($isSavings) data-yk-si-form="1" @endif @if ($isEditing) data-yk-pfm-editing="1" @endif>
     @include('frontend.sections.pfm.partials.page-hero', [
         'crumbs' => $isEditing
             ? [['Money & Finance', route('tools.pfm')], [$tool['name'], route($tool['route'])], ['Edit Calculation', null]]
@@ -144,7 +146,13 @@
                             @if ($isEmergency || $isDebt)
                                 <x-yk-icon :name="$isEditing ? 'refresh-cw' : 'calculator'" class="yk-icon--sm" />
                             @endif
-                            {{ $isEditing ? 'Recalculate' : 'Calculate' }}
+                            @if ($isEditing)
+                                Recalculate
+                            @elseif ($isDebt)
+                                Calculate EMI
+                            @else
+                                Calculate
+                            @endif
                         </button>
                         @if (! $isEditing)
                             @auth('user')

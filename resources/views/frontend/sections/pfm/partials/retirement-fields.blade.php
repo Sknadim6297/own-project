@@ -41,6 +41,23 @@
             <label for="pfm-post">Post-retirement return (% per year)</label>
             <input id="pfm-post" type="number" name="post_retirement_return_percent" min="0" max="50" step="0.01" inputmode="decimal" value="{{ $v('post_retirement_return_percent', '6') }}" required>
         </div>
+        <div class="yk-pfm__field">
+            <label for="pfm-planned-monthly">Planned monthly investment (optional)</label>
+            <input
+                id="pfm-planned-monthly"
+                type="number"
+                name="planned_monthly_investment"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                autocomplete="off"
+                placeholder="Leave blank if unsure"
+                value="{{ $v('planned_monthly_investment') }}"
+                data-yk-rt-planned-monthly
+                aria-describedby="pfm-planned-monthly-help"
+            >
+            <p id="pfm-planned-monthly-help" class="yk-pfm__help">Enter how much you currently plan to invest each month towards your retirement.</p>
+        </div>
     </div>
     <p class="yk-pfm__note">Assumptions are illustrative. Scenario testing is recommended.</p>
 </div>

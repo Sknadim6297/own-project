@@ -235,15 +235,54 @@ class PfmCalculator
      */
     private function debtEmi(array $input): array
     {
-        $principal = $this->money($input['principal'] ?? null, 'Principal');
+        // Task 42 — `principal` remains the purchase/total amount key for API + history.
+        // Financed loan = principal − down_payment (server-side only; never trust client financed values).
+        $purchaseAmount = $this->money($input['principal'] ?? null, 'Principal');
+        $downPayment = $this->money($input['down_payment'] ?? null, 'Down payment', true);
+        if ($downPayment > $purchaseAmount) {
+            throw new InvalidArgumentException('Down payment cannot exceed the total purchase amount.');
+        }
+
+        $financedPrincipal = PfmMath::roundMoney($purchaseAmount - $downPayment);
         $rate = $this->ratePercent($input['annual_rate_percent'] ?? null, 'Interest rate');
         $tenure = $this->positiveFloat($input['tenure_years'] ?? null, 'Tenure');
         $extra = $this->money($input['extra_payment'] ?? null, 'Extra payment', true);
 
-        $plan = PfmMath::emiPlan($principal, $rate, $tenure, $extra);
+        $noLoan = $financedPrincipal <= 0.0;
+        if ($noLoan) {
+            // Full down payment: skip amortize; do not invent interest/months saved.
+            $plan = [
+                'emi' => 0.0,
+                'standard_interest' => 0.0,
+                'standard_total' => 0.0,
+                'standard_months' => 0,
+                'accelerated_interest' => 0.0,
+                'accelerated_months' => 0,
+                'accelerated_total' => 0.0,
+                'interest_saved' => 0.0,
+                'months_saved' => 0,
+            ];
+            $summary = sprintf(
+                'No loan required · Purchase ₹%s paid entirely as down payment',
+                number_format($purchaseAmount, 2)
+            );
+        } else {
+            $plan = PfmMath::emiPlan($financedPrincipal, $rate, $tenure, $extra);
+            $summary = sprintf(
+                'EMI ₹%s · Interest saved ₹%s · Months saved %d',
+                number_format($plan['emi'], 2),
+                number_format($plan['interest_saved'], 2),
+                $plan['months_saved']
+            );
+        }
+
+        $loanRepayment = (float) ($plan['standard_total'] ?? (($plan['emi'] ?? 0) * ($plan['standard_months'] ?? 0)));
+        $totalOutflow = PfmMath::roundMoney($downPayment + $loanRepayment);
 
         $normalized = [
-            'principal' => $principal,
+            'principal' => $purchaseAmount,
+            'down_payment' => $downPayment,
+            'financed_principal' => $financedPrincipal,
             'annual_rate_percent' => $rate,
             'tenure_years' => $tenure,
             'extra_payment' => $extra,
@@ -252,12 +291,13 @@ class PfmCalculator
         $result = array_merge([
             'tool_key' => 'debt-emi-calculator',
             'content_version' => PfmCatalog::CONTENT_VERSION,
-            'summary' => sprintf(
-                'EMI ₹%s · Interest saved ₹%s · Months saved %d',
-                number_format($plan['emi'], 2),
-                number_format($plan['interest_saved'], 2),
-                $plan['months_saved']
-            ),
+            'summary' => $summary,
+            'purchase_amount' => $purchaseAmount,
+            'down_payment' => $downPayment,
+            'financed_principal' => $financedPrincipal,
+            'no_loan' => $noLoan,
+            'loan_repayment_total' => PfmMath::roundMoney($loanRepayment),
+            'total_purchase_outflow' => $totalOutflow,
         ], $plan);
 
         return compact('normalized', 'result');
@@ -287,6 +327,8 @@ class PfmCalculator
         $preReturn = $this->ratePercent($input['pre_retirement_return_percent'] ?? null, 'Pre-retirement return');
         $postReturn = $this->ratePercent($input['post_retirement_return_percent'] ?? null, 'Post-retirement return');
         $assets = $this->money($input['current_assets'] ?? null, 'Current assets', true);
+        // Task 45 — optional planned contribution; omitted/blank stays null (not zero).
+        $plannedMonthly = $this->optionalMoney($input['planned_monthly_investment'] ?? null, 'Planned monthly investment');
 
         $yearsToRetire = $retirementAge - $currentAge;
         $retireMonths = ($lifeExpectancy - $retirementAge) * 12;
@@ -298,6 +340,20 @@ class PfmCalculator
         $monthlyInvestment = PfmMath::pmtForFutureValue($gap, ($preReturn / 100) / 12, $yearsToRetire * 12);
         $readiness = $corpus > 0 ? min(100, round(($fvAssets / $corpus) * 100)) : 100;
 
+        $requiredMonthly = PfmMath::roundMoney($monthlyInvestment);
+        $requiredCorpus = PfmMath::roundMoney($corpus);
+        $roundedFvAssets = PfmMath::roundMoney($fvAssets);
+
+        // Additive sufficiency outputs — same contribution timing as pmtForFutureValue (end-of-month).
+        $sufficiency = $this->retirementSufficiency(
+            $requiredMonthly,
+            $plannedMonthly,
+            $roundedFvAssets,
+            $requiredCorpus,
+            $preReturn,
+            $yearsToRetire
+        );
+
         $normalized = [
             'current_age' => $currentAge,
             'retirement_age' => $retirementAge,
@@ -307,28 +363,99 @@ class PfmCalculator
             'pre_retirement_return_percent' => $preReturn,
             'post_retirement_return_percent' => $postReturn,
             'current_assets' => $assets,
+            'planned_monthly_investment' => $plannedMonthly,
         ];
 
-        $result = [
+        $result = array_merge([
             'tool_key' => 'retirement-calculator',
             'content_version' => PfmCatalog::CONTENT_VERSION,
             'years_to_retire' => $yearsToRetire,
             'future_monthly_expense' => PfmMath::roundMoney($futureMonthly),
-            'required_corpus' => PfmMath::roundMoney($corpus),
-            'future_value_assets' => PfmMath::roundMoney($fvAssets),
+            'required_corpus' => $requiredCorpus,
+            'future_value_assets' => $roundedFvAssets,
             'funding_gap' => PfmMath::roundMoney($gap),
-            'monthly_investment' => PfmMath::roundMoney($monthlyInvestment),
+            'monthly_investment' => $requiredMonthly,
             'readiness_score' => (int) $readiness,
             'summary' => sprintf(
                 'Corpus ₹%s · Gap ₹%s · Monthly ₹%s · Readiness %d%%',
-                number_format(PfmMath::roundMoney($corpus), 2),
+                number_format($requiredCorpus, 2),
                 number_format(PfmMath::roundMoney($gap), 2),
-                number_format(PfmMath::roundMoney($monthlyInvestment), 2),
+                number_format($requiredMonthly, 2),
                 $readiness
             ),
-        ];
+        ], $sufficiency);
 
         return compact('normalized', 'result');
+    }
+
+    /**
+     * Task 45 — compare planned vs required monthly investment; project corpus from planned contributions.
+     * Existing assets use the engine’s annual compound FV; contributions use end-of-month FV (same as PMT).
+     *
+     * @return array<string, mixed>
+     */
+    private function retirementSufficiency(
+        float $requiredMonthly,
+        ?float $plannedMonthly,
+        float $fvAssets,
+        float $requiredCorpus,
+        float $preReturnPercent,
+        int $yearsToRetire
+    ): array {
+        $provided = $plannedMonthly !== null;
+
+        $base = [
+            'planned_monthly_provided' => $provided,
+            'planned_monthly_investment' => $plannedMonthly,
+            'monthly_shortfall' => null,
+            'monthly_surplus' => null,
+            'contribution_coverage_percent' => null,
+            'projected_corpus' => null,
+            'corpus_shortfall' => null,
+            'corpus_surplus' => null,
+            'investment_status' => 'unavailable',
+        ];
+
+        if (! $provided) {
+            return $base;
+        }
+
+        $planned = PfmMath::roundMoney($plannedMonthly);
+        // Contribution FV only (initial=0) so asset growth stays on the annual-compound path used for required PMT.
+        $contribPlan = PfmMath::futureValuePlan(0.0, $planned, $preReturnPercent / 100, (float) $yearsToRetire);
+        $projectedCorpus = PfmMath::roundMoney($fvAssets + (float) $contribPlan['fv_contributions']);
+
+        $monthlyShortfall = PfmMath::roundMoney(max($requiredMonthly - $planned, 0.0));
+        $monthlySurplus = PfmMath::roundMoney(max($planned - $requiredMonthly, 0.0));
+        $corpusShortfall = PfmMath::roundMoney(max($requiredCorpus - $projectedCorpus, 0.0));
+        $corpusSurplus = PfmMath::roundMoney(max($projectedCorpus - $requiredCorpus, 0.0));
+
+        $coverage = null;
+        if ($requiredMonthly > 0.005) {
+            $coverage = round(($planned / $requiredMonthly) * 100, 2);
+        }
+
+        if ($requiredMonthly <= 0.005) {
+            $status = 'zero_required';
+        } elseif ($monthlyShortfall > 0.005) {
+            $status = 'insufficient';
+        } elseif ($monthlySurplus > 0.005) {
+            $status = 'above';
+        } else {
+            $status = 'meets';
+        }
+
+        return [
+            'planned_monthly_provided' => true,
+            'planned_monthly_investment' => $planned,
+            'monthly_shortfall' => $monthlyShortfall,
+            'monthly_surplus' => $monthlySurplus,
+            'contribution_coverage_percent' => $coverage,
+            'projected_corpus' => $projectedCorpus,
+            'corpus_shortfall' => $corpusShortfall,
+            'corpus_surplus' => $corpusSurplus,
+            'investment_status' => $status,
+        ];
     }
 
     /**
@@ -442,6 +569,28 @@ class PfmCalculator
         }
         if (! $allowZero && $n <= 0) {
             throw new InvalidArgumentException($label.' must be greater than zero.');
+        }
+
+        return PfmMath::roundMoney($n);
+    }
+
+    /**
+     * Optional monetary input: omitted/blank → null; explicit 0 → 0.0; negatives rejected.
+     */
+    private function optionalMoney(mixed $value, string $label): ?float
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+        if (! is_numeric($value)) {
+            throw new InvalidArgumentException($label.' must be a number.');
+        }
+        $n = (float) $value;
+        if (! is_finite($n) || $n > self::MAX_AMOUNT) {
+            throw new InvalidArgumentException($label.' is too large. Enter an amount up to ₹'.number_format(self::MAX_AMOUNT).'.');
+        }
+        if ($n < 0) {
+            throw new InvalidArgumentException($label.' cannot be negative.');
         }
 
         return PfmMath::roundMoney($n);

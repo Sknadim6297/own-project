@@ -41,11 +41,16 @@ class DebtEmiController extends Controller
             'currency_symbol' => '₹',
             'limits' => [
                 'principal_min' => 0.01,
+                'down_payment_min' => 0,
                 'rate_min' => 0,
                 'rate_max' => 50,
                 'tenure_years_min' => 0.01,
                 'tenure_years_max' => 100,
                 'extra_payment_min' => 0,
+            ],
+            'fields' => [
+                'principal' => 'Total purchase amount (legacy key; financed = principal − down_payment).',
+                'down_payment' => 'Optional upfront payment. Omit or 0 for legacy behaviour.',
             ],
             'disclaimer' => 'This is an estimate. Actual EMI may vary based on your lender’s terms.',
         ]);
@@ -57,6 +62,7 @@ class DebtEmiController extends Controller
 
         $data = $request->validate([
             'principal' => ['required', 'numeric'],
+            'down_payment' => ['sometimes', 'nullable', 'numeric'],
             'annual_rate_percent' => ['required', 'numeric'],
             'tenure_years' => ['required', 'numeric'],
             'extra_payment' => ['sometimes', 'nullable', 'numeric'],
@@ -66,6 +72,7 @@ class DebtEmiController extends Controller
         try {
             $payload = $calculator->calculate(self::TOOL_KEY, [
                 'principal' => $data['principal'],
+                'down_payment' => $data['down_payment'] ?? 0,
                 'annual_rate_percent' => $data['annual_rate_percent'],
                 'tenure_years' => $data['tenure_years'],
                 'extra_payment' => $data['extra_payment'] ?? 0,
@@ -95,6 +102,7 @@ class DebtEmiController extends Controller
         $data = $request->validate([
             'completion_key' => ['required', 'uuid'],
             'principal' => ['required', 'numeric'],
+            'down_payment' => ['sometimes', 'nullable', 'numeric'],
             'annual_rate_percent' => ['required', 'numeric'],
             'tenure_years' => ['required', 'numeric'],
             'extra_payment' => ['sometimes', 'nullable', 'numeric'],
@@ -104,6 +112,7 @@ class DebtEmiController extends Controller
         try {
             $payload = $calculator->calculate(self::TOOL_KEY, [
                 'principal' => $data['principal'],
+                'down_payment' => $data['down_payment'] ?? 0,
                 'annual_rate_percent' => $data['annual_rate_percent'],
                 'tenure_years' => $data['tenure_years'],
                 'extra_payment' => $data['extra_payment'] ?? 0,
@@ -204,7 +213,10 @@ class DebtEmiController extends Controller
      */
     private function presentResult(array $result, array $inputs): array
     {
-        $principal = (float) ($inputs['principal'] ?? 0);
+        $purchaseAmount = (float) ($result['purchase_amount'] ?? $inputs['principal'] ?? 0);
+        $downPayment = (float) ($result['down_payment'] ?? $inputs['down_payment'] ?? 0);
+        // breakdown.principal = financed loan amount (equals purchase when down_payment is 0 / omitted).
+        $principal = (float) ($result['financed_principal'] ?? max(0, $purchaseAmount - $downPayment));
         $interest = (float) ($result['standard_interest'] ?? 0);
         $total = max($principal + $interest, 0.01);
 
@@ -213,6 +225,12 @@ class DebtEmiController extends Controller
             'content_version' => $result['content_version'] ?? PfmCatalog::CONTENT_VERSION,
             'summary' => $result['summary'] ?? '',
             'emi' => (float) ($result['emi'] ?? 0),
+            'purchase_amount' => $purchaseAmount,
+            'down_payment' => $downPayment,
+            'financed_principal' => $principal,
+            'no_loan' => (bool) ($result['no_loan'] ?? ($principal <= 0)),
+            'loan_repayment_total' => (float) ($result['loan_repayment_total'] ?? $result['standard_total'] ?? ($principal + $interest)),
+            'total_purchase_outflow' => (float) ($result['total_purchase_outflow'] ?? ($downPayment + ($result['standard_total'] ?? ($principal + $interest)))),
             'standard_interest' => $interest,
             'standard_total' => (float) ($result['standard_total'] ?? ($principal + $interest)),
             'standard_months' => (int) ($result['standard_months'] ?? 0),

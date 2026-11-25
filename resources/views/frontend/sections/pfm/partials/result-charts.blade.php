@@ -97,21 +97,37 @@
 
 @elseif ($toolKey === 'debt-emi-calculator')
     @php
-        $principal = max(0, (float) ($inputs['principal'] ?? 0));
+        $purchaseAmount = max(0, (float) ($result['purchase_amount'] ?? $inputs['principal'] ?? 0));
+        $downPayment = max(0, (float) ($result['down_payment'] ?? $inputs['down_payment'] ?? 0));
+        $principal = max(0, (float) ($result['financed_principal'] ?? max(0, $purchaseAmount - $downPayment)));
         $interest = max(0, (float) ($result['standard_interest'] ?? 0));
+        $noLoan = (bool) ($result['no_loan'] ?? ($principal <= 0));
         $total = max(1, $principal + $interest);
         $pPct = ($principal / $total) * 100;
         $iPct = ($interest / $total) * 100;
         $saved = max(0, (float) ($result['interest_saved'] ?? 0));
     @endphp
-    <figure class="yk-pfm__chart" aria-labelledby="{{ $chartId }}-title">
-        <figcaption id="{{ $chartId }}-title" class="yk-pfm__chart-title">EMI repayment breakdown</figcaption>
-        <div class="yk-pfm__stack" role="img" aria-label="Principal {{ number_format($pPct, 1) }} percent, interest {{ number_format($iPct, 1) }} percent">
-            <span class="yk-pfm__stack-seg yk-pfm__stack-seg--teal" style="width: {{ $pPct }}%"></span>
-            <span class="yk-pfm__stack-seg yk-pfm__stack-seg--navy" style="width: {{ $iPct }}%"></span>
-        </div>
-        <p class="yk-pfm__chart-note">Principal {{ $money($principal) }} · Interest {{ $money($interest) }}@if ($saved > 0) · Interest saved with extra payments {{ $money($saved) }}@endif</p>
-    </figure>
+    @if ($noLoan)
+        <figure class="yk-pfm__chart" aria-labelledby="{{ $chartId }}-title">
+            <figcaption id="{{ $chartId }}-title" class="yk-pfm__chart-title">No loan required</figcaption>
+            <p class="yk-pfm__chart-note">Purchase {{ $money($purchaseAmount) }} is covered entirely by the down payment. There is no financed principal or loan interest.</p>
+        </figure>
+    @else
+        <figure class="yk-pfm__chart" aria-labelledby="{{ $chartId }}-title">
+            <figcaption id="{{ $chartId }}-title" class="yk-pfm__chart-title">EMI repayment breakdown</figcaption>
+            <div class="yk-pfm__stack" role="img" aria-label="Financed principal {{ number_format($pPct, 1) }} percent, interest {{ number_format($iPct, 1) }} percent">
+                <span class="yk-pfm__stack-seg yk-pfm__stack-seg--teal" style="width: {{ $pPct }}%"></span>
+                <span class="yk-pfm__stack-seg yk-pfm__stack-seg--navy" style="width: {{ $iPct }}%"></span>
+            </div>
+            <p class="yk-pfm__chart-note">
+                Purchase {{ $money($purchaseAmount) }}
+                · Down payment {{ $money($downPayment) }}
+                · Financed {{ $money($principal) }}
+                · Interest {{ $money($interest) }}
+                @if ($saved > 0) · Interest saved with extra payments {{ $money($saved) }}@endif
+            </p>
+        </figure>
+    @endif
 
 @elseif ($toolKey === 'retirement-calculator')
     @php
@@ -137,39 +153,44 @@
     </figure>
 
 @elseif ($toolKey === 'inflation-calculator')
-    @php
-        $current = max(0, (float) ($inputs['current_amount'] ?? 0));
-        $future = max(0, (float) ($result['future_cost'] ?? 0));
-        $max = max(1, $future, $current);
-        $cH = ($current / $max) * 120;
-        $fH = ($future / $max) * 120;
-    @endphp
-    <figure class="yk-pfm__chart" aria-labelledby="{{ $chartId }}-title">
-        <figcaption id="{{ $chartId }}-title" class="yk-pfm__chart-title">Inflation impact</figcaption>
-        <svg viewBox="0 0 220 180" role="img" aria-label="Current amount versus future cost" preserveAspectRatio="xMidYMid meet">
-            <rect x="40" y="{{ 140 - $cH }}" width="50" height="{{ max(1, $cH) }}" rx="8" fill="#8a0f4d"></rect>
-            <rect x="130" y="{{ 140 - $fH }}" width="50" height="{{ max(1, $fH) }}" rx="8" fill="#e0a73f"></rect>
-            <text x="65" y="158" text-anchor="middle" font-size="11" fill="#6b6b7a">Today</text>
-            <text x="155" y="158" text-anchor="middle" font-size="11" fill="#6b6b7a">Future</text>
-        </svg>
-        <p class="yk-pfm__chart-note">Today {{ $money($current) }} · Future {{ $money($future) }}</p>
-    </figure>
+    @include('frontend.sections.pfm.partials.inflation-chart', [
+        'inputs' => $inputs,
+        'result' => $result,
+        'chartId' => $chartId,
+    ])
 
 @elseif ($toolKey === 'savings-investment-calculator')
     @php
-        $invested = max(0, (float) ($result['invested'] ?? 0));
-        $gains = max(0, (float) ($result['gains'] ?? 0));
-        $corpus = max(0, (float) ($result['corpus'] ?? 0));
-        $total = max(1, $corpus);
-        $invPct = min(100, ($invested / $total) * 100);
-        $gainPct = min(100, ($gains / $total) * 100);
+        $siChartHas = static fn (string $key): bool => array_key_exists($key, $result) && $result[$key] !== null && $result[$key] !== '';
+        $invested = $siChartHas('invested') ? (float) $result['invested'] : null;
+        $gains = $siChartHas('gains') ? (float) $result['gains'] : null;
+        $corpus = $siChartHas('corpus') ? (float) $result['corpus'] : null;
+        $negativeGains = $gains !== null && $gains < -0.005;
+        $canMix = $corpus !== null && $corpus > 0.005 && $invested !== null && $gains !== null && ! $negativeGains;
+        $invPct = $canMix ? min(100, max(0, ($invested / $corpus) * 100)) : 0;
+        $gainPct = $canMix ? min(100, max(0, (max(0.0, $gains) / $corpus) * 100)) : 0;
     @endphp
-    <figure class="yk-pfm__chart" aria-labelledby="{{ $chartId }}-title">
+    <figure class="yk-pfm__chart" aria-labelledby="{{ $chartId }}-title" data-yk-si-chart>
         <figcaption id="{{ $chartId }}-title" class="yk-pfm__chart-title">Investment growth mix</figcaption>
-        <div class="yk-pfm__stack" role="img" aria-label="Invested {{ number_format($invPct, 1) }} percent, gains {{ number_format($gainPct, 1) }} percent">
-            <span class="yk-pfm__stack-seg yk-pfm__stack-seg--navy" style="width: {{ $invPct }}%"></span>
-            <span class="yk-pfm__stack-seg yk-pfm__stack-seg--teal" style="width: {{ $gainPct }}%"></span>
-        </div>
-        <p class="yk-pfm__chart-note">Invested {{ $money($invested) }} · Estimated gains {{ $money($gains) }} · Corpus {{ $money($corpus) }}</p>
+        @if ($canMix)
+            <div class="yk-pfm__stack" role="img" aria-label="Total invested {{ number_format($invPct, 1) }} percent, estimated returns {{ number_format($gainPct, 1) }} percent of maturity">
+                <span class="yk-pfm__stack-seg yk-pfm__stack-seg--navy" style="width: {{ $invPct }}%"></span>
+                <span class="yk-pfm__stack-seg yk-pfm__stack-seg--teal" style="width: {{ $gainPct }}%"></span>
+            </div>
+            <p class="yk-pfm__chart-note">
+                Total invested {{ $money($invested) }}
+                · Estimated returns {{ $money(max(0, $gains)) }}
+                · Estimated maturity {{ $money($corpus) }}
+            </p>
+        @elseif ($negativeGains)
+            <p class="yk-pfm__chart-note" role="status">
+                A contribution-versus-return mix chart is not shown because estimated returns are negative under the entered assumptions.
+                Total invested {{ $invested !== null ? $money($invested) : 'Unavailable' }}
+                · Estimated change {{ $money($gains) }}
+                · Estimated maturity {{ $corpus !== null ? $money($corpus) : 'Unavailable' }}
+            </p>
+        @else
+            <p class="yk-pfm__chart-note" role="status">Investment mix chart is unavailable for this calculation snapshot.</p>
+        @endif
     </figure>
 @endif

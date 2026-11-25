@@ -9,15 +9,23 @@
     $savedAt = optional($calculation->updated_at)->timezone($timezone)?->format('d M Y, h:i A');
     $statusLabel = $calculation->is_draft ? 'Saved draft' : 'Saved calculation';
 @endphp
-@php $isEmergency = $toolKey === 'emergency-fund-calculator'; @endphp
-<main class="yk-pfm yk-tools-ds {{ $isEmergency ? 'yk-pfm--ef' : '' }}" data-yk-tools-ds data-yk-pfm>
+@php
+    $isEmergency = $toolKey === 'emergency-fund-calculator';
+    $isRetirement = $toolKey === 'retirement-calculator';
+    $isSavings = $toolKey === 'savings-investment-calculator';
+@endphp
+<main class="yk-pfm yk-tools-ds yk-tool-shell {{ $isEmergency ? 'yk-pfm--ef' : '' }}{{ $isRetirement ? ' yk-pfm--rt' : '' }}{{ $isSavings ? ' yk-pfm--si' : '' }}" data-yk-tools-ds data-yk-pfm data-yk-tool-shell="1" @if ($isRetirement) data-yk-rt-saved="1" @endif @if ($isSavings) data-yk-si-saved="1" @endif>
     @include('frontend.sections.pfm.partials.page-hero', [
         'crumbs' => [['Money & Finance', route('tools.pfm')], ['History', route($tool['route'].'.history')], ['Show Saved', null]],
         'eyebrow' => $statusLabel,
-        'heroIcon' => $isEmergency ? 'shield-check' : 'calculator',
+        'heroIcon' => $isEmergency ? 'shield-check' : (($isRetirement || $isSavings) ? 'wallet' : 'calculator'),
         'title' => $tool['name'],
         'titleId' => 'pfm-show-heading',
-        'lead' => $calculation->summary ?: ($result['summary'] ?? 'Your saved financial picture.'),
+        'lead' => $isRetirement
+            ? 'Saved retirement estimate based on the inputs and assumptions stored with this calculation.'
+            : ($isSavings
+                ? 'Saved investment estimate based on the inputs and assumptions stored with this calculation.'
+                : ($calculation->summary ?: ($result['summary'] ?? 'Your saved financial picture.'))),
         'meta' => $savedAt ? 'Saved '.$savedAt : null,
     ])
 
@@ -57,20 +65,36 @@
                 'inputs' => $inputs,
             ])
 
-            @if (! $isEmergency && (filled($calculation->summary) || filled($result['summary'] ?? null) || filled($result['health_label'] ?? null)))
-                <section class="yk-pfm__saved-conclusion" aria-labelledby="pfm-saved-conclusion-heading">
-                    <h2 id="pfm-saved-conclusion-heading" class="yk-pfm__section-title">Conclusion</h2>
-                    @if (filled($result['health_label'] ?? null))
-                        <p class="yk-pfm__conclusion-health">
-                            Money health:
-                            <strong>{{ $result['health_label'] }}</strong>
-                        </p>
-                    @endif
-                    <p class="yk-pfm__lead">{{ $calculation->summary ?: ($result['summary'] ?? '') }}</p>
-                </section>
-            @endif
+            @if ($isRetirement)
+                @include('frontend.sections.pfm.partials.retirement-sufficiency', [
+                    'result' => $result,
+                    'inputs' => $inputs,
+                ])
+                @include('frontend.sections.pfm.partials.retirement-conclusion', [
+                    'result' => $result,
+                    'inputs' => $inputs,
+                ])
+            @elseif ($isSavings)
+                @include('frontend.sections.pfm.partials.savings-conclusion', [
+                    'result' => $result,
+                    'inputs' => $inputs,
+                ])
+            @else
+                @if (! $isEmergency && (filled($calculation->summary) || filled($result['summary'] ?? null) || filled($result['health_label'] ?? null)))
+                    <section class="yk-pfm__saved-conclusion" aria-labelledby="pfm-saved-conclusion-heading">
+                        <h2 id="pfm-saved-conclusion-heading" class="yk-pfm__section-title">Conclusion</h2>
+                        @if (filled($result['health_label'] ?? null))
+                            <p class="yk-pfm__conclusion-health">
+                                Money health:
+                                <strong>{{ $result['health_label'] }}</strong>
+                            </p>
+                        @endif
+                        <p class="yk-pfm__lead">{{ $calculation->summary ?: ($result['summary'] ?? '') }}</p>
+                    </section>
+                @endif
 
-            <p class="yk-pfm__note yk-pfm__disclaimer">These figures are educational estimates only and are not financial advice.</p>
+                <p class="yk-pfm__note yk-pfm__disclaimer">These figures are educational estimates only and are not financial advice.</p>
+            @endif
 
             <div class="yk-pfm__actions {{ $isEmergency ? 'yk-ef__actions' : '' }}">
                 <a class="yk-pfm__btn" href="{{ route($tool['route'].'.continue', $calculation) }}">

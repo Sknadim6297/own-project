@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 /**
- * Task 40 — Debt & EMI Calculator structural improvements (no formula / field changes).
+ * Task 40 — Debt & EMI Calculator structural improvements.
+ * Assertions updated after merge with Tasks 41–42 (single-page form + down payment).
  */
 class DebtEmiCalculatorStructureTest extends TestCase
 {
@@ -64,12 +65,17 @@ class DebtEmiCalculatorStructureTest extends TestCase
         $this->assertStringContainsString('%', $html);
         $this->assertStringContainsString('₹', $html);
 
-        // Wizard steps preserved (Task 41 single-page deferred).
-        $this->assertStringContainsString('data-pfm-wizard="1"', $html);
-        $this->assertStringContainsString('data-pfm-step="0"', $html);
-        $this->assertStringContainsString('data-pfm-step="1"', $html);
-        $this->assertStringContainsString('data-pfm-next', $html);
+        // Task 41 completed: single continuous form (wizard deferred note retired).
+        // Task 42: optional down_payment with financed-loan preview hooks.
+        $this->assertStringContainsString('data-yk-debt-single="1"', $html);
+        $this->assertStringContainsString('data-yk-debt-down-payment="1"', $html);
+        $this->assertStringContainsString('name="down_payment"', $html);
+        $this->assertStringContainsString('data-yk-debt-purchase', $html);
+        $this->assertStringContainsString('data-yk-debt-financed-value', $html);
         $this->assertStringContainsString('data-pfm-submit', $html);
+        $this->assertStringNotContainsString('data-pfm-wizard="1"', $html);
+        $this->assertStringNotContainsString('data-pfm-step="0"', $html);
+        $this->assertStringNotContainsString('data-pfm-next', $html);
     }
 
     public function test_calculate_outputs_match_engine_and_save_history_ownership(): void
