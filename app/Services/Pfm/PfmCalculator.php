@@ -503,19 +503,34 @@ class PfmCalculator
     private function savingsInvestment(array $input): array
     {
         $initial = $this->money($input['initial_amount'] ?? null, 'Initial amount', true);
-        $monthly = $this->money($input['monthly_contribution'] ?? null, 'Monthly contribution', true);
+        $frequency = $this->investmentFrequency($input['investment_frequency'] ?? null);
+        $contribution = $this->resolveContributionAmount($input);
         $return = $this->ratePercent($input['expected_return_percent'] ?? null, 'Expected return');
         $years = $this->positiveFloat($input['years'] ?? null, 'Years');
 
-        if ($initial <= 0 && $monthly <= 0) {
-            throw new InvalidArgumentException('Enter an initial amount or a monthly contribution.');
+        if ($initial <= 0 && $contribution <= 0) {
+            throw new InvalidArgumentException('Enter an initial amount or a contribution amount.');
         }
 
-        $plan = PfmMath::futureValuePlan($initial, $monthly, $return / 100, $years);
+        $intervalMonths = self::contributionIntervalMonths($frequency);
+
+        // Exact legacy monthly path for baseline compatibility (interval = 1).
+        $plan = $intervalMonths === 1
+            ? PfmMath::futureValuePlan($initial, $contribution, $return / 100, $years)
+            : PfmMath::futureValuePlanPeriodic($initial, $contribution, $return / 100, $years, $intervalMonths);
+
+        // Lump-sum / zero recurring: no scheduled contributions regardless of frequency.
+        if ($contribution <= 0.005) {
+            $plan['contribution_count'] = 0;
+            $plan['fv_contributions'] = 0.0;
+        }
 
         $normalized = [
             'initial_amount' => $initial,
-            'monthly_contribution' => $monthly,
+            'contribution_amount' => $contribution,
+            // Legacy alias: per-period contribution amount (not always "monthly" when frequency differs).
+            'monthly_contribution' => $contribution,
+            'investment_frequency' => $frequency,
             'expected_return_percent' => $return,
             'years' => $years,
         ];
@@ -523,6 +538,8 @@ class PfmCalculator
         $result = array_merge([
             'tool_key' => 'savings-investment-calculator',
             'content_version' => PfmCatalog::CONTENT_VERSION,
+            'investment_frequency' => $frequency,
+            'contribution_amount' => $contribution,
             'summary' => sprintf(
                 'Corpus ₹%s · Invested ₹%s · Gains ₹%s',
                 number_format($plan['corpus'], 2),
@@ -532,6 +549,67 @@ class PfmCalculator
         ], $plan);
 
         return compact('normalized', 'result');
+    }
+
+    /**
+     * @return 'monthly'|'quarterly'|'half_yearly'|'yearly'
+     */
+    private function investmentFrequency(mixed $value): string
+    {
+        if ($value === null || $value === '') {
+            return 'monthly';
+        }
+
+        $frequency = strtolower(trim((string) $value));
+        $allowed = ['monthly', 'quarterly', 'half_yearly', 'yearly'];
+        if (! in_array($frequency, $allowed, true)) {
+            throw new InvalidArgumentException('Investment frequency must be monthly, quarterly, half_yearly, or yearly.');
+        }
+
+        return $frequency;
+    }
+
+    /**
+     * @param  array<string, mixed>  $input
+     */
+    private function resolveContributionAmount(array $input): float
+    {
+        $hasContribution = array_key_exists('contribution_amount', $input)
+            && $input['contribution_amount'] !== null
+            && $input['contribution_amount'] !== '';
+        $hasMonthly = array_key_exists('monthly_contribution', $input)
+            && $input['monthly_contribution'] !== null
+            && $input['monthly_contribution'] !== '';
+
+        if ($hasContribution && $hasMonthly) {
+            $a = $this->money($input['contribution_amount'], 'Contribution amount', true);
+            $b = $this->money($input['monthly_contribution'], 'Monthly contribution', true);
+            if (abs($a - $b) > 0.005) {
+                throw new InvalidArgumentException('contribution_amount and monthly_contribution must match when both are provided.');
+            }
+
+            return $a;
+        }
+
+        if ($hasContribution) {
+            return $this->money($input['contribution_amount'], 'Contribution amount', true);
+        }
+
+        return $this->money($input['monthly_contribution'] ?? null, 'Monthly contribution', true);
+    }
+
+    /**
+     * @param  'monthly'|'quarterly'|'half_yearly'|'yearly'  $frequency
+     */
+    public static function contributionIntervalMonths(string $frequency): int
+    {
+        return match ($frequency) {
+            'monthly' => 1,
+            'quarterly' => 3,
+            'half_yearly' => 6,
+            'yearly' => 12,
+            default => 1,
+        };
     }
 
     /**

@@ -72,6 +72,72 @@ class PfmMath
             'invested' => self::roundMoney($invested),
             'gains' => self::roundMoney($corpus - $invested),
             'months' => $months,
+            'contribution_count' => $months,
+            'contribution_interval_months' => 1,
+        ];
+    }
+
+    /**
+     * Future value of an initial amount plus end-of-interval contributions with monthly compounding.
+     *
+     * Contribution frequency (interval months) is independent of compounding frequency (always monthly).
+     * Contributions occur at months k, 2k, …, n×k where n = floor(N / k). Partial final intervals
+     * do not add a prorated contribution.
+     *
+     * Interval 1 delegates to {@see futureValuePlan} for exact monthly baseline compatibility.
+     *
+     * @return array{
+     *     fv_initial: float,
+     *     fv_contributions: float,
+     *     corpus: float,
+     *     invested: float,
+     *     gains: float,
+     *     months: int,
+     *     contribution_count: int,
+     *     contribution_interval_months: int
+     * }
+     */
+    public static function futureValuePlanPeriodic(
+        float $initial,
+        float $contribution,
+        float $annualReturn,
+        float $years,
+        int $intervalMonths
+    ): array {
+        if ($intervalMonths < 1) {
+            throw new \InvalidArgumentException('Contribution interval must be at least 1 month.');
+        }
+
+        if ($intervalMonths === 1) {
+            return self::futureValuePlan($initial, $contribution, $annualReturn, $years);
+        }
+
+        $months = (int) round($years * 12);
+        $r = $annualReturn / 12;
+        $n = intdiv($months, $intervalMonths);
+        $fvInitial = $initial * ((1 + $r) ** $months);
+
+        if (abs($r) < 1e-12) {
+            $fvContributions = $contribution * $n;
+        } else {
+            $fvContributions = 0.0;
+            for ($j = 1; $j <= $n; $j++) {
+                $fvContributions += $contribution * ((1 + $r) ** ($months - ($j * $intervalMonths)));
+            }
+        }
+
+        $corpus = $fvInitial + $fvContributions;
+        $invested = $initial + ($contribution * $n);
+
+        return [
+            'fv_initial' => self::roundMoney($fvInitial),
+            'fv_contributions' => self::roundMoney($fvContributions),
+            'corpus' => self::roundMoney($corpus),
+            'invested' => self::roundMoney($invested),
+            'gains' => self::roundMoney($corpus - $invested),
+            'months' => $months,
+            'contribution_count' => $n,
+            'contribution_interval_months' => $intervalMonths,
         ];
     }
 

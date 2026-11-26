@@ -107,8 +107,22 @@ class BmiBmrCatalog
         return array_keys(self::ACTIVITIES);
     }
 
+    /**
+     * Full sex keys retained for calculator engine + historical payloads.
+     * Prefer-not-to-say (unspecified) remains readable for saved records.
+     */
     public static function sexKeys(): array
     {
         return [self::SEX_MALE, self::SEX_FEMALE, self::SEX_UNSPECIFIED];
+    }
+
+    /**
+     * Task 58 — web form / new calculate submissions accept Male and Female only.
+     *
+     * @return list<string>
+     */
+    public static function webSexKeys(): array
+    {
+        return [self::SEX_MALE, self::SEX_FEMALE];
     }
 }

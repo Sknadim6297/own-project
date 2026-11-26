@@ -369,34 +369,94 @@ const bindHomeCarousel = (rootSelector, trackAttr, prevAttr, nextAttr) => {
             return;
         }
 
+        let scrolling = false;
+
+        const maxScroll = () => Math.max(0, track.scrollWidth - track.clientWidth);
+
         const updateControls = () => {
-            const maxScrollLeft = Math.max(0, track.scrollWidth - track.clientWidth);
-            previous.disabled = track.scrollLeft <= 2;
-            next.disabled = track.scrollLeft >= maxScrollLeft - 2;
+            const maxScrollLeft = maxScroll();
+            const atStart = track.scrollLeft <= 2;
+            const atEnd = track.scrollLeft >= maxScrollLeft - 2 || maxScrollLeft <= 2;
+            previous.disabled = atStart;
+            next.disabled = atEnd;
+            previous.setAttribute('aria-disabled', String(atStart));
+            next.setAttribute('aria-disabled', String(atEnd));
+            carousel.classList.toggle('is-carousel-start', atStart);
+            carousel.classList.toggle('is-carousel-end', atEnd);
+            carousel.classList.toggle('is-carousel-scrollable', maxScrollLeft > 2);
         };
 
-        const scrollAmount = () => {
-            const item = track.querySelector(':scope > li');
-            if (item instanceof HTMLElement) {
-                const styles = window.getComputedStyle(track);
-                const gap = Number.parseFloat(styles.columnGap || styles.gap || '0') || 0;
-                return Math.max(item.getBoundingClientRect().width + gap, 160);
+        const itemOffsets = () => [...track.querySelectorAll(':scope > li')]
+            .filter((item) => item instanceof HTMLElement && getComputedStyle(item).display !== 'none')
+            .map((item) => item.offsetLeft);
+
+        const preferReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        /**
+         * Scroll to the previous/next snap target by item offset.
+         * Avoid stacked smooth scrollBy calls (they no-op under mandatory snap).
+         */
+        const scrollByPage = (direction) => {
+            if (scrolling) {
+                return;
             }
 
-            return Math.max(track.clientWidth * 0.75, 180);
-        };
+            const offsets = itemOffsets();
+            if (!offsets.length) {
+                return;
+            }
 
-        const scrollByPage = (direction) => {
-            track.scrollBy({
-                left: direction * scrollAmount(),
-                behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+            const current = track.scrollLeft;
+            const limit = maxScroll();
+            let target = current;
+
+            if (direction > 0) {
+                const nextOffset = offsets.find((left) => left > current + 4);
+                target = nextOffset === undefined ? limit : Math.min(limit, nextOffset);
+            } else {
+                const prevOffset = [...offsets].reverse().find((left) => left < current - 4);
+                target = prevOffset === undefined ? 0 : Math.max(0, prevOffset);
+            }
+
+            if (Math.abs(target - current) < 1) {
+                updateControls();
+                return;
+            }
+
+            scrolling = true;
+            const useSmooth = !preferReducedMotion();
+            track.scrollTo({
+                left: target,
+                behavior: useSmooth ? 'smooth' : 'auto',
             });
+
+            let settled = false;
+            const settle = () => {
+                if (settled) {
+                    return;
+                }
+                // Fallback: stacked/smooth+snap can leave the track short of the target.
+                if (Math.abs(track.scrollLeft - target) > 8) {
+                    track.scrollTo({ left: target, behavior: 'auto' });
+                }
+                settled = true;
+                scrolling = false;
+                updateControls();
+            };
+
+            if ('onscrollend' in track) {
+                track.addEventListener('scrollend', settle, { once: true });
+            }
+            window.setTimeout(settle, useSmooth ? 480 : 40);
         };
 
         previous.addEventListener('click', () => scrollByPage(-1));
         next.addEventListener('click', () => scrollByPage(1));
         track.addEventListener('scroll', updateControls, { passive: true });
         window.addEventListener('resize', updateControls);
+        if ('ResizeObserver' in window) {
+            new ResizeObserver(updateControls).observe(track);
+        }
         updateControls();
     });
 };

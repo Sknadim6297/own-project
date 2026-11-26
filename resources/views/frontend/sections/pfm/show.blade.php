@@ -43,57 +43,59 @@
                 · read-only
             </p>
 
-            @unless ($isEmergency)
-                <h2 class="yk-pfm__section-title">Financial summary</h2>
-            @endunless
-            @include('frontend.sections.pfm.partials.result-metrics', ['toolKey' => $toolKey, 'result' => $result, 'inputs' => $inputs])
-
-            @include('frontend.sections.pfm.partials.saved-money-summary', [
-                'toolKey' => $toolKey,
-                'inputs' => $inputs,
-                'result' => $result,
-            ])
-
-            @include('frontend.sections.pfm.partials.result-charts', [
-                'toolKey' => $toolKey,
-                'result' => $result,
-                'inputs' => $inputs,
-            ])
-
-            @include('frontend.sections.pfm.partials.saved-inputs', [
-                'toolKey' => $toolKey,
-                'inputs' => $inputs,
-            ])
-
-            @if ($isRetirement)
-                @include('frontend.sections.pfm.partials.retirement-sufficiency', [
-                    'result' => $result,
-                    'inputs' => $inputs,
-                ])
-                @include('frontend.sections.pfm.partials.retirement-conclusion', [
-                    'result' => $result,
-                    'inputs' => $inputs,
-                ])
-            @elseif ($isSavings)
+            @if ($isSavings)
                 @include('frontend.sections.pfm.partials.savings-conclusion', [
                     'result' => $result,
                     'inputs' => $inputs,
                 ])
             @else
-                @if (! $isEmergency && (filled($calculation->summary) || filled($result['summary'] ?? null) || filled($result['health_label'] ?? null)))
-                    <section class="yk-pfm__saved-conclusion" aria-labelledby="pfm-saved-conclusion-heading">
-                        <h2 id="pfm-saved-conclusion-heading" class="yk-pfm__section-title">Conclusion</h2>
-                        @if (filled($result['health_label'] ?? null))
-                            <p class="yk-pfm__conclusion-health">
-                                Money health:
-                                <strong>{{ $result['health_label'] }}</strong>
-                            </p>
-                        @endif
-                        <p class="yk-pfm__lead">{{ $calculation->summary ?: ($result['summary'] ?? '') }}</p>
-                    </section>
-                @endif
+                @unless ($isEmergency)
+                    <h2 class="yk-pfm__section-title">Financial summary</h2>
+                @endunless
+                @include('frontend.sections.pfm.partials.result-metrics', ['toolKey' => $toolKey, 'result' => $result, 'inputs' => $inputs])
 
-                <p class="yk-pfm__note yk-pfm__disclaimer">These figures are educational estimates only and are not financial advice.</p>
+                @include('frontend.sections.pfm.partials.saved-money-summary', [
+                    'toolKey' => $toolKey,
+                    'inputs' => $inputs,
+                    'result' => $result,
+                ])
+
+                @include('frontend.sections.pfm.partials.result-charts', [
+                    'toolKey' => $toolKey,
+                    'result' => $result,
+                    'inputs' => $inputs,
+                ])
+
+                @include('frontend.sections.pfm.partials.saved-inputs', [
+                    'toolKey' => $toolKey,
+                    'inputs' => $inputs,
+                ])
+
+                @if ($isRetirement)
+                    @include('frontend.sections.pfm.partials.retirement-sufficiency', [
+                        'result' => $result,
+                        'inputs' => $inputs,
+                    ])
+                    @include('frontend.sections.pfm.partials.retirement-conclusion', [
+                        'result' => $result,
+                        'inputs' => $inputs,
+                    ])
+                @else
+                    @if (! $isEmergency && (filled($calculation->summary) || filled($result['summary'] ?? null) || filled($result['health_label'] ?? null)))
+                        <section class="yk-pfm__saved-conclusion" aria-labelledby="pfm-saved-conclusion-heading">
+                            <h2 id="pfm-saved-conclusion-heading" class="yk-pfm__section-title">Conclusion</h2>
+                            @if (filled($result['health_label'] ?? null))
+                                <p class="yk-pfm__conclusion-health">
+                                    Money health:
+                                    <strong>{{ $result['health_label'] }}</strong>
+                                </p>
+                            @endif
+                            <p class="yk-pfm__lead">{{ $calculation->summary ?: ($result['summary'] ?? '') }}</p>
+                        </section>
+                    @endif
+
+                    <p class="yk-pfm__note yk-pfm__disclaimer">These figures are educational estimates only and are not financial advice.</p>
+                @endif
             @endif
 
             <div class="yk-pfm__actions {{ $isEmergency ? 'yk-ef__actions' : '' }}">

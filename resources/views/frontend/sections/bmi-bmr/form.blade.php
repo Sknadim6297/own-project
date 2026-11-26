@@ -12,16 +12,18 @@
     $activity = old('activity', $old['activity'] ?? '');
     $heightIsCm = $heightUnit === 'cm';
     $weightIsKg = $weightUnit === 'kg';
+    // Task 58: Male / Female only on the web form. Historical unspecified remains readable in saved records.
     $sexOptions = [
         'female' => 'Female',
         'male' => 'Male',
-        'unspecified' => 'Prefer not to say',
     ];
     $sexIcons = [
         'female' => '<circle cx="12" cy="9" r="5"/><path d="M12 14v8M9 18h6"/>',
         'male' => '<circle cx="10" cy="14" r="5"/><path d="m14 10 6-6M15 4h5v5"/>',
-        'unspecified' => '<path d="M5 12h.01M12 12h.01M19 12h.01" stroke-width="3.2"/>',
     ];
+    if ($sex === \App\Support\BmiBmr\BmiBmrCatalog::SEX_UNSPECIFIED) {
+        $sex = '';
+    }
     $activityShort = [
         'sedentary' => 'Little or no exercise',
         'lightly-active' => '1–3 days/week',
@@ -134,7 +136,7 @@
                         <div class="yk-bmi__row-about">
                             <fieldset class="yk-bmi__metric yk-bmi__metric--sex">
                                 <legend>Gender</legend>
-                                <div class="yk-bmi__seg yk-bmi__seg--3" role="radiogroup" aria-label="Gender" aria-describedby="bmi-sex-hint">
+                                <div class="yk-bmi__seg yk-bmi__seg--2" role="radiogroup" aria-label="Gender" aria-describedby="bmi-sex-hint">
                                     @foreach ($sexOptions as $value => $label)
                                         <label class="yk-bmi__seg-option">
                                             <input type="radio" name="sex" value="{{ $value }}" @checked($sex === $value) required>
@@ -148,20 +150,11 @@
                                 </div>
                                 <p id="bmi-sex-hint" class="yk-bmi__hint">Used only for Mifflin–St Jeor BMR.</p>
                             </fieldset>
-
-                            <div class="yk-bmi__metric yk-bmi__metric--age">
-                                <label for="bmi-age">Age</label>
-                                <div class="yk-bmi__input-unit">
-                                    <input id="bmi-age" type="number" name="age" min="1" max="120" step="1" inputmode="numeric" placeholder="e.g. 30" value="{{ old('age', $old['age'] ?? '') }}" required>
-                                    <span>yrs</span>
-                                </div>
-                                <p class="yk-bmi__hint">Adult categories from age 18+.</p>
-                            </div>
                         </div>
 
                         <h2 class="yk-bmi__section"><i class="yk-bmi__section-icon yk-bmi__section-icon--body" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="12" rx="3"/><path d="M7 7V5M12 7V5M17 7V5"/></svg></i>Body Measurements</h2>
                         <div class="yk-bmi__metrics">
-                            <fieldset class="yk-bmi__metric yk-bmi__metric--tile">
+                            <fieldset class="yk-bmi__metric yk-bmi__metric--tile yk-bmi__metric--weight">
                                 <legend>
                                     <i class="yk-bmi__tile-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3.500" width="16" height="17" rx="4"/><path d="M8.500 9.500a3.500 3.500 0 0 1 7 0M12 9.500l1.800-1.800"/></svg></i>
                                     Weight
@@ -180,7 +173,17 @@
                                 </div>
                             </fieldset>
 
-                            <fieldset class="yk-bmi__metric yk-bmi__metric--tile">
+                            {{-- Task 57: Age follows Weight in DOM (visual + keyboard order). --}}
+                            <div class="yk-bmi__metric yk-bmi__metric--age">
+                                <label for="bmi-age">Age</label>
+                                <div class="yk-bmi__input-unit">
+                                    <input id="bmi-age" type="number" name="age" min="1" max="120" step="1" inputmode="numeric" placeholder="e.g. 30" value="{{ old('age', $old['age'] ?? '') }}" required>
+                                    <span>yrs</span>
+                                </div>
+                                <p class="yk-bmi__hint">Adult categories from age 18+.</p>
+                            </div>
+
+                            <fieldset class="yk-bmi__metric yk-bmi__metric--tile yk-bmi__metric--height">
                                 <legend>
                                     <i class="yk-bmi__tile-icon yk-bmi__tile-icon--warm" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round"><path d="m4 16 12-12 4 4L8 20z"/><path d="m8 12 2 2M11 9l2 2M14 6l2 2"/></svg></i>
                                     Height

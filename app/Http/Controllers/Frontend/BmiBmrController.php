@@ -25,10 +25,16 @@ class BmiBmrController extends Controller
 
     public function create(BmiBmrDraft $draft)
     {
+        $old = old() ?: ($draft->normalized()['display_inputs'] ?? []);
+        // Task 58: do not restore Prefer not to say; keep other draft inputs.
+        if (is_array($old) && ($old['sex'] ?? null) === BmiBmrCatalog::SEX_UNSPECIFIED) {
+            $old['sex'] = '';
+        }
+
         return view('frontend.sections.bmi-bmr.form', [
             'open' => $this->isOpen(),
             'activities' => BmiBmrCatalog::ACTIVITIES,
-            'old' => old() ?: ($draft->normalized()['display_inputs'] ?? []),
+            'old' => $old,
             'hasResult' => $draft->result() !== null,
         ]);
     }
@@ -47,7 +53,7 @@ class BmiBmrController extends Controller
             'age' => ['required'],
             'height_unit' => ['required', Rule::in(['cm', 'ft_in'])],
             'weight_unit' => ['required', Rule::in(['kg', 'lb'])],
-            'sex' => ['required', Rule::in(BmiBmrCatalog::sexKeys())],
+            'sex' => ['required', Rule::in(BmiBmrCatalog::webSexKeys())],
             'activity' => ['required', Rule::in(BmiBmrCatalog::activityKeys())],
             'excluded_population' => ['sometimes', 'boolean'],
             'height_cm' => ['nullable'],

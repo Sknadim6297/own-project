@@ -3439,6 +3439,299 @@
     }
 }
 
+/* Task 51 — SI maturity / returns visuals (.yk-sichart / .yk-siconc)           */
+
+.yk-siconc .visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.yk-siconc__kpi-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 0.85rem;
+    margin-top: 0.85rem;
+}
+
+.yk-siconc__kpi--primary {
+    margin: 0;
+    background: linear-gradient(180deg, #FFF8FB 0%, #F8EAF1 100%);
+    border-color: rgba(138, 15, 77, 0.22);
+}
+
+.yk-siconc__kpi-mini {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+}
+
+.yk-siconc__kpi-mini > div {
+    padding: 0.55rem 0.65rem;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #ead9e2;
+}
+
+.yk-siconc__kpi-mini dt {
+    margin: 0;
+    font-size: 0.72rem;
+    color: #6b5a63;
+    font-weight: 600;
+}
+
+.yk-siconc__kpi-mini dd {
+    margin: 0.18rem 0 0;
+    font-size: 0.92rem;
+    font-weight: 750;
+    color: #1f1220;
+    word-break: break-word;
+}
+
+.yk-siconc__gain-note,
+.yk-siconc__help {
+    margin: 0.55rem 0 0;
+    color: #6b5a63;
+    font-size: 0.82rem;
+    line-height: 1.4;
+}
+
+.yk-sichart {
+    margin-top: 1.1rem;
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 0.85rem;
+}
+
+.yk-sichart__donut-wrap,
+.yk-sichart__growth-wrap,
+.yk-sichart__table-wrap {
+    margin: 0;
+    padding: 0.9rem 0.95rem;
+    border-radius: 12px;
+    background: #FFF8FB;
+    border: 1px solid #ead9e2;
+}
+
+.yk-sichart__donut {
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+}
+
+.yk-sichart__donut-svg {
+    width: min(100%, 200px);
+    height: auto;
+}
+
+.yk-sichart__donut-track {
+    stroke: #ead9e2;
+}
+
+.yk-sichart__donut-invested {
+    stroke: #8A0F4D;
+}
+
+.yk-sichart__donut-gains {
+    stroke: #2f7d4a;
+}
+
+.yk-sichart__donut-center-label {
+    font-size: 0.62rem;
+    fill: #6b5a63;
+    font-weight: 600;
+}
+
+.yk-sichart__donut-center-value {
+    font-size: 0.58rem;
+    fill: #1f1220;
+    font-weight: 800;
+}
+
+.yk-sichart__legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+    width: 100%;
+    font-size: 0.82rem;
+    color: #3f2a34;
+}
+
+.yk-sichart__legend li {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+}
+
+.yk-sichart__legend strong {
+    margin-left: auto;
+    color: #8A0F4D;
+}
+
+.yk-sichart__swatch {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 999px;
+    flex: none;
+}
+
+.yk-sichart__swatch--invested {
+    background: #8A0F4D;
+}
+
+.yk-sichart__swatch--gains,
+.yk-sichart__swatch--value {
+    background: #2f7d4a;
+}
+
+.yk-sichart__explain {
+    margin: 0 0 0.65rem;
+    color: #6b5a63;
+    font-size: 0.84rem;
+    line-height: 1.45;
+}
+
+.yk-sichart__growth-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.yk-sichart__grid {
+    stroke: #ead9e2;
+    stroke-width: 1;
+}
+
+.yk-sichart__axis {
+    stroke: #c9a8b8;
+    stroke-width: 1.25;
+}
+
+.yk-sichart__tick,
+.yk-sichart__xlabel {
+    fill: #6b5a63;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.yk-sichart__line {
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.yk-sichart__line--invested {
+    stroke: #8A0F4D;
+}
+
+.yk-sichart__line--value {
+    stroke: #2f7d4a;
+}
+
+.yk-sichart__dot--invested {
+    fill: #8A0F4D;
+}
+
+.yk-sichart__dot--value {
+    fill: #2f7d4a;
+    stroke: #fff;
+    stroke-width: 1.5;
+}
+
+.yk-sichart__point:focus {
+    outline: none;
+}
+
+.yk-sichart__point:focus-visible .yk-sichart__dot--value {
+    stroke: #8A0F4D;
+    stroke-width: 2.5;
+}
+
+.yk-sichart__unavailable {
+    margin: 0;
+    color: #6b5a63;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.yk-sichart__summary {
+    cursor: pointer;
+    list-style: none;
+}
+
+.yk-sichart__summary::-webkit-details-marker {
+    display: none;
+}
+
+.yk-sichart__table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.yk-sichart__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+    min-width: 420px;
+}
+
+.yk-sichart__table th,
+.yk-sichart__table td {
+    padding: 0.55rem 0.6rem;
+    border-bottom: 1px solid #ead9e2;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.yk-sichart__table thead th {
+    color: #8A0F4D;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: #fff;
+}
+
+.yk-sichart__table tbody th {
+    font-weight: 700;
+    color: #1f1220;
+}
+
+.yk-sichart__table tr.is-final td,
+.yk-sichart__table tr.is-final th {
+    background: #F8EAF1;
+    font-weight: 750;
+}
+
+@media (max-width: 1024px) {
+    .yk-siconc__kpi-grid,
+    .yk-sichart {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .yk-siconc__kpi-mini {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 430px) {
+    .yk-sichart__donut-wrap,
+    .yk-sichart__growth-wrap,
+    .yk-sichart__table-wrap {
+        padding: 0.8rem 0.75rem;
+    }
+}
+
 /* Task 48 ? Savings & Investment amount UI (.yk-siamt / .yk-pfm--si)           */
 
 .yk-siamt {
@@ -3713,6 +4006,427 @@
     }
 
     .yk-siamt__preset {
+        flex: 1 1 calc(50% - 0.4rem);
+        text-align: center;
+    }
+}
+
+/* Task 50 — Savings & Investment frequency (.yk-sifreq / .yk-pfm--si)          */
+
+.yk-sifreq {
+    margin: 0 0 1rem;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+}
+
+.yk-sifreq__row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin-top: 0.65rem;
+}
+
+.yk-sifreq__option {
+    display: block;
+    margin: 0;
+    cursor: pointer;
+}
+
+.yk-sifreq__option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.yk-sifreq__card {
+    display: grid;
+    gap: 0.2rem;
+    min-height: 100%;
+    padding: 0.7rem 0.65rem;
+    border: 1.5px solid #ead9e2;
+    border-radius: 12px;
+    background: #FFF8FB;
+    color: #3f2a34;
+    transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.yk-sifreq__option.is-active .yk-sifreq__card,
+.yk-sifreq__option:focus-within .yk-sifreq__card {
+    border-color: #8A0F4D;
+    background: #F8EAF1;
+    box-shadow: 0 0 0 3px rgba(138, 15, 77, 0.12);
+}
+
+.yk-sifreq__label {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #8A0F4D;
+}
+
+.yk-sifreq__hint {
+    font-size: 0.72rem;
+    line-height: 1.35;
+    color: #6b5a63;
+    font-weight: 600;
+}
+
+.yk-siamt__preview-grid--freq {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 768px) {
+    .yk-sifreq__row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 430px) {
+    .yk-sifreq__row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Task 49 — Savings & Investment time period (.yk-sidur / .yk-pfm--si)         */
+
+.yk-sidur .visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.yk-sidur__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(9rem, 12rem);
+    gap: 0.85rem 1rem;
+    align-items: end;
+    margin-bottom: 0.85rem;
+}
+
+.yk-sidur__readout {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    color: #8A0F4D;
+}
+
+.yk-sidur__figure {
+    font-size: clamp(1.85rem, 3.2vw, 2.35rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+.yk-sidur__unit {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #6b5a63;
+}
+
+.yk-sidur__control {
+    width: 100%;
+}
+
+.yk-sidur__slider {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.75rem;
+}
+
+.yk-sidur__step {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ead9e2;
+    border-radius: 10px;
+    background: #fff;
+    color: #8A0F4D;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.yk-sidur__step:hover,
+.yk-sidur__step:focus-visible {
+    border-color: #8A0F4D;
+    background: #F8EAF1;
+    color: #8A0F4D;
+}
+
+.yk-sidur__step:focus-visible {
+    outline: 3px solid rgba(138, 15, 77, 0.28);
+    outline-offset: 2px;
+}
+
+.yk-sidur__step .yk-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.yk-sidur__track {
+    min-width: 0;
+}
+
+.yk-sidur__range {
+    --yk-si-years-pct: 10%;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 40px;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    touch-action: pan-y;
+}
+
+.yk-sidur__range:focus {
+    outline: none;
+}
+
+.yk-sidur__range:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 4px rgba(138, 15, 77, 0.22);
+}
+
+.yk-sidur__range:focus-visible::-moz-range-thumb {
+    box-shadow: 0 0 0 4px rgba(138, 15, 77, 0.22);
+}
+
+.yk-sidur__range::-webkit-slider-runnable-track {
+    height: 10px;
+    border-radius: 999px;
+    background: linear-gradient(
+        90deg,
+        #8A0F4D 0%,
+        #8A0F4D var(--yk-si-years-pct),
+        #ead9e2 var(--yk-si-years-pct),
+        #ead9e2 100%
+    );
+}
+
+.yk-sidur__range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    margin-top: -7px;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background: #8A0F4D;
+    box-shadow: 0 2px 8px rgba(138, 15, 77, 0.35);
+}
+
+.yk-sidur__range::-moz-range-track {
+    height: 10px;
+    border: 0;
+    border-radius: 999px;
+    background: #ead9e2;
+}
+
+.yk-sidur__range::-moz-range-progress {
+    height: 10px;
+    border-radius: 999px;
+    background: #8A0F4D;
+}
+
+.yk-sidur__range::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background: #8A0F4D;
+    box-shadow: 0 2px 8px rgba(138, 15, 77, 0.35);
+}
+
+.yk-sidur__scale,
+.yk-sidur__bounds {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.35rem;
+    color: #6b5a63;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.yk-sidur__scale {
+    margin-top: 0.15rem;
+    letter-spacing: 0.02em;
+}
+
+.yk-sidur__bounds {
+    margin-top: 0.1rem;
+    color: #3f2a34;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.yk-sidur__presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0 0 0.85rem;
+}
+
+.yk-sidur__preset {
+    min-width: 44px;
+    min-height: 34px;
+    padding: 0.35rem 0.7rem;
+    border: 1.5px solid #ead9e2;
+    border-radius: 999px;
+    background: #FFF8FB;
+    color: #3f2a34;
+    font: inherit;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.yk-sidur__preset:hover,
+.yk-sidur__preset:focus-visible {
+    border-color: #8A0F4D;
+    background: #F8EAF1;
+    color: #8A0F4D;
+}
+
+.yk-sidur__preset.is-active {
+    border-color: #8A0F4D;
+    background: #8A0F4D;
+    color: #fff;
+}
+
+.yk-sidur__preset:focus-visible {
+    outline: 3px solid rgba(138, 15, 77, 0.28);
+    outline-offset: 2px;
+}
+
+.yk-sidur__months {
+    margin: 0 0 0.9rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: 12px;
+    background: #FFF8FB;
+    border: 1px solid #ead9e2;
+    color: #3f2a34;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.yk-sidur__months strong {
+    color: #8A0F4D;
+}
+
+.yk-sidur__timeline {
+    list-style: none;
+    margin: 0 0 0.85rem;
+    padding: 0.85rem 0.75rem 0.7rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #FFF8FB 0%, #fff 100%);
+    border: 1px solid #ead9e2;
+    position: relative;
+}
+
+.yk-sidur__timeline::before {
+    content: '';
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    top: 1.35rem;
+    height: 2px;
+    background: #ead9e2;
+    pointer-events: none;
+}
+
+.yk-sidur__timeline li {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    justify-items: center;
+    gap: 0.35rem;
+    text-align: center;
+}
+
+.yk-sidur__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #8A0F4D;
+    box-shadow: 0 0 0 4px #F8EAF1;
+}
+
+.yk-sidur__tl-label {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: #8A0F4D;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.yk-sidur__tl-note {
+    font-size: 0.8rem;
+    line-height: 1.35;
+    color: #6b5a63;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .yk-sidur__head {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+
+    .yk-sidur__timeline {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+        padding: 0.9rem 0.95rem;
+    }
+
+    .yk-sidur__timeline::before {
+        left: 1.15rem;
+        right: auto;
+        top: 1.2rem;
+        bottom: 1.2rem;
+        width: 2px;
+        height: auto;
+    }
+
+    .yk-sidur__timeline li {
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto;
+        column-gap: 0.7rem;
+        justify-items: start;
+        text-align: left;
+    }
+
+    .yk-sidur__dot {
+        grid-row: 1 / span 2;
+        align-self: start;
+        margin-top: 0.15rem;
+    }
+}
+
+@media (max-width: 430px) {
+    .yk-sidur__slider {
+        gap: 0.35rem;
+    }
+
+    .yk-sidur__step {
+        width: 38px;
+        height: 38px;
+    }
+
+    .yk-sidur__preset {
         flex: 1 1 calc(50% - 0.4rem);
         text-align: center;
     }

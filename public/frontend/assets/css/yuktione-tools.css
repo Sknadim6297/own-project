@@ -139,7 +139,7 @@
 }
 
 .yk-tools-strip__viewport {
-    overflow: hidden;
+    overflow: visible;
 }
 
 .yk-tools-strip__track {
@@ -147,22 +147,49 @@
     align-items: stretch;
     gap: 0.85rem;
     margin: 0;
-    padding: 0.2rem 0.05rem 0.45rem;
+    /* End padding lets the final card fully enter the viewport under snap. */
+    padding: 0.2rem max(0.75rem, env(safe-area-inset-right, 0px)) 0.55rem 0.05rem;
     list-style: none;
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    scroll-behavior: auto;
     -webkit-overflow-scrolling: touch;
+    /* Task 54: brand-visible native scroller (hidden when not scrollable). */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(138, 15, 77, 0.45) #f8eaf1;
+}
+
+.yk-tools-strip:not(.is-carousel-scrollable) .yk-tools-strip__track {
     scrollbar-width: none;
 }
 
 .yk-tools-strip__track::-webkit-scrollbar {
-    display: none;
+    height: 6px;
+}
+
+.yk-tools-strip:not(.is-carousel-scrollable) .yk-tools-strip__track::-webkit-scrollbar {
+    height: 0;
+}
+
+.yk-tools-strip__track::-webkit-scrollbar-track {
+    background: #f8eaf1;
+    border-radius: 999px;
+}
+
+.yk-tools-strip__track::-webkit-scrollbar-thumb {
+    background: rgba(138, 15, 77, 0.45);
+    border-radius: 999px;
+}
+
+.yk-tools-strip__track::-webkit-scrollbar-thumb:hover {
+    background: rgba(138, 15, 77, 0.65);
 }
 
 .yk-tools-strip__track > li {
-    flex: 0 0 136px;
-    width: 136px;
+    /* Task 55: slightly wider tiles so more tool names stay on one line. */
+    flex: 0 0 152px;
+    width: 152px;
     height: 138px;
     scroll-snap-align: start;
 }
@@ -241,7 +268,8 @@
     overflow: hidden;
     width: 100%;
     max-width: 100%;
-    min-height: 2.5em;
+    /* Prefer natural one-line height; clamp still allows a second line for long names. */
+    min-height: 1.25em;
     margin-top: auto;
     color: var(--yk-tools-ink);
     font-size: 0.86rem;
@@ -249,21 +277,29 @@
     letter-spacing: -0.02em;
     line-height: 1.25;
     text-align: center;
-    text-wrap: balance;
+    overflow-wrap: normal;
+    word-break: normal;
 }
 
-/* Phone: three tiles per view (swipe for more), arrows hidden, "View All Tools" stays */
+/* Phone: ~three tiles per view; keep arrows + visible scroller when overflow exists */
 @media (max-width: 767px) {
     .yk-tools-strip__title {
         white-space: nowrap;
     }
 
     .yk-tools-strip__nav {
-        display: none;
+        display: inline-flex;
+    }
+
+    .yk-tools-strip__nav-btn {
+        width: 32px;
+        height: 32px;
     }
 
     .yk-tools-strip__track {
         gap: 0.6rem;
+        padding-bottom: 0.65rem;
+        scroll-snap-type: x proximity;
     }
 
     .yk-tools-strip__track > li {
@@ -318,14 +354,16 @@
     }
 
     .yk-tools-strip__track > li {
-        flex-basis: 142px;
-        width: 142px;
+        /* Task 55: wider desktop tiles for single-line tool names where possible. */
+        flex-basis: 168px;
+        width: 168px;
         height: 142px;
     }
 
     .yk-tool-tile {
         min-height: 142px;
         max-height: 142px;
+        padding-inline: 0.45rem;
     }
 }
 

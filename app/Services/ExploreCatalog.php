@@ -13,6 +13,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -69,17 +70,14 @@ class ExploreCatalog
         'nutrition-fitness' => ['label' => 'Nutrition & Fitness', 'tone' => 'mint', 'icon' => 'fitness', 'needles' => ['nutrition', 'diet', 'fitness', 'workout', 'trainer']],
     ];
 
-    public function browse(Request $request): array
+    public function browse(Request $request, bool $withFacets = true): array
     {
         $filters = $this->filters($request);
         $items = $this->paginate($filters);
         $cards = $this->cards($items);
         $items->setCollection($cards);
 
-        $ratingAvailable = Review::query()->where('is_approved', 1)->exists();
-        $availabilityAvailable = Availability::query()->exists();
-
-        return [
+        $payload = [
             'items' => $items,
             'filters' => $filters,
             'categories' => self::CATEGORIES,
@@ -87,17 +85,62 @@ class ExploreCatalog
             'activeTypes' => $this->activeTypes($filters),
             'tab' => $this->tab($filters),
             'counts' => [
-                'types' => $this->typeCounts($filters),
-                'categories' => $this->categoryCounts($filters),
-                'price' => $this->priceCounts($filters),
-                'rating' => $ratingAvailable ? $this->ratingCounts($filters) : [],
-                'availability' => $availabilityAvailable ? $this->availabilityCounts($filters) : [],
+                'types' => [],
+                'categories' => [],
+                'price' => [],
+                'rating' => [],
+                'availability' => [],
             ],
-            'ratingAvailable' => $ratingAvailable,
-            'availabilityAvailable' => $availabilityAvailable,
+            'ratingAvailable' => false,
+            'availabilityAvailable' => false,
             'toolsAvailable' => false,
-            'featured' => $this->featured(),
+            'featured' => [],
         ];
+
+        // Facet counts are only needed by the multi-type explore UI.
+        // Professionals search/pagination skips them to stay fast.
+        if (! $withFacets) {
+            return $payload;
+        }
+
+        $ratingAvailable = Review::query()->where('is_approved', 1)->exists();
+        $availabilityAvailable = Availability::query()->exists();
+
+        $payload['counts'] = [
+            'types' => $this->typeCounts($filters),
+            'categories' => $this->categoryCounts($filters),
+            'price' => $this->priceCounts($filters),
+            'rating' => $ratingAvailable ? $this->ratingCounts($filters) : [],
+            'availability' => $availabilityAvailable ? $this->availabilityCounts($filters) : [],
+        ];
+        $payload['ratingAvailable'] = $ratingAvailable;
+        $payload['availabilityAvailable'] = $availabilityAvailable;
+        $payload['featured'] = $this->featured();
+
+        return $payload;
+    }
+
+    /**
+     * Lightweight directory totals for the Experts page shell (nav counts / hero).
+     *
+     * @return array{experts: int, rating: string|null, categories: int}
+     */
+    public function directoryStats(): array
+    {
+        return Cache::remember('yuktione.directory-stats', 300, function () {
+            $experts = Professional::query()
+                ->where('status', 'accepted')
+                ->where('active', true)
+                ->count();
+
+            $average = Review::query()->where('is_approved', 1)->avg('rating');
+
+            return [
+                'experts' => $experts,
+                'rating' => $average !== null ? number_format((float) $average, 1) : null,
+                'categories' => count(self::CATEGORIES),
+            ];
+        });
     }
 
     private function filters(Request $request): array

@@ -59,25 +59,28 @@
                 </p>
             @endif
 
-            @include('frontend.sections.pfm.partials.result-metrics', ['toolKey' => $toolKey, 'result' => $result, 'inputs' => $inputs ?? []])
-            @include('frontend.sections.pfm.partials.result-charts', ['toolKey' => $toolKey, 'result' => $result, 'inputs' => $inputs ?? []])
-
-            @if ($isRetirement)
-                @include('frontend.sections.pfm.partials.retirement-sufficiency', [
-                    'result' => $result,
-                    'inputs' => $inputs ?? [],
-                ])
-                @include('frontend.sections.pfm.partials.retirement-conclusion', [
-                    'result' => $result,
-                    'inputs' => $inputs ?? [],
-                ])
-            @elseif ($isSavings)
+            @if ($isSavings)
+                {{-- Task 51 — consolidated maturity / returns presentation (includes KPI, charts, conclusion). --}}
                 @include('frontend.sections.pfm.partials.savings-conclusion', [
                     'result' => $result,
                     'inputs' => $inputs ?? [],
                 ])
             @else
-                <p class="yk-pfm__note yk-pfm__disclaimer">These figures are educational estimates only and are not financial advice.</p>
+                @include('frontend.sections.pfm.partials.result-metrics', ['toolKey' => $toolKey, 'result' => $result, 'inputs' => $inputs ?? []])
+                @include('frontend.sections.pfm.partials.result-charts', ['toolKey' => $toolKey, 'result' => $result, 'inputs' => $inputs ?? []])
+
+                @if ($isRetirement)
+                    @include('frontend.sections.pfm.partials.retirement-sufficiency', [
+                        'result' => $result,
+                        'inputs' => $inputs ?? [],
+                    ])
+                    @include('frontend.sections.pfm.partials.retirement-conclusion', [
+                        'result' => $result,
+                        'inputs' => $inputs ?? [],
+                    ])
+                @else
+                    <p class="yk-pfm__note yk-pfm__disclaimer">These figures are educational estimates only and are not financial advice.</p>
+                @endif
             @endif
 
             <div class="yk-pfm__actions {{ $isEmergency ? 'yk-ef__actions' : '' }}">

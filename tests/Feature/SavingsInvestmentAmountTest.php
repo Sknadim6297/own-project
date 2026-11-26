@@ -39,13 +39,15 @@ class SavingsInvestmentAmountTest extends TestCase
             ->assertSee('Investment amount')
             ->assertSee('Investment type')
             ->assertSee('Lump Sum')
-            ->assertSee('Monthly Investment')
+            ->assertSee('Recurring Investment')
             ->assertSee('Combined Investment')
             ->assertSee('Contribution preview')
-            ->assertSee('Planned total contributions')
+            ->assertSee('Total invested (planned)')
             ->assertSee('excludes estimated investment returns', false)
             ->assertSee('name="initial_amount"', false)
+            ->assertSee('name="contribution_amount"', false)
             ->assertSee('name="monthly_contribution"', false)
+            ->assertSee('name="investment_frequency"', false)
             ->assertSee('data-yk-si-preset="initial"', false)
             ->assertSee('data-yk-si-preset="monthly"', false)
             ->getContent();
@@ -74,7 +76,7 @@ class SavingsInvestmentAmountTest extends TestCase
             ->assertOk()
             ->assertSee(number_format((float) $expected['corpus'], 2), false)
             ->assertSee(number_format((float) $expected['invested'], 2), false)
-            ->assertSee('Your Investment Summary')
+            ->assertSee('Your Investment Results')
             ->assertSee('lump sum', false);
 
         $this->assertSame(100000.0, (float) $expected['invested']);
@@ -122,7 +124,7 @@ class SavingsInvestmentAmountTest extends TestCase
             ->assertOk()
             ->assertSee('1,294,929.04', false)
             ->assertSee('700,000.00', false)
-            ->assertSee('Your Investment Summary')
+            ->assertSee('Your Investment Results')
             ->assertSee('initial amount', false);
     }
 
@@ -219,7 +221,7 @@ class SavingsInvestmentAmountTest extends TestCase
         $this->actingAs($user, 'user')
             ->get(route(self::ROUTE.'.history.show', $saved))
             ->assertOk()
-            ->assertSee('Your Investment Summary')
+            ->assertSee('Your Investment Results')
             ->assertSee('1,294,929.04', false);
     }
 
@@ -242,7 +244,7 @@ class SavingsInvestmentAmountTest extends TestCase
             ->assertRedirect(route(self::ROUTE.'.results'));
         $this->get(route(self::ROUTE.'.results'))
             ->assertOk()
-            ->assertSee('Your Investment Summary')
+            ->assertSee('Your Investment Results')
             ->assertSee('Your Investment Conclusion')
             ->assertSee('Assumptions used');
 

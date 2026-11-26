@@ -124,26 +124,53 @@ class ToolsCatalog
     }
 
     /**
-     * Launchable tools for a tools-catalogue category key, or for a legacy
-     * Explore/All Categories hub key (experts hub slug).
+     * Launchable tools for a tools-catalogue category key, or for an
+     * Explore / All Categories hub key (experts hub slug).
+     *
+     * Hub keys must use TOOL_PLACEMENT hub mappings — never remap them through
+     * tools-catalogue aliases (those aliases are only for /tools?category= bookmarks).
+     * Remapping hub keys hid tools (e.g. Astrology & Tarot → empty) and flooded
+     * others with the wrong catalogue (e.g. Parenting showing all Mental Wellness).
      */
     public function forExploreCategory(string $categoryKey): Collection
     {
-        $categoryKey = $this->normalizeCategoryKey($categoryKey) ?? $categoryKey;
+        $categoryKey = trim($categoryKey);
 
+        if ($categoryKey === '') {
+            return collect();
+        }
+
+        // Exact nine-category tools-catalogue key.
         if (array_key_exists($categoryKey, self::CATEGORIES)) {
             return $this->published()
                 ->filter(fn (array $card) => ($card['category'] ?? null) === $categoryKey)
                 ->values();
         }
 
-        if (! array_key_exists($categoryKey, ExploreCatalog::CATEGORIES)) {
-            return collect();
+        // Explore / All Categories hub key — filter by hub_category placement.
+        if (array_key_exists($categoryKey, ExploreCatalog::CATEGORIES)) {
+            return $this->published()
+                ->filter(fn (array $card) => ($card['hub_category'] ?? null) === $categoryKey)
+                ->values();
         }
 
-        return $this->published()
-            ->filter(fn (array $card) => ($card['hub_category'] ?? null) === $categoryKey)
-            ->values();
+        // Legacy tools-catalogue aliases / compound bookmarks only.
+        if (isset(self::CATEGORY_GROUP_ALIASES[$categoryKey])) {
+            $group = self::CATEGORY_GROUP_ALIASES[$categoryKey];
+
+            return $this->published()
+                ->filter(fn (array $card) => in_array($card['category'] ?? null, $group, true))
+                ->values();
+        }
+
+        $normalized = $this->normalizeCategoryKey($categoryKey);
+        if ($normalized !== null && array_key_exists($normalized, self::CATEGORIES)) {
+            return $this->published()
+                ->filter(fn (array $card) => ($card['category'] ?? null) === $normalized)
+                ->values();
+        }
+
+        return collect();
     }
 
     /**

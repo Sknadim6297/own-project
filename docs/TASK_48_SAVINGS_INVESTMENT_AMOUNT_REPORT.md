@@ -1,7 +1,7 @@
 # Task 48 — Savings & Investment Calculator: Investment Amount
 
-**Status:** Complete (implemented and verified locally)  
-**Date:** 25 Nov 2026  
+**Status:** Complete (implemented and re-verified locally)  
+**Date:** 25 Nov 2026 (implementation); re-verified 26 Nov 2026 after stash merge  
 **Scope:** Investment amount UI only. No commit / push / deploy. Tasks 49–51 not started.
 
 ---

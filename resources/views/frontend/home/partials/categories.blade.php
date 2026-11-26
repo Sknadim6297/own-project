@@ -12,7 +12,13 @@
     }
 @endphp
 
-<section class="yk-home-cats yk-home-cats--rich" aria-labelledby="yk-home-cats-title" data-categories-carousel>
+{{-- Task 52: homepage Solutions card rail (Explore by Need categories). Horizontal scroll must reach every card. --}}
+<section
+    class="yk-home-cats yk-home-cats--rich"
+    aria-labelledby="yk-home-cats-title"
+    data-categories-carousel
+    data-yk-solutions-rail
+>
     <div class="yk-home-cats__shell">
         <div class="yk-home-cats__head">
             <h2 id="yk-home-cats-title">Explore <span>by Need</span></h2>

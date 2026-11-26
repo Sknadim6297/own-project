@@ -535,6 +535,7 @@
     gap: 0.6rem;
 }
 
+.yk-bmi__seg--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .yk-bmi__seg--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
 .yk-bmi__seg-option { position: relative; display: block; cursor: pointer; }
@@ -1213,10 +1214,25 @@
    Responsive
    ========================================================================== */
 @media (min-width: 560px) {
-    .yk-bmi__row-about { grid-template-columns: minmax(0, 2.6fr) minmax(0, 1fr); gap: 1.4rem; align-items: start; }
-    .yk-bmi__metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
-    .yk-bmi__metric--tile { padding-right: 1.3rem; }
-    .yk-bmi__metric--tile + .yk-bmi__metric--tile { padding: 0 0 0 1.5rem; border-left: 1px solid #e8e4de; }
+    /* Task 57: Gender alone in About You; Weight / Age / Height use named areas so Age sits under Weight. */
+    .yk-bmi__row-about { grid-template-columns: minmax(0, 1fr); }
+    .yk-bmi__metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-areas:
+            "weight height"
+            "age height";
+        column-gap: 0;
+        row-gap: 1rem;
+        align-items: start;
+    }
+    .yk-bmi__metric--weight { grid-area: weight; padding-right: 1.3rem; }
+    .yk-bmi__metric--age { grid-area: age; padding-right: 1.3rem; }
+    .yk-bmi__metric--height {
+        grid-area: height;
+        padding: 0 0 0 1.5rem;
+        border-left: 1px solid #e8e4de;
+        align-self: stretch;
+    }
 }
 
 @media (min-width: 640px) {
@@ -1270,7 +1286,12 @@
 }
 
 @media (max-width: 559px) {
-    .yk-bmi__metric--tile + .yk-bmi__metric--tile {
+    /* Task 57 DOM order: Weight → Age → Height (vertical stack). */
+    .yk-bmi__metric--age {
+        margin-top: 0.35rem;
+        padding-top: 0.35rem;
+    }
+    .yk-bmi__metric--height {
         margin-top: 1.1rem;
         padding-top: 1.1rem;
         border-top: 1px solid #e8e4de;

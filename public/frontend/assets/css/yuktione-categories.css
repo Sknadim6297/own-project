@@ -108,15 +108,20 @@
 
 .yk-home-cats__track {
     display: flex;
+    flex-wrap: nowrap;
     gap: 0.7rem;
     margin: 0;
-    padding: 0.1rem 0.05rem 0.25rem;
+    /* End padding lets the final card fully enter the viewport under snap. */
+    padding: 0.1rem max(0.75rem, env(safe-area-inset-right, 0px)) 0.25rem 0.05rem;
     list-style: none;
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-behavior: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    touch-action: pan-x pan-y;
 }
 
 .yk-home-cats__track::-webkit-scrollbar {
@@ -182,14 +187,18 @@
 .yk-home-cats__label {
     position: relative;
     z-index: 1;
-    max-width: 12ch;
+    /* Task 55: use full card width — ch caps forced unnecessary two-line wraps. */
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     color: inherit;
     font-size: 0.8rem;
     font-weight: 650;
     letter-spacing: -0.02em;
-    line-height: 1.2;
+    line-height: 1.25;
     text-align: center;
-    text-wrap: balance;
+    overflow-wrap: normal;
+    word-break: normal;
 }
 
 .yk-home-cats__card--violet,
@@ -293,7 +302,7 @@
 }
 
 .yk-home-cats__card--photo .yk-home-cats__label {
-    max-width: 14ch;
+    max-width: 100%;
     color: var(--y1-charcoal, #1f1f1f);
     font-size: 0.92rem;
     font-weight: 700;
@@ -302,13 +311,18 @@
 .yk-home-cats__blurb {
     position: relative;
     z-index: 1;
-    max-width: 16ch;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     color: var(--y1-grey, #6b6b7a);
     font-size: 0.72rem;
     font-weight: 500;
     line-height: 1.35;
     text-align: center;
-    text-wrap: balance;
+    /* Reserve two lines so cards stay equal height when a blurb wraps. */
+    min-height: calc(1.35em * 2);
+    overflow-wrap: normal;
+    word-break: normal;
 }
 
 /* Desktop card sizing (formerly forced from the home "bright" overrides) */
@@ -336,32 +350,76 @@
     font-weight: 750;
 }
 
-/* Phone + tablet: compact illustrated grid (3 × 2). All categories stay one tap away via "View more" */
+/* Task 55: equal card heights + prefer single-line topic names when the rail has room. */
+.yk-home-cats--rich .yk-home-cats__track {
+    align-items: stretch;
+}
+
+.yk-home-cats--rich .yk-home-cats__track > li {
+    display: flex;
+}
+
+.yk-home-cats--rich .yk-home-cats__card--photo {
+    flex: 1 1 auto;
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    .yk-home-cats--rich .yk-home-cats__card--photo .yk-home-cats__label {
+        white-space: nowrap;
+    }
+}
+
+/* Desktop rail cards are wide enough for short blurbs on one line. */
+@media (min-width: 1024px) {
+    .yk-home-cats--rich .yk-home-cats__blurb {
+        white-space: nowrap;
+        min-height: 0;
+    }
+}
+
+/*
+ * Phone + tablet (Task 52): keep compact card sizing, but restore a real horizontal
+ * scroller so every solution card remains reachable (no hidden nth-child cards).
+ */
 @media (max-width: 1023.98px) {
+    .yk-home-cats--rich .yk-home-cats__controls {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+    }
+
     .yk-home-cats--rich .yk-home-cats__nav {
-        display: none;
+        display: inline-flex;
     }
 
     .yk-home-cats--rich .yk-home-cats__viewport {
-        overflow: visible;
+        overflow: hidden;
     }
 
     .yk-home-cats--rich .yk-home-cats__track {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        display: flex;
+        flex-wrap: nowrap;
         gap: 0.6rem;
-        padding: 0.1rem 0 0.25rem;
-        overflow: visible;
-        scroll-snap-type: none;
+        padding: 0.1rem max(0.75rem, env(safe-area-inset-right, 0px)) 0.35rem 0.05rem;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x proximity;
+        scroll-behavior: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .yk-home-cats--rich .yk-home-cats__track > li {
-        width: auto;
+        flex: 0 0 auto;
+        width: min(42vw, 132px);
         min-width: 0;
+        display: flex; /* keep stretch for equal card heights (Task 55) */
     }
 
     .yk-home-cats--rich .yk-home-cats__track > li:nth-child(n + 7) {
-        display: none;
+        display: flex;
     }
 
     .yk-home-cats--rich .yk-home-cats__card--photo {
@@ -377,19 +435,26 @@
     }
 
     .yk-home-cats--rich .yk-home-cats__card--photo .yk-home-cats__label {
-        max-width: none;
+        max-width: 100%;
         font-size: 0.76rem;
         line-height: 1.2;
+        /* Phone: allow graceful wrap rather than clipping long topic names. */
+        white-space: normal;
     }
 
     .yk-home-cats--rich .yk-home-cats__blurb {
         display: none;
+        min-height: 0;
     }
 }
 
 @media (min-width: 640px) and (max-width: 1023.98px) {
     .yk-home-cats--rich .yk-home-cats__track {
         gap: 0.9rem;
+    }
+
+    .yk-home-cats--rich .yk-home-cats__track > li {
+        width: min(28vw, 152px);
     }
 
     .yk-home-cats--rich .yk-home-cats__media {
@@ -403,11 +468,15 @@
 
     .yk-home-cats--rich .yk-home-cats__card--photo .yk-home-cats__label {
         font-size: 0.9rem;
+        white-space: nowrap;
     }
 
     .yk-home-cats--rich .yk-home-cats__blurb {
         display: block;
         font-size: 0.72rem;
+        /* Tablet cards are narrower — keep reserved height, allow wrap if needed. */
+        white-space: normal;
+        min-height: calc(1.35em * 2);
     }
 }
 @media (prefers-reduced-motion: reduce) {

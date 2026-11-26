@@ -47,7 +47,7 @@ class SavingsInvestmentSummaryTest extends TestCase
             ->assertOk()
             ->assertSee('data-yk-si-results', false)
             ->assertSee('data-yk-si-conclusion', false)
-            ->assertSee('Your Investment Summary')
+            ->assertSee('Your Investment Results')
             ->assertSee('Your Investment Conclusion')
             ->assertSee('Estimated maturity amount')
             ->assertSee('Assumptions used')
@@ -74,7 +74,7 @@ class SavingsInvestmentSummaryTest extends TestCase
         $lump = $this->actingAs($user, 'user')->get(route(self::ROUTE.'.results'))->assertOk()->getContent();
         $this->assertStringContainsString('data-yk-si-scenario="lump_sum"', $lump);
         $this->assertStringContainsString('lump sum', $lump);
-        $this->assertStringContainsString('no recurring monthly contributions', $lump);
+        $this->assertStringContainsString('no recurring contributions', $lump);
 
         $this->actingAs($user, 'user')->post(route(self::ROUTE.'.calculate'), $this->payload([
             'initial_amount' => 0,
@@ -148,7 +148,7 @@ class SavingsInvestmentSummaryTest extends TestCase
             ->get(route(self::ROUTE.'.history.show', $record))
             ->assertOk()
             ->assertSee('data-yk-si-saved', false)
-            ->assertSee('Your Investment Summary')
+            ->assertSee('Your Investment Results')
             ->getContent();
         $this->assertStringContainsString(number_format((float) $record->outputs['corpus'], 2), $show);
 
@@ -200,7 +200,7 @@ class SavingsInvestmentSummaryTest extends TestCase
             ->assertRedirect(route(self::ROUTE.'.results'));
         $this->get(route(self::ROUTE.'.results'))
             ->assertOk()
-            ->assertSee('Your Investment Summary')
+            ->assertSee('Your Investment Results')
             ->assertSee('Save result (sign in)');
         $this->assertSame(0, PfmCalculation::query()->count());
 
@@ -214,7 +214,7 @@ class SavingsInvestmentSummaryTest extends TestCase
             ->assertRedirect(route('tools.pfm.inflation.results'));
 
         $inf = $this->actingAs($user, 'user')->get(route('tools.pfm.inflation.results'))->assertOk()->getContent();
-        $this->assertStringNotContainsString('Your Investment Summary', $inf);
+        $this->assertStringNotContainsString('Your Investment Results', $inf);
         $this->assertStringNotContainsString('data-yk-si-conclusion', $inf);
     }
 
