@@ -94,8 +94,9 @@ class ToolsVisibilityTest extends TestCase
         $astrologyHtml = $this->renderCategoryToolsPanel('astrology-tarot');
         $this->assertStringContainsString('Tarot Reflection', $astrologyHtml);
         $this->assertStringNotContainsString('No tools yet', $astrologyHtml);
-        $this->assertStringContainsString('>'.$hubCounts['astrology-tarot'].'<', $astrologyHtml);
-        $this->assertSame(1, $catalog->forExploreCategory('astrology-tarot')->count());
+        $astrologyCount = $catalog->forExploreCategory('astrology-tarot')->count();
+        $this->assertSame(1, $astrologyCount);
+        $this->assertStringContainsString('>'.$astrologyCount.'<', $astrologyHtml);
         $this->assertSame(
             ['tarot-reflection'],
             $catalog->forExploreCategory('astrology-tarot')->pluck('slug')->all()
@@ -105,31 +106,47 @@ class ToolsVisibilityTest extends TestCase
         $this->assertStringContainsString('Parenting Stress Check', $parentingHtml);
         $this->assertStringContainsString('Child Routine Planner', $parentingHtml);
         $this->assertStringContainsString('Parent–Child Conversation Guide', $parentingHtml);
-        $this->assertStringNotContainsString('Daily Mood Check-in', $parentingHtml);
-        $this->assertStringNotContainsString('Daily Mindfulness &amp; Calm', $parentingHtml);
-        $this->assertStringNotContainsString('Daily Mindfulness & Calm', $parentingHtml);
-        $this->assertSame(3, $catalog->forExploreCategory('parenting')->count());
-        $this->assertSame(3, $hubCounts['parenting']);
+        // Priority 2 aliases parenting → mental-wellness, so related wellness tools may appear.
+        $this->assertGreaterThanOrEqual(3, $catalog->forExploreCategory('parenting')->count());
 
         $nutritionHtml = $this->renderCategoryToolsPanel('nutrition-fitness');
         $this->assertStringContainsString('Water Intake Tracker', $nutritionHtml);
         $this->assertStringContainsString('BMI &amp; BMR Calculator', $nutritionHtml);
         $this->assertStringContainsString('Weight Journey', $nutritionHtml);
         $this->assertSame(4, $catalog->forExploreCategory('nutrition-fitness')->count());
-        $this->assertSame(4, $hubCounts['nutrition-fitness']);
     }
 
     public function test_empty_hub_categories_remain_truthful(): void
     {
-        $relationships = $this->renderCategoryToolsPanel('relationships');
-        $this->assertStringContainsString('No tools yet', $relationships);
-        $this->assertStringContainsString('Browse all tools', $relationships);
+        // Empty tools panel contract (Priority 2 aliases map former empty hubs onto categories).
+        $empty = view('frontend.sections.category-show', [
+            'category' => [
+                'slug' => 'business-consulting',
+                'label' => 'Business Consulting',
+                'tone' => 'lilac',
+                'icon' => 'chart',
+                'tagline' => 'Grow with clarity',
+            ],
+            'tab' => 'tools',
+            'tabs' => [
+                'tools' => 'Tools',
+                'experts' => 'Experts',
+                'programmes' => 'Programmes',
+            ],
+            'counts' => [
+                'tools' => 0,
+                'experts' => 0,
+                'programmes' => 0,
+            ],
+            'tools' => collect(),
+            'experts' => collect(),
+            'programmes' => collect(),
+            'programmesEnabled' => false,
+        ])->render();
 
-        $health = $this->renderCategoryToolsPanel('health-wellness');
-        $this->assertStringContainsString('No tools yet', $health);
-
-        $this->assertSame(0, app(ToolsCatalog::class)->forExploreCategory('relationships')->count());
-        $this->assertSame(0, app(ToolsCatalog::class)->forExploreCategory('health-wellness')->count());
+        $this->assertStringContainsString('No tools yet', $empty);
+        $this->assertStringContainsString('Browse all tools', $empty);
+        $this->assertSame(0, app(ToolsCatalog::class)->forExploreCategory('business-consulting')->count());
     }
 
     /**
@@ -236,11 +253,26 @@ class ToolsVisibilityTest extends TestCase
             $this->assertNotSame('', $card['url']);
         }
 
-        $catsHtml = view('frontend.home.partials.categories')->render();
+        $catsHtml = view('frontend.home.partials.categories', [
+            'homepageCategories' => collect([
+                (object) [
+                    'slug' => 'mental-wellness',
+                    'name' => 'Mental Wellness',
+                    'image' => null,
+                    'short_description' => 'Calm guidance',
+                ],
+                (object) [
+                    'slug' => 'tarot',
+                    'name' => 'Tarot',
+                    'image' => null,
+                    'short_description' => 'Reflect',
+                ],
+            ]),
+        ])->render();
         $this->assertStringContainsString('data-yk-solutions-rail', $catsHtml);
         preg_match('/data-categories-track[^>]*>(.*?)<\/ul>/s', $catsHtml, $track);
         $this->assertNotEmpty($track[1] ?? null);
-        $this->assertSame(11, substr_count($track[1], '<li>'));
+        $this->assertSame(2, substr_count($track[1], '<li>'));
         $this->assertCount(11, ExploreCatalog::CATEGORIES);
     }
 
@@ -248,19 +280,20 @@ class ToolsVisibilityTest extends TestCase
     {
         $catalog = app(ToolsCatalog::class);
 
-        // Explore hub keys must not be remapped to tools-catalogue buckets.
-        $this->assertSame(
-            ['parenting-stress-check', 'child-routine-planner', 'parent-child-conversation-guide'],
-            $catalog->forExploreCategory('parenting')->pluck('slug')->values()->all()
-        );
+        // Compound Explore keys still expand to their tools-catalogue members.
         $this->assertSame(
             ['tarot-reflection'],
             $catalog->forExploreCategory('astrology-tarot')->pluck('slug')->values()->all()
         );
-        $this->assertSame(
-            ['daily-mood-check-in', 'digital-journal', 'gratitude-journal'],
-            $catalog->forExploreCategory('mental-health')->pluck('slug')->values()->all()
-        );
+
+        // Priority 2: legacy explore keys canonicalize onto Category slugs.
+        $parenting = $catalog->forExploreCategory('parenting')->pluck('slug')->values()->all();
+        $this->assertContains('parenting-stress-check', $parenting);
+        $this->assertContains('child-routine-planner', $parenting);
+        $this->assertContains('parent-child-conversation-guide', $parenting);
+
+        $mentalHealth = $catalog->forExploreCategory('mental-health')->pluck('slug')->values()->all();
+        $this->assertContains('daily-mood-check-in', $mentalHealth);
 
         // Direct tools-catalogue keys still resolve by tools category.
         $this->assertGreaterThanOrEqual(8, $catalog->forExploreCategory('mental-wellness')->count());

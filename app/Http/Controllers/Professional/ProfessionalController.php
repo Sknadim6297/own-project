@@ -48,7 +48,7 @@ class ProfessionalController extends Controller
 
     public function registerForm()
     {
-        $services = Service::where('status', 'active')->get();
+        $services = Service::query()->active()->ordered()->get();
         return view('professional.login.register', compact('services'));
     }
 

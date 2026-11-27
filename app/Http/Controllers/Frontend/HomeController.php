@@ -169,19 +169,10 @@ class HomeController extends Controller
             ->take(6)
             ->values();
         
-        $homepageCategories = CategoryBox::query()
-            ->where('status', true)
-            ->with([
-                'subCategories' => function ($query) {
-                    $query->where('status', true)
-                        ->orderBy('id')
-                        ->select('id', 'category_box_id', 'service_id', 'name', 'image', 'status');
-                },
-                'subCategories.service:id,name,slug',
-            ])
-            ->orderBy('order')
-            ->orderBy('id')
-            ->get();
+        // Priority 2: homepage Explore by Need uses Category records (services table).
+        $homepageCategories = app(\App\Services\CategoryCatalog::class)->forHomepage();
+        // Priority 4: reversible topic layout (default single-row until client confirms).
+        $topicLayout = \App\Support\Homepage\TopicLayout::resolve(request()->query('topic_layout'));
         $acceptedExpertsQuery = Professional::query()
             ->with([
                 'profile',
@@ -217,7 +208,7 @@ class HomeController extends Controller
             ->orderByDesc('id')
             ->limit(6)
             ->get();
-        return view('frontend.index', compact('services', 'banners', 'about_us', 'whychooses', 'testimonials', 'homeblogs', 'howworks', 'mcqs', 'blogPosts', 'upcomingProgrammeEvents', 'pastProgrammeEvents', 'homepageCategories', 'featuredExperts', 'featuredExpertCategories', 'talkExperts', 'faqs'));
+        return view('frontend.index', compact('services', 'banners', 'about_us', 'whychooses', 'testimonials', 'homeblogs', 'howworks', 'mcqs', 'blogPosts', 'upcomingProgrammeEvents', 'pastProgrammeEvents', 'homepageCategories', 'topicLayout', 'featuredExperts', 'featuredExpertCategories', 'talkExperts', 'faqs'));
     }
 
     //     public function getServiceQuestions($serviceId)

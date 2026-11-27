@@ -88,6 +88,8 @@ Route::get('categories/{category}', [\App\Http\Controllers\Frontend\CategoryCont
     ->name('categories.show');
 // Preserve Explore bookmarks: redirect to All Categories / category detail.
 Route::get('gridlisting', [\App\Http\Controllers\Frontend\CategoryController::class, 'legacyExploreRedirect'])->name('gridlisting');
+// Mixed experts/articles explore surface (legacy gridlisting UI).
+Route::get('explore', [HomeController::class, 'explore'])->name('explore');
 Route::get('tools/psychology/mood/history', [\App\Http\Controllers\Frontend\MoodCheckinController::class, 'history'])->name('tools.psychology.mood.history');
 Route::get('tools/psychology/mood/finish', [\App\Http\Controllers\Frontend\MoodCheckinController::class, 'finish'])->name('tools.psychology.mood.finish');
 Route::get('tools/psychology/mood/complete/{checkin}', [\App\Http\Controllers\Frontend\MoodCheckinController::class, 'saved'])

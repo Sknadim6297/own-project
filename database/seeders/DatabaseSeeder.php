@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AdminSeeder::class);
         $this->call(AdminMenuSeeder::class);
         $this->call(TarotCardSeeder::class);
+        $this->call(CanonicalCategorySeeder::class);
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([

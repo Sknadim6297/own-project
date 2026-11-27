@@ -3,153 +3,125 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\SubService;
 use App\Models\Service;
+use App\Models\SubService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
+/**
+ * Admin Service management under a parent Category.
+ * Persists to the `sub_services` table for booking/API compatibility.
+ */
 class SubServiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        $query = SubService::with('service');
+        $query = SubService::with('service')->ordered();
 
-        // Filter by service
         if ($request->filled('service_id')) {
             $query->where('service_id', $request->service_id);
         }
 
-        // Filter by status
         if ($request->filled('status')) {
             $statusValue = $request->status === 'active' ? 1 : 0;
             $query->where('status', $statusValue);
         }
 
-        // Search by name
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
-        $subServices = $query->latest()->paginate(10);
-        $services = Service::where('status', 'active')->get();
+        $subServices = $query->paginate(10)->withQueryString();
+        $services = Service::query()->ordered()->get();
 
-    return view('sub-service.index', compact('subServices', 'services'));
+        return view('sub-service.index', compact('subServices', 'services'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        $services = Service::where('status', 'active')->get();
-    return view('sub-service.create', compact('services'));
+        $services = Service::query()->active()->ordered()->get();
+
+        return view('sub-service.create', compact('services'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $request->validate([
-            'service_id' => 'required|exists:services,id',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'status' => 'required|in:active,inactive',
-        ]);
+        $validated = $this->validatedService($request);
 
-        // Prevent adding duplicate sub-service names for the same service (case-insensitive)
-        $duplicate = SubService::where('service_id', $request->service_id)
-            ->whereRaw('LOWER(name) = ?', [strtolower($request->name)])
+        $duplicate = SubService::where('service_id', $validated['service_id'])
+            ->whereRaw('LOWER(name) = ?', [strtolower($validated['name'])])
             ->exists();
 
         if ($duplicate) {
-            return redirect()->back()->withInput()->with('error', 'You have already added this sub-service for the selected service.');
+            return redirect()->back()->withInput()->with('error', 'You have already added this service for the selected category.');
         }
 
-        $data = $request->only(['service_id', 'name', 'description']);
+        $data = $validated;
         $data['status'] = $request->status === 'active' ? 1 : 0;
+        $data['slug'] = $validated['slug'] ?: SubService::uniqueSlug(Str::slug($validated['name']));
+        $data['display_order'] = (int) ($validated['display_order'] ?? 0);
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('uploads/sub-services', 'public');
-            $data['image'] = $imagePath;
+            $data['image'] = $request->file('image')->store('uploads/sub-services', 'public');
         }
+
+        unset($data['status']);
+        $data['status'] = $request->status === 'active' ? 1 : 0;
 
         SubService::create($data);
 
         return redirect()->route('admin.sub-service.index')
-            ->with('success', 'Sub-service created successfully.');
+            ->with('success', 'Service created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(SubService $subService)
     {
         $subService->load('service');
-    return view('sub-service.show', compact('subService'));
+
+        return view('sub-service.show', compact('subService'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(SubService $subService)
     {
-        $services = Service::where('status', 'active')->get();
-    return view('sub-service.edit', compact('subService', 'services'));
+        $services = Service::query()->ordered()->get();
+
+        return view('sub-service.edit', compact('subService', 'services'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, SubService $subService)
     {
-        $request->validate([
-            'service_id' => 'required|exists:services,id',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'status' => 'required|in:active,inactive',
-        ]);
+        $validated = $this->validatedService($request, $subService->id);
 
-        // Prevent updating to a name that would duplicate another sub-service under the same service
-        $duplicate = SubService::where('service_id', $request->service_id)
-            ->whereRaw('LOWER(name) = ?', [strtolower($request->name)])
+        $duplicate = SubService::where('service_id', $validated['service_id'])
+            ->whereRaw('LOWER(name) = ?', [strtolower($validated['name'])])
             ->where('id', '!=', $subService->id)
             ->exists();
 
         if ($duplicate) {
-            return redirect()->back()->withInput()->with('error', 'Another sub-service with this name already exists for the selected service.');
+            return redirect()->back()->withInput()->with('error', 'Another service with this name already exists for the selected category.');
         }
 
-        $data = $request->only(['service_id', 'name', 'description']);
+        $data = $validated;
         $data['status'] = $request->status === 'active' ? 1 : 0;
+        $data['slug'] = $validated['slug'] ?: SubService::uniqueSlug(Str::slug($validated['name']), $subService->id);
+        $data['display_order'] = (int) ($validated['display_order'] ?? 0);
 
         if ($request->hasFile('image')) {
-            // Delete old image if exists
             if ($subService->image) {
                 Storage::disk('public')->delete($subService->image);
             }
-            
-            $imagePath = $request->file('image')->store('uploads/sub-services', 'public');
-            $data['image'] = $imagePath;
+            $data['image'] = $request->file('image')->store('uploads/sub-services', 'public');
         }
 
         $subService->update($data);
 
         return redirect()->route('admin.sub-service.index')
-            ->with('success', 'Sub-service updated successfully.');
+            ->with('success', 'Service updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(SubService $subService)
     {
-        // Delete image if exists
         if ($subService->image) {
             Storage::disk('public')->delete($subService->image);
         }
@@ -157,6 +129,25 @@ class SubServiceController extends Controller
         $subService->delete();
 
         return redirect()->route('admin.sub-service.index')
-            ->with('success', 'Sub-service deleted successfully.');
+            ->with('success', 'Service deleted successfully.');
+    }
+
+    private function validatedService(Request $request, ?int $id = null): array
+    {
+        return $request->validate([
+            'service_id' => 'required|exists:services,id',
+            'name' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:sub_services,slug,'.($id ?: 'NULL').',id',
+            'description' => 'nullable|string',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'status' => 'required|in:active,inactive',
+            'display_order' => 'nullable|integer|min:0|max:9999',
+        ], [
+            'service_id.required' => 'Please select a parent category.',
+            'service_id.exists' => 'The selected category is invalid.',
+            'name.required' => 'Please enter a service name.',
+        ]);
     }
 }

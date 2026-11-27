@@ -186,9 +186,9 @@
                     </div>
 
                     <div class="space-y-1.5">
-                        <label for="specialization" class="block text-xs font-medium">Service you offer</label>
+                        <label for="specialization" class="block text-xs font-medium">Category</label>
                         <select id="specialization" name="specialization" class="w-full rounded-control border border-border bg-white px-3 py-2.5 text-sm text-text-primary focus:border-brand-primary focus:outline-none focus:ring-4 focus:ring-brand-100 aria-[invalid=true]:border-error" aria-describedby="specialization-error">
-                            <option value="">Select a service</option>
+                            <option value="">Select a category</option>
                             @foreach($services as $service)
                                 <option value="{{ $service->name }}">{{ $service->name }}</option>
                             @endforeach

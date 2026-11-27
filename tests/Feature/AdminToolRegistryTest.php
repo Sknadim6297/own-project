@@ -265,7 +265,7 @@ class AdminToolRegistryTest extends TestCase
             ->assertSee('Daily Mood Check-in')
             ->assertSee('Digital Journal')
             ->assertSee('Gratitude Journal')
-            ->assertSee('Start Check-in')
+            ->assertSee('yk-tool-tile', false)
             ->assertSee(route('tools.psychology.mood'), false)
             ->assertSee(route('tools.psychology.journal'), false)
             ->assertSee(route('tools.psychology.gratitude'), false)

@@ -151,6 +151,58 @@ class AccountRecoveryTest extends TestCase
         Notification::assertSentTo($user, CustomerResetPassword::class);
     }
 
+    public function test_registered_customer_sees_send_failed_when_broker_cannot_send(): void
+    {
+        $user = User::query()->create([
+            'name' => 'Broken Mail Customer',
+            'email' => 'broken-mail-customer@example.test',
+            'phone' => '9876500999',
+            'password' => 'already-set-password',
+            'registration_completed' => true,
+        ]);
+
+        $this->mock(AccountRecovery::class, function ($mock) use ($user) {
+            $mock->shouldReceive('registeredCustomerByEmail')
+                ->once()
+                ->andReturn($user);
+            $mock->shouldReceive('sendCustomerReset')
+                ->once()
+                ->with($user)
+                ->andReturn(false);
+        });
+
+        $this->from('/forgot-password')
+            ->post('/forgot-password', ['email' => 'broken-mail-customer@example.test'])
+            ->assertRedirect('/forgot-password')
+            ->assertSessionHasErrors(['email' => AccountRecovery::SEND_FAILED]);
+    }
+
+    public function test_registered_professional_sees_send_failed_when_broker_cannot_send(): void
+    {
+        $professional = Professional::query()->create([
+            'name' => 'Broken Mail Professional',
+            'email' => 'broken-mail-professional@example.test',
+            'phone' => '9876500888',
+            'password' => Hash::make('already-set-password'),
+            'status' => 'accepted',
+        ]);
+
+        $this->mock(AccountRecovery::class, function ($mock) use ($professional) {
+            $mock->shouldReceive('registeredProfessionalByEmail')
+                ->once()
+                ->andReturn($professional);
+            $mock->shouldReceive('sendProfessionalReset')
+                ->once()
+                ->with($professional)
+                ->andReturn(false);
+        });
+
+        $this->from('/professional/forgot-password')
+            ->post('/professional/forgot-password', ['email' => 'broken-mail-professional@example.test'])
+            ->assertRedirect('/professional/forgot-password')
+            ->assertSessionHasErrors(['email' => AccountRecovery::SEND_FAILED]);
+    }
+
     public function test_password_can_be_reset_with_valid_token_and_old_password_fails(): void
     {
         Notification::fake();

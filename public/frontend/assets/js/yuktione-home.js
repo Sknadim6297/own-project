@@ -453,6 +453,30 @@ const bindHomeCarousel = (rootSelector, trackAttr, prevAttr, nextAttr) => {
         previous.addEventListener('click', () => scrollByPage(-1));
         next.addEventListener('click', () => scrollByPage(1));
         track.addEventListener('scroll', updateControls, { passive: true });
+
+        // Keyboard: ArrowLeft / ArrowRight when focus is inside the carousel.
+        if (!track.hasAttribute('tabindex')) {
+            track.setAttribute('tabindex', '0');
+        }
+        const onKeyDown = (event) => {
+            if (event.key === 'ArrowRight') {
+                event.preventDefault();
+                scrollByPage(1);
+            } else if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                scrollByPage(-1);
+            } else if (event.key === 'Home') {
+                event.preventDefault();
+                track.scrollTo({ left: 0, behavior: preferReducedMotion() ? 'auto' : 'smooth' });
+            } else if (event.key === 'End') {
+                event.preventDefault();
+                track.scrollTo({ left: maxScroll(), behavior: preferReducedMotion() ? 'auto' : 'smooth' });
+            }
+        };
+        track.addEventListener('keydown', onKeyDown);
+        previous.addEventListener('keydown', onKeyDown);
+        next.addEventListener('keydown', onKeyDown);
+
         window.addEventListener('resize', updateControls);
         if ('ResizeObserver' in window) {
             new ResizeObserver(updateControls).observe(track);

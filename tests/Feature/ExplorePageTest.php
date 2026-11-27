@@ -141,9 +141,15 @@ class ExplorePageTest extends TestCase
         ]);
     }
 
+    public function test_legacy_gridlisting_redirects_to_categories(): void
+    {
+        $this->get(route('gridlisting'))
+            ->assertRedirect(route('categories.index'));
+    }
+
     public function test_explore_page_shows_only_public_records_and_uses_dm_sans(): void
     {
-        $response = $this->get(route('gridlisting'));
+        $response = $this->get(route('explore'));
 
         $response->assertOk()
             ->assertSee('Explore what')
@@ -157,10 +163,10 @@ class ExplorePageTest extends TestCase
             ->assertSee('Tools are listed separately.')
             ->assertSee('Open the Tools catalogue');
 
-        // Programmes stay hidden while config('yuktione.programmes_enabled') is false.
+        // Programme records stay hidden while config('yuktione.programmes_enabled') is false.
+        // Header may still show a Programmes placeholder nav label.
         if (! config('yuktione.programmes_enabled')) {
-            $response->assertDontSee('Visible Programme')
-                ->assertDontSee('Programmes', false);
+            $response->assertDontSee('Visible Programme');
         } else {
             $response->assertSee('Visible Programme');
         }
@@ -168,17 +174,17 @@ class ExplorePageTest extends TestCase
 
     public function test_explore_search_and_tools_tab_stay_honest(): void
     {
-        $this->get(route('gridlisting', ['q' => 'Visible Expert']))
+        $this->get(route('explore', ['q' => 'Visible Expert']))
             ->assertOk()
             ->assertSee('Visible Expert')
             ->assertDontSee('Visible Programme');
 
-        $this->get(route('gridlisting', ['type' => 'tools']))
+        $this->get(route('explore', ['type' => 'tools']))
             ->assertOk()
             ->assertSee('Tools live in the dedicated catalogue')
             ->assertSee('Browse Tools');
 
-        $this->get(route('gridlisting', ['category' => 'astrology-tarot']))
+        $this->get(route('explore', ['category' => 'astrology-tarot']))
             ->assertOk()
             ->assertSee('Visible Expert')
             ->assertDontSee('Visible Programme');

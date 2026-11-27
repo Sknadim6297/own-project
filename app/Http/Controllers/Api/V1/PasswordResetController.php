@@ -29,8 +29,11 @@ class PasswordResetController extends Controller
         try {
             $user = $recovery->registeredCustomerByEmail($email);
 
-            if ($user) {
-                $recovery->sendCustomerReset($user);
+            if ($user && ! $recovery->sendCustomerReset($user)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => AccountRecovery::SEND_FAILED,
+                ], 500);
             }
         } catch (\Throwable $exception) {
             report($exception);

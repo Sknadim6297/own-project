@@ -33,4 +33,16 @@ return [
     | real ratings.
     */
     'placeholder_ratings' => env('YUKTIONE_PLACEHOLDER_RATINGS', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Homepage topic layout (Priority 4 — awaiting client confirmation)
+    |--------------------------------------------------------------------------
+    | single-row  — current Task 55 / Priority 3 default (one horizontal rail)
+    | label-wrap  — single-row cards with readable two-line topic labels
+    | two-row     — two rows of topic cards that scroll together
+    |
+    | Preview without changing config: /?topic_layout=two-row|label-wrap|single-row
+    */
+    'topic_layout' => env('YUKTIONE_TOPIC_LAYOUT', 'single-row'),
 ];

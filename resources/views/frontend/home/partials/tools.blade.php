@@ -1,8 +1,18 @@
 @php
+    use App\Support\Homepage\TopicLayout;
+
     $spotlight = \App\Support\Tools\ToolsSpotlight::cards(12);
+    $topicLayout = $topicLayout ?? TopicLayout::resolve();
+    $topicLayoutClass = TopicLayout::toolsClasses($topicLayout);
 @endphp
 
-<section class="yk-tools-strip yk-tools-strip--rail" aria-labelledby="yk-tools-strip-title" data-tools-carousel data-yk-tools-rail>
+<section
+    class="yk-tools-strip yk-tools-strip--rail{{ $topicLayoutClass !== '' ? ' '.$topicLayoutClass : '' }}"
+    aria-labelledby="yk-tools-strip-title"
+    data-tools-carousel
+    data-yk-tools-rail
+    data-topic-layout="{{ $topicLayout }}"
+>
     <div class="yk-tools-strip__shell">
         <header class="yk-tools-strip__head">
             <h2 class="yk-tools-strip__title" id="yk-tools-strip-title">

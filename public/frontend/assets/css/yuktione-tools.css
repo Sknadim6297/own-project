@@ -109,6 +109,11 @@
     cursor: default;
 }
 
+/* Hide arrow controls when every tile already fits. */
+.yk-tools-strip:not(.is-carousel-scrollable) .yk-tools-strip__nav {
+    display: none;
+}
+
 .yk-tools-strip__all {
     display: inline-flex;
     align-items: center;
@@ -165,7 +170,7 @@
 }
 
 .yk-tools-strip__track::-webkit-scrollbar {
-    height: 6px;
+    height: 8px;
 }
 
 .yk-tools-strip:not(.is-carousel-scrollable) .yk-tools-strip__track::-webkit-scrollbar {
@@ -416,6 +421,71 @@
     .yk-tools__tiles,
     .yk-tools__tiles--catalog {
         grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
+/*
+ * Priority 4 — Alternative B: emphasize two-line tool labels on the homepage strip.
+ * Opt-in: .yk-tools-strip--label-wrap
+ */
+.yk-tools-strip--label-wrap .yk-tool-tile__label {
+    white-space: normal;
+    -webkit-line-clamp: 2;
+    min-height: calc(1.25em * 2);
+}
+
+.yk-tools-strip--label-wrap .yk-tools-strip__track > li,
+.yk-tools-strip--label-wrap .yk-tool-tile {
+    height: 148px;
+    min-height: 148px;
+    max-height: 148px;
+}
+
+/*
+ * Priority 4 — Alternative C (proposed): two rows of tool tiles scrolling together.
+ * Opt-in: .yk-tools-strip--two-row
+ */
+.yk-tools-strip--two-row .yk-tools-strip__track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(2, minmax(0, auto));
+    grid-auto-columns: 152px;
+    align-items: stretch;
+    column-gap: 0.85rem;
+    row-gap: 0.75rem;
+}
+
+.yk-tools-strip--two-row .yk-tools-strip__track > li {
+    flex: unset;
+    width: auto;
+    height: 138px;
+    scroll-snap-align: start;
+}
+
+.yk-tools-strip--two-row .yk-tool-tile__label {
+    white-space: normal;
+    -webkit-line-clamp: 2;
+    min-height: calc(1.25em * 2);
+}
+
+@media (max-width: 767px) {
+    .yk-tools-strip--two-row .yk-tools-strip__track {
+        grid-auto-columns: calc((100% - 0.6rem) / 2.2);
+        column-gap: 0.6rem;
+        row-gap: 0.55rem;
+    }
+
+    .yk-tools-strip--two-row .yk-tools-strip__track > li {
+        width: auto;
+        min-width: 88px;
+        height: 124px;
+        flex-basis: unset;
+    }
+}
+
+@media (min-width: 1024px) {
+    .yk-tools-strip--two-row .yk-tools-strip__track {
+        grid-auto-columns: 160px;
     }
 }
 

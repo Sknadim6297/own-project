@@ -16,7 +16,30 @@ class TopicLabelFormattingTest extends TestCase
 {
     public function test_solutions_rail_preserves_topic_names_counts_and_destinations(): void
     {
-        $html = view('frontend.home.partials.categories')->render();
+        $homepage = collect([
+            (object) [
+                'slug' => 'mental-wellness',
+                'name' => 'Mental Wellness',
+                'image' => null,
+                'short_description' => 'Calm guidance',
+            ],
+            (object) [
+                'slug' => 'career-counselling',
+                'name' => 'Career Counselling',
+                'image' => null,
+                'short_description' => 'Grow at work',
+            ],
+            (object) [
+                'slug' => 'nutrition',
+                'name' => 'Nutrition',
+                'image' => null,
+                'short_description' => 'Eat well',
+            ],
+        ]);
+
+        $html = view('frontend.home.partials.categories', [
+            'homepageCategories' => $homepage,
+        ])->render();
 
         $this->assertStringContainsString('data-yk-solutions-rail', $html);
         $this->assertStringContainsString('data-categories-track', $html);
@@ -25,16 +48,17 @@ class TopicLabelFormattingTest extends TestCase
 
         preg_match('/data-categories-track[^>]*>(.*?)<\/ul>/s', $html, $track);
         $this->assertNotEmpty($track[1] ?? null);
-        $this->assertSame(11, substr_count($track[1], '<li>'));
-        $this->assertSame(11, substr_count($track[1], 'yk-home-cats__label'));
+        $this->assertSame(3, substr_count($track[1], '<li>'));
+        $this->assertSame(3, substr_count($track[1], 'yk-home-cats__label'));
 
-        foreach (CategoryHub::DISPLAY_LABELS as $slug => $label) {
-            $this->assertStringContainsString(e($label), $html);
-            $this->assertStringContainsString(route('categories.show', $slug), $html);
+        foreach ($homepage as $category) {
+            $this->assertStringContainsString(e($category->name), $html);
+            $this->assertStringContainsString(route('categories.show', $category->slug), $html);
         }
 
         $this->assertCount(11, ExploreCatalog::CATEGORIES);
         $this->assertSame(array_keys(ExploreCatalog::CATEGORIES), array_keys(CategoryHub::DISPLAY_LABELS));
+        $this->assertCount(9, ToolsCatalog::CATEGORIES);
     }
 
     public function test_topic_label_css_removes_ch_width_caps_and_scopes_nowrap(): void

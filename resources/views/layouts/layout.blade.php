@@ -206,7 +206,7 @@
 	@if (config('yuktione.programmes_enabled') && request()->routeIs('event.list', 'event.details'))
 		<link href="{{ asset('frontend/assets/css/yuktione-programmes.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-programmes.css')) }}" rel="stylesheet">
 	@endif
-	@if (request()->routeIs('gridlisting'))
+	@if (request()->routeIs('explore', 'gridlisting'))
 		<link href="{{ asset('frontend/assets/css/yuktione-explore.css') }}?v={{ filemtime(public_path('frontend/assets/css/yuktione-explore.css')) }}" rel="stylesheet">
 	@endif
 	@if (request()->routeIs('categories.*') || request()->routeIs('tools.index') || request()->routeIs('professionals'))

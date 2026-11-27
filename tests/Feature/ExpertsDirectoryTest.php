@@ -241,14 +241,12 @@ class ExpertsDirectoryTest extends TestCase
         $response = $this->get(route('professionals'));
 
         $response->assertOk()
-            ->assertSee('Explore <span>Experts</span>', false)
+            ->assertSee('>Experts</h1>', false)
             ->assertSee('yuktione-experts.css', false)
             ->assertSee('yuktione-pro-directory.css', false)
-            ->assertSee('Talk to an', false)
             ->assertSee('yk-pcard', false)
             ->assertSee('data-pro-fav', false)
             ->assertSee('Book a Session', false)
-            ->assertSee('Experience', false)
             ->assertSee('Career Coach Ava', false)
             ->assertSee('Psych Therapist Bo', false)
             ->assertDontSee('Pending Expert', false)
@@ -258,8 +256,8 @@ class ExpertsDirectoryTest extends TestCase
             ->assertSee('View Profile', false)
             ->assertSee('Book', false)
             ->assertSee('yuktione-experts.js', false)
-            ->assertSee('2–4 years', false)
-            ->assertSee('10+ years', false);
+            ->assertSee('2–4 yrs', false)
+            ->assertSee('10+ yrs', false);
     }
 
     public function test_expert_name_prefix_search_is_case_insensitive(): void

@@ -8,9 +8,12 @@ use Illuminate\Support\Facades\Password;
 
 class AccountRecovery
 {
-    public const UNREGISTERED_TITLE = 'Mobile Number Not Registered';
+    /**
+     * Legacy copy retained for older recovery partials; forgot-password now uses email.
+     */
+    public const UNREGISTERED_TITLE = 'Email Not Registered';
 
-    public const UNREGISTERED_MESSAGE = 'This mobile number is not registered on our portal. Please register and complete your onboarding to continue.';
+    public const UNREGISTERED_MESSAGE = 'This email address is not registered on our portal. Please register and complete your onboarding to continue.';
 
     /**
      * Generic confirmation shown for every customer email recovery attempt

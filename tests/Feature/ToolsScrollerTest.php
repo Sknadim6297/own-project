@@ -85,11 +85,34 @@ class ToolsScrollerTest extends TestCase
 
     public function test_task_52_solutions_rail_and_shared_carousel_remain_intact(): void
     {
-        $cats = view('frontend.home.partials.categories')->render();
+        $homepage = collect([
+            (object) [
+                'slug' => 'mental-wellness',
+                'name' => 'Mental Wellness',
+                'image' => null,
+                'short_description' => 'Calm guidance',
+            ],
+            (object) [
+                'slug' => 'nutrition',
+                'name' => 'Nutrition',
+                'image' => null,
+                'short_description' => 'Eat well',
+            ],
+            (object) [
+                'slug' => 'investments',
+                'name' => 'Investments',
+                'image' => null,
+                'short_description' => 'Grow wealth',
+            ],
+        ]);
+
+        $cats = view('frontend.home.partials.categories', [
+            'homepageCategories' => $homepage,
+        ])->render();
         $this->assertStringContainsString('data-yk-solutions-rail', $cats);
         preg_match('/data-categories-track[^>]*>(.*?)<\/ul>/s', $cats, $track);
         $this->assertNotEmpty($track[1] ?? null);
-        $this->assertSame(11, substr_count($track[1], '<li>'));
+        $this->assertSame(3, substr_count($track[1], '<li>'));
         $this->assertCount(11, ExploreCatalog::CATEGORIES);
 
         $js = file_get_contents(public_path('frontend/assets/js/yuktione-home.js'));
@@ -97,6 +120,7 @@ class ToolsScrollerTest extends TestCase
         $this->assertStringContainsString("bindHomeCarousel('[data-tools-carousel]'", $js);
         $this->assertStringContainsString("bindHomeCarousel('[data-categories-carousel]'", $js);
         $this->assertStringContainsString('itemOffsets', $js);
+        $this->assertStringContainsString('ArrowRight', $js);
     }
 
     public function test_task_53_hub_category_mappings_remain_correct(): void

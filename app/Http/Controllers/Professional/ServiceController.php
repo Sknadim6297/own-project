@@ -177,7 +177,7 @@ class ServiceController extends Controller
                 ->whereIn('id', $subServiceIds)->count() !== count($subServiceIds)) {
             return response()->json([
                 'success' => false,
-                'message' => 'One or more selected sub-services do not belong to the selected service.',
+                'message' => 'One or more selected services do not belong to the selected category.',
             ], 422);
         }
         

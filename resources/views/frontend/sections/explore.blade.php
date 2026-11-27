@@ -19,7 +19,7 @@
             }
         }
 
-        return route('gridlisting', $params);
+        return route('explore', $params);
     };
     $sorts = [
         'relevant' => 'Most Relevant',
@@ -62,7 +62,7 @@
                 </nav>
                 <h1 id="explore-heading">Explore what<br><span>speaks to you.</span></h1>
                 <p class="yk-explore__lead">Discover experts, tools{{ config('yuktione.programmes_enabled') ? ', programmes' : '' }} and articles to support your journey.</p>
-                <form class="yk-explore__search" action="{{ route('gridlisting') }}" method="get" role="search">
+                <form class="yk-explore__search" action="{{ route('explore') }}" method="get" role="search">
                     @include('frontend.sections.partials.explore-state', ['omit' => ['q']])
                     <label class="visually-hidden" for="explore-search">Search experts, tools{{ config('yuktione.programmes_enabled') ? ', programmes' : '' }}, topics</label>
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg>
@@ -117,12 +117,12 @@
 
     <div class="yk-explore__wrap yk-explore__layout">
         <button class="yk-explore__backdrop" type="button" data-explore-close aria-label="Close filters"></button>
-        <form class="yk-explore__sidebar" method="get" action="{{ route('gridlisting') }}" data-explore-filters>
+        <form class="yk-explore__sidebar" method="get" action="{{ route('explore') }}" data-explore-filters>
             <input type="hidden" name="type" value="all">
             @include('frontend.sections.partials.explore-state', ['omit' => ['type', 'types', 'price', 'rating', 'availability']])
             <div class="yk-explore__sidebar-head">
                 <h2>Filters</h2>
-                <a href="{{ route('gridlisting') }}">Reset</a>
+                <a href="{{ route('explore') }}">Reset</a>
             </div>
 
             <fieldset>
@@ -215,7 +215,7 @@
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h14"/></svg>
                         </a>
                     </div>
-                    <form method="get" action="{{ route('gridlisting') }}">
+                    <form method="get" action="{{ route('explore') }}">
                         @include('frontend.sections.partials.explore-state', ['omit' => ['sort']])
                         <label for="explore-sort">Sort By</label>
                         <select id="explore-sort" name="sort" onchange="this.form.submit()">
@@ -231,7 +231,7 @@
             @if ($tab === 'tools')
                 <p class="yk-explore__empty">Tools live in the dedicated catalogue. <a href="{{ route('tools.index') }}">Browse Tools</a> — or switch tabs for experts{{ config('yuktione.programmes_enabled') ? ', programmes' : '' }} and articles.</p>
             @elseif ($items->isEmpty())
-                <p class="yk-explore__empty">No results match these filters. Try another topic or <a href="{{ route('gridlisting') }}">reset Explore</a>.</p>
+                <p class="yk-explore__empty">No results match these filters. Try another topic or <a href="{{ route('explore') }}">reset Explore</a>.</p>
             @else
                 <ul class="yk-explore__grid @if ($filters['view'] === 'list') is-list @endif">
                     @foreach ($items as $card)
@@ -310,12 +310,12 @@
         <div class="yk-explore__wrap">
             <div class="yk-explore__featured-head">
                 <h2 id="explore-featured"><x-yuktione.two-tone text="Featured for You" /></h2>
-                <a href="{{ route('gridlisting') }}">View All</a>
+                <a href="{{ route('explore') }}">View All</a>
             </div>
             <ul>
                 @foreach ($featured as $item)
                     <li>
-                        <a class="is-{{ $item['tone'] }}" href="{{ route('gridlisting', $item['query']) }}">
+                        <a class="is-{{ $item['tone'] }}" href="{{ route('explore', $item['query']) }}">
                             <span>@include('frontend.sections.partials.explore-icon', ['icon' => $item['icon']])</span>
                             {{ $item['label'] }}
                         </a>

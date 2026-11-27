@@ -98,7 +98,7 @@
                                                 <div class="row gy-3">
                                                     <!-- Service Selection -->
                                                     <div class="col-xl-12">
-                                                        <label for="service_id" class="form-label">Parent Service <span class="text-danger">*</span></label>
+                                                        <label for="service_id" class="form-label">Parent Category <span class="text-danger">*</span></label>
                                                         <select class="form-select" name="service_id" id="service_id" required>
                                                             <option value="">Select Service</option>
                                                             @foreach($services as $service)
@@ -109,9 +109,9 @@
                                                     
                                                     <!-- Sub-Service Name -->
                                                     <div class="col-xl-12">
-                                                        <label for="sub-service-name" class="form-label">Sub-Service Name <span class="text-danger">*</span></label>
+                                                        <label for="sub-service-name" class="form-label">Service Name <span class="text-danger">*</span></label>
                                                         <input type="text" class="form-control" name="name" id="sub-service-name" 
-                                                               placeholder="Enter sub-service name" required>
+                                                               placeholder="Enter service name" required>
                                                     </div>
                                                     
                                                     <!-- Description -->

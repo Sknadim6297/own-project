@@ -12,7 +12,7 @@ class ExploreToolsFormattingTest extends TestCase
             ->assertOk()
             ->assertSee('yuktione-tools-page.css', false)
             ->assertSee('yk-tools', false)
-            ->assertSee('Try Our', false)
+            ->assertSee('Practical tools', false)
             ->assertSee('All Tools', false);
     }
 

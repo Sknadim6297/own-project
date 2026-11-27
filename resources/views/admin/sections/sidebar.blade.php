@@ -319,10 +319,10 @@
                                     <i class="ri-arrow-down-s-line side-menu__angle"></i></a>
                                 <ul class="slide-menu child2">
                                     <li class="slide">
-                                        <a href="{{ route('admin.service.index') }}" class="side-menu__item">Service Cards </a>
+                                        <a href="{{ route('admin.service.index') }}" class="side-menu__item">Categories</a>
                                     </li>
                                     <li class="slide">
-                                        <a href="{{ route('admin.sub-service.index') }}" class="side-menu__item">Sub-Services </a>
+                                        <a href="{{ route('admin.sub-service.index') }}" class="side-menu__item">Services</a>
                                     </li>
                                     <li class="slide">
                                         <a href="{{ route('admin.service-details.index') }}" class="side-menu__item">Service Details </a>
@@ -331,7 +331,7 @@
                                         <a href="{{ route('admin.re-requested-service.index') }}" class="side-menu__item">Re-requested Service </a>
                                     </li> --}}
                                     <li class="slide">
-                                        <a href="{{ route('admin.categorybox.index') }}" class="side-menu__item">Category Management </a>
+                                        <a href="{{ route('admin.categorybox.index') }}" class="side-menu__item">Legacy Homepage Boxes</a>
                                     </li>
                                 </ul>
                             </li>

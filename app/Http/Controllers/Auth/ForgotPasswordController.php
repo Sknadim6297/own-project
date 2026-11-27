@@ -38,8 +38,12 @@ class ForgotPasswordController extends Controller
         try {
             $user = $recovery->registeredCustomerByEmail($email);
 
-            if ($user) {
-                $recovery->sendCustomerReset($user);
+            // Known accounts must actually queue/send; unknown emails still get the
+            // generic status below so we do not leak whether the address exists.
+            if ($user && ! $recovery->sendCustomerReset($user)) {
+                return back()
+                    ->withInput($request->only('email'))
+                    ->withErrors(['email' => AccountRecovery::SEND_FAILED]);
             }
         } catch (\Throwable $exception) {
             report($exception);

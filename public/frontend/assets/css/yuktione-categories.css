@@ -82,6 +82,11 @@
     cursor: default;
 }
 
+/* Hide arrow controls when every card already fits (dynamic category counts). */
+.yk-home-cats:not(.is-carousel-scrollable) .yk-home-cats__nav {
+    display: none;
+}
+
 .yk-home-cats__more {
     display: inline-flex;
     align-items: center;
@@ -485,5 +490,113 @@
     .yk-home-cats__media img {
         transition: none;
         scroll-behavior: auto;
+    }
+}
+
+/*
+ * Priority 4 — Alternative B: single-row rail with readable two-line topic labels.
+ * Opt-in via .yk-home-cats--label-wrap (config / ?topic_layout=label-wrap).
+ * Does not change the default Task 55 single-line preference until confirmed.
+ */
+.yk-home-cats--label-wrap.yk-home-cats--rich .yk-home-cats__card--photo .yk-home-cats__label {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    min-height: calc(1.25em * 2);
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+@media (min-width: 768px) {
+    .yk-home-cats--label-wrap.yk-home-cats--rich .yk-home-cats__card--photo .yk-home-cats__label {
+        white-space: normal;
+    }
+}
+
+@media (min-width: 640px) and (max-width: 1023.98px) {
+    .yk-home-cats--label-wrap.yk-home-cats--rich .yk-home-cats__card--photo .yk-home-cats__label {
+        white-space: normal;
+    }
+}
+
+/*
+ * Priority 4 — Alternative C (proposed): two rows of topic cards that scroll together.
+ * Opt-in via .yk-home-cats--two-row (config / ?topic_layout=two-row).
+ * Uses grid-auto-flow: column so both rows share one horizontal scroller.
+ */
+.yk-home-cats--two-row.yk-home-cats--rich .yk-home-cats__track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(2, minmax(0, auto));
+    grid-auto-columns: min(46vw, 148px);
+    align-items: stretch;
+    column-gap: 0.7rem;
+    row-gap: 0.7rem;
+    flex-wrap: unset;
+}
+
+.yk-home-cats--two-row.yk-home-cats--rich .yk-home-cats__track > li {
+    width: auto;
+    min-width: 0;
+    flex: unset;
+    scroll-snap-align: start;
+}
+
+.yk-home-cats--two-row.yk-home-cats--rich .yk-home-cats__card--photo .yk-home-cats__label {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    min-height: calc(1.2em * 2);
+}
+
+@media (min-width: 640px) {
+    .yk-home-cats--two-row.yk-home-cats--rich .yk-home-cats__track {
+        grid-auto-columns: min(28vw, 152px);
+        column-gap: 0.9rem;
+        row-gap: 0.85rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .yk-home-cats--two-row.yk-home-cats--rich .yk-home-cats__track {
+        grid-auto-columns: 168px;
+    }
+
+    .yk-home-cats--two-row.yk-home-cats--rich .yk-home-cats__card--photo .yk-home-cats__label {
+        white-space: normal;
+    }
+}
+
+@media (min-width: 1024px) {
+    .yk-home-cats--two-row.yk-home-cats--rich .yk-home-cats__track {
+        /* ~4 columns visible → 8 cards in view across two rows */
+        grid-auto-columns: calc((100% - 3 * 1.05rem) / 4);
+        column-gap: 1.05rem;
+        row-gap: 1rem;
+    }
+
+    .yk-home-cats--two-row.yk-home-cats--rich .yk-home-cats__track > li {
+        width: auto;
+    }
+}
+
+@media (max-width: 1023.98px) {
+    /* Override Task 52 flex rail when two-row mode is active. */
+    .yk-home-cats--two-row.yk-home-cats--rich .yk-home-cats__track {
+        display: grid;
+        flex-wrap: unset;
+        gap: unset;
+        column-gap: 0.6rem;
+        row-gap: 0.6rem;
+        grid-auto-columns: min(42vw, 132px);
+    }
+
+    .yk-home-cats--two-row.yk-home-cats--rich .yk-home-cats__track > li {
+        width: auto;
+        flex: unset;
     }
 }

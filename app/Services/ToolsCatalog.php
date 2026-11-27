@@ -68,6 +68,11 @@ class ToolsCatalog
      *
      * @var array<string, array{tools: string, hub: string}>
      */
+    /**
+     * Legacy hardcoded placement retained as fallback when category_tool is empty.
+     *
+     * @var array<string, array{tools: string, hub: string}>
+     */
     private const TOOL_PLACEMENT = [
         'daily-mood-check-in' => ['tools' => 'mental-wellness', 'hub' => 'mental-health'],
         'digital-journal' => ['tools' => 'mental-wellness', 'hub' => 'mental-health'],
@@ -94,6 +99,14 @@ class ToolsCatalog
         'savings-investment-calculator' => ['tools' => 'investments', 'hub' => 'money-finance'],
     ];
 
+    /**
+     * @return array<string, array{tools: string, hub: string}>
+     */
+    public static function legacyToolPlacement(): array
+    {
+        return self::TOOL_PLACEMENT;
+    }
+
     public function browse(Request $request): array
     {
         $filters = $this->filters($request);
@@ -113,11 +126,16 @@ class ToolsCatalog
             ]
         );
 
+        $categories = app(CategoryCatalog::class)->toolsCategoryMap();
+        if ($categories === []) {
+            $categories = self::CATEGORIES;
+        }
+
         return [
             'items' => $items,
             'filters' => $filters,
-            'categories' => self::CATEGORIES,
-            'counts' => $this->counts($published, $filters),
+            'categories' => $categories,
+            'counts' => $this->counts($published, $filters, array_keys($categories)),
             'topics' => self::TOPICS,
             'catalogueAvailable' => $published->isNotEmpty(),
         ];
@@ -140,26 +158,38 @@ class ToolsCatalog
             return collect();
         }
 
-        // Exact nine-category tools-catalogue key.
-        if (array_key_exists($categoryKey, self::CATEGORIES)) {
-            return $this->published()
-                ->filter(fn (array $card) => ($card['category'] ?? null) === $categoryKey)
-                ->values();
-        }
-
-        // Explore / All Categories hub key — filter by hub_category placement.
-        if (array_key_exists($categoryKey, ExploreCatalog::CATEGORIES)) {
-            return $this->published()
-                ->filter(fn (array $card) => ($card['hub_category'] ?? null) === $categoryKey)
-                ->values();
-        }
-
-        // Legacy tools-catalogue aliases / compound bookmarks only.
-        if (isset(self::CATEGORY_GROUP_ALIASES[$categoryKey])) {
-            $group = self::CATEGORY_GROUP_ALIASES[$categoryKey];
-
+        // Compound Explore keys must expand before single-slug aliases
+        // (e.g. astrology-tarot → astrology+tarot, not only astrology).
+        $group = self::CATEGORY_GROUP_ALIASES[$categoryKey]
+            ?? CategoryCatalog::GROUP_ALIASES[$categoryKey]
+            ?? null;
+        if (is_array($group)) {
             return $this->published()
                 ->filter(fn (array $card) => in_array($card['category'] ?? null, $group, true))
+                ->values();
+        }
+
+        $catalog = app(CategoryCatalog::class);
+        $canonical = $catalog->canonicalizeSlug($categoryKey) ?? $categoryKey;
+        $toolsMap = $catalog->toolsCategoryMap();
+
+        // Exact Category slug (DB or fallback nine).
+        if (array_key_exists($canonical, $toolsMap) || array_key_exists($canonical, self::CATEGORIES)) {
+            return $this->published()
+                ->filter(fn (array $card) => ($card['category'] ?? null) === $canonical)
+                ->values();
+        }
+
+        // Legacy Explore hub key — resolve via alias then hub_category / category.
+        if (array_key_exists($categoryKey, ExploreCatalog::CATEGORIES)) {
+            $target = $catalog->canonicalizeSlug($categoryKey) ?? $categoryKey;
+
+            return $this->published()
+                ->filter(function (array $card) use ($categoryKey, $target) {
+                    return ($card['hub_category'] ?? null) === $target
+                        || ($card['hub_category'] ?? null) === $categoryKey
+                        || ($card['category'] ?? null) === $target;
+                })
                 ->values();
         }
 
@@ -190,10 +220,11 @@ class ToolsCatalog
      */
     public function hubCategoryCounts(): array
     {
-        $counts = array_fill_keys(array_keys(ExploreCatalog::CATEGORIES), 0);
+        $discovery = app(CategoryCatalog::class)->discoveryCategoryMap();
+        $counts = array_fill_keys(array_keys($discovery !== [] ? $discovery : ExploreCatalog::CATEGORIES), 0);
 
         foreach ($this->published() as $card) {
-            $hub = $card['hub_category'] ?? null;
+            $hub = $card['hub_category'] ?? $card['category'] ?? null;
             if (is_string($hub) && array_key_exists($hub, $counts)) {
                 $counts[$hub]++;
             }
@@ -301,7 +332,11 @@ class ToolsCatalog
             'availability' => $cataloguePending ? 'Pending' : 'Available',
             'availability_state' => $cataloguePending ? 'pending' : 'available',
             'category' => $category,
-            'category_label' => $category ? (self::CATEGORIES[$category]['label'] ?? '') : '',
+            'category_label' => $category
+                ? (app(CategoryCatalog::class)->toolsCategoryMap()[$category]['label']
+                    ?? self::CATEGORIES[$category]['label']
+                    ?? '')
+                : '',
             'hub_category' => $placement['hub'],
             'icon' => $this->iconKey($tool),
             'slug' => $tool->slug,
@@ -313,14 +348,31 @@ class ToolsCatalog
      */
     private function placementFor(Tool $tool): array
     {
+        $catalog = app(CategoryCatalog::class);
+        $dbMap = $catalog->toolCategoryPlacement();
+
+        if (isset($dbMap[$tool->slug])) {
+            $toolsSlug = $dbMap[$tool->slug];
+
+            return [
+                'tools' => $toolsSlug,
+                'hub' => $toolsSlug,
+            ];
+        }
+
         if (isset(self::TOOL_PLACEMENT[$tool->slug])) {
-            return self::TOOL_PLACEMENT[$tool->slug];
+            $legacy = self::TOOL_PLACEMENT[$tool->slug];
+
+            return [
+                'tools' => $legacy['tools'],
+                'hub' => $catalog->canonicalizeSlug($legacy['hub']) ?? $legacy['tools'],
+            ];
         }
 
         // Unknown tools stay visible under Mental Wellness until mapped explicitly.
         return [
             'tools' => 'mental-wellness',
-            'hub' => ExploreCatalog::PSYCHOLOGY_CATEGORY,
+            'hub' => 'mental-wellness',
         ];
     }
 
@@ -415,13 +467,14 @@ class ToolsCatalog
         return str_contains($haystack, mb_strtolower($filters['q']));
     }
 
-    private function counts(Collection $published, array $filters): array
+    private function counts(Collection $published, array $filters, ?array $slugs = null): array
     {
         $search = $filters;
         $search['category'] = '';
         $counts = [];
+        $slugs = $slugs ?: array_keys(self::CATEGORIES);
 
-        foreach (array_keys(self::CATEGORIES) as $slug) {
+        foreach ($slugs as $slug) {
             $counts[$slug] = $published->filter(function (array $card) use ($search, $slug) {
                 return $card['category'] === $slug && $this->matches($card, $search);
             })->count();

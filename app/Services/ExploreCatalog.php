@@ -80,7 +80,7 @@ class ExploreCatalog
         $payload = [
             'items' => $items,
             'filters' => $filters,
-            'categories' => self::CATEGORIES,
+            'categories' => $this->categoryDefinitions(),
             'experienceBuckets' => self::EXPERIENCE_BUCKETS,
             'activeTypes' => $this->activeTypes($filters),
             'tab' => $this->tab($filters),
@@ -156,10 +156,9 @@ class ExploreCatalog
             $type = 'all';
         }
 
-        $category = (string) $request->query('category', '');
-        if (!array_key_exists($category, self::CATEGORIES)) {
-            $category = '';
-        }
+        // Expert / explore hub filters keep the 11 ExploreCatalog keys (and mobile
+        // API contracts). Do not collapse them into the nine tools Category slugs.
+        $category = $this->normalizeExpertCategory((string) $request->query('category', ''));
 
         $service = (string) $request->query('service', '');
         if (!preg_match('/^[a-z0-9-]{1,160}$/', $service)) {
@@ -398,16 +397,9 @@ class ExploreCatalog
             ->where('active', true);
 
         if ($filters['q'] !== '') {
-            $like = $this->like($filters['q']);
-            $query->where(function (Builder $inner) use ($like) {
-                $inner->where('name', 'like', $like)
-                    ->orWhereHas('profile', fn (Builder $profile) => $profile->where('specialization', 'like', $like))
-                    ->orWhereHas('professionalServices', function (Builder $service) use ($like) {
-                        $service->where('service_name', 'like', $like)
-                            ->orWhere('tags', 'like', $like)
-                            ->orWhereHas('service', fn (Builder $parent) => $parent->where('name', 'like', $like));
-                    });
-            });
+            // Professionals directory search is name-prefix only (case-insensitive).
+            // Do not match mid-name tokens or specialization/service text here.
+            $query->where('name', 'like', $this->likePrefix($filters['q']));
         }
 
         if ($filters['category'] !== '') {
@@ -499,7 +491,8 @@ class ExploreCatalog
         }
 
         if ($filters['category'] !== '') {
-            $this->whereTextMatches($query, self::CATEGORIES[$filters['category']]['needles'], 'programme');
+            $needles = $this->categoryDefinitions()[$filters['category']]['needles'] ?? [];
+            $this->whereTextMatches($query, $needles, 'programme');
         }
 
         $prices = $filters['price'];
@@ -534,7 +527,8 @@ class ExploreCatalog
         }
 
         if ($filters['category'] !== '') {
-            $this->whereTextMatches($query, self::CATEGORIES[$filters['category']]['needles'], 'article');
+            $needles = $this->categoryDefinitions()[$filters['category']]['needles'] ?? [];
+            $this->whereTextMatches($query, $needles, 'article');
         }
 
         return $query;
@@ -548,9 +542,93 @@ class ExploreCatalog
      * without any classifiable service fall back to specialization needles, but
      * only when they do not already have a service mapped to a different category.
      */
+    /**
+     * Expert / explore hub category definitions.
+     *
+     * The nine client Categories (tools + homepage) live in CategoryCatalog /
+     * the `services` table. Professional filtering and mobile API contracts keep
+     * these Explore hub keys (including legacy aliases such as career-business).
+     *
+     * @return array<string, array{label: string, tone: string, icon: string, needles: list<string>}>
+     */
+    public function categoryDefinitions(): array
+    {
+        return self::CATEGORIES;
+    }
+
+    /**
+     * Map a request category onto an Explore hub key.
+     * Accepts hub keys directly and nine tools Category slugs via reverse map.
+     */
+    public function normalizeExpertCategory(string $category): string
+    {
+        if ($category === '' || array_key_exists($category, self::CATEGORIES)) {
+            return array_key_exists($category, self::CATEGORIES) ? $category : '';
+        }
+
+        $hub = self::TOOLS_SLUG_TO_HUB[$category] ?? null;
+
+        return ($hub !== null && array_key_exists($hub, self::CATEGORIES)) ? $hub : '';
+    }
+
+    /**
+     * Nine tools/homepage Category slugs → Explore hub key for expert filters.
+     *
+     * @var array<string, string>
+     */
+    private const TOOLS_SLUG_TO_HUB = [
+        'mental-wellness' => 'mental-health',
+        'career-counselling' => 'career-business',
+        'business-consulting' => 'career-business',
+        'nutrition' => 'nutrition-fitness',
+        'fitness' => 'nutrition-fitness',
+        'astrology' => 'astrology-tarot',
+        'tarot' => 'astrology-tarot',
+        'investments' => 'money-finance',
+        'tax-matters' => 'money-finance',
+    ];
+
+    /**
+     * Apply an Explore hub category filter to an experts query (mobile API / shared).
+     */
+    public function constrainExpertsToCategory(Builder $query, string $categoryKey): void
+    {
+        $normalized = $this->normalizeExpertCategory($categoryKey);
+        if ($normalized === '') {
+            $query->whereRaw('1 = 0');
+
+            return;
+        }
+
+        $this->whereExpertCategory($query, $normalized);
+    }
+
+    /**
+     * Apply an Explore hub category filter to programme/event listings (mobile API).
+     */
+    public function constrainProgrammesToCategory(Builder $query, string $categoryKey): void
+    {
+        $normalized = $this->normalizeExpertCategory($categoryKey);
+        if ($normalized === '') {
+            $query->whereRaw('1 = 0');
+
+            return;
+        }
+
+        $needles = self::CATEGORIES[$normalized]['needles'] ?? [];
+        if ($needles === []) {
+            $query->whereRaw('1 = 0');
+
+            return;
+        }
+
+        $this->whereTextMatches($query, $needles, 'programme');
+    }
+
     private function whereExpertCategory(Builder $query, string $categoryKey): void
     {
-        if (! array_key_exists($categoryKey, self::CATEGORIES)) {
+        $definitions = $this->categoryDefinitions();
+        if (! array_key_exists($categoryKey, $definitions)) {
             $query->whereRaw('1 = 0');
 
             return;
@@ -558,7 +636,7 @@ class ExploreCatalog
 
         $serviceIds = $this->serviceIdsMappedToCategory($categoryKey);
         $otherMappedServiceIds = $this->serviceIdsMappedToOtherCategories($categoryKey);
-        $needles = self::CATEGORIES[$categoryKey]['needles'];
+        $needles = $definitions[$categoryKey]['needles'] ?? [];
 
         $query->where(function (Builder $outer) use ($serviceIds, $otherMappedServiceIds, $needles) {
             if ($serviceIds !== []) {
@@ -629,11 +707,25 @@ class ExploreCatalog
             return $this->serviceCategoryMapCache;
         }
 
-        $map = array_fill_keys(array_keys(self::CATEGORIES), []);
+        $definitions = $this->categoryDefinitions();
+        $map = array_fill_keys(array_keys($definitions), []);
+        // Nine homepage/tools Category rows also live in `services`. They must not
+        // be treated as consultation offerings for expert filters or discovery CTAs.
+        $hubCategorySlugs = array_fill_keys(array_keys(CategoryCatalog::FALLBACK_CATEGORIES), true);
 
         foreach (Service::query()->get(['id', 'name', 'slug']) as $service) {
-            $key = $this->categoryKeyForText(trim(($service->name ?? '').' '.($service->slug ?? '')));
-            if ($key === null) {
+            $slug = (string) ($service->slug ?? '');
+            if ($slug !== '' && isset($hubCategorySlugs[$slug])) {
+                continue;
+            }
+
+            if ($slug !== '' && array_key_exists($slug, $map)) {
+                $map[$slug][] = (int) $service->id;
+                continue;
+            }
+
+            $key = $this->categoryKeyForText(trim(($service->name ?? '').' '.$slug));
+            if ($key === null || ! array_key_exists($key, $map)) {
                 continue;
             }
             $map[$key][] = (int) $service->id;
@@ -742,7 +834,7 @@ class ExploreCatalog
     private function categoryCounts(array $filters): array
     {
         $filters['category'] = '';
-        $counts = array_fill_keys(array_keys(self::CATEGORIES), 0);
+        $counts = array_fill_keys(array_keys($this->categoryDefinitions()), 0);
 
         if ($this->includes('experts', $filters)) {
             $rows = DB::table('professionals')
@@ -872,8 +964,8 @@ class ExploreCatalog
 
     private function incrementCategories(array &$counts, string $haystack): void
     {
-        foreach (self::CATEGORIES as $key => $category) {
-            foreach ($category['needles'] as $needle) {
+        foreach ($this->categoryDefinitions() as $key => $category) {
+            foreach ($category['needles'] ?? [] as $needle) {
                 if (str_contains($haystack, $needle)) {
                     $counts[$key]++;
                     break;
@@ -888,8 +980,8 @@ class ExploreCatalog
     public function categoryKeyForText(string $text): ?string
     {
         $haystack = strtolower($text);
-        foreach (self::CATEGORIES as $key => $category) {
-            foreach ($category['needles'] as $needle) {
+        foreach ($this->categoryDefinitions() as $key => $category) {
+            foreach ($category['needles'] ?? [] as $needle) {
                 if (str_contains($haystack, $needle)) {
                     return $key;
                 }
@@ -905,7 +997,7 @@ class ExploreCatalog
      */
     public function psychologyCategoryKey(): ?string
     {
-        return array_key_exists(self::PSYCHOLOGY_CATEGORY, self::CATEGORIES)
+        return array_key_exists(self::PSYCHOLOGY_CATEGORY, $this->categoryDefinitions())
             ? self::PSYCHOLOGY_CATEGORY
             : null;
     }

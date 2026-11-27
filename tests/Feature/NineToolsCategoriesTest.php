@@ -103,12 +103,16 @@ class NineToolsCategoriesTest extends TestCase
         $this->assertCount(9, ToolsCatalog::CATEGORIES);
 
         $html = $this->get(route('tools.index'))->assertOk()->getContent();
-        $this->assertTrue(preg_match('/<nav[^>]*yk-tools__cats[^>]*>(.*?)<\/nav>/s', $html, $chipNav) === 1);
-        $chipsHtml = $chipNav[1];
+        $this->assertTrue(preg_match_all('/class="yk-tools__chip[^"]*"[^>]*>\s*([^<]+)/', $html, $chipMatches) > 0);
+        $chipLabels = array_map(static fn (string $label) => trim(html_entity_decode($label)), $chipMatches[1]);
+        $chipLabels = array_values(array_filter($chipLabels, static fn (string $label) => $label !== '' && $label !== 'All'));
+        foreach ($labels as $label) {
+            $this->assertContains($label, $chipLabels, $label.' missing from tools category chips');
+        }
         $positions = [];
         foreach ($labels as $label) {
-            $pos = strpos($chipsHtml, $label);
-            $this->assertNotFalse($pos, $label.' missing from tools category chips');
+            $pos = array_search($label, $chipLabels, true);
+            $this->assertNotFalse($pos, $label.' missing from ordered chips');
             $positions[] = $pos;
         }
         $sorted = $positions;
@@ -152,7 +156,7 @@ class NineToolsCategoriesTest extends TestCase
         $page = $this->get(route('tools.index', ['category' => 'business-consulting']));
         $page->assertOk()
             ->assertSee('Business Consulting')
-            ->assertSee('(0)', false)
+            ->assertSee('yk-cat-detail__count">0</span>', false)
             ->assertSee('No tools match these filters')
             ->assertDontSee('Daily Mood Check-in');
 

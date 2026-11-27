@@ -39,8 +39,12 @@ class AuthController extends Controller
         try {
             $professional = $recovery->registeredProfessionalByEmail($email);
 
-            if ($professional) {
-                $recovery->sendProfessionalReset($professional);
+            // Known professionals must actually queue/send; unknown emails still get
+            // the generic status below so we do not leak whether the address exists.
+            if ($professional && ! $recovery->sendProfessionalReset($professional)) {
+                return back()
+                    ->withInput($request->only('email'))
+                    ->withErrors(['email' => AccountRecovery::SEND_FAILED]);
             }
         } catch (\Throwable $exception) {
             report($exception);
@@ -88,7 +92,9 @@ class AuthController extends Controller
         );
         
         return $status === Password::PASSWORD_RESET
-                    ? redirect()->route('professional.login')->with('status', __($status))
-                    : back()->withErrors(['email' => [__($status)]]);
+            ? redirect()->route('professional.login')->with('status', 'Your password has been reset successfully. Please sign in with your new password.')
+            : back()
+                ->withInput($request->only('email'))
+                ->withErrors(['email' => [__($status)]]);
     }
 }
